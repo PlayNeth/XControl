@@ -1,0 +1,201 @@
+# Mesa Panel
+
+A Catalyst-style control panel for Linux with Mesa drivers: simple per-game
+graphics overrides, plus X11 display settings through xrandr.
+
+| Setting | OpenGL | Vulkan | Wine / Proton (DXVK / VKD3D-Proton) |
+|---|---|---|---|
+| Anisotropic filtering Off, 2–16× | yes (shim) | yes (layer) | yes (layer + DXVK config) |
+| Forced MSAA 2–8× | games that draw to the window directly | no | Direct3D 8/9 with the WineD3D renderer |
+| MSAA Off | window MSAA | no | Direct3D 11 through DXVK |
+| Transparency AA | alpha test (fixed-function or shader `discard`), while MSAA is active | no | WineD3D: yes; DXVK: supersample only, when the game uses MSAA |
+| VSync off / on | `vblank_mode` | `MESA_VK_WSI_PRESENT_MODE` | DXVK sync interval |
+| Fast sync / adaptive | no | yes | yes |
+| Frame limiter | yes (shim) | yes (layer) | yes (layer) |
+
+Profiles match a game by Steam AppID (`steam:220`) or by the file name of the
+program or one of its arguments (`ioquake3.x86_64`, `game.exe`). Anything
+without a profile gets the global settings.
+
+## Install (Arch)
+
+```sh
+makepkg -si
+```
+
+Dependencies: `python`, `python-gobject`, `python-cairo`, `gtk3`, `xorg-xrandr`
+(build: `vulkan-headers`). The package is 64-bit only. That covers Proton games
+too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
+32-bit Linux games won't load the GL shim and print a harmless `ld.so` warning.
+
+## Using it
+
+1. Open **Mesa Panel**, set the global settings, and use **Add game** for
+   per-game profiles. Changes save automatically.
+2. Start games through the launcher:
+   - Steam: set the game's launch options to `mesa-panel-run %command%`
+   - Anything else: `mesa-panel-run /path/to/game`, or fill in **Command**
+     in the profile and press **Launch**.
+3. To check what would be applied: `mesa-panel-run --print-env /path/to/game`.
+   Set `MESAPANEL_DEBUG=1` to have the shim and layer log what they hook.
+
+## How it works
+
+- **`mesa-panel-run`** looks up the profile and sets environment variables, then
+  `exec`s the game.
+- **`libmesapanel_gl.so`** (`LD_PRELOAD`) intercepts GL calls through direct
+  linking, `glXGetProcAddress`/`eglGetProcAddress`, and `dlsym` on a libGL/libEGL
+  handle (the SDL path).
+  - AF: forces `GL_TEXTURE_MAX_ANISOTROPY` whenever a texture or sampler gets a
+    linear or mipmapped minification filter. Point-sampled textures are left
+    alone.
+  - MSAA: adds sample buffers to `glXChooseFBConfig`, `glXChooseVisual` and
+    `eglChooseConfig`. If no matching config exists, it falls back to what the
+    game asked for.
+  - TrAA: enables alpha-to-coverage or per-sample shading while
+    `GL_ALPHA_TEST` is on.
+  - FPS: sleeps before `SwapBuffers`.
+  - Other `dlsym` lookups pass through as a tail call, so other interposers
+    (Steam overlay, MangoHud) keep working in either load order.
+- **`VK_LAYER_MESAPANEL_overrides`** is an implicit Vulkan layer that only loads
+  when `MESAPANEL_VK=1`.
+  - AF: patches `vkCreateSampler` for linear samplers and turns on the
+    `samplerAnisotropy` feature if the game didn't.
+  - FPS: limits in `vkQueuePresentKHR`.
+- Driver and DXVK knobs (`RADV_TEX_ANISO`, `DXVK_CONFIG`, …) are set alongside
+  the hooks to cover paths they can't see.
+
+## Direct3D 8/9 games and MSAA
+
+DXVK has no way to force MSAA. For old Direct3D 8/9 games (Need for Speed: Hot Pursuit 2,
+GTA: Vice City and similar), set **Direct3D 8/9 games** to **WineD3D** in the game's
+profile. The launcher then makes Wine use its built-in `d3d8`/`d3d9` for that game only
+(`WINEDLLOVERRIDES=d3d8,d3d9=b`, plus `PROTON_USE_WINED3D=1` under Proton) and passes
+the MSAA level as `WINE_D3D_CONFIG=SampleCount=N`. The rest of the prefix keeps using DXVK.
+
+For a game in your own Wine prefix, add a profile whose **Applies to** is the executable
+name (for example `nfshp2.exe`), then start it with:
+
+```sh
+WINEPREFIX=~/your-prefix mesa-panel-run wine /path/to/nfshp2.exe
+```
+
+## Displays
+
+The Displays page drives xrandr. You can drag monitors around (edges snap),
+change resolution, refresh rate and rotation, set the primary display, and turn
+outputs on or off. **Apply** asks you to confirm and reverts after 15 seconds
+if you don't. **Restore this layout when I log in** adds an autostart entry
+that runs `mesa-panel --apply-display`. In a Wayland session xrandr can't
+change outputs, so the page explains that and disables Apply.
+
+## Custom resolutions and ignoring the EDID
+
+**Resolutions…** on the Displays page opens a per-display editor:
+
+- **Add a resolution:** width, height and refresh rate, plus a timing standard:
+  - **CVT**: VESA's standard formula, CRT-style blanking.
+  - **CVT reduced blanking (v1):** lower pixel clock, for LCDs and bandwidth-limited links.
+  - **CVT reduced blanking v2:** hits the exact refresh rate; good for high refresh rates.
+  - **GTF**: the classic CRT formula.
+  - **DMT**: the fixed VESA table (640×480 at 60 Hz = 25.175 MHz, and so on). This
+    matters for low resolutions, because CVT's 640×480 at 60 Hz is below the 25 MHz
+    many HDMI links accept.
+  - **Manual:** paste any modeline.
+
+  The preview shows the modeline, pixel clock, horizontal frequency and actual
+  refresh rate. It warns when a mode is outside the range the display reports or
+  too slow for HDMI. **Classic modes** fills in 640×480, 800×600, 1024×768 and so on.
+- **Offer only my resolutions for this display** hides the EDID's mode list, for
+  displays whose EDID lists modes they can't really show.
+
+New modes go to xrandr right away; pick one on the Displays page and press Apply
+(with the usual 15-second revert). X forgets custom modes when it restarts, so the
+panel re-creates them at login. The full layout is re-applied only when **Restore
+this layout when I log in** is on.
+
+All generators match `edid-decode` exactly (1,056 CVT/RB/RBv2/GTF timings and the
+87-entry DMT table). Run `make check` to verify.
+
+## System-wide mode list (EDID override)
+
+The options above only change what the panel offers. Games and other programs read
+the mode list from the kernel, which builds it from the display's EDID. **Resolutions…
+→ System-wide mode list…** builds a corrected EDID that lists only the modes you tick:
+
+- It keeps the display's name, serial number, size and colour data from its real EDID.
+- A mode that matches an established timing sets that bit. A VESA (DMT) mode uses a
+  standard-timing slot. Everything else is stored as an exact detailed timing, so
+  your custom CVT, GTF or manual modes keep their exact timings.
+- It clears the "continuous frequency / GTF" flag, so the kernel doesn't add extra
+  modes on its own, and widens the range limits to cover your modes.
+- If the display has a CTA-861 block (HDMI, audio, HDR), that data is kept; only its
+  video modes are replaced.
+
+Every generated EDID is checked against `edid-decode --check` in `make check`.
+
+Buttons:
+
+- **Save EDID file…** writes the EDID to a file.
+- **Test now** loads it through the kernel's debugfs `edid_override` until the next
+  reboot (asks for your password via polkit). **Undo test** restores the original.
+- **Make permanent…** installs it to `/usr/lib/firmware/edid/` and shows what to add
+  to your boot setup: the `drm.edid_firmware=` kernel parameter, and on Arch a
+  mkinitcpio `FILES=` entry, because the kms hook loads the GPU driver from the
+  initramfs. The panel never edits your bootloader or initramfs configuration itself.
+
+The only code that runs as root is `mesa-panel-edid-helper`. It validates every
+argument, accepts only real EDID files, and writes only to the connector's debugfs
+override or `/usr/lib/firmware/edid/mesa-panel-*.bin`.
+
+## Monitor Info
+
+The **Monitor Info** page shows what each connected display reports in its EDID,
+plus what the driver exposes through xrandr:
+
+- **Identity:** model, manufacturer, product code, serial number, manufacture date.
+- **Panel:** native resolution, size, pixel density, color depth (with the driver's
+  `max bpc` limit), gamma.
+- **Refresh & sync:** highest refresh rate and resolution, supported refresh range,
+  variable refresh rate (`vrr_capable` plus the FreeSync range).
+- **Color & HDR:** HDR10/HLG/HDR10+/Dolby Vision, peak and full-frame brightness,
+  gamut coverage of sRGB/DCI-P3/Rec. 2020 computed from the reported primaries,
+  white point, wide-color signaling.
+- **Connection:** X11 and kernel output names, current mode, input type, HDMI 2.0/2.1
+  capability (TMDS clock, FRL bandwidth), audio, YCbCr formats, power saving.
+
+The **Details** button on the Displays page jumps to the selected monitor.
+**Copy details** copies a plain-text summary, and **Save EDID…** writes the raw EDID
+for `edid-decode` or bug reports. The data comes from the kernel
+(`/sys/class/drm`), so this page also works on Wayland.
+
+Keep in mind that this is what the monitor *claims*. Gamut and brightness figures in
+EDIDs are often rounded or copied between models, so treat them as approximate.
+
+## Translations
+
+The interface uses gettext; translations live in `po/`. A Brazilian Portuguese
+translation is included, and the app follows your desktop language.
+
+- Add a language: `make new-po LANG_CODE=es`, then translate `po/es.po`
+  (Poedit works well).
+- After changing strings in the code: `make update-po` merges them into every
+  translation.
+- `make` checks each translation with `msgfmt --check`, which also catches
+  broken `{placeholders}`, and translates the app-menu entry.
+
+**Copy details** on the Monitor Info page copies in your language. The arrow next to
+it has **Copy in English**, which is more useful in bug reports.
+
+## Limitations
+
+- Forced MSAA can't work for games that render through framebuffer objects
+  (most games since ~2008), or for Vulkan games. That was also true of the
+  Catalyst-era drivers. Use the game's own AA, or a post-process AA such as
+  vkBasalt.
+- Transparency AA finds alpha-tested shaders by looking for `discard`, the usual way
+  to write an alpha test. Shaders that discard for other reasons get supersampled
+  too: correct, but slower. Games that load precompiled SPIR-V shaders aren't detected.
+- Recent DXVK versions can describe samplers through `VK_EXT_descriptor_heap`
+  without calling `vkCreateSampler`. The `samplerAnisotropy` entries in
+  `DXVK_CONFIG` cover that case for D3D9/11.

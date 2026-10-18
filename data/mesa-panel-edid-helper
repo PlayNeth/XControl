@@ -1,0 +1,83 @@
+#!/bin/sh
+# mesa-panel-edid-helper: the only part of mesa-panel that runs as root (via pkexec).
+#
+#   test    CARD CONNECTOR FILE   load FILE as the connector's EDID until reboot
+#                                 (kernel debugfs edid_override + hotplug)
+#   reset   CARD CONNECTOR        drop a test override
+#   install NAME FILE             copy FILE to /usr/lib/firmware/edid/NAME
+#   remove  NAME                  delete /usr/lib/firmware/edid/NAME
+#
+# Arguments are validated strictly; FILE must be a real EDID.
+set -eu
+
+die() { echo "mesa-panel-edid-helper: $*" >&2; exit 1; }
+
+DEBUGFS=/sys/kernel/debug
+FIRMWARE=/usr/lib/firmware
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    DEBUGFS=${MESAPANEL_DEBUGFS:-$DEBUGFS}
+    FIRMWARE=${MESAPANEL_FIRMWARE:-$FIRMWARE}
+fi
+
+check_card() { case $1 in ''|*[!0-9]*) die "invalid card number: $1";; esac; }
+check_conn() {
+    case $1 in ''|*[!A-Za-z0-9-]*) die "invalid connector name: $1";; esac
+    [ ${#1} -le 32 ] || die "invalid connector name: $1"
+}
+check_name() {
+    case $1 in mesa-panel-*.bin) ;; *) die "invalid file name: $1";; esac
+    case ${1%.bin} in *[!A-Za-z0-9-]*) die "invalid file name: $1";; esac
+}
+check_edid() {
+    if [ ! -f "$1" ] || [ -L "$1" ]; then die "not a regular file: $1"; fi
+    size=$(wc -c < "$1")
+    if [ "$size" -lt 128 ] || [ "$size" -gt 32768 ] || [ $((size % 128)) -ne 0 ]; then
+        die "not an EDID (size $size)"
+    fi
+    header=$(od -An -tx1 -N8 "$1" | tr -d ' \n')
+    [ "$header" = "00ffffffffffff00" ] || die "not an EDID (bad header)"
+}
+connector_dir() {
+    [ -d "$DEBUGFS/dri" ] || mount -t debugfs none "$DEBUGFS" 2>/dev/null || true
+    dir="$DEBUGFS/dri/$1/$2"
+    [ -e "$dir/edid_override" ] || die "no EDID override support for card $1 connector $2 ($dir)"
+    echo "$dir"
+}
+hotplug() {
+    if [ -e "$1/trigger_hotplug" ]; then echo 1 > "$1/trigger_hotplug"; fi
+}
+
+[ $# -ge 1 ] || die "usage: test|reset|install|remove ..."
+cmd=$1; shift
+case $cmd in
+    test)
+        [ $# -eq 3 ] || die "usage: test CARD CONNECTOR FILE"
+        check_card "$1"; check_conn "$2"; check_edid "$3"
+        dir=$(connector_dir "$1" "$2")
+        cat "$3" > "$dir/edid_override"
+        hotplug "$dir"
+        echo "EDID override loaded for $2 (until reboot)"
+        ;;
+    reset)
+        [ $# -eq 2 ] || die "usage: reset CARD CONNECTOR"
+        check_card "$1"; check_conn "$2"
+        dir=$(connector_dir "$1" "$2")
+        printf reset > "$dir/edid_override"
+        hotplug "$dir"
+        echo "EDID override removed for $2"
+        ;;
+    install)
+        [ $# -eq 2 ] || die "usage: install NAME FILE"
+        check_name "$1"; check_edid "$2"
+        install -Dm644 "$2" "$FIRMWARE/edid/$1"
+        echo "installed $FIRMWARE/edid/$1"
+        ;;
+    remove)
+        [ $# -eq 1 ] || die "usage: remove NAME"
+        check_name "$1"
+        rm -f "$FIRMWARE/edid/$1"
+        echo "removed $FIRMWARE/edid/$1"
+        ;;
+    *) die "unknown command: $cmd" ;;
+esac

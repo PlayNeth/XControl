@@ -1,0 +1,1080 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: mesa-panel 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-18 16:41-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: mesa_panel/app.py:37
+msgid "Gaming"
+msgstr ""
+
+#: mesa_panel/app.py:41
+msgid "Displays"
+msgstr ""
+
+#: mesa_panel/app.py:46
+msgid "Monitor Info"
+msgstr ""
+
+#: mesa_panel/display_page.py:15
+msgid "Normal"
+msgstr ""
+
+#: mesa_panel/display_page.py:15
+msgid "Rotated left"
+msgstr ""
+
+#: mesa_panel/display_page.py:15
+msgid "Rotated right"
+msgstr ""
+
+#: mesa_panel/display_page.py:15
+msgid "Upside down"
+msgstr ""
+
+#: mesa_panel/display_page.py:70
+msgid "No active displays"
+msgstr ""
+
+#. TRANSLATORS: label drawn on the primary display in the arrangement view
+#: mesa_panel/display_page.py:100
+msgid "Primary"
+msgstr ""
+
+#: mesa_panel/display_page.py:185
+msgid "Drag the displays to match how they sit on your desk."
+msgstr ""
+
+#: mesa_panel/display_page.py:194
+msgid "Make this the primary display"
+msgstr ""
+
+#: mesa_panel/display_page.py:220
+msgid "Details"
+msgstr ""
+
+#: mesa_panel/display_page.py:221
+msgid "Show what this display reports: model, refresh range, HDR, color"
+msgstr ""
+
+#: mesa_panel/display_page.py:223
+msgid "Resolutions…"
+msgstr ""
+
+#: mesa_panel/display_page.py:224
+msgid "Add custom resolutions, or ignore the modes the display reports"
+msgstr ""
+
+#: mesa_panel/display_page.py:231
+msgid "Display"
+msgstr ""
+
+#: mesa_panel/display_page.py:231
+msgid "Enabled"
+msgstr ""
+
+#: mesa_panel/display_page.py:232 mesa_panel/resolutions_dialog.py:128
+msgid "Resolution"
+msgstr ""
+
+#: mesa_panel/display_page.py:232
+msgid "Refresh rate"
+msgstr ""
+
+#: mesa_panel/display_page.py:233
+msgid "Orientation"
+msgstr ""
+
+#: mesa_panel/display_page.py:233
+msgid "Position"
+msgstr ""
+
+#: mesa_panel/display_page.py:241
+msgid "Restore this layout when I log in"
+msgstr ""
+
+#: mesa_panel/display_page.py:245
+msgid "Apply"
+msgstr ""
+
+#: mesa_panel/display_page.py:248
+msgid "Detect displays"
+msgstr ""
+
+#: mesa_panel/display_page.py:250
+msgid "Identify"
+msgstr ""
+
+#: mesa_panel/display_page.py:370
+msgid ""
+"None of your custom resolutions are active on this display, so all modes are "
+"shown."
+msgstr ""
+
+#: mesa_panel/display_page.py:503
+msgid "At least one display must stay on"
+msgstr ""
+
+#: mesa_panel/display_page.py:503
+msgid "Turn on a display before applying."
+msgstr ""
+
+#: mesa_panel/display_page.py:511
+msgid "xrandr could not apply this layout"
+msgstr ""
+
+#: mesa_panel/display_page.py:517
+msgid "Display settings applied"
+msgstr ""
+
+#: mesa_panel/display_page.py:523
+msgid "Could not restore the previous layout"
+msgstr ""
+
+#: mesa_panel/display_page.py:525
+msgid "Display settings reverted"
+msgstr ""
+
+#: mesa_panel/display_page.py:530
+msgid "Keep these display settings?"
+msgstr ""
+
+#: mesa_panel/display_page.py:531
+msgid "Revert"
+msgstr ""
+
+#: mesa_panel/display_page.py:531
+msgid "Keep changes"
+msgstr ""
+
+#: mesa_panel/display_page.py:535
+#, python-brace-format
+msgid "The previous settings will be restored in {n} second."
+msgid_plural "The previous settings will be restored in {n} seconds."
+msgstr[0] ""
+msgstr[1] ""
+
+#: mesa_panel/edid_override_dialog.py:22
+#, python-brace-format
+msgid "System-wide mode list for {output}"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:26 mesa_panel/resolutions_dialog.py:67
+msgid "Close"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:42
+msgid ""
+"Builds a corrected EDID for this display that lists only the modes you tick. "
+"The kernel then reports exactly these modes to X, games and every other "
+"program. The display's name, serial number and colour data are kept."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:64
+#, python-brace-format
+msgid "custom, {standard}"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:65
+msgid "from the display / driver"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:66
+msgid "(current)"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:76
+msgid "Native (preferred) mode"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:86
+msgid "Save EDID file…"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:88
+msgid "Test now"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:89
+msgid "Load it into the kernel until the next reboot (asks for your password)"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:91
+msgid "Undo test"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:93
+msgid "Make permanent…"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:110
+#, python-brace-format
+msgid ""
+"Could not match {output} to a kernel connector, so the override can only be "
+"saved as a file."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:113
+msgid ""
+"pkexec (polkit) is needed to test or install the override; you can still "
+"save the file."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:175
+#, python-brace-format
+msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:201
+msgid "Authorization was cancelled."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:205 mesa_panel/monitors_page.py:132
+msgid "Save EDID"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:206 mesa_panel/gaming_page.py:123
+#: mesa_panel/gaming_page.py:397 mesa_panel/monitors_page.py:133
+msgid "Cancel"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:206 mesa_panel/monitors_page.py:133
+msgid "Save"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:215
+#, python-brace-format
+msgid "Saved {path}"
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:231
+msgid ""
+"Loaded until reboot. The display was re-detected; check the Displays page or "
+"run xrandr. Use “Undo test” to go back."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:238
+msgid "The display's own EDID is back."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:256
+#, python-brace-format
+msgid ""
+"Installed {file}.\n"
+"\n"
+"To load it at every boot, add this kernel parameter:\n"
+"    {param}\n"
+"\n"
+"GRUB: add it to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub, then run\n"
+"    sudo grub-mkconfig -o /boot/grub/grub.cfg\n"
+"systemd-boot: add it to the “options” line of your entry in /boot/loader/"
+"entries/.\n"
+"\n"
+"Arch loads the graphics driver early (the kms hook), so also put the file in "
+"the initramfs: add\n"
+"    FILES=({file})\n"
+"to /etc/mkinitcpio.conf, then run\n"
+"    sudo mkinitcpio -P\n"
+"\n"
+"Reboot afterwards. To undo, remove the parameter and the FILES entry, "
+"rebuild, and reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:271
+msgid "Kernel parameter copied"
+msgstr ""
+
+#. TRANSLATORS: slider position meaning the feature is forced off
+#: mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:36
+msgid "Off"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:18
+msgid "Multisample (alpha-to-coverage)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:19
+msgid "Supersample (best quality)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:22
+msgid "DXVK (default)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:23
+msgid "WineD3D (needed for forced MSAA)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:26
+msgid "Application decides"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:27
+msgid "Always off"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:28
+msgid "Always on"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:29
+msgid "Fast sync (no tearing, uncapped; Vulkan)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:30
+msgid "Adaptive (tears below refresh rate; Vulkan)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:36
+#, python-brace-format
+msgid "{n}×"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:66
+msgid "Use application settings"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:122
+msgid "Add Steam game"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397
+#: mesa_panel/resolutions_dialog.py:152
+msgid "Add"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:129
+msgid "Search installed games"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:165
+msgid "Profile:"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:170
+msgid "Add game"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:172
+msgid "Steam game…"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:172
+msgid "Program or script…"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:179
+msgid "Delete"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:186
+msgid "Game"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:190
+msgid ""
+"Comma-separated. steam:APPID matches a Steam game; any other entry matches "
+"the file name of the program or of one of its arguments (e.g. game.exe under "
+"Proton)."
+msgstr ""
+
+#: mesa_panel/gaming_page.py:193
+msgid "Optional: command to start the game from here"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:194
+msgid "Launch"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:197
+msgid "Name"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:199
+msgid "Applies to"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:201
+msgid "Command"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:211
+msgid "Anti-Aliasing"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:212
+msgid "Multisampling"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:213
+msgid "Transparency"
+msgstr ""
+
+#. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
+#: mesa_panel/gaming_page.py:220
+msgid "Direct3D 8/9 games"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:226
+msgid ""
+"Forced multisampling works in OpenGL games and, with WineD3D selected, in "
+"Direct3D 8/9 games that draw straight to the screen (mostly older titles). "
+"DXVK cannot force it. Games with post-processing or deferred rendering "
+"ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 "
+"games running through DXVK. Transparency AA smooths alpha-tested foliage and "
+"fences while multisampling is active; in shader-based games, including "
+"WineD3D, both modes supersample just those surfaces."
+msgstr ""
+
+#: mesa_panel/gaming_page.py:236
+msgid "Texture Filtering"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:237
+msgid "Anisotropic filtering"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:238
+msgid "Works in OpenGL, Vulkan and Proton (DXVK / VKD3D-Proton) games."
+msgstr ""
+
+#: mesa_panel/gaming_page.py:242
+msgid "Frame Rate"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:243
+msgid "Vertical sync"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:249
+msgid "Limit frame rate to"
+msgstr ""
+
+#. TRANSLATORS: frames per second, shown after the frame limit number
+#: mesa_panel/gaming_page.py:256
+msgid "FPS"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:257
+msgid "Frame limiter"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:273
+msgid ""
+"Settings apply to games started through the panel's launcher. For Steam "
+"games, use these launch options:"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:278
+msgid "Copy launch options"
+msgstr ""
+
+#. TRANSLATORS: {program} is glxgears or vkcube
+#: mesa_panel/gaming_page.py:287
+#, python-brace-format
+msgid "Test with {program}"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:305
+msgid "Global settings (all games)"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:373
+msgid "Saved"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:375
+#, python-brace-format
+msgid "Could not save profiles: {error}"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:381
+msgid "No Steam games found"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:382
+msgid ""
+"No installed Steam games were found in the usual Steam folders. You can "
+"still add a game with “Program or script…” and type steam:APPID into "
+"“Applies to”."
+msgstr ""
+
+#: mesa_panel/gaming_page.py:395
+msgid "Choose the game's executable"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:413
+#, python-brace-format
+msgid "Delete the profile “{name}”?"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:427
+msgid "Could not start the program"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:436
+msgid "The command is not valid"
+msgstr ""
+
+#: mesa_panel/gaming_page.py:447
+msgid "Launch options copied"
+msgstr ""
+
+#. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1 (kernel)"
+#: mesa_panel/monitor_info.py:82
+#, python-brace-format
+msgid "{output} (kernel)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:234
+msgid "Connection"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:206
+msgid "Output"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:86
+msgid "This display did not report any information."
+msgstr ""
+
+#: mesa_panel/monitor_info.py:87
+msgid "Not reported"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:91
+#, python-brace-format
+msgid "Model year {year}"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:93
+#, python-brace-format
+msgid "Week {week}, {year}"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:96
+#, python-brace-format
+msgid "version {version}"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:98
+#, python-brace-format
+msgid "{list} extension"
+msgid_plural "{list} extensions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: mesa_panel/monitor_info.py:101
+msgid "(bad checksum)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:103
+msgid "Model"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:104
+msgid "Manufacturer"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:105
+msgid "Product code"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:106
+msgid "Serial number"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:107
+msgid "Manufactured"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:110
+msgid "Identity"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:120
+msgid "interlaced"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:121
+msgid "Native resolution"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:124
+msgid "Screen size"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:124
+#, python-brace-format
+msgid "{inches}″ ({width} × {height} mm)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:127
+msgid "Pixel density"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:127
+#, python-brace-format
+msgid "{ppi} PPI"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:128
+#, python-brace-format
+msgid "{n} bit per color"
+msgid_plural "{n} bits per color"
+msgstr[0] ""
+msgstr[1] ""
+
+#: mesa_panel/monitor_info.py:133
+#, python-brace-format
+msgid "(driver limit: {limit}, adjustable {range})"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:135
+#, python-brace-format
+msgid "(driver limit: {limit})"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:136
+msgid "Color depth"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:138
+msgid "Gamma"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:139
+msgid "Panel"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:147 mesa_panel/monitor_info.py:154
+msgid "Highest refresh rate"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:149 mesa_panel/monitor_info.py:157
+msgid "Highest resolution"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:159
+msgid "Supported refresh range"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:161
+msgid "Horizontal scan range"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:164
+msgid "Supported"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:166
+msgid "Not available on this connection"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:171
+#, python-brace-format
+msgid "(FreeSync {low}–{high} Hz)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:172
+#, python-brace-format
+msgid "(FreeSync up to {high} Hz)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:173
+msgid "Variable refresh rate"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:175
+msgid "Max pixel clock"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:176
+msgid "Refresh & Sync"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:185
+msgid "Not supported"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:187
+#, python-brace-format
+msgid "{nits} cd/m² peak"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:189
+#, python-brace-format
+msgid "{nits} full-frame"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:191
+#, python-brace-format
+msgid "{nits} minimum"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:192
+msgid "Brightness (HDR metadata)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:195
+msgid "Gamut (EDID primaries)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:198
+msgid "White point"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:200
+msgid "Wide color signaling"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:202
+msgid "Driver colorspace"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:203
+msgid "Color & HDR"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:208
+msgid "Current mode"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:210
+msgid "Input type"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:211
+msgid "Digital"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:211
+msgid "Analog (VGA)"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:214
+msgid "HDMI 2.1 capable"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:216
+msgid "HDMI 2.0 capable"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:219
+msgid "HDMI support"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:221
+msgid "Max TMDS clock"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:224
+msgid "HDMI FRL bandwidth"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:225
+#, python-brace-format
+msgid "{rate} Gbps × {lanes} lane ({total} Gbps)"
+msgid_plural "{rate} Gbps × {lanes} lanes ({total} Gbps)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: mesa_panel/monitor_info.py:228
+msgid "Audio"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:228
+msgid "Yes"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:228
+msgid "No"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:230
+msgid "RGB only"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:232
+msgid "standby"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:232
+msgid "suspend"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:232
+msgid "off"
+msgstr ""
+
+#: mesa_panel/monitor_info.py:233
+msgid "Power saving"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:17
+msgid "Information reported by each connected display (EDID) and its driver."
+msgstr ""
+
+#: mesa_panel/monitors_page.py:21
+msgid "Refresh"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:38
+#, python-brace-format
+msgid "Could not read monitor information: {error}"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:40
+msgid "No connected displays with readable information were found."
+msgstr ""
+
+#: mesa_panel/monitors_page.py:64
+msgid "Copy details"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:68
+msgid "More copy options"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:70
+msgid "Copy in English (for bug reports)"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:78
+msgid "Save EDID…"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:79
+msgid "Save the raw EDID, e.g. for edid-decode or a bug report"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:129
+msgid "Monitor details copied"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:143
+msgid "EDID saved"
+msgstr ""
+
+#: mesa_panel/monitors_page.py:145
+msgid "Could not save the EDID"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:13
+msgid "CVT – standard blanking (CRT style)"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:14
+msgid "CVT – reduced blanking (LCD)"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:15
+msgid "CVT – reduced blanking v2 (exact refresh rate)"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:16
+msgid "GTF – classic CRT formula"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:17
+msgid "DMT – VESA standard timings"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:18
+msgid "Manual modeline"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:21
+msgid "manual"
+msgstr ""
+
+#. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz (custom, DMT)"
+#: mesa_panel/resolutions_dialog.py:40
+#, python-brace-format
+msgid "{w}x{h} @ {hz} (custom, {standard})"
+msgstr ""
+
+#. TRANSLATORS: a resolution the user created, e.g. "1024x768 (custom, DMT)"
+#: mesa_panel/resolutions_dialog.py:43
+#, python-brace-format
+msgid "{w}x{h} (custom, {standard})"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:45
+#, python-brace-format
+msgid "{mode}  (recommended)"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:61
+#, python-brace-format
+msgid "Resolutions for {output}"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:80
+msgid "Offer only my resolutions for this display"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:86
+msgid ""
+"Hides every other mode: the ones the display reports in its EDID and the "
+"scaled modes some drivers add (modesetting does this on connectors that "
+"support scaling). Custom resolutions are re-created automatically when you "
+"log in or open this panel."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:92
+msgid "My resolutions"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:102
+msgid "Add a resolution"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:119
+msgid "Classic modes"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:135
+msgid "Timing"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:139
+msgid "Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:140
+msgid "Modeline"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:159
+msgid "For all programs"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:162
+msgid ""
+"The options above only change what this panel offers. To hide unwanted modes "
+"from games and every other program, give the kernel a corrected EDID."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:164
+msgid "System-wide mode list…"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:223
+msgid "No custom resolutions yet."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:240
+msgid "Remove"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:258
+#, python-brace-format
+msgid "VESA DMT has no timing for {w} × {h}. Pick another timing standard."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:275
+#, python-brace-format
+msgid "Pixel clock {clock} MHz · horizontal {hfreq} kHz · refresh {hz} Hz"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:279
+msgid ""
+"Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh "
+"rate."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:282
+#, python-brace-format
+msgid ""
+"Outside the {low}–{high} Hz range the display reports; it may show no "
+"picture."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:285
+#, python-brace-format
+msgid "Above the display's reported maximum pixel clock ({clock} MHz)."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:301
+msgid "That resolution is already in the list"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:307
+msgid "xrandr could not add this resolution"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:311
+msgid "The X server did not keep this resolution"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:312
+#, python-brace-format
+msgid ""
+"xrandr accepted {mode}, but it is not in the mode list of {output}. The "
+"display driver may have rejected it."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:318
+msgid "Resolution added. Pick it on the Displays page and press Apply."
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:322
+msgid "This resolution is in use"
+msgstr ""
+
+#: mesa_panel/resolutions_dialog.py:323
+msgid "Switch the display to another resolution before removing it."
+msgstr ""
+
+#. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
+#: mesa_panel/xrandr.py:50
+#, python-brace-format
+msgid "{output} (off)"
+msgstr ""
+
+#: mesa_panel/xrandr.py:62
+msgid "The xrandr command was not found. Install the xorg-xrandr package."
+msgstr ""
+
+#: mesa_panel/xrandr.py:65
+msgid ""
+"You are in a Wayland session. xrandr only controls X11 outputs, so use your "
+"desktop's display settings here."
+msgstr ""
+
+#: mesa_panel/xrandr.py:68
+msgid "No X11 display found (DISPLAY is not set)."
+msgstr ""
+
+#: data/mesa-panel.desktop.in:4
+msgid "Mesa Panel"
+msgstr ""
+
+#: data/mesa-panel.desktop.in:5
+msgid "Graphics Control Panel"
+msgstr ""
+
+#: data/mesa-panel.desktop.in:6
+msgid "Per-game anti-aliasing, filtering, VSync and display settings"
+msgstr ""
+
+#: data/mesa-panel.desktop.in:11
+msgid ""
+"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;"
+"xrandr;"
+msgstr ""

@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# make
+build/
+
+# makepkg
+pkg/
+src/
+*.pkg.tar.*
+*.tar.gz
