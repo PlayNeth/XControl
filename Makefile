@@ -79,6 +79,8 @@ check:
 	$(PYTHON) tests/check_gettext.py
 	$(PYTHON) tests/check_modelines.py
 	$(PYTHON) tests/check_edid_override.py
+	$(PYTHON) tests/check_override_status.py
+	$(PYTHON) tests/check_output_names.py
 	sh -n data/mesa-panel-edid-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 

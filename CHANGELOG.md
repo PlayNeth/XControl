@@ -2,6 +2,18 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.5.1 (2026-10-18)
+
+**Show EDID override status and keep settings across X driver switches**
+
+- Show at the top of the System-wide mode list dialog whether the kernel is using the
+  override, and if not, what is missing (kernel parameter, initramfs entry, rebuild, reboot)
+- Point out when the kernel parameter names the wrong file or connector
+- Move saved custom resolutions, "only my resolutions" choices and the saved layout to the
+  new output names when switching between amdgpu/ati and modesetting X drivers
+- Tell users who already set up an override to rebuild the initramfs after reinstalling it
+- Add tests for the override status check and output name mapping
+
 ## 0.5.0 (2026-10-18)
 
 **Initial version of Mesa Panel**

@@ -144,9 +144,22 @@ Buttons:
   mkinitcpio `FILES=` entry, because the kms hook loads the GPU driver from the
   initramfs. The panel never edits your bootloader or initramfs configuration itself.
 
+The top of the dialog says whether the kernel is actually using the override, and if not,
+what's missing: the kernel parameter (or one naming the wrong connector), the initramfs
+`FILES=` entry, an initramfs built before the file last changed, or simply a pending
+reboot. **Test now** always lasts only until the next reboot.
+
 The only code that runs as root is `mesa-panel-edid-helper`. It validates every
 argument, accepts only real EDID files, and writes only to the connector's debugfs
 override or `/usr/lib/firmware/edid/mesa-panel-*.bin`.
+
+## Switching X drivers
+
+The same connector has a different X name depending on the driver: `DisplayPort-0` and
+`HDMI-A-0` with xf86-video-amdgpu or xf86-video-ati, `DP-1` and `HDMI-1` with modesetting.
+Custom resolutions, the "only my resolutions" choice and the saved layout are stored under
+the X name, so when an output disappears and another appears on the same kernel connector,
+the panel moves the saved settings over (on the Displays page and at login).
 
 ## Monitor Info
 

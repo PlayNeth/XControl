@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.5.0\n"
+"Project-Id-Version: mesa-panel 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:41-0300\n"
+"POT-Creation-Date: 2026-10-18 17:27-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -68,8 +68,7 @@ msgstr "Detalhes"
 
 #: mesa_panel/display_page.py:221
 msgid "Show what this display reports: model, refresh range, HDR, color"
-msgstr ""
-"Mostrar o que esta tela informa: modelo, faixa de atualização, HDR, cores"
+msgstr "Mostrar o que esta tela informa: modelo, faixa de atualização, HDR, cores"
 
 #: mesa_panel/display_page.py:223
 msgid "Resolutions…"
@@ -77,8 +76,7 @@ msgstr "Resoluções…"
 
 #: mesa_panel/display_page.py:224
 msgid "Add custom resolutions, or ignore the modes the display reports"
-msgstr ""
-"Adicionar resoluções personalizadas ou ignorar os modos que a tela informa"
+msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela informa"
 
 #: mesa_panel/display_page.py:231
 msgid "Display"
@@ -120,172 +118,189 @@ msgstr "Detectar telas"
 msgid "Identify"
 msgstr "Identificar"
 
-#: mesa_panel/display_page.py:370
-msgid ""
-"None of your custom resolutions are active on this display, so all modes are"
-" shown."
-msgstr ""
-"Nenhuma das suas resoluções personalizadas está ativa nesta tela, por isso "
-"todos os modos são mostrados."
+#: mesa_panel/display_page.py:275
+#, python-brace-format
+msgid "Saved settings moved to the new output names: {names}"
+msgstr "Configurações salvas movidas para os novos nomes de saída: {names}"
 
-#: mesa_panel/display_page.py:503
+#: mesa_panel/display_page.py:375
+msgid "None of your custom resolutions are active on this display, so all modes are shown."
+msgstr "Nenhuma das suas resoluções personalizadas está ativa nesta tela, por isso todos os modos são mostrados."
+
+#: mesa_panel/display_page.py:508
 msgid "At least one display must stay on"
 msgstr "Pelo menos uma tela precisa ficar ligada"
 
-#: mesa_panel/display_page.py:503
+#: mesa_panel/display_page.py:508
 msgid "Turn on a display before applying."
 msgstr "Ligue uma tela antes de aplicar."
 
-#: mesa_panel/display_page.py:511
+#: mesa_panel/display_page.py:516
 msgid "xrandr could not apply this layout"
 msgstr "O xrandr não conseguiu aplicar este layout"
 
-#: mesa_panel/display_page.py:517
+#: mesa_panel/display_page.py:522
 msgid "Display settings applied"
 msgstr "Configurações de tela aplicadas"
 
-#: mesa_panel/display_page.py:523
+#: mesa_panel/display_page.py:528
 msgid "Could not restore the previous layout"
 msgstr "Não foi possível restaurar o layout anterior"
 
-#: mesa_panel/display_page.py:525
+#: mesa_panel/display_page.py:530
 msgid "Display settings reverted"
 msgstr "Configurações de tela revertidas"
 
-#: mesa_panel/display_page.py:530
+#: mesa_panel/display_page.py:535
 msgid "Keep these display settings?"
 msgstr "Manter estas configurações de tela?"
 
-#: mesa_panel/display_page.py:531
+#: mesa_panel/display_page.py:536
 msgid "Revert"
 msgstr "Reverter"
 
-#: mesa_panel/display_page.py:531
+#: mesa_panel/display_page.py:536
 msgid "Keep changes"
 msgstr "Manter alterações"
 
-#: mesa_panel/display_page.py:535
+#: mesa_panel/display_page.py:540
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
 msgstr[0] "As configurações anteriores serão restauradas em {n} segundo."
 msgstr[1] "As configurações anteriores serão restauradas em {n} segundos."
 
-#: mesa_panel/edid_override_dialog.py:22
+#: mesa_panel/edid_override_dialog.py:23
 #, python-brace-format
 msgid "System-wide mode list for {output}"
 msgstr "Lista de modos do sistema para {output}"
 
-#: mesa_panel/edid_override_dialog.py:26 mesa_panel/resolutions_dialog.py:67
+#: mesa_panel/edid_override_dialog.py:27 mesa_panel/resolutions_dialog.py:67
 msgid "Close"
 msgstr "Fechar"
 
-#: mesa_panel/edid_override_dialog.py:42
-msgid ""
-"Builds a corrected EDID for this display that lists only the modes you tick."
-" The kernel then reports exactly these modes to X, games and every other "
-"program. The display's name, serial number and colour data are kept."
-msgstr ""
-"Cria um EDID corrigido para esta tela que lista só os modos que você marcar."
-" O kernel passa a informar exatamente esses modos ao X, aos jogos e a todos "
-"os outros programas. O nome, o número de série e os dados de cor da tela são"
-" mantidos."
+#: mesa_panel/edid_override_dialog.py:43
+msgid "Builds a corrected EDID for this display that lists only the modes you tick. The kernel then reports exactly these modes to X, games and every other program. The display's name, serial number and colour data are kept."
+msgstr "Cria um EDID corrigido para esta tela que lista só os modos que você marcar. O kernel passa a informar exatamente esses modos ao X, aos jogos e a todos os outros programas. O nome, o número de série e os dados de cor da tela são mantidos."
 
-#: mesa_panel/edid_override_dialog.py:64
+#: mesa_panel/edid_override_dialog.py:71
 #, python-brace-format
 msgid "custom, {standard}"
 msgstr "personalizado, {standard}"
 
-#: mesa_panel/edid_override_dialog.py:65
+#: mesa_panel/edid_override_dialog.py:72
 msgid "from the display / driver"
 msgstr "da tela / driver"
 
-#: mesa_panel/edid_override_dialog.py:66
+#: mesa_panel/edid_override_dialog.py:73
 msgid "(current)"
 msgstr "(atual)"
 
-#: mesa_panel/edid_override_dialog.py:76
+#: mesa_panel/edid_override_dialog.py:83
 msgid "Native (preferred) mode"
 msgstr "Modo nativo (preferido)"
 
-#: mesa_panel/edid_override_dialog.py:86
+#: mesa_panel/edid_override_dialog.py:93
 msgid "Save EDID file…"
 msgstr "Salvar arquivo EDID…"
 
-#: mesa_panel/edid_override_dialog.py:88
+#: mesa_panel/edid_override_dialog.py:95
 msgid "Test now"
 msgstr "Testar agora"
 
-#: mesa_panel/edid_override_dialog.py:89
+#: mesa_panel/edid_override_dialog.py:96
 msgid "Load it into the kernel until the next reboot (asks for your password)"
 msgstr "Carregar no kernel até a próxima reinicialização (pede sua senha)"
 
-#: mesa_panel/edid_override_dialog.py:91
+#: mesa_panel/edid_override_dialog.py:98
 msgid "Undo test"
 msgstr "Desfazer teste"
 
-#: mesa_panel/edid_override_dialog.py:93
+#: mesa_panel/edid_override_dialog.py:100
 msgid "Make permanent…"
 msgstr "Tornar permanente…"
 
-#: mesa_panel/edid_override_dialog.py:110
+#: mesa_panel/edid_override_dialog.py:117
 #, python-brace-format
-msgid ""
-"Could not match {output} to a kernel connector, so the override can only be "
-"saved as a file."
-msgstr ""
-"Não foi possível associar {output} a um conector do kernel, então o EDID só "
-"pode ser salvo como arquivo."
+msgid "Could not match {output} to a kernel connector, so the override can only be saved as a file."
+msgstr "Não foi possível associar {output} a um conector do kernel, então o EDID só pode ser salvo como arquivo."
 
-#: mesa_panel/edid_override_dialog.py:113
-msgid ""
-"pkexec (polkit) is needed to test or install the override; you can still "
-"save the file."
-msgstr ""
-"O pkexec (polkit) é necessário para testar ou instalar o EDID; você ainda "
-"pode salvar o arquivo."
+#: mesa_panel/edid_override_dialog.py:120
+msgid "pkexec (polkit) is needed to test or install the override; you can still save the file."
+msgstr "O pkexec (polkit) é necessário para testar ou instalar o EDID; você ainda pode salvar o arquivo."
 
-#: mesa_panel/edid_override_dialog.py:175
+#: mesa_panel/edid_override_dialog.py:183
 #, python-brace-format
 msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
-msgstr ""
-"{count} modos · {blocks} blocos EDID · faixa de atualização {low}–{high} Hz"
+msgstr "{count} modos · {blocks} blocos EDID · faixa de atualização {low}–{high} Hz"
 
-#: mesa_panel/edid_override_dialog.py:201
+#: mesa_panel/edid_override_dialog.py:205
+msgid "The kernel is using the installed override, and it loads at every boot."
+msgstr "O kernel está usando a substituição instalada, e ela é carregada em toda inicialização."
+
+#: mesa_panel/edid_override_dialog.py:206
+#, python-brace-format
+msgid "The kernel is using the installed override, but only until the next reboot: the kernel parameter {param} is missing."
+msgstr "O kernel está usando a substituição instalada, mas só até a próxima reinicialização: falta o parâmetro de kernel {param}."
+
+#: mesa_panel/edid_override_dialog.py:208
+#, python-brace-format
+msgid "No permanent override is installed for {connector}. “Test now” lasts only until the next reboot."
+msgstr "Nenhuma substituição permanente instalada para {connector}. “Testar agora” vale só até a próxima reinicialização."
+
+#: mesa_panel/edid_override_dialog.py:210
+#, python-brace-format
+msgid "An override is installed, but the kernel isn't using it because the kernel parameter {param} is missing. Add it and reboot."
+msgstr "Há uma substituição instalada, mas o kernel não a usa porque falta o parâmetro de kernel {param}. Adicione-o e reinicie."
+
+#: mesa_panel/edid_override_dialog.py:212
+#, python-brace-format
+msgid "An override is installed, but the kernel parameter is {current} instead of {param}. Fix it and reboot."
+msgstr "Há uma substituição instalada, mas o parâmetro de kernel é {current} em vez de {param}. Corrija-o e reinicie."
+
+#: mesa_panel/edid_override_dialog.py:214
+#, python-brace-format
+msgid "The override is installed and the kernel parameter is set, but the file is not in the initramfs, so the graphics driver can't read it at boot. Add FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."
+msgstr "A substituição está instalada e o parâmetro de kernel está definido, mas o arquivo não está no initramfs, então o driver de vídeo não consegue lê-lo na inicialização. Adicione FILES=({file}) ao /etc/mkinitcpio.conf, execute “sudo mkinitcpio -P” e reinicie."
+
+#: mesa_panel/edid_override_dialog.py:217
+msgid "The override file changed after the initramfs was built, so the old one is still loaded at boot. Run “sudo mkinitcpio -P” and reboot."
+msgstr "O arquivo de substituição mudou depois que o initramfs foi gerado, então o antigo ainda é carregado na inicialização. Execute “sudo mkinitcpio -P” e reinicie."
+
+#: mesa_panel/edid_override_dialog.py:219
+msgid "The override is installed and set up, but the kernel isn't using it. If you haven't rebooted since, reboot. Otherwise “sudo dmesg | grep -i edid” shows why."
+msgstr "A substituição está instalada e configurada, mas o kernel não a está usando. Se você ainda não reiniciou desde então, reinicie. Caso contrário, “sudo dmesg | grep -i edid” mostra o motivo."
+
+#: mesa_panel/edid_override_dialog.py:246
 msgid "Authorization was cancelled."
 msgstr "A autorização foi cancelada."
 
-#: mesa_panel/edid_override_dialog.py:205 mesa_panel/monitors_page.py:132
+#: mesa_panel/edid_override_dialog.py:250 mesa_panel/monitors_page.py:132
 msgid "Save EDID"
 msgstr "Salvar EDID"
 
-#: mesa_panel/edid_override_dialog.py:206 mesa_panel/gaming_page.py:123
-#: mesa_panel/gaming_page.py:397 mesa_panel/monitors_page.py:133
+#: mesa_panel/edid_override_dialog.py:251 mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397 mesa_panel/monitors_page.py:133
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: mesa_panel/edid_override_dialog.py:206 mesa_panel/monitors_page.py:133
+#: mesa_panel/edid_override_dialog.py:251 mesa_panel/monitors_page.py:133
 msgid "Save"
 msgstr "Salvar"
 
-#: mesa_panel/edid_override_dialog.py:215
+#: mesa_panel/edid_override_dialog.py:260
 #, python-brace-format
 msgid "Saved {path}"
 msgstr "Salvo em {path}"
 
-#: mesa_panel/edid_override_dialog.py:231
-msgid ""
-"Loaded until reboot. The display was re-detected; check the Displays page or"
-" run xrandr. Use “Undo test” to go back."
-msgstr ""
-"Carregado até a próxima reinicialização. A tela foi detectada de novo; "
-"confira a página Telas ou rode o xrandr. Use “Desfazer teste” para voltar."
+#: mesa_panel/edid_override_dialog.py:277
+msgid "Loaded until reboot. The display was re-detected; check the Displays page or run xrandr. Use “Undo test” to go back."
+msgstr "Carregado até a próxima reinicialização. A tela foi detectada de novo; confira a página Telas ou rode o xrandr. Use “Desfazer teste” para voltar."
 
-#: mesa_panel/edid_override_dialog.py:238
+#: mesa_panel/edid_override_dialog.py:284
 msgid "The display's own EDID is back."
 msgstr "O EDID original da tela voltou."
 
-#: mesa_panel/edid_override_dialog.py:256
+#: mesa_panel/edid_override_dialog.py:303
 #, python-brace-format
 msgid ""
 "Installed {file}.\n"
@@ -302,7 +317,9 @@ msgid ""
 "to /etc/mkinitcpio.conf, then run\n"
 "    sudo mkinitcpio -P\n"
 "\n"
-"Reboot afterwards. To undo, remove the parameter and the FILES entry, rebuild, and reboot."
+"Reboot afterwards. If you had already set this up, the initramfs still holds the old file: run “sudo mkinitcpio -P” and reboot.\n"
+"\n"
+"To undo, remove the parameter and the FILES entry, rebuild, and reboot."
 msgstr ""
 "{file} instalado.\n"
 "\n"
@@ -318,9 +335,11 @@ msgstr ""
 "ao /etc/mkinitcpio.conf e depois rode\n"
 "    sudo mkinitcpio -P\n"
 "\n"
-"Reinicie em seguida. Para desfazer, remova o parâmetro e a entrada FILES, recrie o initramfs e reinicie."
+"Reinicie em seguida. Se você já tinha configurado isso antes, o initramfs ainda contém o arquivo antigo: execute “sudo mkinitcpio -P” e reinicie.\n"
+"\n"
+"Para desfazer, remova o parâmetro e a entrada FILES, recrie o initramfs e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:271
+#: mesa_panel/edid_override_dialog.py:321
 msgid "Kernel parameter copied"
 msgstr "Parâmetro do kernel copiado"
 
@@ -378,8 +397,7 @@ msgstr "Usar configurações do aplicativo"
 msgid "Add Steam game"
 msgstr "Adicionar jogo da Steam"
 
-#: mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397
-#: mesa_panel/resolutions_dialog.py:152
+#: mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397 mesa_panel/resolutions_dialog.py:152
 msgid "Add"
 msgstr "Adicionar"
 
@@ -412,14 +430,8 @@ msgid "Game"
 msgstr "Jogo"
 
 #: mesa_panel/gaming_page.py:190
-msgid ""
-"Comma-separated. steam:APPID matches a Steam game; any other entry matches "
-"the file name of the program or of one of its arguments (e.g. game.exe under"
-" Proton)."
-msgstr ""
-"Separado por vírgulas. steam:APPID corresponde a um jogo da Steam; qualquer "
-"outra entrada corresponde ao nome do arquivo do programa ou de um dos seus "
-"argumentos (por exemplo, game.exe no Proton)."
+msgid "Comma-separated. steam:APPID matches a Steam game; any other entry matches the file name of the program or of one of its arguments (e.g. game.exe under Proton)."
+msgstr "Separado por vírgulas. steam:APPID corresponde a um jogo da Steam; qualquer outra entrada corresponde ao nome do arquivo do programa ou de um dos seus argumentos (por exemplo, game.exe no Proton)."
 
 #: mesa_panel/gaming_page.py:193
 msgid "Optional: command to start the game from here"
@@ -453,31 +465,14 @@ msgstr "Multiamostragem"
 msgid "Transparency"
 msgstr "Transparência"
 
-#. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9)
-#. games
+#. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
 #: mesa_panel/gaming_page.py:220
 msgid "Direct3D 8/9 games"
 msgstr "Jogos Direct3D 8/9"
 
 #: mesa_panel/gaming_page.py:226
-msgid ""
-"Forced multisampling works in OpenGL games and, with WineD3D selected, in "
-"Direct3D 8/9 games that draw straight to the screen (mostly older titles). "
-"DXVK cannot force it. Games with post-processing or deferred rendering "
-"ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 "
-"games running through DXVK. Transparency AA smooths alpha-tested foliage and"
-" fences while multisampling is active; in shader-based games, including "
-"WineD3D, both modes supersample just those surfaces."
-msgstr ""
-"A multiamostragem forçada funciona em jogos OpenGL e, com o WineD3D "
-"selecionado, em jogos Direct3D 8/9 que desenham direto na tela "
-"(principalmente títulos mais antigos). O DXVK não consegue forçá-la. Jogos "
-"com pós-processamento ou renderização diferida a ignoram; use as opções de "
-"AA do próprio jogo. Desligado também desativa o MSAA em jogos Direct3D 11 "
-"executados pelo DXVK. A suavização de transparência suaviza folhagens e "
-"cercas com teste alfa enquanto a multiamostragem estiver ativa; em jogos "
-"baseados em shaders, incluindo o WineD3D, os dois modos aplicam "
-"superamostragem só nessas superfícies."
+msgid "Forced multisampling works in OpenGL games and, with WineD3D selected, in Direct3D 8/9 games that draw straight to the screen (mostly older titles). DXVK cannot force it. Games with post-processing or deferred rendering ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 games running through DXVK. Transparency AA smooths alpha-tested foliage and fences while multisampling is active; in shader-based games, including WineD3D, both modes supersample just those surfaces."
+msgstr "A multiamostragem forçada funciona em jogos OpenGL e, com o WineD3D selecionado, em jogos Direct3D 8/9 que desenham direto na tela (principalmente títulos mais antigos). O DXVK não consegue forçá-la. Jogos com pós-processamento ou renderização diferida a ignoram; use as opções de AA do próprio jogo. Desligado também desativa o MSAA em jogos Direct3D 11 executados pelo DXVK. A suavização de transparência suaviza folhagens e cercas com teste alfa enquanto a multiamostragem estiver ativa; em jogos baseados em shaders, incluindo o WineD3D, os dois modos aplicam superamostragem só nessas superfícies."
 
 #: mesa_panel/gaming_page.py:236
 msgid "Texture Filtering"
@@ -513,12 +508,8 @@ msgid "Frame limiter"
 msgstr "Limitador de quadros"
 
 #: mesa_panel/gaming_page.py:273
-msgid ""
-"Settings apply to games started through the panel's launcher. For Steam "
-"games, use these launch options:"
-msgstr ""
-"As configurações valem para jogos iniciados pelo lançador do painel. Para "
-"jogos da Steam, use estas opções de inicialização:"
+msgid "Settings apply to games started through the panel's launcher. For Steam games, use these launch options:"
+msgstr "As configurações valem para jogos iniciados pelo lançador do painel. Para jogos da Steam, use estas opções de inicialização:"
 
 #: mesa_panel/gaming_page.py:278
 msgid "Copy launch options"
@@ -548,14 +539,8 @@ msgid "No Steam games found"
 msgstr "Nenhum jogo da Steam encontrado"
 
 #: mesa_panel/gaming_page.py:382
-msgid ""
-"No installed Steam games were found in the usual Steam folders. You can "
-"still add a game with “Program or script…” and type steam:APPID into "
-"“Applies to”."
-msgstr ""
-"Nenhum jogo da Steam instalado foi encontrado nas pastas habituais da Steam."
-" Você ainda pode adicionar um jogo com “Programa ou script…” e digitar "
-"steam:APPID em “Aplica-se a”."
+msgid "No installed Steam games were found in the usual Steam folders. You can still add a game with “Program or script…” and type steam:APPID into “Applies to”."
+msgstr "Nenhum jogo da Steam instalado foi encontrado nas pastas habituais da Steam. Você ainda pode adicionar um jogo com “Programa ou script…” e digitar steam:APPID em “Aplica-se a”."
 
 #: mesa_panel/gaming_page.py:395
 msgid "Choose the game's executable"
@@ -578,8 +563,7 @@ msgstr "O comando não é válido"
 msgid "Launch options copied"
 msgstr "Opções de inicialização copiadas"
 
-#. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1
-#. (kernel)"
+#. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1 (kernel)"
 #: mesa_panel/monitor_info.py:82
 #, python-brace-format
 msgid "{output} (kernel)"
@@ -905,8 +889,7 @@ msgstr "Salvar EDID…"
 
 #: mesa_panel/monitors_page.py:79
 msgid "Save the raw EDID, e.g. for edid-decode or a bug report"
-msgstr ""
-"Salvar o EDID bruto, por exemplo para o edid-decode ou um relatório de bug"
+msgstr "Salvar o EDID bruto, por exemplo para o edid-decode ou um relatório de bug"
 
 #: mesa_panel/monitors_page.py:129
 msgid "Monitor details copied"
@@ -948,8 +931,7 @@ msgstr "Modeline manual"
 msgid "manual"
 msgstr "manual"
 
-#. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz
-#. (custom, DMT)"
+#. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz (custom, DMT)"
 #: mesa_panel/resolutions_dialog.py:40
 #, python-brace-format
 msgid "{w}x{h} @ {hz} (custom, {standard})"
@@ -976,16 +958,8 @@ msgid "Offer only my resolutions for this display"
 msgstr "Oferecer só as minhas resoluções para esta tela"
 
 #: mesa_panel/resolutions_dialog.py:86
-msgid ""
-"Hides every other mode: the ones the display reports in its EDID and the "
-"scaled modes some drivers add (modesetting does this on connectors that "
-"support scaling). Custom resolutions are re-created automatically when you "
-"log in or open this panel."
-msgstr ""
-"Oculta todos os outros modos: os que a tela informa no EDID e os modos "
-"escalados que alguns drivers adicionam (o modesetting faz isso em conectores"
-" com suporte a escala). As resoluções personalizadas são recriadas "
-"automaticamente quando você inicia a sessão ou abre este painel."
+msgid "Hides every other mode: the ones the display reports in its EDID and the scaled modes some drivers add (modesetting does this on connectors that support scaling). Custom resolutions are re-created automatically when you log in or open this panel."
+msgstr "Oculta todos os outros modos: os que a tela informa no EDID e os modos escalados que alguns drivers adicionam (o modesetting faz isso em conectores com suporte a escala). As resoluções personalizadas são recriadas automaticamente quando você inicia a sessão ou abre este painel."
 
 #: mesa_panel/resolutions_dialog.py:92
 msgid "My resolutions"
@@ -1005,9 +979,7 @@ msgstr "Temporização"
 
 #: mesa_panel/resolutions_dialog.py:139
 msgid "Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"
-msgstr ""
-"Cole uma modeline, por exemplo das ferramentas cvt ou gtf ou de um xorg.conf"
-" antigo"
+msgstr "Cole uma modeline, por exemplo das ferramentas cvt ou gtf ou de um xorg.conf antigo"
 
 #: mesa_panel/resolutions_dialog.py:140
 msgid "Modeline"
@@ -1018,13 +990,8 @@ msgid "For all programs"
 msgstr "Para todos os programas"
 
 #: mesa_panel/resolutions_dialog.py:162
-msgid ""
-"The options above only change what this panel offers. To hide unwanted modes"
-" from games and every other program, give the kernel a corrected EDID."
-msgstr ""
-"As opções acima só mudam o que este painel oferece. Para esconder modos "
-"indesejados dos jogos e de todos os outros programas, forneça ao kernel um "
-"EDID corrigido."
+msgid "The options above only change what this panel offers. To hide unwanted modes from games and every other program, give the kernel a corrected EDID."
+msgstr "As opções acima só mudam o que este painel oferece. Para esconder modos indesejados dos jogos e de todos os outros programas, forneça ao kernel um EDID corrigido."
 
 #: mesa_panel/resolutions_dialog.py:164
 msgid "System-wide mode list…"
@@ -1041,32 +1008,21 @@ msgstr "Remover"
 #: mesa_panel/resolutions_dialog.py:258
 #, python-brace-format
 msgid "VESA DMT has no timing for {w} × {h}. Pick another timing standard."
-msgstr ""
-"O VESA DMT não tem temporização para {w} × {h}. Escolha outro padrão de "
-"temporização."
+msgstr "O VESA DMT não tem temporização para {w} × {h}. Escolha outro padrão de temporização."
 
 #: mesa_panel/resolutions_dialog.py:275
 #, python-brace-format
 msgid "Pixel clock {clock} MHz · horizontal {hfreq} kHz · refresh {hz} Hz"
-msgstr ""
-"Clock de pixel {clock} MHz · horizontal {hfreq} kHz · atualização {hz} Hz"
+msgstr "Clock de pixel {clock} MHz · horizontal {hfreq} kHz · atualização {hz} Hz"
 
 #: mesa_panel/resolutions_dialog.py:279
-msgid ""
-"Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh "
-"rate."
-msgstr ""
-"Abaixo de 25 MHz: conexões HDMI costumam recusar isto. Use DMT ou uma taxa "
-"de atualização maior."
+msgid "Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh rate."
+msgstr "Abaixo de 25 MHz: conexões HDMI costumam recusar isto. Use DMT ou uma taxa de atualização maior."
 
 #: mesa_panel/resolutions_dialog.py:282
 #, python-brace-format
-msgid ""
-"Outside the {low}–{high} Hz range the display reports; it may show no "
-"picture."
-msgstr ""
-"Fora da faixa de {low}–{high} Hz que a tela informa; ela pode ficar sem "
-"imagem."
+msgid "Outside the {low}–{high} Hz range the display reports; it may show no picture."
+msgstr "Fora da faixa de {low}–{high} Hz que a tela informa; ela pode ficar sem imagem."
 
 #: mesa_panel/resolutions_dialog.py:285
 #, python-brace-format
@@ -1087,12 +1043,8 @@ msgstr "O servidor X não manteve esta resolução"
 
 #: mesa_panel/resolutions_dialog.py:312
 #, python-brace-format
-msgid ""
-"xrandr accepted {mode}, but it is not in the mode list of {output}. The "
-"display driver may have rejected it."
-msgstr ""
-"O xrandr aceitou {mode}, mas ele não está na lista de modos de {output}. O "
-"driver de vídeo pode tê-lo recusado."
+msgid "xrandr accepted {mode}, but it is not in the mode list of {output}. The display driver may have rejected it."
+msgstr "O xrandr aceitou {mode}, mas ele não está na lista de modos de {output}. O driver de vídeo pode tê-lo recusado."
 
 #: mesa_panel/resolutions_dialog.py:318
 msgid "Resolution added. Pick it on the Displays page and press Apply."
@@ -1106,8 +1058,7 @@ msgstr "Esta resolução está em uso"
 msgid "Switch the display to another resolution before removing it."
 msgstr "Mude a tela para outra resolução antes de removê-la."
 
-#. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0
-#. (off)"
+#. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
 #: mesa_panel/xrandr.py:50
 #, python-brace-format
 msgid "{output} (off)"
@@ -1118,12 +1069,8 @@ msgid "The xrandr command was not found. Install the xorg-xrandr package."
 msgstr "O comando xrandr não foi encontrado. Instale o pacote xorg-xrandr."
 
 #: mesa_panel/xrandr.py:65
-msgid ""
-"You are in a Wayland session. xrandr only controls X11 outputs, so use your "
-"desktop's display settings here."
-msgstr ""
-"Você está em uma sessão Wayland. O xrandr só controla saídas X11, então use "
-"aqui as configurações de tela do seu ambiente gráfico."
+msgid "You are in a Wayland session. xrandr only controls X11 outputs, so use your desktop's display settings here."
+msgstr "Você está em uma sessão Wayland. O xrandr só controla saídas X11, então use aqui as configurações de tela do seu ambiente gráfico."
 
 #: mesa_panel/xrandr.py:68
 msgid "No X11 display found (DISPLAY is not set)."
@@ -1142,8 +1089,5 @@ msgid "Per-game anti-aliasing, filtering, VSync and display settings"
 msgstr "Suavização, filtragem, VSync e configurações de tela por jogo"
 
 #: data/mesa-panel.desktop.in:11
-msgid ""
-"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;"
-msgstr ""
-"gráficos;placa de "
-"vídeo;gpu;amd;radeon;anisotrópica;suavização;serrilhado;vsync;fps;monitor;tela;xrandr;"
+msgid "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;"
+msgstr "gráficos;placa de vídeo;gpu;amd;radeon;anisotrópica;suavização;serrilhado;vsync;fps;monitor;tela;xrandr;"

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.5.0\n"
+"Project-Id-Version: mesa-panel 0.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 16:41-0300\n"
+"POT-Creation-Date: 2026-10-18 17:27-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,159 +119,217 @@ msgstr ""
 msgid "Identify"
 msgstr ""
 
-#: mesa_panel/display_page.py:370
+#: mesa_panel/display_page.py:275
+#, python-brace-format
+msgid "Saved settings moved to the new output names: {names}"
+msgstr ""
+
+#: mesa_panel/display_page.py:375
 msgid ""
 "None of your custom resolutions are active on this display, so all modes are "
 "shown."
 msgstr ""
 
-#: mesa_panel/display_page.py:503
+#: mesa_panel/display_page.py:508
 msgid "At least one display must stay on"
 msgstr ""
 
-#: mesa_panel/display_page.py:503
+#: mesa_panel/display_page.py:508
 msgid "Turn on a display before applying."
 msgstr ""
 
-#: mesa_panel/display_page.py:511
+#: mesa_panel/display_page.py:516
 msgid "xrandr could not apply this layout"
 msgstr ""
 
-#: mesa_panel/display_page.py:517
+#: mesa_panel/display_page.py:522
 msgid "Display settings applied"
 msgstr ""
 
-#: mesa_panel/display_page.py:523
+#: mesa_panel/display_page.py:528
 msgid "Could not restore the previous layout"
 msgstr ""
 
-#: mesa_panel/display_page.py:525
+#: mesa_panel/display_page.py:530
 msgid "Display settings reverted"
 msgstr ""
 
-#: mesa_panel/display_page.py:530
+#: mesa_panel/display_page.py:535
 msgid "Keep these display settings?"
 msgstr ""
 
-#: mesa_panel/display_page.py:531
+#: mesa_panel/display_page.py:536
 msgid "Revert"
 msgstr ""
 
-#: mesa_panel/display_page.py:531
+#: mesa_panel/display_page.py:536
 msgid "Keep changes"
 msgstr ""
 
-#: mesa_panel/display_page.py:535
+#: mesa_panel/display_page.py:540
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
 msgstr[0] ""
 msgstr[1] ""
 
-#: mesa_panel/edid_override_dialog.py:22
+#: mesa_panel/edid_override_dialog.py:23
 #, python-brace-format
 msgid "System-wide mode list for {output}"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:26 mesa_panel/resolutions_dialog.py:67
+#: mesa_panel/edid_override_dialog.py:27 mesa_panel/resolutions_dialog.py:67
 msgid "Close"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:42
+#: mesa_panel/edid_override_dialog.py:43
 msgid ""
 "Builds a corrected EDID for this display that lists only the modes you tick. "
 "The kernel then reports exactly these modes to X, games and every other "
 "program. The display's name, serial number and colour data are kept."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:64
+#: mesa_panel/edid_override_dialog.py:71
 #, python-brace-format
 msgid "custom, {standard}"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:65
+#: mesa_panel/edid_override_dialog.py:72
 msgid "from the display / driver"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:66
+#: mesa_panel/edid_override_dialog.py:73
 msgid "(current)"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:76
+#: mesa_panel/edid_override_dialog.py:83
 msgid "Native (preferred) mode"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:86
+#: mesa_panel/edid_override_dialog.py:93
 msgid "Save EDID file…"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:88
+#: mesa_panel/edid_override_dialog.py:95
 msgid "Test now"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:89
+#: mesa_panel/edid_override_dialog.py:96
 msgid "Load it into the kernel until the next reboot (asks for your password)"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:91
+#: mesa_panel/edid_override_dialog.py:98
 msgid "Undo test"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:93
+#: mesa_panel/edid_override_dialog.py:100
 msgid "Make permanent…"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:110
+#: mesa_panel/edid_override_dialog.py:117
 #, python-brace-format
 msgid ""
 "Could not match {output} to a kernel connector, so the override can only be "
 "saved as a file."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:113
+#: mesa_panel/edid_override_dialog.py:120
 msgid ""
 "pkexec (polkit) is needed to test or install the override; you can still "
 "save the file."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:175
+#: mesa_panel/edid_override_dialog.py:183
 #, python-brace-format
 msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:201
+#: mesa_panel/edid_override_dialog.py:205
+msgid "The kernel is using the installed override, and it loads at every boot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:206
+#, python-brace-format
+msgid ""
+"The kernel is using the installed override, but only until the next reboot: "
+"the kernel parameter {param} is missing."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:208
+#, python-brace-format
+msgid ""
+"No permanent override is installed for {connector}. “Test now” lasts only "
+"until the next reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:210
+#, python-brace-format
+msgid ""
+"An override is installed, but the kernel isn't using it because the kernel "
+"parameter {param} is missing. Add it and reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:212
+#, python-brace-format
+msgid ""
+"An override is installed, but the kernel parameter is {current} instead of "
+"{param}. Fix it and reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:214
+#, python-brace-format
+msgid ""
+"The override is installed and the kernel parameter is set, but the file is "
+"not in the initramfs, so the graphics driver can't read it at boot. Add "
+"FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:217
+msgid ""
+"The override file changed after the initramfs was built, so the old one is "
+"still loaded at boot. Run “sudo mkinitcpio -P” and reboot."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:219
+msgid ""
+"The override is installed and set up, but the kernel isn't using it. If you "
+"haven't rebooted since, reboot. Otherwise “sudo dmesg | grep -i edid” shows "
+"why."
+msgstr ""
+
+#: mesa_panel/edid_override_dialog.py:246
 msgid "Authorization was cancelled."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:205 mesa_panel/monitors_page.py:132
+#: mesa_panel/edid_override_dialog.py:250 mesa_panel/monitors_page.py:132
 msgid "Save EDID"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:206 mesa_panel/gaming_page.py:123
+#: mesa_panel/edid_override_dialog.py:251 mesa_panel/gaming_page.py:123
 #: mesa_panel/gaming_page.py:397 mesa_panel/monitors_page.py:133
 msgid "Cancel"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:206 mesa_panel/monitors_page.py:133
+#: mesa_panel/edid_override_dialog.py:251 mesa_panel/monitors_page.py:133
 msgid "Save"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:215
+#: mesa_panel/edid_override_dialog.py:260
 #, python-brace-format
 msgid "Saved {path}"
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:231
+#: mesa_panel/edid_override_dialog.py:277
 msgid ""
 "Loaded until reboot. The display was re-detected; check the Displays page or "
 "run xrandr. Use “Undo test” to go back."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:238
+#: mesa_panel/edid_override_dialog.py:284
 msgid "The display's own EDID is back."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:256
+#: mesa_panel/edid_override_dialog.py:303
 #, python-brace-format
 msgid ""
 "Installed {file}.\n"
@@ -290,11 +348,13 @@ msgid ""
 "to /etc/mkinitcpio.conf, then run\n"
 "    sudo mkinitcpio -P\n"
 "\n"
-"Reboot afterwards. To undo, remove the parameter and the FILES entry, "
-"rebuild, and reboot."
+"Reboot afterwards. If you had already set this up, the initramfs still holds "
+"the old file: run “sudo mkinitcpio -P” and reboot.\n"
+"\n"
+"To undo, remove the parameter and the FILES entry, rebuild, and reboot."
 msgstr ""
 
-#: mesa_panel/edid_override_dialog.py:271
+#: mesa_panel/edid_override_dialog.py:321
 msgid "Kernel parameter copied"
 msgstr ""
 

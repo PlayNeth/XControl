@@ -7,7 +7,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
-from . import config, modelines, xrandr  # noqa: E402
+from . import config, modelines, output_names, xrandr  # noqa: E402
 from .i18n import N_, _, hz, ngettext  # noqa: E402
 from .paths import autostart_file  # noqa: E402
 from .resolutions_dialog import ResolutionsDialog, mode_label, standard_of  # noqa: E402
@@ -269,6 +269,11 @@ class DisplayPage(Gtk.Box):
         self.mode_problems = {}
         try:
             self.monitors = xrandr.query() if xrandr.available() and os.environ.get("DISPLAY") and not warn else []
+            if self.monitors:
+                renamed = output_names.migrate_saved()
+                if renamed:
+                    self.window.set_status(_("Saved settings moved to the new output names: {names}").format(
+                        names=", ".join(f"{a} → {b}" for a, b in renamed.items())))
             if self.monitors and self._restore_missing_modes():
                 self.monitors = xrandr.query()
         except Exception as e:  # noqa: BLE001 - surface any xrandr failure
@@ -604,6 +609,7 @@ def apply_saved_layout():
     """CLI entry point used at login (mesa-panel --apply-display)."""
     if xrandr.session_warning():
         return 0
+    output_names.migrate_saved()  # the X driver may have renamed the outputs
     data = config.load()
     for problem in restore_custom_modes(data):
         print(f"mesa-panel: could not restore custom mode {problem}")

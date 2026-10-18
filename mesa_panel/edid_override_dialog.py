@@ -10,6 +10,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import edid, edid_override, monitor_info, xrandr  # noqa: E402
+from . import edid_override_status as status  # noqa: E402
 from .i18n import _, num  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
 from .resolutions_dialog import SHORT_NAMES, standard_of  # noqa: E402
@@ -42,6 +43,12 @@ class EdidOverrideDialog(Gtk.Dialog):
             "Builds a corrected EDID for this display that lists only the modes you tick. The kernel then "
             "reports exactly these modes to X, games and every other program. The display's name, serial "
             "number and colour data are kept.")), False, False, 0)
+
+        # ---- is an override in use?
+        self.status_label = Gtk.Label(xalign=0, wrap=True, selectable=True)
+        self.status_label.set_max_width_chars(72)
+        self.status_label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        box.pack_start(self.status_label, False, False, 0)
 
         # ---- mode list
         self.listbox = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
@@ -114,6 +121,7 @@ class EdidOverrideDialog(Gtk.Dialog):
                                "save the file."))
         self.show_all()
         self._changed()
+        self._update_status()
 
     # ---- data
     def _collect_modes(self):
@@ -183,6 +191,43 @@ class EdidOverrideDialog(Gtk.Dialog):
             b.set_sensitive(ok and bool(shutil.which("pkexec")) and os.path.exists(HELPER)
                             and bool(self.record and self.record.card))
 
+    def _update_status(self, current=None):
+        conn = self._connector()
+        if not conn:
+            self.status_label.hide()
+            return
+        if current is None:
+            current = next((raw for _card, name, raw in edid.read_sysfs_full() if name == conn), b"")
+        st = status.check(conn, current)
+        param = f"drm.edid_firmware={st.expected}"
+        ok = st.state == status.ACTIVE_PERMANENT
+        text = {
+            status.ACTIVE_PERMANENT: _("The kernel is using the installed override, and it loads at every boot."),
+            status.ACTIVE_TEST_ONLY: _("The kernel is using the installed override, but only until the next reboot: "
+                                       "the kernel parameter {param} is missing."),
+            status.NOT_INSTALLED: _("No permanent override is installed for {connector}. “Test now” lasts only "
+                                    "until the next reboot."),
+            status.NO_PARAMETER: _("An override is installed, but the kernel isn't using it because the kernel "
+                                   "parameter {param} is missing. Add it and reboot."),
+            status.WRONG_PARAMETER: _("An override is installed, but the kernel parameter is {current} instead of "
+                                      "{param}. Fix it and reboot."),
+            status.NOT_IN_INITRAMFS: _("The override is installed and the kernel parameter is set, but the file is "
+                                       "not in the initramfs, so the graphics driver can't read it at boot. Add "
+                                       "FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."),
+            status.STALE_INITRAMFS: _("The override file changed after the initramfs was built, so the old one is "
+                                      "still loaded at boot. Run “sudo mkinitcpio -P” and reboot."),
+            status.NOT_LOADED: _("The override is installed and set up, but the kernel isn't using it. If you "
+                                 "haven't rebooted since, reboot. Otherwise “sudo dmesg | grep -i edid” shows why."),
+        }[st.state].format(param=param, connector=conn, file=st.file,
+                           current=f"drm.edid_firmware={st.parameter}")
+        if ok:
+            self.status_label.set_text("✓ " + text)
+        elif st.state == status.NOT_INSTALLED:
+            self.status_label.set_text(text)
+        else:
+            self.status_label.set_markup(f"<span foreground='#c64600'>{GLib.markup_escape_text(text)}</span>")
+        self.status_label.show()
+
     # ---- actions
     def _write_temp(self):
         data = self._build()
@@ -227,6 +272,7 @@ class EdidOverrideDialog(Gtk.Dialog):
             return
         ok, msg = self._run_helper("test", self.record.card, self._connector(), path)
         os.unlink(path)
+        self._update_status()
         if ok:
             self._set_result(_("Loaded until reboot. The display was re-detected; check the Displays page "
                                "or run xrandr. Use “Undo test” to go back."))
@@ -236,6 +282,7 @@ class EdidOverrideDialog(Gtk.Dialog):
     def _undo(self, *_args):
         ok, msg = self._run_helper("reset", self.record.card, self._connector())
         self._set_result(_("The display's own EDID is back.") if ok else msg, error=not ok)
+        self._update_status()
 
     def _install(self, *_args):
         conn = self._connector()
@@ -263,11 +310,14 @@ class EdidOverrideDialog(Gtk.Dialog):
             "    FILES=({file})\n"
             "to /etc/mkinitcpio.conf, then run\n"
             "    sudo mkinitcpio -P\n\n"
-            "Reboot afterwards. To undo, remove the parameter and the FILES entry, rebuild, and reboot."
+            "Reboot afterwards. If you had already set this up, the initramfs still holds the old file: "
+            "run “sudo mkinitcpio -P” and reboot.\n\n"
+            "To undo, remove the parameter and the FILES entry, rebuild, and reboot."
         ).format(file=fw, param=param)
         self.result.set_markup(GLib.markup_escape_text(steps).replace(
             GLib.markup_escape_text(param), f"<b><tt>{GLib.markup_escape_text(param)}</tt></b>"))
         Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(param, -1)
+        self._update_status()
         self.main_window.set_status(_("Kernel parameter copied"))
 
 
