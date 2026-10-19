@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.16.1 (2026-10-19)
+
+**Fix 3D preview leaving garbage on screen without a compositor**
+
+- Fix the Gaming page's 3D preview leaving stale screen contents in parts of the
+  window on i3 without a compositor
+- Render the preview off-screen in its own OpenGL context (EGL) and show each
+  frame as an image, so the rest of the window is drawn normally
+
 ## 0.16.0 (2026-10-19)
 
 **Add live 3D preview of graphics settings to the Gaming page**

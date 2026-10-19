@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.16.0
+pkgver=0.16.1
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -13,7 +13,7 @@ license=('MIT')
 provides=('mesa-panel')
 conflicts=('mesa-panel')
 replaces=('mesa-panel')
-depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
+depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
 makedepends=('vulkan-headers' 'gettext')
 optdepends=(
   'vulkan-icd-loader: Vulkan and Proton game overrides'

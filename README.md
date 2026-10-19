@@ -81,8 +81,10 @@ behind them, drawn with the settings you're editing:
 
 The corner shows the frame rate and the OpenGL renderer. Drag to turn the scene; double-click
 resets it. It only draws while it's on screen, and the **3D preview** heading collapses it
-(remembered). "Application decides" settings are shown as the plain picture. It uses OpenGL 3.3
-through GTK, nothing else to install.
+(remembered). "Application decides" settings are shown as the plain picture. It renders with OpenGL 3.3
+off-screen (EGL) and shows each frame as an image, so the rest of the window is drawn normally;
+GTK's own GL widget makes GTK 3 draw the whole window through OpenGL, which leaves garbage on
+screen without a compositor. Nothing else to install.
 
 ## FreeSync
 

@@ -7,13 +7,18 @@ chain-link fence behind them, drawn with the settings being edited:
   transparency AA   the fence (alpha test / alpha-to-coverage / per-sample shading)
   frame limiter     the animation's frame rate
 
-OpenGL is called through libepoxy (GTK's own GL loader) with ctypes, so nothing else is
-needed. The animation only runs while the preview is on screen.
+It renders off-screen in its own OpenGL context (EGL, surfaceless) and shows each frame as
+an ordinary image. GTK's GtkGLArea isn't used on purpose: in GTK 3 on X11 it switches the
+whole window to OpenGL drawing, which without a compositor (i3) leaves stale screen contents
+in parts of the window. OpenGL is called through libepoxy with ctypes; nothing else is needed.
+The animation only runs while the preview is on screen.
 """
 import ctypes
 import ctypes.util
 import math
 import time
+
+import cairo
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -72,7 +77,9 @@ _SIGS = {
     "glFramebufferRenderbuffer": (None, [_u, _u, _u, _u]), "glCheckFramebufferStatus": (_u, [_u]),
     "glBlitFramebuffer": (None, [_i, _i, _i, _i, _i, _i, _i, _i, _u, _u]),
     "glMinSampleShading": (None, [_f]),
+    "glReadPixels": (None, [_i, _i, _i, _i, _u, _u, _p]), "glPixelStorei": (None, [_u, _i]),
 }
+GL_BGRA, GL_PACK_ALIGNMENT = 0x80E1, 0x0D05
 
 
 class GL:
@@ -92,6 +99,73 @@ class GL:
         v = _u(0)
         fn(1, ctypes.byref(v))
         return v.value
+
+
+class EGLContext:
+    """An OpenGL 3.3 core context with no window: rendering goes into framebuffer objects."""
+    EGL_NONE, EGL_OPENGL_API, EGL_OPENGL_BIT, EGL_PBUFFER_BIT = 0x3038, 0x30A2, 0x0008, 0x0001
+    EGL_SURFACE_TYPE, EGL_RENDERABLE_TYPE, EGL_RED, EGL_GREEN, EGL_BLUE = 0x3033, 0x3040, 0x3024, 0x3023, 0x3022
+    EGL_WIDTH, EGL_HEIGHT = 0x3057, 0x3056
+    EGL_MAJOR, EGL_MINOR, EGL_PROFILE, EGL_CORE = 0x3098, 0x30FB, 0x30FD, 0x1
+    EGL_PLATFORM_SURFACELESS_MESA = 0x31DD
+
+    def __init__(self):
+        egl = ctypes.CDLL(ctypes.util.find_library("EGL") or "libEGL.so.1")
+        vp, i = ctypes.c_void_p, ctypes.c_int
+        for name, res, args in (("eglGetDisplay", vp, [vp]), ("eglInitialize", i, [vp, vp, vp]),
+                                ("eglBindAPI", i, [ctypes.c_uint]), ("eglGetProcAddress", vp, [ctypes.c_char_p]),
+                                ("eglChooseConfig", i, [vp, ctypes.POINTER(i), ctypes.POINTER(vp), i,
+                                                        ctypes.POINTER(i)]),
+                                ("eglCreateContext", vp, [vp, vp, vp, ctypes.POINTER(i)]),
+                                ("eglCreatePbufferSurface", vp, [vp, vp, ctypes.POINTER(i)]),
+                                ("eglMakeCurrent", i, [vp, vp, vp, vp]), ("eglDestroyContext", i, [vp, vp]),
+                                ("eglDestroySurface", i, [vp, vp]), ("eglGetError", i, [])):
+            f = getattr(egl, name)
+            f.restype, f.argtypes = res, args
+        self.egl = egl
+        dpy = None
+        get_platform = egl.eglGetProcAddress(b"eglGetPlatformDisplayEXT")
+        if get_platform:  # no window system needed at all
+            fn = ctypes.CFUNCTYPE(vp, ctypes.c_uint, vp, vp)(get_platform)
+            dpy = fn(self.EGL_PLATFORM_SURFACELESS_MESA, None, None)
+            if dpy and not egl.eglInitialize(dpy, None, None):
+                dpy = None
+        if not dpy:
+            dpy = egl.eglGetDisplay(None)
+            if not dpy or not egl.eglInitialize(dpy, None, None):
+                raise RuntimeError("EGL is not available")
+        self.dpy = dpy
+        if not egl.eglBindAPI(self.EGL_OPENGL_API):
+            raise RuntimeError("EGL has no desktop OpenGL")
+
+        def attrs(*pairs):
+            flat = [v for p in pairs for v in p] + [self.EGL_NONE]
+            return (i * len(flat))(*flat)
+        config, n = vp(), i(0)
+        for surface_type in (self.EGL_PBUFFER_BIT, 0):
+            want = [(self.EGL_RENDERABLE_TYPE, self.EGL_OPENGL_BIT), (self.EGL_RED, 8), (self.EGL_GREEN, 8),
+                    (self.EGL_BLUE, 8)] + ([(self.EGL_SURFACE_TYPE, surface_type)] if surface_type else [])
+            if egl.eglChooseConfig(dpy, attrs(*want), ctypes.byref(config), 1, ctypes.byref(n)) and n.value:
+                break
+        if not n.value:
+            raise RuntimeError("no suitable EGL config")
+        self.ctx = egl.eglCreateContext(dpy, config, None, attrs((self.EGL_MAJOR, 3), (self.EGL_MINOR, 3),
+                                                                 (self.EGL_PROFILE, self.EGL_CORE)))
+        if not self.ctx:
+            raise RuntimeError(f"no OpenGL 3.3 context (EGL error 0x{egl.eglGetError():x})")
+        # a 1×1 pbuffer to be current with; without one, surfaceless contexts are used
+        self.surf = egl.eglCreatePbufferSurface(dpy, config, attrs((self.EGL_WIDTH, 1), (self.EGL_HEIGHT, 1)))
+        self.make_current()
+
+    def make_current(self):
+        if not self.egl.eglMakeCurrent(self.dpy, self.surf, self.surf, self.ctx):
+            raise RuntimeError(f"eglMakeCurrent failed (0x{self.egl.eglGetError():x})")
+
+    def destroy(self):
+        self.egl.eglMakeCurrent(self.dpy, None, None, None)
+        if self.surf:
+            self.egl.eglDestroySurface(self.dpy, self.surf)
+        self.egl.eglDestroyContext(self.dpy, self.ctx)
 
 
 # ---------------------------------------------------------------- math (column-major 4x4)
@@ -251,14 +325,10 @@ class Preview3D(Gtk.Overlay):
 
     def __init__(self):
         super().__init__()
-        self.area = Gtk.GLArea(hexpand=True)
-        self.area.set_required_version(3, 3)
-        self.area.set_has_depth_buffer(False)   # we draw into our own framebuffer
-        self.area.set_auto_render(False)
+        self.area = Gtk.DrawingArea(hexpand=True)
         self.area.set_size_request(-1, 240)
-        self.area.connect("realize", self._realize)
+        self.area.connect("draw", self._draw)
         self.area.connect("unrealize", self._unrealize)
-        self.area.connect("render", self._render)
         self.area.connect("map", self._start)
         self.area.connect("unmap", self._stop)
         self.area.add_events(Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK |
@@ -293,13 +363,16 @@ class Preview3D(Gtk.Overlay):
         self.frames, self.fps_since = 0, time.monotonic()
         self.fbo = None
         self.fbo_key = None
+        self.ctx = None
+        self.image = None       # the last frame, as a cairo surface
+        self._pixels = None
         self._caption()
 
     # ---- what to show
     def set_settings(self, s):
         self.settings = {k: s.get(k, v) for k, v in self.settings.items()}
         self._caption()
-        self.area.queue_render()
+        self._frame()
 
     def _effective(self):
         s = self.settings
@@ -347,7 +420,7 @@ class Preview3D(Gtk.Overlay):
         dt = 0 if self.last_time is None else min(now - self.last_time, 0.1)
         self.last_time = self.last_frame = now
         self.angle = (self.angle + dt * 70.0) % 360.0   # degrees per second, like glxgears
-        self.area.queue_render()
+        self._frame()
         return GLib.SOURCE_CONTINUE
 
     def _press(self, _w, ev):
@@ -359,27 +432,33 @@ class Preview3D(Gtk.Overlay):
         if self._drag:
             self.yaw = self._drag["yaw"] + (ev.x - self._drag["x"]) * 0.4
             self.pitch = max(-5.0, min(40.0, self._drag["pitch"] + (ev.y - self._drag["y"]) * 0.3))
-            self.area.queue_render()
+            if self.tick_id is None:
+                self._frame()
 
-    # ---- GL setup
-    def _realize(self, area):
-        area.make_current()
-        if area.get_error():
-            self.error = _("3D preview unavailable: {error}").format(error=area.get_error().message)
-            self._caption()
-            return
+    # ---- GL setup (on the first frame)
+    def _ensure_gl(self):
+        if self.gl or self.error:
+            return bool(self.gl)
         try:
+            self.ctx = EGLContext()
             self.gl = GL()
             self._setup()
         except Exception as e:  # noqa: BLE001
             self.gl = None
             self.error = _("3D preview unavailable: {error}").format(error=e)
             self._caption()
+        return bool(self.gl)
 
-    def _unrealize(self, area):
-        area.make_current()
-        self._free_fbo()
-        self.gl = None
+    def _unrealize(self, _area):
+        self._stop()
+        if self.ctx:
+            try:
+                self.ctx.make_current()
+                self._free_fbo()
+            finally:
+                self.ctx.destroy()
+        self.ctx = self.gl = None
+        self.fbo = self.fbo_key = None
 
     def _shader(self, kind, src):
         gl = self.gl
@@ -467,21 +546,19 @@ class Preview3D(Gtk.Overlay):
     # ---- framebuffers
     def _free_fbo(self):
         if self.fbo and self.gl:
-            fbo, color, depth = self.fbo
-            self.gl.DeleteFramebuffers(1, ctypes.byref(_u(fbo)))
-            self.gl.DeleteRenderbuffers(1, ctypes.byref(_u(color)))
-            self.gl.DeleteRenderbuffers(1, ctypes.byref(_u(depth)))
+            for fbo, *rbs in self.fbo:
+                self.gl.DeleteFramebuffers(1, ctypes.byref(_u(fbo)))
+                for rb in rbs:
+                    self.gl.DeleteRenderbuffers(1, ctypes.byref(_u(rb)))
         self.fbo, self.fbo_key = None, None
 
-    def _ensure_fbo(self, w, h, samples):
-        if self.fbo_key == (w, h, samples):
-            return True
-        self._free_fbo()
+    def _make_fbo(self, w, h, samples, depth):
         gl = self.gl
         fbo = gl.gen(gl.GenFramebuffers)
         gl.BindFramebuffer(GL_FRAMEBUFFER, fbo)
         rbs = []
-        for fmt, attach in ((GL_RGBA8, GL_COLOR_ATTACHMENT0), (GL_DEPTH_COMPONENT24, GL_DEPTH_ATTACHMENT)):
+        formats = [(GL_RGBA8, GL_COLOR_ATTACHMENT0)] + ([(GL_DEPTH_COMPONENT24, GL_DEPTH_ATTACHMENT)] if depth else [])
+        for fmt, attach in formats:
             rb = gl.gen(gl.GenRenderbuffers)
             gl.BindRenderbuffer(GL_RENDERBUFFER, rb)
             if samples > 1:
@@ -490,24 +567,60 @@ class Preview3D(Gtk.Overlay):
                 gl.RenderbufferStorage(GL_RENDERBUFFER, fmt, w, h)
             gl.FramebufferRenderbuffer(GL_FRAMEBUFFER, attach, GL_RENDERBUFFER, rb)
             rbs.append(rb)
-        self.fbo = (fbo, *rbs)
+        ok = gl.CheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE
+        return (fbo, *rbs), ok
+
+    def _ensure_fbo(self, w, h, samples):
+        """(scene framebuffer, plain framebuffer to read from); they're the same without MSAA."""
+        if self.fbo_key == (w, h, samples):
+            return True
+        self._free_fbo()
+        scene, ok = self._make_fbo(w, h, samples, True)
+        if samples > 1:
+            resolve, ok2 = self._make_fbo(w, h, 1, False)
+            self.fbo = [scene, resolve]
+            ok = ok and ok2
+        else:
+            self.fbo = [scene]
         self.fbo_key = (w, h, samples)
-        return gl.CheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE
+        return ok
 
     # ---- drawing
-    def _render(self, area, _ctx):
+    def _draw(self, area, cr):
+        w, h = area.get_allocated_width(), area.get_allocated_height()
+        if self.image is None:
+            self._frame()
+        if self.image is not None:
+            cr.save()
+            cr.translate(0, h)
+            cr.scale(w / self.image.get_width(), -h / self.image.get_height())  # GL rows go bottom-up
+            cr.set_source_surface(self.image, 0, 0)
+            cr.paint()
+            cr.restore()
+        else:
+            cr.set_source_rgb(0.10, 0.12, 0.16)
+            cr.paint()
+        return False
+
+    def _frame(self):
+        """Render one frame into self.image and have it shown."""
+        area = self.area
+        if not area.get_realized() or not self._ensure_gl():
+            area.queue_draw()
+            return
+        self.ctx.make_current()
+        w, h = max(1, area.get_allocated_width()), max(1, area.get_allocated_height())
+        self._render(w, h)
+        area.queue_draw()
+
+    def _render(self, w, h):
         gl = self.gl
-        if not gl:
-            return True
-        scale = area.get_scale_factor()
-        w, h = max(1, area.get_allocated_width() * scale), max(1, area.get_allocated_height() * scale)
-        target = gl.get_int(GL_DRAW_FRAMEBUFFER_BINDING)   # GTK's own framebuffer for this widget
         samples, af, traa = self._effective()
         samples = min(samples, self.max_samples)
         if not self._ensure_fbo(w, h, samples):
             samples = 1
             self._ensure_fbo(w, h, 1)
-        gl.BindFramebuffer(GL_FRAMEBUFFER, self.fbo[0])
+        gl.BindFramebuffer(GL_FRAMEBUFFER, self.fbo[0][0])
         gl.Viewport(0, 0, w, h)
         gl.ClearColor(0.10, 0.12, 0.16, 1.0)
         gl.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -561,11 +674,22 @@ class Preview3D(Gtk.Overlay):
         if self.has_sample_shading:
             gl.Disable(GL_SAMPLE_SHADING)
 
-        # resolve into GTK's framebuffer
-        gl.BindFramebuffer(GL_READ_FRAMEBUFFER, self.fbo[0])
-        gl.BindFramebuffer(GL_DRAW_FRAMEBUFFER, target)
-        gl.BlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST)
-        gl.BindFramebuffer(GL_FRAMEBUFFER, target)
+        # resolve the samples, then read the picture back for GTK to draw
+        if len(self.fbo) > 1:
+            gl.BindFramebuffer(GL_READ_FRAMEBUFFER, self.fbo[0][0])
+            gl.BindFramebuffer(GL_DRAW_FRAMEBUFFER, self.fbo[1][0])
+            gl.BlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST)
+        gl.BindFramebuffer(GL_FRAMEBUFFER, self.fbo[-1][0])
+        stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, w)
+        if self._pixels is None or len(self._pixels) != stride * h:
+            self._pixels = bytearray(stride * h)
+            self.image = cairo.ImageSurface.create_for_data(self._pixels, cairo.FORMAT_RGB24, w, h, stride)
+        buf = (ctypes.c_char * len(self._pixels)).from_buffer(self._pixels)
+        gl.PixelStorei(GL_PACK_ALIGNMENT, 4)
+        gl.ReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buf)   # = cairo's RGB24 layout (little-endian)
+        del buf
+        self.image.mark_dirty()
+        gl.BindFramebuffer(GL_FRAMEBUFFER, 0)
         gl.BindVertexArray(0)
 
         self.frames += 1
