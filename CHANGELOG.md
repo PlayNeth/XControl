@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.17.1 (2026-10-19)
+
+**Fix bar clock showing dates in English and add a clock language**
+
+- Fix the bar's clock always showing weekday and month names in English; it now
+  follows the session's language (LC_ALL, LC_TIME or LANG)
+- Add a "Clock language" choice to the bar settings to pick any installed
+  UTF-8 locale instead
+
 ## 0.17.0 (2026-10-19)
 
 **Add Bar & Compositor page to run polybar and picom**

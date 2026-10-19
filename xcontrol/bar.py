@@ -42,6 +42,7 @@ DEFAULT = {
     "urgent": "#a54242", "dim": "#707880",
     "modules": DEFAULT_MODULES,
     "clock_format": "%H:%M", "clock_alt": "%a %d %b %Y", "temp_warn": 80, "disk_mount": "/",
+    "clock_locale": "",   # "" = the session's language (LC_ALL, LC_TIME or LANG)
 }
 CLOCK_FORMATS = ["%H:%M", "%H:%M:%S", "%I:%M %p", "%a %H:%M", "%a %d %b  %H:%M", "%d/%m %H:%M"]
 
@@ -84,6 +85,31 @@ def config_path():
 
 
 # ---------------------------------------------------------------- what this system has
+def system_locale(env=None):
+    """The language dates use in this session, e.g. 'pt_BR.UTF-8'; None for C/POSIX."""
+    env = os.environ if env is None else env
+    for var in ("LC_ALL", "LC_TIME", "LANG"):
+        value = env.get(var, "").strip()
+        if value:
+            return None if value.split(".")[0] in ("C", "POSIX") else value
+    return None
+
+
+def locales():
+    """UTF-8 locales installed (locale -a), as polybar wants them: 'pt_BR.UTF-8'."""
+    try:
+        out = subprocess.run(["locale", "-a"], capture_output=True, text=True, timeout=5).stdout
+    except (OSError, subprocess.SubprocessError):
+        return []
+    found = []
+    for name in out.split():
+        m = re.match(r"^([a-z]{2,3}_[A-Z]{2}(?:@\w+)?)\.(utf8|UTF-8)$", name)
+        if m:
+            found.append(m.group(1).split("@")[0] + ".UTF-8" + ("@" + m.group(1).split("@")[1]
+                                                               if "@" in m.group(1) else ""))
+    return sorted(set(found))
+
+
 def version():
     try:
         out = subprocess.run(["polybar", "--version"], capture_output=True, text=True, timeout=5).stdout
@@ -231,6 +257,9 @@ def generate(b, ver=None, nerd=None, root="/", has_pavu=None):
         "cursor-click = pointer",
         "enable-ipc = true",
     ]
+    loc = b["clock_locale"] or system_locale()
+    if loc:  # polybar reads this from the bar, not the clock; without it dates come out in English
+        lines.append(f"locale = {loc}")
     if tray_old:
         lines += ["tray-position = right", "tray-padding = 2", "tray-background = ${colors.background}"]
     lines.append("")

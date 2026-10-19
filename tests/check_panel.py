@@ -88,6 +88,18 @@ expect("config option form", cmd[3].startswith("--config="), True)
 expect("write only when changed", (B.write(b, ver=(3, 7), nerd="", root=root, has_pavu=False),
                                    B.write(b, ver=(3, 7), nerd="", root=root, has_pavu=False)), (True, False))
 
+expect("session language", (B.system_locale({"LANG": "pt_BR.UTF-8"}), B.system_locale({"LC_ALL": "C.UTF-8"}),
+                            B.system_locale({"LC_TIME": "de_DE.UTF-8", "LANG": "en_US.UTF-8"}), B.system_locale({})),
+       ("pt_BR.UTF-8", None, "de_DE.UTF-8", None))
+os.environ["LANG"] = "pt_BR.UTF-8"
+os.environ.pop("LC_ALL", None)
+os.environ.pop("LC_TIME", None)
+barsec = ini(B.generate(B.normalize({}), ver=(3, 7), nerd="", root=root, has_pavu=False))["bar/xcontrol"]
+expect("dates follow the system language (set on the bar)", barsec.get("locale"), "pt_BR.UTF-8")
+barsec = ini(B.generate(B.normalize({"clock_locale": "en_GB.UTF-8"}), ver=(3, 7), nerd="", root=root,
+                        has_pavu=False))["bar/xcontrol"]
+expect("chosen clock language", barsec.get("locale"), "en_GB.UTF-8")
+
 # ---- picom
 p = C.normalize({"backend": "glx", "blur": "medium", "corner_radius": 8, "inactive_opacity": 85,
                  "shadow_radius": 99, "fade_speed": 0})

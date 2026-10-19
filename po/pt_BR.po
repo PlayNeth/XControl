@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 15:24-0300\n"
+"POT-Creation-Date: 2026-10-19 15:28-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -1458,7 +1458,7 @@ msgstr "Suavização de serrilhado"
 msgid "Multisampling"
 msgstr "Multiamostragem"
 
-#: xcontrol/gaming_page.py:242 xcontrol/panel_page.py:341
+#: xcontrol/gaming_page.py:242 xcontrol/panel_page.py:348
 msgid "Transparency"
 msgstr "Transparência"
 
@@ -2831,7 +2831,7 @@ msgstr ""
 "O XControl escreve a própria configuração do polybar do zero e inicia uma "
 "barra por tela. A sua configuração do polybar não é usada nem alterada."
 
-#: xcontrol/panel_page.py:127 xcontrol/panel_page.py:296
+#: xcontrol/panel_page.py:127 xcontrol/panel_page.py:303
 msgid "Stop them"
 msgstr "Encerrá-los"
 
@@ -2959,28 +2959,37 @@ msgstr ""
 "%H horas, %M minutos, %S segundos, %a dia da semana, %d dia, %b mês, %Y ano "
 "(como no comando date)."
 
-#: xcontrol/panel_page.py:204
+#: xcontrol/panel_page.py:201
+#, python-brace-format
+msgid "Same as the system ({locale})"
+msgstr "O mesmo do sistema ({locale})"
+
+#: xcontrol/panel_page.py:205
+msgid "Clock language"
+msgstr "Idioma do relógio"
+
+#: xcontrol/panel_page.py:211
 msgid "Temperature warning at"
 msgstr "Alerta de temperatura em"
 
-#: xcontrol/panel_page.py:213
+#: xcontrol/panel_page.py:220
 msgid "Disk to show"
 msgstr "Disco a mostrar"
 
-#: xcontrol/panel_page.py:235
+#: xcontrol/panel_page.py:242
 msgid "no battery here"
 msgstr "sem bateria aqui"
 
-#: xcontrol/panel_page.py:236
+#: xcontrol/panel_page.py:243
 #, python-brace-format
 msgid "polybar {v} puts the tray at the right end"
 msgstr "o polybar {v} coloca a bandeja na ponta direita"
 
-#: xcontrol/panel_page.py:286
+#: xcontrol/panel_page.py:293
 msgid "Use XControl's compositor"
 msgstr "Usar o compositor do XControl"
 
-#: xcontrol/panel_page.py:292
+#: xcontrol/panel_page.py:299
 msgid ""
 "A compositor adds shadows, fading, transparency and rounded corners, and "
 "stops tearing. XControl writes its own picom setup; your picom.conf isn't "
@@ -2990,23 +2999,23 @@ msgstr ""
 "arredondados, e acaba com o tearing. O XControl escreve a própria "
 "configuração do picom; o seu picom.conf não é usado nem alterado."
 
-#: xcontrol/panel_page.py:299
+#: xcontrol/panel_page.py:306
 msgid "Drawing"
 msgstr "Desenho"
 
-#: xcontrol/panel_page.py:305
+#: xcontrol/panel_page.py:312
 msgid "Backend"
 msgstr "Backend"
 
-#: xcontrol/panel_page.py:306
+#: xcontrol/panel_page.py:313
 msgid "VSync (no tearing)"
 msgstr "VSync (sem tearing)"
 
-#: xcontrol/panel_page.py:309
+#: xcontrol/panel_page.py:316
 msgid "Let full-screen games skip the compositor"
 msgstr "Deixar jogos em tela cheia pularem o compositor"
 
-#: xcontrol/panel_page.py:312
+#: xcontrol/panel_page.py:319
 msgid ""
 "Recommended: full-screen games get lower input lag, and FreeSync only works "
 "for them this way."
@@ -3014,47 +3023,47 @@ msgstr ""
 "Recomendado: jogos em tela cheia ficam com menos atraso de entrada, e o "
 "FreeSync só funciona para eles assim."
 
-#: xcontrol/panel_page.py:315
+#: xcontrol/panel_page.py:322
 msgid "Effects"
 msgstr "Efeitos"
 
-#: xcontrol/panel_page.py:317
+#: xcontrol/panel_page.py:324
 msgid "Shadows"
 msgstr "Sombras"
 
-#: xcontrol/panel_page.py:322
+#: xcontrol/panel_page.py:329
 msgid "Shadow size"
 msgstr "Tamanho da sombra"
 
-#: xcontrol/panel_page.py:325
+#: xcontrol/panel_page.py:332
 msgid "Shadow strength"
 msgstr "Intensidade da sombra"
 
-#: xcontrol/panel_page.py:326
+#: xcontrol/panel_page.py:333
 msgid "Fade windows in and out"
 msgstr "Esmaecer janelas ao abrir e fechar"
 
-#: xcontrol/panel_page.py:331
+#: xcontrol/panel_page.py:338
 msgid "Fade speed"
 msgstr "Velocidade do esmaecimento"
 
-#: xcontrol/panel_page.py:334
+#: xcontrol/panel_page.py:341
 msgid "Rounded corners"
 msgstr "Cantos arredondados"
 
-#: xcontrol/panel_page.py:339
+#: xcontrol/panel_page.py:346
 msgid "Blur behind see-through windows"
 msgstr "Desfoque atrás de janelas transparentes"
 
-#: xcontrol/panel_page.py:345
+#: xcontrol/panel_page.py:352
 msgid "Focused window"
 msgstr "Janela em foco"
 
-#: xcontrol/panel_page.py:348
+#: xcontrol/panel_page.py:355
 msgid "Other windows"
 msgstr "Outras janelas"
 
-#: xcontrol/panel_page.py:349
+#: xcontrol/panel_page.py:356
 msgid ""
 "Percent opacity. Full-screen windows and the lock screen are never see-"
 "through."
@@ -3062,37 +3071,37 @@ msgstr ""
 "Opacidade em porcentagem. Janelas em tela cheia e a tela de bloqueio nunca "
 "ficam transparentes."
 
-#: xcontrol/panel_page.py:448
+#: xcontrol/panel_page.py:459
 msgid "Could not save the settings"
 msgstr "Não foi possível salvar as configurações"
 
-#: xcontrol/panel_page.py:450
+#: xcontrol/panel_page.py:461
 msgid "Applied"
 msgstr "Aplicado"
 
-#: xcontrol/panel_page.py:471
+#: xcontrol/panel_page.py:482
 msgid "the screen"
 msgstr "a tela"
 
-#: xcontrol/panel_page.py:473
+#: xcontrol/panel_page.py:484
 msgid "polybar isn't installed."
 msgstr "O polybar não está instalado."
 
-#: xcontrol/panel_page.py:477
+#: xcontrol/panel_page.py:488
 #, python-brace-format
 msgid "Running on {displays}."
 msgstr "Rodando em {displays}."
 
-#: xcontrol/panel_page.py:480 xcontrol/panel_page.py:500
+#: xcontrol/panel_page.py:491 xcontrol/panel_page.py:511
 #, python-brace-format
 msgid "Not running: {why}"
 msgstr "Não está rodando: {why}"
 
-#: xcontrol/panel_page.py:480 xcontrol/panel_page.py:500
+#: xcontrol/panel_page.py:491 xcontrol/panel_page.py:511
 msgid "Starting…"
 msgstr "Iniciando…"
 
-#: xcontrol/panel_page.py:486
+#: xcontrol/panel_page.py:497
 msgid ""
 "Another polybar is running (started by your i3 config or a script); it will "
 "sit on top of XControl's."
@@ -3100,23 +3109,23 @@ msgstr ""
 "Há outro polybar rodando (iniciado pela config do i3 ou por um script); ele "
 "vai ficar por cima do do XControl."
 
-#: xcontrol/panel_page.py:489
+#: xcontrol/panel_page.py:500
 msgid ""
 "Remove these from your i3 config, or there will be two bars after the next "
 "login:"
 msgstr ""
 "Remova estas linhas da config do i3, ou haverá duas barras no próximo login:"
 
-#: xcontrol/panel_page.py:493
+#: xcontrol/panel_page.py:504
 msgid "picom isn't installed."
 msgstr "O picom não está instalado."
 
-#: xcontrol/panel_page.py:497
+#: xcontrol/panel_page.py:508
 #, python-brace-format
 msgid "Running (picom {v})."
 msgstr "Rodando (picom {v})."
 
-#: xcontrol/panel_page.py:506
+#: xcontrol/panel_page.py:517
 msgid ""
 "Another compositor is running, so XControl's can't start. Stop it, and "
 "remove it from your i3 config."
@@ -3124,7 +3133,7 @@ msgstr ""
 "Há outro compositor rodando, então o do XControl não consegue iniciar. "
 "Encerre-o e remova-o da config do i3."
 
-#: xcontrol/panel_page.py:509
+#: xcontrol/panel_page.py:520
 msgid ""
 "Remove these from your i3 config, or the other compositor starts first after"
 " the next login:"

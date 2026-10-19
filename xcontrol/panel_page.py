@@ -196,6 +196,13 @@ class PanelPage(Gtk.Box):
         self._row(g, 1, _("After a click"), self.clock_alt)
         g.attach(_hint(_("%H hours, %M minutes, %S seconds, %a weekday, %d day, %b month, %Y year "
                          "(like the date command).")), 1, 2, 1, 1)
+        self.clock_locale = Gtk.ComboBoxText()
+        sys_loc = B.system_locale()
+        self.clock_locale.append("", _("Same as the system ({locale})").format(locale=sys_loc or "C"))
+        for loc in B.locales():
+            self.clock_locale.append(loc, loc)
+        self.clock_locale.connect("changed", self._changed)
+        self._row(g, 5, _("Clock language"), self.clock_locale)
         self.temp_warn = Gtk.SpinButton.new_with_range(40, 110, 1)
         self.temp_warn.connect("value-changed", self._changed)
         tb = Gtk.Box(spacing=6)
@@ -370,6 +377,9 @@ class PanelPage(Gtk.Box):
         self.clock_alt.set_text(b["clock_alt"])
         self.temp_warn.set_value(b["temp_warn"])
         self.disk.get_child().set_text(b["disk_mount"])
+        if not self.clock_locale.set_active_id(b["clock_locale"]):
+            self.clock_locale.append(b["clock_locale"], b["clock_locale"])
+            self.clock_locale.set_active_id(b["clock_locale"])
         self._fill_modules()
 
         self.pic_switch.set_active(p["enabled"])
@@ -414,6 +424,7 @@ class PanelPage(Gtk.Box):
         b["clock_alt"] = self.clock_alt.get_text().strip() or "%a %d %b %Y"
         b["temp_warn"] = int(self.temp_warn.get_value())
         b["disk_mount"] = self.disk.get_child().get_text().strip() or "/"
+        b["clock_locale"] = self.clock_locale.get_active_id() or ""
         p["enabled"] = self.pic_switch.get_active()
         p["backend"] = self.backend.get_active_id() or "glx"
         p["vsync"] = self.vsync.get_active()
