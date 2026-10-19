@@ -64,8 +64,9 @@ def _scale(lo, hi, step, digits, fmt):
 
 
 class ColorPanel(Gtk.Expander):
-    def __init__(self, on_change):
+    def __init__(self, on_change, on_preview=None):
         super().__init__()
+        self.on_preview = on_preview or (lambda m: None)
         head = Gtk.Label(xalign=0)
         head.set_markup("<b>" + _("Scaling and color") + "</b>")
         self.set_label_widget(head)
@@ -130,7 +131,7 @@ class ColorPanel(Gtk.Expander):
         sbox.pack_start(self.sat_note, False, False, 0)
         row("CTM", _("Saturation"), sbox,
             _("Done by the display engine, so it applies to everything on screen, games included. "
-              "At 100 colors are unchanged."))
+              "At 100 colors are unchanged. Shown live while you drag; Apply keeps it."))
 
         self.gamma = _scale(0.5, 2.0, 0.05, 2, lambda v: num(v, 2))
         self.gamma.add_mark(1.0, Gtk.PositionType.BOTTOM, None)
@@ -251,6 +252,7 @@ class ColorPanel(Gtk.Expander):
         P.set_saturation(self.mon, scale.get_value() / 100)
         self.sat_note.hide()
         self.on_change()
+        self.on_preview(self.mon)
 
     def _gamma_changed(self, scale):
         if self.loading or not self.mon or not self.mon.has_gamma:
@@ -258,6 +260,7 @@ class ColorPanel(Gtk.Expander):
         g = round(scale.get_value(), 2)
         self.mon.gamma = (g, g, g)
         self.on_change()
+        self.on_preview(self.mon)
 
     def _reset(self, *_args):
         m = self.mon
@@ -276,3 +279,4 @@ class ColorPanel(Gtk.Expander):
             m.gamma = (1.0, 1.0, 1.0)
         self.show_monitor(m)
         self.on_change()
+        self.on_preview(m)

@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
-from . import config, modelines, output_names, xrandr  # noqa: E402
+from . import config, modelines, output_names, output_props, xrandr  # noqa: E402
 from .display_color import ColorPanel  # noqa: E402
 from .i18n import N_, _, hz, ngettext  # noqa: E402
 from .paths import autostart_file  # noqa: E402
@@ -239,7 +239,13 @@ class DisplayPage(Gtk.Box):
         self.controls = [w for _, w in rows[1:]]
         self.pack_start(g, False, False, 0)
 
-        self.color = ColorPanel(self._color_changed)
+        self.previewed = set()      # outputs whose colours are being previewed live
+        self._preview_pending = {}
+        self._preview_timer = None
+        self.color = ColorPanel(self._color_changed, self._color_preview)
+        # leaving without Apply puts the previewed colours back
+        self.window.connect("delete-event", lambda *_a: (self._undo_preview(), False)[1])
+        self.connect("destroy", lambda *_a: self._undo_preview())
         self.pack_start(self.color, False, False, 0)
         labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
         for child in g.get_children():
@@ -273,6 +279,7 @@ class DisplayPage(Gtk.Box):
         return connected.index(m) + 1 if m in connected else 0
 
     def reload(self, keep=None):
+        self._undo_preview()  # a re-read discards unapplied changes, previews included
         warn = xrandr.session_warning()
         self.warning_label.set_text(warn or "")
         self.warning.set_visible(bool(warn))
@@ -358,6 +365,47 @@ class DisplayPage(Gtk.Box):
 
     def _color_changed(self):
         self.window.set_status(_("Press Apply to use the new settings"))
+
+    # ---- live preview of saturation and gamma
+    def _color_preview(self, m):
+        self._preview_pending[m.name] = m
+        if self._preview_timer is None:  # at most every 120 ms while a slider moves
+            self._preview_timer = GLib.timeout_add(120, self._flush_preview)
+
+    def _flush_preview(self):
+        self._preview_timer = None
+        pending, self._preview_pending = self._preview_pending, {}
+        for name, m in pending.items():
+            args = output_props.preview_args(m)
+            if not args:
+                continue
+            try:
+                xrandr.run(["xrandr"] + args)
+                self.previewed.add(name)
+                self.window.set_status(_("Previewing: press Apply to keep these colors"))
+            except Exception as e:  # noqa: BLE001
+                self.window.set_status(_("Preview failed: {error}").format(error=e))
+        return False
+
+    def _cancel_preview_timer(self):
+        if self._preview_timer is not None:
+            GLib.source_remove(self._preview_timer)
+            self._preview_timer = None
+        self._preview_pending = {}
+
+    def _undo_preview(self):
+        """Put back the colours from before the preview (nothing was applied)."""
+        self._cancel_preview_timer()
+        originals = {m.name: m for m in self.original}
+        for name in sorted(self.previewed):
+            orig = originals.get(name)
+            args = output_props.preview_args(orig) if orig else []
+            if args:
+                try:
+                    xrandr.run(["xrandr"] + args)
+                except Exception:  # noqa: BLE001 - best effort; the output may be gone
+                    pass
+        self.previewed.clear()
 
     def _restore_missing_modes(self):
         """X forgets custom modes when it restarts; put back any saved ones that
@@ -531,6 +579,7 @@ class DisplayPage(Gtk.Box):
             self.window.message(_("At least one display must stay on"), _("Turn on a display before applying."))
             return
         xrandr.normalize_positions(self.monitors)
+        self._cancel_preview_timer()  # the full command below includes the previewed values
         try:
             cmd = xrandr.build_command(self.monitors, reference=self.original)
             previous = xrandr.build_command(self.original, reference=self.monitors) if self.original else None
@@ -545,12 +594,14 @@ class DisplayPage(Gtk.Box):
             return
         if self._confirm_keep():
             self._remember(xrandr.build_command(self.monitors))  # only what differs from defaults
+            self.previewed.clear()  # now applied for real
             self.reload()
             self.window.set_status(_("Display settings applied"))
         else:
             if previous:
                 try:
                     xrandr.run(previous)
+                    self.previewed.clear()  # `previous` restored the colours too
                 except Exception as e:  # noqa: BLE001
                     self.window.message(_("Could not restore the previous layout"), str(e))
             self.reload()

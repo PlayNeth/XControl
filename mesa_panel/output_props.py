@@ -182,3 +182,14 @@ def args_for(m, reference=None):
         if changed or custom:
             args += ["--gamma", ":".join(f"{g:.3g}" for g in m.gamma)]
     return args
+
+
+def preview_args(m):
+    """xrandr arguments that set only this output's colour matrix and gamma: no mode
+    set, so they can run while a slider moves (live preview)."""
+    args = ["--output", m.name]
+    if "CTM" in m.props:
+        args += ["--set", "CTM", ctm_value(m)]
+    if m.has_gamma:
+        args += ["--gamma", ":".join(f"{g:.3g}" for g in m.gamma)]
+    return args if len(args) > 2 else []

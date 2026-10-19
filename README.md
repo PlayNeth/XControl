@@ -134,7 +134,9 @@ through, so on AMD you normally get all of them:
   NVIDIA's "digital vibrance".
 - **Gamma** (`xrandr --gamma`): night-light tools such as redshift also change gamma and win.
 
-Changes go through **Apply** with the usual 15-second revert. A saved layout only stores values
+**Saturation** and **Gamma** change the screen live while you drag; leaving without Apply (or
+closing the panel) puts the old colors back. Changes go through **Apply** with the usual
+15-second revert. A saved layout only stores values
 that differ from the driver's defaults, so they come back after X restarts.
 
 ## Custom resolutions and ignoring the EDID

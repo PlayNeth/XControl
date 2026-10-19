@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.8.0 (2026-10-19)
+
+**Preview saturation and gamma live while dragging**
+
+- Change the screen live while dragging the Saturation and Gamma sliders or pressing
+  "Reset to defaults", before pressing Apply
+- Put the previous colors back when leaving without Apply, reloading the page or closing
+  the panel
+- Show in the status bar that colors are being previewed, or why the preview failed
+
 ## 0.7.5 (2026-10-19)
 
 **Let the window manager draw the title bar outside GNOME-style desktops**
