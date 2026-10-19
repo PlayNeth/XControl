@@ -2,6 +2,20 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.9.3 (2026-10-19)
+
+**Stop the mouse wheel changing settings and keep the window responsive**
+
+- Make the mouse wheel scroll the page instead of changing a dropdown, number field or
+  slider under the pointer; number fields and sliders take the wheel only once clicked
+- Fix the window freezing for seconds while a gaming mouse saves or changes settings:
+  ratbagd calls now run in the background, with a "Talking to the mouse…" spinner
+- Fix gaming mouse saves failing with a timeout on slow mice (wait up to 30 seconds)
+- Show "Looking for gaming mice…" while the Gaming Mouse tab searches for devices
+- Explain on Logitech mice that a steady LED has no brightness setting, and hide the
+  brightness slider there; pick a darker color to dim it
+- Fix a possible crash when changing an LED's mode rebuilt the controls too early
+
 ## 0.9.2 (2026-10-19)
 
 **Let gaming mice switch to a chosen DPI stage after saving**

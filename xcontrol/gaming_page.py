@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import config, launcher, steam, vrr  # noqa: E402
+from . import config, launcher, steam, vrr, widgets  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 LAUNCH_OPTION = "xcontrol-run %command%"
@@ -107,6 +107,8 @@ class SliderSetting:
 
     def _scroll(self, scale, event):
         """One wheel notch = one step. GTK's default jumps by a whole page."""
+        if not widgets.wheel_allowed(scale):  # scrolling the page past the slider
+            return widgets.scroll_page(scale, event)
         step = 0
         if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
             step = 1

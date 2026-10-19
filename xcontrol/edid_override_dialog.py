@@ -9,7 +9,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import edid, edid_override, monitor_info, xrandr  # noqa: E402
+from . import edid, edid_override, monitor_info, widgets, xrandr  # noqa: E402
 from . import edid_override_status as status  # noqa: E402
 from .i18n import _, num  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
@@ -120,6 +120,7 @@ class EdidOverrideDialog(Gtk.Dialog):
             self._set_result(_("pkexec (polkit) is needed to test or install the override; you can still "
                                "save the file."))
         self.show_all()
+        widgets.protect(self)
         self._changed()
         self._update_status()
 

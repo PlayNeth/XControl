@@ -5,6 +5,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
+from . import widgets  # noqa: E402
 from . import config, edid, modelines, xrandr  # noqa: E402
 from .i18n import N_, _, num  # noqa: E402
 from .i18n import hz as hz_text  # noqa: E402
@@ -176,6 +177,7 @@ class ResolutionsDialog(Gtk.Dialog):
         self.ignore_switch.connect("notify::active", self._ignore_toggled)
         self._fill_list()
         self.show_all()
+        widgets.protect(self)
         self._update_preview()
 
     # ---- helpers

@@ -7,6 +7,7 @@ Run: dbus-run-session -- python3 tests/fake_ratbagd.py & ... (XCONTROL_RATBAG_BU
 import json
 import os
 import sys
+import time
 
 from gi.repository import Gio, GLib
 
@@ -155,6 +156,10 @@ def on_call(conn, sender, path, iface, method, params, inv):
                 props["IsDefault"] = GLib.Variant("b", p == path)
     dump()
     inv.return_value(None)
+    delay = float(os.environ.get("FAKE_RATBAG_COMMIT_DELAY", "0"))
+    if method == "Commit" and delay:
+        # like ratbagd writing to a mouse: its main loop answers nothing meanwhile
+        GLib.idle_add(lambda: (time.sleep(delay), False)[1])
 
 
 def on_get(conn, sender, path, iface, prop):

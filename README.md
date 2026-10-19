@@ -242,13 +242,20 @@ service Piper uses) for supported Logitech, SteelSeries, Razer, Roccat, G.Skill 
 - polling rate, button debounce time and angle snapping, when the mouse supports them;
 - button remapping: any mouse button, DPI and profile switching, wheel directions, double click,
   or disabled. Keyboard keys and macros set elsewhere (Piper) are shown and kept;
-- LEDs: off, on, color cycle or breathing, color, brightness and effect speed;
+- LEDs: off, on, color cycle or breathing, color, brightness and effect speed (Logitech mice keep a
+  brightness only for the cycle and breathing effects; dim a steady light with a darker color);
 - profiles, if the mouse has several.
 
 These settings live in the mouse's own memory and are written by **Save to mouse**. On mice
 with onboard profiles (most Logitech G mice), saving makes the mouse reload its settings and
 switch to the DPI stage chosen under **After saving, use** next to the button. libratbag can't
 see presses of the mouse's own DPI button, so pick the stage you want there before saving.
+
+## Mouse wheel
+
+Turning the wheel over a dropdown, number field or slider scrolls the page instead of changing
+the setting, so scrolling past settings can't change them by accident. Number fields and
+sliders take the wheel once you've clicked into them; dropdowns never do.
 
 ## Upgrading from mesa-panel
 

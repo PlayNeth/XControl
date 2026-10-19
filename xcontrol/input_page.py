@@ -1,6 +1,8 @@
 """The Input page: mouse and touchpad (libinput), keyboard (XKB), and gaming mouse
 hardware (libratbag)."""
 import os
+import queue
+import threading
 import traceback
 
 import gi
@@ -8,7 +10,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import input_devices as D, keyboard as K, ratbag as R  # noqa: E402
+from . import input_devices as D, keyboard as K, ratbag as R, widgets  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 from .paths import input_autostart_file  # noqa: E402
 
@@ -62,6 +64,8 @@ def _section(title):
 
 def _wheel_steps(scale, event):
     """One wheel notch = one step (GTK jumps a whole page by default)."""
+    if not widgets.wheel_allowed(scale):
+        return widgets.scroll_page(scale, event)
     adj = scale.get_adjustment()
     step = 0
     if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
@@ -284,8 +288,8 @@ class PointerTab(Gtk.Box):
         val = self.value
         self.loading = True
         try:
-            for key, widgets in self.rows.items():
-                for w in widgets:
+            for key, row in self.rows.items():
+                for w in row:
                     w.set_visible(d.has(key))
                     w.set_no_show_all(not d.has(key))
             self.profile.remove_all()
@@ -568,6 +572,33 @@ class KeyboardTab(Gtk.Box):
 
 
 # ---------------------------------------------------------------------------
+class _Worker:
+    """Runs ratbagd calls one at a time on a background thread. ratbagd can't answer
+    while it writes to a mouse (seconds), so calling it from the window's thread would
+    freeze the window. done(result, error) is called back on the main thread."""
+
+    def __init__(self):
+        self.jobs = queue.Queue()
+        threading.Thread(target=self._loop, name="xcontrol-ratbag", daemon=True).start()
+
+    def run(self, job, done):
+        self.jobs.put((job, done))
+
+    def _loop(self):
+        while True:
+            job, done = self.jobs.get()
+            try:
+                result, error = job(), None
+            except Exception as e:  # noqa: BLE001
+                result, error = None, e
+            GLib.idle_add(self._finish, done, result, error)
+
+    @staticmethod
+    def _finish(done, result, error):
+        done(result, error)
+        return False
+
+
 class GamingMouseTab(Gtk.Box):
     def __init__(self, window):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
@@ -576,6 +607,9 @@ class GamingMouseTab(Gtk.Box):
         self.dev = None
         self.profile = None
         self.loading = False
+        self.busy = 0
+        self.worker = _Worker()
+        self.w = {}
 
         bar = Gtk.Box(spacing=6)
         bar.pack_start(Gtk.Label(label=_("Mouse:")), False, False, 0)
@@ -586,9 +620,9 @@ class GamingMouseTab(Gtk.Box):
         self.profile_combo = Gtk.ComboBoxText()
         self.profile_combo.connect("changed", self._profile_chosen)
         bar.pack_start(self.profile_combo, False, False, 0)
-        refresh = Gtk.Button(label=_("Refresh"))
-        refresh.connect("clicked", lambda *_a: self.reload())
-        bar.pack_start(refresh, False, False, 0)
+        self.refresh_btn = Gtk.Button(label=_("Refresh"))
+        self.refresh_btn.connect("clicked", lambda *_a: self.reload())
+        bar.pack_start(self.refresh_btn, False, False, 0)
         self.pack_start(bar, False, False, 0)
 
         self.message = _hint("")
@@ -602,6 +636,12 @@ class GamingMouseTab(Gtk.Box):
         self.active_btn = Gtk.Button(label=_("Use this profile"))
         self.active_btn.connect("clicked", self._make_profile_active)
         actions.pack_start(self.active_btn, False, False, 0)
+        self.spinner = Gtk.Spinner()
+        self.busy_label = Gtk.Label(label=_("Talking to the mouse…"))
+        self.busy_label.get_style_context().add_class("dim-label")
+        for w in (self.spinner, self.busy_label):
+            w.set_no_show_all(True)
+            actions.pack_start(w, False, False, 0)
         self.save_btn = Gtk.Button(label=_("Save to mouse"))
         self.save_btn.get_style_context().add_class("suggested-action")
         self.save_btn.connect("clicked", self._commit)
@@ -613,23 +653,86 @@ class GamingMouseTab(Gtk.Box):
                                            "stage. XControl can't see presses of the mouse's own DPI button."))
         self.after_save.connect("changed", self._after_save_chosen)
         actions.pack_end(self.after_save, False, False, 0)
-        actions.pack_end(Gtk.Label(label=_("After saving, use")), False, False, 0)
+        self.after_save_label = Gtk.Label(label=_("After saving, use"))
+        actions.pack_end(self.after_save_label, False, False, 0)
         self.pack_start(actions, False, False, 0)
         self.pack_start(_hint(_("Settings are stored in the mouse itself, so they also work on other computers. "
                                 "Changes take effect when you press “Save to mouse”; the mouse then switches to "
                                 "the DPI stage chosen next to the button.")), False, False, 0)
+        self._set_enabled(False)
         self.reload()
+
+    # ---- background calls
+    def _do(self, job, after=None, status=None, rebuild_on_error=True):
+        """Run `job` (ratbagd calls) on the worker; then `after()` on the main thread."""
+        self.busy += 1
+        self._show_busy()
+
+        def done(_result, error):
+            self.busy -= 1
+            self._show_busy()
+            if error is not None:
+                self.window.message(_("The mouse didn't accept this setting"), str(error))
+                if rebuild_on_error and self.profile:
+                    self._build()
+                return
+            if after:
+                after()
+            if status:
+                self.window.set_status(status)
+        self.worker.run(job, done)
+
+    def _show_busy(self):
+        on = self.busy > 0
+        self.spinner.set_visible(on)
+        self.busy_label.set_visible(on)
+        if on:
+            self.spinner.start()
+        else:
+            self.spinner.stop()
+        self.refresh_btn.set_sensitive(not on)
+
+    def _guard(self, make_job, after=None):
+        """Signal handler: make_job(*args) runs on the main thread (reads widgets) and
+        returns the ratbagd job to run in the background, or None."""
+        def run(*args):
+            if self.loading:
+                return
+            job = make_job(*args)
+            if job:
+                self._do(job, after=after, status=_("Changed; press “Save to mouse” to keep it"))
+        return run
+
+    def _set_enabled(self, on):
+        for w in (self.body, self.save_btn, self.active_btn, self.profile_combo, self.after_save):
+            w.set_sensitive(on)
 
     # ---- loading
     def reload(self):
         keep = self.dev.name if self.dev else None
-        why = R.available()
-        self.devices = []
-        if why is None:
+        self.message.set_text(_("Looking for gaming mice…"))
+        self.message.show()
+
+        def job():
+            why = R.available()
+            if why is not None:
+                return why, []
             try:
-                self.devices = R.devices()
+                return None, R.devices()
             except Exception as e:  # noqa: BLE001
-                why = str(e)
+                return str(e), []
+
+        def done(result, error):
+            self.busy -= 1
+            self._show_busy()
+            why, devices = result if error is None else (str(error), [])
+            self._loaded(keep, why, devices)
+        self.busy += 1
+        self._show_busy()
+        self.worker.run(job, done)
+
+    def _loaded(self, keep, why, devices):
+        self.devices = devices
         self.loading = True
         self.combo.remove_all()
         for i, d in enumerate(self.devices):
@@ -646,9 +749,9 @@ class GamingMouseTab(Gtk.Box):
             msg = ""
         self.message.set_text(msg)
         self.message.set_visible(bool(msg))
-        for w in (self.body, self.save_btn, self.active_btn, self.profile_combo):
-            w.set_sensitive(bool(self.devices))
+        self._set_enabled(bool(self.devices))
         names = [d.name for d in self.devices]
+        self.dev = None
         self.combo.set_active(names.index(keep) if keep in names else (0 if names else -1))
         if not self.devices:
             for c in self.body.get_children():
@@ -696,6 +799,12 @@ class GamingMouseTab(Gtk.Box):
         finally:
             self.loading = False
         self.body.show_all()
+        widgets.protect(self.body)
+
+    def _rebuild_later(self):
+        """Rebuild once the current signal handler has returned (it may belong to a widget
+        that the rebuild destroys)."""
+        GLib.idle_add(lambda: (self._build(), False)[1])
 
     def _fill_after_save(self, p):
         self.after_save.remove_all()
@@ -704,7 +813,8 @@ class GamingMouseTab(Gtk.Box):
                 self.after_save.append(str(r["Index"]), _("Stage {n} ({dpi} DPI)").format(n=i, dpi=r.dpi))
         active = next((r for r in p.resolutions if r.get("IsActive")), None)
         self.after_save.set_active_id(str(active["Index"]) if active else None)
-        self.after_save.set_visible(bool(p.resolutions))
+        for w in (self.after_save, self.after_save_label):
+            w.set_visible(bool(p.resolutions))
 
     def _refill_after_save(self):
         self.loading = True
@@ -713,31 +823,20 @@ class GamingMouseTab(Gtk.Box):
         finally:
             self.loading = False
 
+    def _activate_job(self, r):
+        def job():
+            r.make_active()
+            for o in self.profile.resolutions:
+                o.props["IsActive"] = o is r
+        return job
+
     def _after_save_chosen(self, combo):
         if self.loading or not self.profile or combo.get_active_id() is None:
             return
         idx = int(combo.get_active_id())
         r = next(r for r in self.profile.resolutions if r["Index"] == idx)
-        if r.get("IsActive"):
-            return
-        try:
-            r.make_active()
-            for o in self.profile.resolutions:
-                o.props["IsActive"] = o is r
-            self._build()  # keep the "In use" column in step
-        except Exception as e:  # noqa: BLE001
-            self.window.message(_("The mouse didn't accept this setting"), str(e))
-    def _guard(self, fn):
-        def run(*args):
-            if self.loading:
-                return
-            try:
-                fn(*args)
-                self.window.set_status(_("Changed; press “Save to mouse” to keep it"))
-            except Exception as e:  # noqa: BLE001
-                self.window.message(_("The mouse didn't accept this setting"), str(e))
-                self._build()
-        return run
+        if not r.get("IsActive"):
+            self._do(self._activate_job(r), after=self._build)  # keep the "In use" column in step
 
     def _build_dpi(self, p):
         if not p.resolutions:
@@ -752,13 +851,14 @@ class GamingMouseTab(Gtk.Box):
             use = Gtk.RadioButton.new_from_widget(active_group)
             active_group = active_group or use
             use.set_active(bool(r.get("IsActive")))
-            use.connect("toggled", self._guard(lambda b, r=r: b.get_active() and self._use_stage(r)))
+            use.connect("toggled", self._guard(lambda b, r=r: b.get_active() and self._activate_job(r),
+                                               after=self._refill_after_save))
             g.attach(use, 1, i, 1, 1)
             self.w["use"].append(use)
             default = Gtk.RadioButton.new_from_widget(default_group)
             default_group = default_group or default
             default.set_active(bool(r.get("IsDefault")))
-            default.connect("toggled", self._guard(lambda b, r=r: b.get_active() and r.make_default()))
+            default.connect("toggled", self._guard(lambda b, r=r: b.get_active() and r.make_default))
             g.attach(default, 2, i, 1, 1)
             self.w["default"].append(default)
             choices = r.choices
@@ -771,11 +871,10 @@ class GamingMouseTab(Gtk.Box):
                     want = int(s.get_value())
                     dpi = min(choices, key=lambda c: abs(c - want))
                     if dpi != want:
-                        s.set_value(dpi)
-                        return
-                    if dpi != r.dpi:
-                        r.set_dpi(dpi)
-                spin.connect("value-changed", self._guard(snap))
+                        s.set_value(dpi)  # comes back here with an allowed value
+                        return None
+                    return (lambda: r.set_dpi(dpi)) if dpi != r.dpi else None
+                spin.connect("value-changed", self._guard(snap, after=self._refill_after_save))
                 g.attach(spin, 3, i, 1, 1)
                 self.w["dpi"].append(spin)
             else:
@@ -783,21 +882,12 @@ class GamingMouseTab(Gtk.Box):
             if r.can_disable:
                 off = Gtk.CheckButton(label=_("Enabled"))
                 off.set_active(not r.get("IsDisabled"))
-                off.connect("toggled", self._guard(lambda b, r=r: (r.set_disabled(not b.get_active()),
-                                                                   self._refill_after_save())))
+                off.connect("toggled", self._guard(
+                    lambda b, r=r: (lambda on=b.get_active(): r.set_disabled(not on)),
+                    after=self._refill_after_save))
                 g.attach(off, 4, i, 1, 1)
                 self.w["enabled"].append(off)
         self.body.pack_start(frame, False, False, 0)
-
-    def _use_stage(self, r):
-        r.make_active()
-        for o in self.profile.resolutions:
-            o.props["IsActive"] = o is r
-        self.loading = True
-        try:
-            self._fill_after_save(self.profile)
-        finally:
-            self.loading = False
 
     def _build_sensor(self, p):
         rows = []
@@ -806,7 +896,7 @@ class GamingMouseTab(Gtk.Box):
             for hz in p.report_rates:
                 c.append(str(hz), _("{hz} Hz ({ms} ms)").format(hz=hz, ms=f"{1000 / hz:g}"))
             c.set_active_id(str(p.get("ReportRate")))
-            c.connect("changed", self._guard(lambda c: p.set_report_rate(int(c.get_active_id()))))
+            c.connect("changed", self._guard(lambda c: (lambda v=int(c.get_active_id()): p.set_report_rate(v))))
             rows.append((_("Polling rate"), c))
             self.w["rate"] = c
         if p.debounces and p.get("Debounce", -1) != -1:
@@ -814,13 +904,13 @@ class GamingMouseTab(Gtk.Box):
             for ms in p.debounces:
                 c.append(str(ms), _("{ms} ms").format(ms=ms))
             c.set_active_id(str(p.get("Debounce")))
-            c.connect("changed", self._guard(lambda c: p.set_debounce(int(c.get_active_id()))))
+            c.connect("changed", self._guard(lambda c: (lambda v=int(c.get_active_id()): p.set_debounce(v))))
             rows.append((_("Button debounce"), c))
             self.w["debounce"] = c
         if p.angle_snapping is not None:
             c = Gtk.CheckButton(label=_("Straighten nearly straight lines"))
             c.set_active(p.angle_snapping)
-            c.connect("toggled", self._guard(lambda c: p.set_angle_snapping(c.get_active())))
+            c.connect("toggled", self._guard(lambda c: (lambda v=c.get_active(): p.set_angle_snapping(v))))
             rows.append((_("Angle snapping"), c))
             self.w["angle"] = c
         if not rows:
@@ -863,13 +953,12 @@ class GamingMouseTab(Gtk.Box):
             def changed(c, b=b):
                 choice = c.get_active_id()
                 if choice == "keep" or not choice:
-                    return
+                    return None
                 if choice == "none":
-                    b.set_none()
-                elif choice[0] == "b":
-                    b.set_button(int(choice[1:]))
-                else:
-                    b.set_special(R.SPECIAL_BASE + int(choice[1:]))
+                    return b.set_none
+                if choice[0] == "b":
+                    return lambda n=int(choice[1:]): b.set_button(n)
+                return lambda n=R.SPECIAL_BASE + int(choice[1:]): b.set_special(n)
             c.connect("changed", self._guard(changed))
             g.attach(c, 1, i, 1, 1)
             self.w["buttons"].append(c)
@@ -888,10 +977,12 @@ class GamingMouseTab(Gtk.Box):
                 if m in LED_MODE_LABELS:
                     mode.append(str(m), _(LED_MODE_LABELS[m]))
             mode.set_active_id(str(led.get("Mode")))
-            mode.connect("changed", self._guard(lambda c, led=led: (led.set_mode(int(c.get_active_id())),
-                                                                    self._build())))
+            # a different mode shows different controls: rebuild once the mouse took it
+            mode.connect("changed", self._guard(lambda c, led=led: (lambda m=int(c.get_active_id()): led.set_mode(m)),
+                                                after=self._rebuild_later))
             box = Gtk.Box(spacing=8)
             box.pack_start(mode, False, False, 0)
+            self.w["leds"].append({"mode": mode})
             if led.color_bits:
                 rgba = Gdk.RGBA()
                 r, gg, b = led.rgb
@@ -901,23 +992,33 @@ class GamingMouseTab(Gtk.Box):
 
                 def set_color(btn, led=led):
                     c = btn.get_rgba()
-                    led.set_color((round(c.red * 255), round(c.green * 255), round(c.blue * 255)))
+                    rgb = (round(c.red * 255), round(c.green * 255), round(c.blue * 255))
+                    return lambda: led.set_color(rgb)
                 color.connect("color-set", self._guard(set_color))
                 box.pack_start(color, False, False, 0)
+                self.w["leds"][-1]["color"] = color
             g.attach(box, 1, row, 1, 1)
             row += 1
-            if led.get("Mode") != R.LED_OFF:
+            # Logitech (HID++) profiles store brightness only for the cycle and breathing
+            # effects; for a steady light the value is dropped when saving.
+            logitech = str(self.dev.get("Model", "")).split(":")[1:2] == ["046d"]
+            if led.get("Mode") == R.LED_ON and logitech:
+                g.attach(_hint(_("This mouse has no brightness setting for a steady light; "
+                                 "pick a darker color to dim it.")), 1, row, 1, 1)
+                row += 1
+            elif led.get("Mode") != R.LED_OFF:
                 bright = _scale(0, 255, 5, 0, lambda v: f"{round(v * 100 / 255)} %")
                 bright.set_value(led.get("Brightness", 255))
-                later = _Debounce(250, self._guard(lambda v, led=led: led.set_brightness(v)))
+                later = _Debounce(250, self._guard(lambda v, led=led: (lambda: led.set_brightness(v))))
                 bright.connect("value-changed", lambda s, later=later: None if self.loading else later(s.get_value()))
                 g.attach(Gtk.Label(label=_("Brightness"), xalign=0), 0, row, 1, 1)
                 g.attach(bright, 1, row, 1, 1)
+                self.w["leds"][-1]["brightness"] = bright
                 row += 1
             if led.get("Mode") in (R.LED_CYCLE, R.LED_BREATHING):
                 speed = _scale(100, 10000, 100, 0, lambda v: _("{s} s").format(s=f"{v / 1000:g}"))
                 speed.set_value(led.get("EffectDuration", 1000))
-                later = _Debounce(250, self._guard(lambda v, led=led: led.set_duration(v)))
+                later = _Debounce(250, self._guard(lambda v, led=led: (lambda: led.set_duration(v))))
                 speed.connect("value-changed", lambda s, later=later: None if self.loading else later(s.get_value()))
                 g.attach(Gtk.Label(label=_("Effect length"), xalign=0), 0, row, 1, 1)
                 g.attach(speed, 1, row, 1, 1)
@@ -926,24 +1027,20 @@ class GamingMouseTab(Gtk.Box):
 
     # ---- actions
     def _make_profile_active(self, *_args):
-        if self.profile:
-            try:
-                self.profile.make_active()
-                for p in self.dev.profiles:
-                    p.props["IsActive"] = p is self.profile
-                self._device_chosen(self.combo)
-                self.window.set_status(_("Profile switched"))
-            except Exception as e:  # noqa: BLE001
-                self.window.message(_("Could not switch profiles"), str(e))
+        if not self.profile:
+            return
+        profile = self.profile
+
+        def job():
+            profile.make_active()
+            for p in self.dev.profiles:
+                p.props["IsActive"] = p is profile
+        self._do(job, after=lambda: self._device_chosen(self.combo), status=_("Profile switched"),
+                 rebuild_on_error=False)
 
     def _commit(self, *_args):
-        if not self.dev:
-            return
-        try:
-            self.dev.commit()
-            self.window.set_status(_("Saved to the mouse"))
-        except Exception as e:  # noqa: BLE001
-            self.window.message(_("Could not save to the mouse"), str(e))
+        if self.dev:
+            self._do(self.dev.commit, status=_("Saved to the mouse"), rebuild_on_error=False)
 
 
 # ---------------------------------------------------------------------------

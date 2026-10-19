@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.9.2\n"
+"Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 12:43-0300\n"
+"POT-Creation-Date: 2026-10-19 12:52-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,12 +53,12 @@ msgstr ""
 #. TRANSLATORS: slider position meaning the feature is forced off
 #: xcontrol/display_color.py:20 xcontrol/gaming_page.py:17
 #: xcontrol/gaming_page.py:38 xcontrol/gaming_page.py:43
-#: xcontrol/gaming_page.py:48 xcontrol/input_page.py:24
-#: xcontrol/input_page.py:29 xcontrol/input_page.py:40
+#: xcontrol/gaming_page.py:48 xcontrol/input_page.py:26
+#: xcontrol/input_page.py:31 xcontrol/input_page.py:42
 msgid "Off"
 msgstr ""
 
-#: xcontrol/display_color.py:20 xcontrol/input_page.py:40
+#: xcontrol/display_color.py:20 xcontrol/input_page.py:42
 msgid "On"
 msgstr ""
 
@@ -78,92 +78,92 @@ msgstr ""
 msgid "Limited (16–235, for TVs)"
 msgstr ""
 
-#: xcontrol/display_color.py:71
+#: xcontrol/display_color.py:73
 msgid "Scaling and color"
 msgstr ""
 
-#: xcontrol/display_color.py:95
+#: xcontrol/display_color.py:97
 msgid "GPU scaling"
 msgstr ""
 
-#: xcontrol/display_color.py:96
+#: xcontrol/display_color.py:98
 msgid "Used when the resolution is lower than the display's native one."
 msgstr ""
 
 #. TRANSLATORS: horizontal and vertical border sizes, in pixels
-#: xcontrol/display_color.py:107
+#: xcontrol/display_color.py:109
 msgid "Borders"
 msgstr ""
 
-#: xcontrol/display_color.py:111
+#: xcontrol/display_color.py:113
 msgid "Underscan"
 msgstr ""
 
-#: xcontrol/display_color.py:112
+#: xcontrol/display_color.py:114
 msgid ""
 "Shrinks the picture so a TV that crops the edges (overscan) shows all of it."
 msgstr ""
 
-#: xcontrol/display_color.py:116
+#: xcontrol/display_color.py:118
 msgid "Output range"
 msgstr ""
 
-#: xcontrol/display_color.py:117
+#: xcontrol/display_color.py:119
 msgid ""
 "If blacks look gray or dark details are crushed, the display and the GPU "
 "disagree on the range."
 msgstr ""
 
-#: xcontrol/display_color.py:121 xcontrol/monitor_info.py:136
+#: xcontrol/display_color.py:123 xcontrol/monitor_info.py:136
 msgid "Color depth"
 msgstr ""
 
-#: xcontrol/display_color.py:122
+#: xcontrol/display_color.py:124
 msgid ""
 "The highest depth the link may use; the driver lowers it when bandwidth runs "
 "out."
 msgstr ""
 
-#: xcontrol/display_color.py:124
+#: xcontrol/display_color.py:126
 #, python-brace-format
 msgid "{n} %"
 msgstr ""
 
-#: xcontrol/display_color.py:132
+#: xcontrol/display_color.py:134
 msgid "Saturation"
 msgstr ""
 
-#: xcontrol/display_color.py:133
+#: xcontrol/display_color.py:135
 msgid ""
 "Done by the display engine, so it applies to everything on screen, games "
 "included. At 100 colors are unchanged. Shown live while you drag; Apply "
 "keeps it."
 msgstr ""
 
-#: xcontrol/display_color.py:139 xcontrol/monitor_info.py:138
+#: xcontrol/display_color.py:141 xcontrol/monitor_info.py:138
 msgid "Gamma"
 msgstr ""
 
-#: xcontrol/display_color.py:140
+#: xcontrol/display_color.py:142
 msgid ""
 "Higher values brighten dark and middle tones. Night-light tools also change "
 "gamma and may override this."
 msgstr ""
 
-#: xcontrol/display_color.py:143 xcontrol/input_page.py:203
+#: xcontrol/display_color.py:145 xcontrol/input_page.py:207
 msgid "Reset to defaults"
 msgstr ""
 
-#: xcontrol/display_color.py:148
+#: xcontrol/display_color.py:150
 msgid "The driver offers no scaling or color settings for this display."
 msgstr ""
 
-#: xcontrol/display_color.py:203 xcontrol/display_color.py:205
+#: xcontrol/display_color.py:205 xcontrol/display_color.py:207
 #, python-brace-format
 msgid "{bits} bits per color"
 msgstr ""
 
-#: xcontrol/display_color.py:211
+#: xcontrol/display_color.py:213
 msgid ""
 "Another program set a custom color matrix; moving the slider replaces it."
 msgstr ""
@@ -221,12 +221,12 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: xcontrol/display_page.py:233 xcontrol/input_page.py:784
+#: xcontrol/display_page.py:233 xcontrol/input_page.py:883
 #: xcontrol/monitor_info.py:178
 msgid "Enabled"
 msgstr ""
 
-#: xcontrol/display_page.py:234 xcontrol/resolutions_dialog.py:128
+#: xcontrol/display_page.py:234 xcontrol/resolutions_dialog.py:129
 msgid "Resolution"
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Restore this layout when I log in"
 msgstr ""
 
-#: xcontrol/display_page.py:262 xcontrol/input_page.py:208
+#: xcontrol/display_page.py:262 xcontrol/input_page.py:212
 msgid "Apply"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgid ""
 "and fullscreen games."
 msgstr ""
 
-#: xcontrol/display_page.py:367 xcontrol/input_page.py:336
+#: xcontrol/display_page.py:367 xcontrol/input_page.py:340
 msgid "Press Apply to use the new settings"
 msgstr ""
 
@@ -336,7 +336,7 @@ msgstr[1] ""
 msgid "System-wide mode list for {output}"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:67
+#: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr ""
 
@@ -397,44 +397,44 @@ msgid ""
 "save the file."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:183
+#: xcontrol/edid_override_dialog.py:184
 #, python-brace-format
 msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:205
+#: xcontrol/edid_override_dialog.py:206
 msgid "The kernel is using the installed override, and it loads at every boot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:206
+#: xcontrol/edid_override_dialog.py:207
 #, python-brace-format
 msgid ""
 "The kernel is using the installed override, but only until the next reboot: "
 "the kernel parameter {param} is missing."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:208
+#: xcontrol/edid_override_dialog.py:209
 #, python-brace-format
 msgid ""
 "No permanent override is installed for {connector}. “Test now” lasts only "
 "until the next reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:210
+#: xcontrol/edid_override_dialog.py:211
 #, python-brace-format
 msgid ""
 "An override is installed, but the kernel isn't using it because the kernel "
 "parameter {param} is missing. Add it and reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:212
+#: xcontrol/edid_override_dialog.py:213
 #, python-brace-format
 msgid ""
 "An override is installed, but the kernel parameter is {current} instead of "
 "{param}. Fix it and reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:214
+#: xcontrol/edid_override_dialog.py:215
 #, python-brace-format
 msgid ""
 "The override is installed and the kernel parameter is set, but the file is "
@@ -442,52 +442,52 @@ msgid ""
 "FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:217
+#: xcontrol/edid_override_dialog.py:218
 msgid ""
 "The override file changed after the initramfs was built, so the old one is "
 "still loaded at boot. Run “sudo mkinitcpio -P” and reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:219
+#: xcontrol/edid_override_dialog.py:220
 msgid ""
 "The override is installed and set up, but the kernel isn't using it. If you "
 "haven't rebooted since, reboot. Otherwise “sudo dmesg | grep -i edid” shows "
 "why."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:246
+#: xcontrol/edid_override_dialog.py:247
 msgid "Authorization was cancelled."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:250 xcontrol/monitors_page.py:132
+#: xcontrol/edid_override_dialog.py:251 xcontrol/monitors_page.py:132
 msgid "Save EDID"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:251 xcontrol/gaming_page.py:135
-#: xcontrol/gaming_page.py:466 xcontrol/monitors_page.py:133
+#: xcontrol/edid_override_dialog.py:252 xcontrol/gaming_page.py:137
+#: xcontrol/gaming_page.py:468 xcontrol/monitors_page.py:133
 msgid "Cancel"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:251 xcontrol/monitors_page.py:133
+#: xcontrol/edid_override_dialog.py:252 xcontrol/monitors_page.py:133
 msgid "Save"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:260
+#: xcontrol/edid_override_dialog.py:261
 #, python-brace-format
 msgid "Saved {path}"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:277
+#: xcontrol/edid_override_dialog.py:278
 msgid ""
 "Loaded until reboot. The display was re-detected; check the Displays page or "
 "run xrandr. Use “Undo test” to go back."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:284
+#: xcontrol/edid_override_dialog.py:285
 msgid "The display's own EDID is back."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:303
+#: xcontrol/edid_override_dialog.py:304
 #, python-brace-format
 msgid ""
 "Installed {file}.\n"
@@ -512,7 +512,7 @@ msgid ""
 "To undo, remove the parameter and the FILES entry, rebuild, and reboot."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:321
+#: xcontrol/edid_override_dialog.py:322
 msgid "Kernel parameter copied"
 msgstr ""
 
@@ -585,88 +585,88 @@ msgstr ""
 msgid "Use application settings"
 msgstr ""
 
-#: xcontrol/gaming_page.py:134
+#: xcontrol/gaming_page.py:136
 msgid "Add Steam game"
 msgstr ""
 
-#: xcontrol/gaming_page.py:135 xcontrol/gaming_page.py:466
-#: xcontrol/resolutions_dialog.py:152
+#: xcontrol/gaming_page.py:137 xcontrol/gaming_page.py:468
+#: xcontrol/resolutions_dialog.py:153
 msgid "Add"
 msgstr ""
 
-#: xcontrol/gaming_page.py:141
+#: xcontrol/gaming_page.py:143
 msgid "Search installed games"
 msgstr ""
 
-#: xcontrol/gaming_page.py:177 xcontrol/input_page.py:585
+#: xcontrol/gaming_page.py:179 xcontrol/input_page.py:619
 msgid "Profile:"
 msgstr ""
 
-#: xcontrol/gaming_page.py:182
+#: xcontrol/gaming_page.py:184
 msgid "Add game"
 msgstr ""
 
-#: xcontrol/gaming_page.py:184
+#: xcontrol/gaming_page.py:186
 msgid "Steam game…"
 msgstr ""
 
-#: xcontrol/gaming_page.py:184
+#: xcontrol/gaming_page.py:186
 msgid "Program or script…"
 msgstr ""
 
-#: xcontrol/gaming_page.py:191
+#: xcontrol/gaming_page.py:193
 msgid "Delete"
 msgstr ""
 
-#: xcontrol/gaming_page.py:198
+#: xcontrol/gaming_page.py:200
 msgid "Game"
 msgstr ""
 
-#: xcontrol/gaming_page.py:202
+#: xcontrol/gaming_page.py:204
 msgid ""
 "Comma-separated. steam:APPID matches a Steam game; any other entry matches "
 "the file name of the program or of one of its arguments (e.g. game.exe under "
 "Proton)."
 msgstr ""
 
-#: xcontrol/gaming_page.py:205
+#: xcontrol/gaming_page.py:207
 msgid "Optional: command to start the game from here"
 msgstr ""
 
-#: xcontrol/gaming_page.py:206
+#: xcontrol/gaming_page.py:208
 msgid "Launch"
 msgstr ""
 
-#: xcontrol/gaming_page.py:209
+#: xcontrol/gaming_page.py:211
 msgid "Name"
 msgstr ""
 
-#: xcontrol/gaming_page.py:211
+#: xcontrol/gaming_page.py:213
 msgid "Applies to"
 msgstr ""
 
-#: xcontrol/gaming_page.py:213
+#: xcontrol/gaming_page.py:215
 msgid "Command"
 msgstr ""
 
-#: xcontrol/gaming_page.py:223
+#: xcontrol/gaming_page.py:225
 msgid "Anti-Aliasing"
 msgstr ""
 
-#: xcontrol/gaming_page.py:224
+#: xcontrol/gaming_page.py:226
 msgid "Multisampling"
 msgstr ""
 
-#: xcontrol/gaming_page.py:225
+#: xcontrol/gaming_page.py:227
 msgid "Transparency"
 msgstr ""
 
 #. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
-#: xcontrol/gaming_page.py:232
+#: xcontrol/gaming_page.py:234
 msgid "Direct3D 8/9 games"
 msgstr ""
 
-#: xcontrol/gaming_page.py:238
+#: xcontrol/gaming_page.py:240
 msgid ""
 "Forced multisampling works in OpenGL games and, with WineD3D selected, in "
 "Direct3D 8/9 games that draw straight to the screen (mostly older titles). "
@@ -677,699 +677,705 @@ msgid ""
 "WineD3D, both modes supersample just those surfaces."
 msgstr ""
 
-#: xcontrol/gaming_page.py:248
+#: xcontrol/gaming_page.py:250
 msgid "Texture Filtering"
 msgstr ""
 
-#: xcontrol/gaming_page.py:249
+#: xcontrol/gaming_page.py:251
 msgid "Anisotropic filtering"
 msgstr ""
 
-#: xcontrol/gaming_page.py:250
+#: xcontrol/gaming_page.py:252
 msgid "Works in OpenGL, Vulkan and Proton (DXVK / VKD3D-Proton) games."
 msgstr ""
 
-#: xcontrol/gaming_page.py:254
+#: xcontrol/gaming_page.py:256
 msgid "Frame Rate"
 msgstr ""
 
-#: xcontrol/gaming_page.py:255
+#: xcontrol/gaming_page.py:257
 msgid "Vertical sync"
 msgstr ""
 
-#: xcontrol/gaming_page.py:261
+#: xcontrol/gaming_page.py:263
 msgid "Limit frame rate to"
 msgstr ""
 
 #. TRANSLATORS: frames per second, shown after the frame limit number
-#: xcontrol/gaming_page.py:268
+#: xcontrol/gaming_page.py:270
 msgid "FPS"
 msgstr ""
 
-#: xcontrol/gaming_page.py:269
+#: xcontrol/gaming_page.py:271
 msgid "Frame limiter"
 msgstr ""
 
 #. TRANSLATORS: AMD's name for variable refresh rate; keep it if your language uses it
-#: xcontrol/gaming_page.py:274
+#: xcontrol/gaming_page.py:276
 msgid "FreeSync"
 msgstr ""
 
-#: xcontrol/gaming_page.py:286
+#: xcontrol/gaming_page.py:288
 msgid "Post-Processing"
 msgstr ""
 
-#: xcontrol/gaming_page.py:288
+#: xcontrol/gaming_page.py:290
 msgid "Edge smoothing"
 msgstr ""
 
-#: xcontrol/gaming_page.py:294
+#: xcontrol/gaming_page.py:296
 msgid "Sharpening"
 msgstr ""
 
-#: xcontrol/gaming_page.py:301
+#: xcontrol/gaming_page.py:303
 msgid ""
 "Applied by vkBasalt after the game draws each frame, so it works where "
 "forced multisampling can't: Vulkan games and Windows games through DXVK or "
 "VKD3D-Proton. Not OpenGL. Press Home in the game to compare with it off."
 msgstr ""
 
-#: xcontrol/gaming_page.py:305
+#: xcontrol/gaming_page.py:307
 msgid ""
 "Needs vkBasalt, which isn't installed. It smooths edges and sharpens the "
 "image in Vulkan games and Windows games through DXVK or VKD3D-Proton."
 msgstr ""
 
-#: xcontrol/gaming_page.py:322
+#: xcontrol/gaming_page.py:324
 msgid ""
 "Settings apply to games started through the panel's launcher. For Steam "
 "games, use these launch options:"
 msgstr ""
 
-#: xcontrol/gaming_page.py:327
+#: xcontrol/gaming_page.py:329
 msgid "Copy launch options"
 msgstr ""
 
 #. TRANSLATORS: {program} is glxgears or vkcube
-#: xcontrol/gaming_page.py:336
+#: xcontrol/gaming_page.py:338
 #, python-brace-format
 msgid "Test with {program}"
 msgstr ""
 
-#: xcontrol/gaming_page.py:354
+#: xcontrol/gaming_page.py:356
 msgid "Global settings (all games)"
 msgstr ""
 
-#: xcontrol/gaming_page.py:406
+#: xcontrol/gaming_page.py:408
 msgid "Variable refresh is turned off for these games."
 msgstr ""
 
-#: xcontrol/gaming_page.py:408
+#: xcontrol/gaming_page.py:410
 msgid ""
 "Works in fullscreen OpenGL, Vulkan and Proton games on a FreeSync display, "
 "while the frame rate is inside the display's FreeSync range. With a frame "
 "limit, set it a few FPS below the display's maximum refresh rate."
 msgstr ""
 
-#: xcontrol/gaming_page.py:412
+#: xcontrol/gaming_page.py:414
 msgid ""
 "X has it disabled: add Option \"VariableRefresh\" \"true\" to the Device "
 "section of your xorg.conf and restart X."
 msgstr ""
 
-#: xcontrol/gaming_page.py:442
+#: xcontrol/gaming_page.py:444
 msgid "Saved"
 msgstr ""
 
-#: xcontrol/gaming_page.py:444
+#: xcontrol/gaming_page.py:446
 #, python-brace-format
 msgid "Could not save profiles: {error}"
 msgstr ""
 
-#: xcontrol/gaming_page.py:450
+#: xcontrol/gaming_page.py:452
 msgid "No Steam games found"
 msgstr ""
 
-#: xcontrol/gaming_page.py:451
+#: xcontrol/gaming_page.py:453
 msgid ""
 "No installed Steam games were found in the usual Steam folders. You can "
 "still add a game with “Program or script…” and type steam:APPID into "
 "“Applies to”."
 msgstr ""
 
-#: xcontrol/gaming_page.py:464
+#: xcontrol/gaming_page.py:466
 msgid "Choose the game's executable"
 msgstr ""
 
-#: xcontrol/gaming_page.py:482
+#: xcontrol/gaming_page.py:484
 #, python-brace-format
 msgid "Delete the profile “{name}”?"
 msgstr ""
 
-#: xcontrol/gaming_page.py:496
+#: xcontrol/gaming_page.py:498
 msgid "Could not write the vkBasalt configuration"
 msgstr ""
 
-#: xcontrol/gaming_page.py:501
+#: xcontrol/gaming_page.py:503
 msgid "Could not start the program"
 msgstr ""
 
-#: xcontrol/gaming_page.py:510
+#: xcontrol/gaming_page.py:512
 msgid "The command is not valid"
 msgstr ""
 
-#: xcontrol/gaming_page.py:521
+#: xcontrol/gaming_page.py:523
 msgid "Launch options copied"
 msgstr ""
 
-#: xcontrol/input_page.py:16
+#: xcontrol/input_page.py:18
 msgid "Adaptive: faster movement goes further"
 msgstr ""
 
-#: xcontrol/input_page.py:17
+#: xcontrol/input_page.py:19
 msgid "Flat: no acceleration (best for games)"
 msgstr ""
 
-#: xcontrol/input_page.py:18
+#: xcontrol/input_page.py:20
 msgid "Custom (set elsewhere)"
 msgstr ""
 
-#: xcontrol/input_page.py:21
+#: xcontrol/input_page.py:23
 msgid "Two fingers"
 msgstr ""
 
-#: xcontrol/input_page.py:22
+#: xcontrol/input_page.py:24
 msgid "Right edge of the touchpad"
 msgstr ""
 
-#: xcontrol/input_page.py:23
+#: xcontrol/input_page.py:25
 msgid "Hold a button and move"
 msgstr ""
 
-#: xcontrol/input_page.py:27
+#: xcontrol/input_page.py:29
 msgid "Press the bottom corners (right corner = right click)"
 msgstr ""
 
-#: xcontrol/input_page.py:28
+#: xcontrol/input_page.py:30
 msgid "Press with 1, 2 or 3 fingers (2 = right click)"
 msgstr ""
 
-#: xcontrol/input_page.py:33
+#: xcontrol/input_page.py:35
 msgid "Double click"
 msgstr ""
 
-#: xcontrol/input_page.py:33
+#: xcontrol/input_page.py:35
 msgid "Wheel left"
 msgstr ""
 
-#: xcontrol/input_page.py:33
+#: xcontrol/input_page.py:35
 msgid "Wheel right"
 msgstr ""
 
-#: xcontrol/input_page.py:33
+#: xcontrol/input_page.py:35
 msgid "Wheel up"
 msgstr ""
 
-#: xcontrol/input_page.py:33
+#: xcontrol/input_page.py:35
 msgid "Wheel down"
 msgstr ""
 
-#: xcontrol/input_page.py:34
+#: xcontrol/input_page.py:36
 msgid "Ratchet mode switch"
 msgstr ""
 
-#: xcontrol/input_page.py:34
+#: xcontrol/input_page.py:36
 msgid "DPI cycle up"
 msgstr ""
 
-#: xcontrol/input_page.py:34
+#: xcontrol/input_page.py:36
 msgid "DPI cycle down"
 msgstr ""
 
-#: xcontrol/input_page.py:34
+#: xcontrol/input_page.py:36
 msgid "DPI up"
 msgstr ""
 
-#: xcontrol/input_page.py:35
+#: xcontrol/input_page.py:37
 msgid "DPI down"
 msgstr ""
 
-#: xcontrol/input_page.py:35
+#: xcontrol/input_page.py:37
 msgid "DPI shift (sniper)"
 msgstr ""
 
-#: xcontrol/input_page.py:35
+#: xcontrol/input_page.py:37
 msgid "Default DPI"
 msgstr ""
 
-#: xcontrol/input_page.py:35
+#: xcontrol/input_page.py:37
 msgid "Profile cycle up"
 msgstr ""
 
-#: xcontrol/input_page.py:36
+#: xcontrol/input_page.py:38
 msgid "Profile cycle down"
 msgstr ""
 
-#: xcontrol/input_page.py:36
+#: xcontrol/input_page.py:38
 msgid "Profile up"
 msgstr ""
 
-#: xcontrol/input_page.py:36
+#: xcontrol/input_page.py:38
 msgid "Profile down"
 msgstr ""
 
-#: xcontrol/input_page.py:36
+#: xcontrol/input_page.py:38
 msgid "Second mode"
 msgstr ""
 
-#: xcontrol/input_page.py:37
+#: xcontrol/input_page.py:39
 msgid "Battery level"
 msgstr ""
 
-#: xcontrol/input_page.py:39
+#: xcontrol/input_page.py:41
 msgid "Left click"
 msgstr ""
 
-#: xcontrol/input_page.py:39 xcontrol/input_page.py:196
+#: xcontrol/input_page.py:41 xcontrol/input_page.py:200
 msgid "Right click"
 msgstr ""
 
-#: xcontrol/input_page.py:39
+#: xcontrol/input_page.py:41
 msgid "Middle click"
 msgstr ""
 
-#: xcontrol/input_page.py:39
+#: xcontrol/input_page.py:41
 msgid "Back"
 msgstr ""
 
-#: xcontrol/input_page.py:39
+#: xcontrol/input_page.py:41
 msgid "Forward"
 msgstr ""
 
-#: xcontrol/input_page.py:40
+#: xcontrol/input_page.py:42
 msgid "Color cycle"
 msgstr ""
 
-#: xcontrol/input_page.py:41
+#: xcontrol/input_page.py:43
 msgid "Breathing"
 msgstr ""
 
-#: xcontrol/input_page.py:147
+#: xcontrol/input_page.py:151
 msgid "Device:"
 msgstr ""
 
-#: xcontrol/input_page.py:151 xcontrol/input_page.py:589
+#: xcontrol/input_page.py:155 xcontrol/input_page.py:623
 #: xcontrol/monitors_page.py:21
 msgid "Refresh"
 msgstr ""
 
-#: xcontrol/input_page.py:160
+#: xcontrol/input_page.py:164
 msgid "Pointer"
 msgstr ""
 
-#: xcontrol/input_page.py:165
+#: xcontrol/input_page.py:169
 msgid "Slow"
 msgstr ""
 
-#: xcontrol/input_page.py:165 xcontrol/input_page.py:167
-#: xcontrol/input_page.py:474
+#: xcontrol/input_page.py:169 xcontrol/input_page.py:171
+#: xcontrol/input_page.py:478
 msgid "Default"
 msgstr ""
 
-#: xcontrol/input_page.py:165
+#: xcontrol/input_page.py:169
 msgid "Fast"
 msgstr ""
 
-#: xcontrol/input_page.py:170
+#: xcontrol/input_page.py:174
 msgid "Acceleration"
 msgstr ""
 
-#: xcontrol/input_page.py:171
+#: xcontrol/input_page.py:175
 msgid "Pointer speed"
 msgstr ""
 
-#: xcontrol/input_page.py:172
+#: xcontrol/input_page.py:176
 msgid "Scroll speed"
 msgstr ""
 
-#: xcontrol/input_page.py:175
+#: xcontrol/input_page.py:179
 msgid "Natural scrolling (content follows your fingers)"
 msgstr ""
 
-#: xcontrol/input_page.py:176
+#: xcontrol/input_page.py:180
 msgid "Left-handed (swap the left and right buttons)"
 msgstr ""
 
-#: xcontrol/input_page.py:177
+#: xcontrol/input_page.py:181
 msgid "Middle click by pressing left and right together"
 msgstr ""
 
-#: xcontrol/input_page.py:178
+#: xcontrol/input_page.py:182
 msgid "Horizontal scrolling"
 msgstr ""
 
-#: xcontrol/input_page.py:184
+#: xcontrol/input_page.py:188
 msgid "Touchpad"
 msgstr ""
 
-#: xcontrol/input_page.py:185
+#: xcontrol/input_page.py:189
 msgid "Tap to click"
 msgstr ""
 
-#: xcontrol/input_page.py:186
+#: xcontrol/input_page.py:190
 msgid "Tap and drag"
 msgstr ""
 
-#: xcontrol/input_page.py:187
+#: xcontrol/input_page.py:191
 msgid "Drag lock (lifting the finger doesn't end the drag)"
 msgstr ""
 
-#: xcontrol/input_page.py:188
+#: xcontrol/input_page.py:192
 msgid "Disable while typing"
 msgstr ""
 
-#: xcontrol/input_page.py:195
+#: xcontrol/input_page.py:199
 msgid "Scrolling"
 msgstr ""
 
-#: xcontrol/input_page.py:204
+#: xcontrol/input_page.py:208
 msgid "Set this device back to its driver defaults (press Apply to use them)"
 msgstr ""
 
-#: xcontrol/input_page.py:214
+#: xcontrol/input_page.py:218
 msgid ""
 "Changes are used when you press Apply, and kept for each device by name: "
 "XControl puts them back at login and whenever the device is plugged in. "
 "Refresh discards changes you haven't applied."
 msgstr ""
 
-#: xcontrol/input_page.py:247
+#: xcontrol/input_page.py:251
 msgid "xinput was not found, or this isn't an X11 session."
 msgstr ""
 
-#: xcontrol/input_page.py:253
+#: xcontrol/input_page.py:257
 msgid "touchpad"
 msgstr ""
 
-#: xcontrol/input_page.py:253
+#: xcontrol/input_page.py:257
 msgid "mouse"
 msgstr ""
 
-#: xcontrol/input_page.py:257
+#: xcontrol/input_page.py:261
 msgid "No mouse or touchpad using the libinput driver was found."
 msgstr ""
 
-#: xcontrol/input_page.py:353
+#: xcontrol/input_page.py:357
 msgid "Defaults shown; press Apply to use them"
 msgstr ""
 
-#: xcontrol/input_page.py:382
+#: xcontrol/input_page.py:386
 msgid "Could not change this setting"
 msgstr ""
 
-#: xcontrol/input_page.py:384
+#: xcontrol/input_page.py:388
 msgid "Settings applied"
 msgstr ""
 
-#: xcontrol/input_page.py:400
+#: xcontrol/input_page.py:404
 msgid "Layout"
 msgstr ""
 
-#: xcontrol/input_page.py:405
+#: xcontrol/input_page.py:409
 msgid "Not set"
 msgstr ""
 
-#: xcontrol/input_page.py:406
+#: xcontrol/input_page.py:410
 msgid "Default (Caps Lock)"
 msgstr ""
 
-#: xcontrol/input_page.py:407 xcontrol/input_page.py:460
+#: xcontrol/input_page.py:411 xcontrol/input_page.py:464
 msgid "None"
 msgstr ""
 
-#: xcontrol/input_page.py:412
+#: xcontrol/input_page.py:416
 msgid "Keyboard layout"
 msgstr ""
 
-#: xcontrol/input_page.py:412 xcontrol/input_page.py:413
+#: xcontrol/input_page.py:416 xcontrol/input_page.py:417
 msgid "Variant"
 msgstr ""
 
-#: xcontrol/input_page.py:413
+#: xcontrol/input_page.py:417
 msgid "Second layout"
 msgstr ""
 
-#: xcontrol/input_page.py:414
+#: xcontrol/input_page.py:418
 msgid "Switch layouts with"
 msgstr ""
 
-#: xcontrol/input_page.py:414
+#: xcontrol/input_page.py:418
 msgid "Caps Lock key"
 msgstr ""
 
-#: xcontrol/input_page.py:415
+#: xcontrol/input_page.py:419
 msgid "Compose key"
 msgstr ""
 
-#: xcontrol/input_page.py:430
+#: xcontrol/input_page.py:434
 msgid "Key repeat"
 msgstr ""
 
-#: xcontrol/input_page.py:431 xcontrol/input_page.py:815
+#: xcontrol/input_page.py:435 xcontrol/input_page.py:905
 #, python-brace-format
 msgid "{ms} ms"
 msgstr ""
 
-#: xcontrol/input_page.py:432
+#: xcontrol/input_page.py:436
 #, python-brace-format
 msgid "{n} per second"
 msgstr ""
 
-#: xcontrol/input_page.py:437
+#: xcontrol/input_page.py:441
 msgid "Delay before repeating"
 msgstr ""
 
-#: xcontrol/input_page.py:437
+#: xcontrol/input_page.py:441
 msgid "Repeat speed"
 msgstr ""
 
-#: xcontrol/input_page.py:443
+#: xcontrol/input_page.py:447
 msgid "Type here to test"
 msgstr ""
 
-#: xcontrol/input_page.py:447
+#: xcontrol/input_page.py:451
 msgid "Stop managing the keyboard"
 msgstr ""
 
-#: xcontrol/input_page.py:448
+#: xcontrol/input_page.py:452
 msgid ""
 "Forget XControl's keyboard settings; your own setup (xorg.conf.d, i3 config) "
 "takes over again from the next login"
 msgstr ""
 
-#: xcontrol/input_page.py:453
+#: xcontrol/input_page.py:457
 msgid ""
 "Changes apply right away. XControl only re-applies the keyboard settings you "
 "change here, at login and when a keyboard is plugged in."
 msgstr ""
 
-#: xcontrol/input_page.py:493
+#: xcontrol/input_page.py:497
 msgid "setxkbmap was not found, or this isn't an X11 session."
 msgstr ""
 
-#: xcontrol/input_page.py:560
+#: xcontrol/input_page.py:564
 msgid "Keyboard settings saved"
 msgstr ""
 
-#: xcontrol/input_page.py:562
+#: xcontrol/input_page.py:566
 msgid "Could not change the keyboard settings"
 msgstr ""
 
-#: xcontrol/input_page.py:567
+#: xcontrol/input_page.py:571
 msgid "XControl no longer changes the keyboard"
 msgstr ""
 
-#: xcontrol/input_page.py:581
+#: xcontrol/input_page.py:615
 msgid "Mouse:"
 msgstr ""
 
-#: xcontrol/input_page.py:602
+#: xcontrol/input_page.py:636
 msgid "Use this profile"
 msgstr ""
 
-#: xcontrol/input_page.py:605
+#: xcontrol/input_page.py:640
+msgid "Talking to the mouse…"
+msgstr ""
+
+#: xcontrol/input_page.py:645
 msgid "Save to mouse"
 msgstr ""
 
-#: xcontrol/input_page.py:612
+#: xcontrol/input_page.py:652
 msgid ""
 "Saving makes the mouse reload its settings and switch to this DPI stage. "
 "XControl can't see presses of the mouse's own DPI button."
 msgstr ""
 
-#: xcontrol/input_page.py:616
+#: xcontrol/input_page.py:656
 msgid "After saving, use"
 msgstr ""
 
-#: xcontrol/input_page.py:618
+#: xcontrol/input_page.py:659
 msgid ""
 "Settings are stored in the mouse itself, so they also work on other "
 "computers. Changes take effect when you press “Save to mouse”; the mouse "
 "then switches to the DPI stage chosen next to the button."
 msgstr ""
 
-#: xcontrol/input_page.py:639
+#: xcontrol/input_page.py:675
+msgid "The mouse didn't accept this setting"
+msgstr ""
+
+#: xcontrol/input_page.py:703
+msgid "Changed; press “Save to mouse” to keep it"
+msgstr ""
+
+#: xcontrol/input_page.py:713
+msgid "Looking for gaming mice…"
+msgstr ""
+
+#: xcontrol/input_page.py:742
 msgid ""
 "Install libratbag (the ratbagd service) to set DPI, polling rate, buttons "
 "and lighting on supported gaming mice from Logitech, SteelSeries, Razer, "
 "Roccat, G.Skill and others."
 msgstr ""
 
-#: xcontrol/input_page.py:642
+#: xcontrol/input_page.py:745
 #, python-brace-format
 msgid "Could not reach ratbagd: {error}"
 msgstr ""
 
-#: xcontrol/input_page.py:644
+#: xcontrol/input_page.py:747
 msgid ""
 "No supported gaming mouse found. libratbag lists supported models on its "
 "website."
 msgstr ""
 
-#: xcontrol/input_page.py:664
+#: xcontrol/input_page.py:767
 #, python-brace-format
 msgid "Profile {n}"
 msgstr ""
 
-#: xcontrol/input_page.py:666
+#: xcontrol/input_page.py:769
 msgid "(in use)"
 msgstr ""
 
-#: xcontrol/input_page.py:704
+#: xcontrol/input_page.py:813
 #, python-brace-format
 msgid "Stage {n} ({dpi} DPI)"
 msgstr ""
 
-#: xcontrol/input_page.py:729 xcontrol/input_page.py:738
-msgid "The mouse didn't accept this setting"
-msgstr ""
-
-#: xcontrol/input_page.py:736
-msgid "Changed; press “Save to mouse” to keep it"
-msgstr ""
-
-#: xcontrol/input_page.py:745
+#: xcontrol/input_page.py:844
 msgid "Sensitivity (DPI)"
 msgstr ""
 
-#: xcontrol/input_page.py:746
+#: xcontrol/input_page.py:845
 msgid "In use"
 msgstr ""
 
-#: xcontrol/input_page.py:747
+#: xcontrol/input_page.py:846
 msgid "At power-on"
 msgstr ""
 
-#: xcontrol/input_page.py:748
+#: xcontrol/input_page.py:847
 msgid "DPI"
 msgstr ""
 
-#: xcontrol/input_page.py:751
+#: xcontrol/input_page.py:850
 #, python-brace-format
 msgid "Stage {n}"
 msgstr ""
 
-#: xcontrol/input_page.py:807
+#: xcontrol/input_page.py:897
 #, python-brace-format
 msgid "{hz} Hz ({ms} ms)"
 msgstr ""
 
-#: xcontrol/input_page.py:810
+#: xcontrol/input_page.py:900
 msgid "Polling rate"
 msgstr ""
 
-#: xcontrol/input_page.py:818
+#: xcontrol/input_page.py:908
 msgid "Button debounce"
 msgstr ""
 
-#: xcontrol/input_page.py:821
+#: xcontrol/input_page.py:911
 msgid "Straighten nearly straight lines"
 msgstr ""
 
-#: xcontrol/input_page.py:824
+#: xcontrol/input_page.py:914
 msgid "Angle snapping"
 msgstr ""
 
-#: xcontrol/input_page.py:828
+#: xcontrol/input_page.py:918
 msgid "Sensor"
 msgstr ""
 
-#: xcontrol/input_page.py:833
+#: xcontrol/input_page.py:923
 msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
 msgstr ""
 
-#: xcontrol/input_page.py:840
+#: xcontrol/input_page.py:930
 msgid "Buttons"
 msgstr ""
 
-#: xcontrol/input_page.py:842 xcontrol/input_page.py:847
+#: xcontrol/input_page.py:932 xcontrol/input_page.py:937
 #, python-brace-format
 msgid "Button {n}"
 msgstr ""
 
-#: xcontrol/input_page.py:848
+#: xcontrol/input_page.py:938
 #, python-brace-format
 msgid "{action} (button {n})"
 msgstr ""
 
-#: xcontrol/input_page.py:854
+#: xcontrol/input_page.py:944
 msgid "Disabled"
 msgstr ""
 
-#: xcontrol/input_page.py:858
+#: xcontrol/input_page.py:948
 msgid "Keyboard key (set in Piper)"
 msgstr ""
 
-#: xcontrol/input_page.py:858
+#: xcontrol/input_page.py:948
 msgid "Macro (set in Piper)"
 msgstr ""
 
-#: xcontrol/input_page.py:859
+#: xcontrol/input_page.py:949
 #, python-brace-format
 msgid "Other ({kind})"
 msgstr ""
 
-#: xcontrol/input_page.py:881
+#: xcontrol/input_page.py:970
 msgid "Lighting"
 msgstr ""
 
-#: xcontrol/input_page.py:884
+#: xcontrol/input_page.py:973
 #, python-brace-format
 msgid "LED {n}"
 msgstr ""
 
-#: xcontrol/input_page.py:914
+#: xcontrol/input_page.py:1006
+msgid ""
+"This mouse has no brightness setting for a steady light; pick a darker color "
+"to dim it."
+msgstr ""
+
+#: xcontrol/input_page.py:1014
 msgid "Brightness"
 msgstr ""
 
-#: xcontrol/input_page.py:918
+#: xcontrol/input_page.py:1019
 #, python-brace-format
 msgid "{s} s"
 msgstr ""
 
-#: xcontrol/input_page.py:922
+#: xcontrol/input_page.py:1023
 msgid "Effect length"
 msgstr ""
 
-#: xcontrol/input_page.py:935
+#: xcontrol/input_page.py:1038
 msgid "Profile switched"
 msgstr ""
 
-#: xcontrol/input_page.py:937
-msgid "Could not switch profiles"
-msgstr ""
-
-#: xcontrol/input_page.py:944
+#: xcontrol/input_page.py:1043
 msgid "Saved to the mouse"
 msgstr ""
 
-#: xcontrol/input_page.py:946
-msgid "Could not save to the mouse"
-msgstr ""
-
-#: xcontrol/input_page.py:957
+#: xcontrol/input_page.py:1054
 msgid "Mouse & Touchpad"
 msgstr ""
 
-#: xcontrol/input_page.py:958
+#: xcontrol/input_page.py:1055
 msgid "Keyboard"
 msgstr ""
 
-#: xcontrol/input_page.py:959
+#: xcontrol/input_page.py:1056
 msgid "Gaming Mouse"
 msgstr ""
 
-#: xcontrol/input_page.py:964
+#: xcontrol/input_page.py:1061
 #, python-brace-format
 msgid "This section could not be loaded: {error}"
 msgstr ""
@@ -1711,61 +1717,61 @@ msgstr ""
 msgid "Could not save the EDID"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:13
+#: xcontrol/resolutions_dialog.py:14
 msgid "CVT – standard blanking (CRT style)"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:14
+#: xcontrol/resolutions_dialog.py:15
 msgid "CVT – reduced blanking (LCD)"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:15
+#: xcontrol/resolutions_dialog.py:16
 msgid "CVT – reduced blanking v2 (exact refresh rate)"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:16
+#: xcontrol/resolutions_dialog.py:17
 msgid "GTF – classic CRT formula"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:17
+#: xcontrol/resolutions_dialog.py:18
 msgid "DMT – VESA standard timings"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:18
+#: xcontrol/resolutions_dialog.py:19
 msgid "Manual modeline"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:21
+#: xcontrol/resolutions_dialog.py:22
 msgid "manual"
 msgstr ""
 
 #. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz (custom, DMT)"
-#: xcontrol/resolutions_dialog.py:40
+#: xcontrol/resolutions_dialog.py:41
 #, python-brace-format
 msgid "{w}x{h} @ {hz} (custom, {standard})"
 msgstr ""
 
 #. TRANSLATORS: a resolution the user created, e.g. "1024x768 (custom, DMT)"
-#: xcontrol/resolutions_dialog.py:43
+#: xcontrol/resolutions_dialog.py:44
 #, python-brace-format
 msgid "{w}x{h} (custom, {standard})"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:45
+#: xcontrol/resolutions_dialog.py:46
 #, python-brace-format
 msgid "{mode}  (recommended)"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:61
+#: xcontrol/resolutions_dialog.py:62
 #, python-brace-format
 msgid "Resolutions for {output}"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:80
+#: xcontrol/resolutions_dialog.py:81
 msgid "Offer only my resolutions for this display"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:86
+#: xcontrol/resolutions_dialog.py:87
 msgid ""
 "Hides every other mode: the ones the display reports in its EDID and the "
 "scaled modes some drivers add (modesetting does this on connectors that "
@@ -1773,108 +1779,108 @@ msgid ""
 "log in or open this panel."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:92
+#: xcontrol/resolutions_dialog.py:93
 msgid "My resolutions"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:102
+#: xcontrol/resolutions_dialog.py:103
 msgid "Add a resolution"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:119
+#: xcontrol/resolutions_dialog.py:120
 msgid "Classic modes"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:135
+#: xcontrol/resolutions_dialog.py:136
 msgid "Timing"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:139
+#: xcontrol/resolutions_dialog.py:140
 msgid "Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:140
+#: xcontrol/resolutions_dialog.py:141
 msgid "Modeline"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:159
+#: xcontrol/resolutions_dialog.py:160
 msgid "For all programs"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:162
+#: xcontrol/resolutions_dialog.py:163
 msgid ""
 "The options above only change what this panel offers. To hide unwanted modes "
 "from games and every other program, give the kernel a corrected EDID."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:164
+#: xcontrol/resolutions_dialog.py:165
 msgid "System-wide mode list…"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:223
+#: xcontrol/resolutions_dialog.py:225
 msgid "No custom resolutions yet."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:240
+#: xcontrol/resolutions_dialog.py:242
 msgid "Remove"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:258
+#: xcontrol/resolutions_dialog.py:260
 #, python-brace-format
 msgid "VESA DMT has no timing for {w} × {h}. Pick another timing standard."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:275
+#: xcontrol/resolutions_dialog.py:277
 #, python-brace-format
 msgid "Pixel clock {clock} MHz · horizontal {hfreq} kHz · refresh {hz} Hz"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:279
+#: xcontrol/resolutions_dialog.py:281
 msgid ""
 "Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh "
 "rate."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:282
+#: xcontrol/resolutions_dialog.py:284
 #, python-brace-format
 msgid ""
 "Outside the {low}–{high} Hz range the display reports; it may show no "
 "picture."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:285
+#: xcontrol/resolutions_dialog.py:287
 #, python-brace-format
 msgid "Above the display's reported maximum pixel clock ({clock} MHz)."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:301
+#: xcontrol/resolutions_dialog.py:303
 msgid "That resolution is already in the list"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:307
+#: xcontrol/resolutions_dialog.py:309
 msgid "xrandr could not add this resolution"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:311
+#: xcontrol/resolutions_dialog.py:313
 msgid "The X server did not keep this resolution"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:312
+#: xcontrol/resolutions_dialog.py:314
 #, python-brace-format
 msgid ""
 "xrandr accepted {mode}, but it is not in the mode list of {output}. The "
 "display driver may have rejected it."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:318
+#: xcontrol/resolutions_dialog.py:320
 msgid "Resolution added. Pick it on the Displays page and press Apply."
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:322
+#: xcontrol/resolutions_dialog.py:324
 msgid "This resolution is in use"
 msgstr ""
 
-#: xcontrol/resolutions_dialog.py:323
+#: xcontrol/resolutions_dialog.py:325
 msgid "Switch the display to another resolution before removing it."
 msgstr ""
 

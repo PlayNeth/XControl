@@ -13,6 +13,9 @@ BUS_NAME = "org.freedesktop.ratbag1"
 MANAGER_PATH = "/org/freedesktop/ratbag1"
 IFACE = "org.freedesktop.ratbag1."
 API_VERSION = 2
+# ratbagd answers nothing while it writes to a mouse, which can take several seconds;
+# XControl calls it from a background thread, so waiting longer is fine
+TIMEOUT = 30000
 
 # Button ActionTypes
 ACTION_NONE, ACTION_BUTTON, ACTION_SPECIAL, ACTION_KEY, ACTION_MACRO, ACTION_UNKNOWN = 0, 1, 2, 3, 4, 1000
@@ -53,7 +56,7 @@ class _Object:
         try:
             res = self.conn.call_sync(BUS_NAME, self.path, "org.freedesktop.DBus.Properties", "GetAll",
                                       GLib.Variant("(s)", (self.iface,)), GLib.VariantType("(a{sv})"),
-                                      Gio.DBusCallFlags.NONE, 5000, None)
+                                      Gio.DBusCallFlags.NONE, TIMEOUT, None)
         except GLib.Error as e:
             raise RatbagError(e.message) from e
         self.props = res.unpack()[0]
@@ -62,15 +65,15 @@ class _Object:
         try:
             self.conn.call_sync(BUS_NAME, self.path, "org.freedesktop.DBus.Properties", "Set",
                                 GLib.Variant("(ssv)", (self.iface, name, variant)), None,
-                                Gio.DBusCallFlags.NONE, 5000, None)
+                                Gio.DBusCallFlags.NONE, TIMEOUT, None)
         except GLib.Error as e:
             raise RatbagError(e.message) from e
         self.props[name] = variant.unpack()
 
-    def call(self, method, timeout=5000):
+    def call(self, method, timeout=None):
         try:
             self.conn.call_sync(BUS_NAME, self.path, self.iface, method, None, None,
-                                Gio.DBusCallFlags.NONE, timeout, None)
+                                Gio.DBusCallFlags.NONE, timeout or TIMEOUT, None)
         except GLib.Error as e:
             raise RatbagError(e.message) from e
 

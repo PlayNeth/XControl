@@ -5,7 +5,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk  # noqa: E402
 
-from . import __version__, wm  # noqa: E402
+from . import __version__, widgets, wm  # noqa: E402
 from .i18n import _  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
@@ -57,6 +57,7 @@ class MainWindow(Gtk.ApplicationWindow):
         stack.add_titled(inputs, "input", _("Input"))
 
         self.stack = stack
+        widgets.protect(stack)  # the wheel scrolls pages instead of changing settings under the pointer
         box = Gtk.Box()
         box.pack_start(sidebar, False, False, 0)
         box.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)

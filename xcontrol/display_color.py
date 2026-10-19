@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, Gtk, Pango  # noqa: E402
 
-from . import output_props as P  # noqa: E402
+from . import output_props as P, widgets  # noqa: E402
 from .i18n import N_, _, num  # noqa: E402
 
 SCALING_LABELS = {
@@ -36,6 +36,8 @@ def _hint(text):
 
 def _wheel_steps(scale, event):
     """One wheel notch = one step increment (GTK jumps much further by default)."""
+    if not widgets.wheel_allowed(scale):
+        return widgets.scroll_page(scale, event)
     adj = scale.get_adjustment()
     step = 0
     if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
@@ -173,8 +175,8 @@ class ColorPanel(Gtk.Expander):
         props = m.props if m else {}
         avail = {k: (k in props) for k in ("scaling mode", "underscan", "Broadcast RGB", "max bpc", "CTM")}
         avail["gamma"] = bool(m and m.has_gamma)
-        for key, widgets in self.rows.items():
-            for w in widgets:
+        for key, row in self.rows.items():
+            for w in row:
                 w.set_visible(avail[key])
                 w.set_no_show_all(not avail[key])
         anything = any(avail.values())
