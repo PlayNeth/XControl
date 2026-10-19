@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.9.2 (2026-10-19)
+
+**Let gaming mice switch to a chosen DPI stage after saving**
+
+- Add an "After saving, use" choice next to Save to mouse: on mice with onboard profiles
+  (most Logitech G mice) saving reloads the mouse, which then switches to this DPI stage
+- Keep the "In use" DPI stage and the after-saving choice in step when either is changed
+- Update the after-saving list when a DPI stage is enabled or disabled
+- Explain in the hint that XControl can't see presses of the mouse's own DPI button
+
 ## 0.9.1 (2026-10-19)
 
 **Add an Apply button for mouse and touchpad settings**

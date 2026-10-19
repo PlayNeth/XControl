@@ -606,9 +606,18 @@ class GamingMouseTab(Gtk.Box):
         self.save_btn.get_style_context().add_class("suggested-action")
         self.save_btn.connect("clicked", self._commit)
         actions.pack_end(self.save_btn, False, False, 0)
+        # Saving rewrites the profile in the mouse, which then switches to the stage ratbagd
+        # believes is in use. ratbagd never sees the mouse's own DPI button, so make it explicit.
+        self.after_save = Gtk.ComboBoxText()
+        self.after_save.set_tooltip_text(_("Saving makes the mouse reload its settings and switch to this DPI "
+                                           "stage. XControl can't see presses of the mouse's own DPI button."))
+        self.after_save.connect("changed", self._after_save_chosen)
+        actions.pack_end(self.after_save, False, False, 0)
+        actions.pack_end(Gtk.Label(label=_("After saving, use")), False, False, 0)
         self.pack_start(actions, False, False, 0)
         self.pack_start(_hint(_("Settings are stored in the mouse itself, so they also work on other computers. "
-                                "Changes take effect when you press “Save to mouse”.")), False, False, 0)
+                                "Changes take effect when you press “Save to mouse”; the mouse then switches to "
+                                "the DPI stage chosen next to the button.")), False, False, 0)
         self.reload()
 
     # ---- loading
@@ -681,12 +690,43 @@ class GamingMouseTab(Gtk.Box):
             self._build_sensor(p)
             self._build_buttons(p)
             self._build_leds(p)
+            self._fill_after_save(p)
         except Exception:  # noqa: BLE001
             traceback.print_exc()
         finally:
             self.loading = False
         self.body.show_all()
 
+    def _fill_after_save(self, p):
+        self.after_save.remove_all()
+        for i, r in enumerate(p.resolutions, start=1):
+            if not r.get("IsDisabled"):
+                self.after_save.append(str(r["Index"]), _("Stage {n} ({dpi} DPI)").format(n=i, dpi=r.dpi))
+        active = next((r for r in p.resolutions if r.get("IsActive")), None)
+        self.after_save.set_active_id(str(active["Index"]) if active else None)
+        self.after_save.set_visible(bool(p.resolutions))
+
+    def _refill_after_save(self):
+        self.loading = True
+        try:
+            self._fill_after_save(self.profile)
+        finally:
+            self.loading = False
+
+    def _after_save_chosen(self, combo):
+        if self.loading or not self.profile or combo.get_active_id() is None:
+            return
+        idx = int(combo.get_active_id())
+        r = next(r for r in self.profile.resolutions if r["Index"] == idx)
+        if r.get("IsActive"):
+            return
+        try:
+            r.make_active()
+            for o in self.profile.resolutions:
+                o.props["IsActive"] = o is r
+            self._build()  # keep the "In use" column in step
+        except Exception as e:  # noqa: BLE001
+            self.window.message(_("The mouse didn't accept this setting"), str(e))
     def _guard(self, fn):
         def run(*args):
             if self.loading:
@@ -712,7 +752,7 @@ class GamingMouseTab(Gtk.Box):
             use = Gtk.RadioButton.new_from_widget(active_group)
             active_group = active_group or use
             use.set_active(bool(r.get("IsActive")))
-            use.connect("toggled", self._guard(lambda b, r=r: b.get_active() and r.make_active()))
+            use.connect("toggled", self._guard(lambda b, r=r: b.get_active() and self._use_stage(r)))
             g.attach(use, 1, i, 1, 1)
             self.w["use"].append(use)
             default = Gtk.RadioButton.new_from_widget(default_group)
@@ -743,10 +783,21 @@ class GamingMouseTab(Gtk.Box):
             if r.can_disable:
                 off = Gtk.CheckButton(label=_("Enabled"))
                 off.set_active(not r.get("IsDisabled"))
-                off.connect("toggled", self._guard(lambda b, r=r: r.set_disabled(not b.get_active())))
+                off.connect("toggled", self._guard(lambda b, r=r: (r.set_disabled(not b.get_active()),
+                                                                   self._refill_after_save())))
                 g.attach(off, 4, i, 1, 1)
                 self.w["enabled"].append(off)
         self.body.pack_start(frame, False, False, 0)
+
+    def _use_stage(self, r):
+        r.make_active()
+        for o in self.profile.resolutions:
+            o.props["IsActive"] = o is r
+        self.loading = True
+        try:
+            self._fill_after_save(self.profile)
+        finally:
+            self.loading = False
 
     def _build_sensor(self, p):
         rows = []

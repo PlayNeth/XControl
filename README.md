@@ -245,7 +245,10 @@ service Piper uses) for supported Logitech, SteelSeries, Razer, Roccat, G.Skill 
 - LEDs: off, on, color cycle or breathing, color, brightness and effect speed;
 - profiles, if the mouse has several.
 
-These settings live in the mouse's own memory and are written by **Save to mouse**.
+These settings live in the mouse's own memory and are written by **Save to mouse**. On mice
+with onboard profiles (most Logitech G mice), saving makes the mouse reload its settings and
+switch to the DPI stage chosen under **After saving, use** next to the button. libratbag can't
+see presses of the mouse's own DPI button, so pick the stage you want there before saving.
 
 ## Upgrading from mesa-panel
 

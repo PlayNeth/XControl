@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.9.1\n"
+"Project-Id-Version: xcontrol 0.9.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 12:40-0300\n"
+"POT-Creation-Date: 2026-10-19 12:43-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -206,7 +206,7 @@ msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela inf
 msgid "Display"
 msgstr "Tela"
 
-#: xcontrol/display_page.py:233 xcontrol/input_page.py:744 xcontrol/monitor_info.py:178
+#: xcontrol/display_page.py:233 xcontrol/input_page.py:784 xcontrol/monitor_info.py:178
 msgid "Enabled"
 msgstr "Ativada"
 
@@ -1052,7 +1052,7 @@ msgstr "Tecla Compose"
 msgid "Key repeat"
 msgstr "Repetição de teclas"
 
-#: xcontrol/input_page.py:431 xcontrol/input_page.py:764
+#: xcontrol/input_page.py:431 xcontrol/input_page.py:815
 #, python-brace-format
 msgid "{ms} ms"
 msgstr "{ms} ms"
@@ -1114,172 +1114,185 @@ msgstr "Usar este perfil"
 msgid "Save to mouse"
 msgstr "Salvar no mouse"
 
-#: xcontrol/input_page.py:610
-msgid "Settings are stored in the mouse itself, so they also work on other computers. Changes take effect when you press “Save to mouse”."
-msgstr "As configurações ficam guardadas no próprio mouse, então valem também em outros computadores. As mudanças passam a valer quando você clica em “Salvar no mouse”."
+#: xcontrol/input_page.py:612
+msgid "Saving makes the mouse reload its settings and switch to this DPI stage. XControl can't see presses of the mouse's own DPI button."
+msgstr "Salvar faz o mouse recarregar as configurações e mudar para este nível de DPI. O XControl não consegue ver quando você usa o botão de DPI do próprio mouse."
 
-#: xcontrol/input_page.py:630
+#: xcontrol/input_page.py:616
+msgid "After saving, use"
+msgstr "Depois de salvar, usar"
+
+#: xcontrol/input_page.py:618
+msgid "Settings are stored in the mouse itself, so they also work on other computers. Changes take effect when you press “Save to mouse”; the mouse then switches to the DPI stage chosen next to the button."
+msgstr "As configurações ficam guardadas no próprio mouse, então valem também em outros computadores. As mudanças passam a valer quando você clica em “Salvar no mouse”; o mouse então muda para o nível de DPI escolhido ao lado do botão."
+
+#: xcontrol/input_page.py:639
 msgid "Install libratbag (the ratbagd service) to set DPI, polling rate, buttons and lighting on supported gaming mice from Logitech, SteelSeries, Razer, Roccat, G.Skill and others."
 msgstr "Instale o libratbag (o serviço ratbagd) para ajustar DPI, taxa de atualização, botões e iluminação de mouses gamer compatíveis da Logitech, SteelSeries, Razer, Roccat, G.Skill e outros."
 
-#: xcontrol/input_page.py:633
+#: xcontrol/input_page.py:642
 #, python-brace-format
 msgid "Could not reach ratbagd: {error}"
 msgstr "Não foi possível falar com o ratbagd: {error}"
 
-#: xcontrol/input_page.py:635
+#: xcontrol/input_page.py:644
 msgid "No supported gaming mouse found. libratbag lists supported models on its website."
 msgstr "Nenhum mouse gamer compatível encontrado. O site do libratbag lista os modelos compatíveis."
 
-#: xcontrol/input_page.py:655
+#: xcontrol/input_page.py:664
 #, python-brace-format
 msgid "Profile {n}"
 msgstr "Perfil {n}"
 
-#: xcontrol/input_page.py:657
+#: xcontrol/input_page.py:666
 msgid "(in use)"
 msgstr "(em uso)"
 
-#: xcontrol/input_page.py:696
-msgid "Changed; press “Save to mouse” to keep it"
-msgstr "Alterado; clique em “Salvar no mouse” para manter"
+#: xcontrol/input_page.py:704
+#, python-brace-format
+msgid "Stage {n} ({dpi} DPI)"
+msgstr "Nível {n} ({dpi} DPI)"
 
-#: xcontrol/input_page.py:698
+#: xcontrol/input_page.py:729 xcontrol/input_page.py:738
 msgid "The mouse didn't accept this setting"
 msgstr "O mouse não aceitou esta configuração"
 
-#: xcontrol/input_page.py:705
+#: xcontrol/input_page.py:736
+msgid "Changed; press “Save to mouse” to keep it"
+msgstr "Alterado; clique em “Salvar no mouse” para manter"
+
+#: xcontrol/input_page.py:745
 msgid "Sensitivity (DPI)"
 msgstr "Sensibilidade (DPI)"
 
-#: xcontrol/input_page.py:706
+#: xcontrol/input_page.py:746
 msgid "In use"
 msgstr "Em uso"
 
-#: xcontrol/input_page.py:707
+#: xcontrol/input_page.py:747
 msgid "At power-on"
 msgstr "Ao ligar"
 
-#: xcontrol/input_page.py:708
+#: xcontrol/input_page.py:748
 msgid "DPI"
 msgstr "DPI"
 
-#: xcontrol/input_page.py:711
+#: xcontrol/input_page.py:751
 #, python-brace-format
 msgid "Stage {n}"
 msgstr "Nível {n}"
 
-#: xcontrol/input_page.py:756
+#: xcontrol/input_page.py:807
 #, python-brace-format
 msgid "{hz} Hz ({ms} ms)"
 msgstr "{hz} Hz ({ms} ms)"
 
-#: xcontrol/input_page.py:759
+#: xcontrol/input_page.py:810
 msgid "Polling rate"
 msgstr "Taxa de atualização (polling)"
 
-#: xcontrol/input_page.py:767
+#: xcontrol/input_page.py:818
 msgid "Button debounce"
 msgstr "Debounce dos botões"
 
-#: xcontrol/input_page.py:770
+#: xcontrol/input_page.py:821
 msgid "Straighten nearly straight lines"
 msgstr "Endireitar linhas quase retas"
 
-#: xcontrol/input_page.py:773
+#: xcontrol/input_page.py:824
 msgid "Angle snapping"
 msgstr "Correção de ângulo"
 
-#: xcontrol/input_page.py:777
+#: xcontrol/input_page.py:828
 msgid "Sensor"
 msgstr "Sensor"
 
-#: xcontrol/input_page.py:782
+#: xcontrol/input_page.py:833
 msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
 msgstr "A correção de ângulo ajuda a desenhar linhas retas, mas atrapalha a mira em jogos."
 
-#: xcontrol/input_page.py:789
+#: xcontrol/input_page.py:840
 msgid "Buttons"
 msgstr "Botões"
 
-#: xcontrol/input_page.py:791 xcontrol/input_page.py:796
+#: xcontrol/input_page.py:842 xcontrol/input_page.py:847
 #, python-brace-format
 msgid "Button {n}"
 msgstr "Botão {n}"
 
-#: xcontrol/input_page.py:797
+#: xcontrol/input_page.py:848
 #, python-brace-format
 msgid "{action} (button {n})"
 msgstr "{action} (botão {n})"
 
-#: xcontrol/input_page.py:803
+#: xcontrol/input_page.py:854
 msgid "Disabled"
 msgstr "Desativado"
 
-#: xcontrol/input_page.py:807
+#: xcontrol/input_page.py:858
 msgid "Keyboard key (set in Piper)"
 msgstr "Tecla do teclado (defina no Piper)"
 
-#: xcontrol/input_page.py:807
+#: xcontrol/input_page.py:858
 msgid "Macro (set in Piper)"
 msgstr "Macro (defina no Piper)"
 
-#: xcontrol/input_page.py:808
+#: xcontrol/input_page.py:859
 #, python-brace-format
 msgid "Other ({kind})"
 msgstr "Outro ({kind})"
 
-#: xcontrol/input_page.py:830
+#: xcontrol/input_page.py:881
 msgid "Lighting"
 msgstr "Iluminação"
 
-#: xcontrol/input_page.py:833
+#: xcontrol/input_page.py:884
 #, python-brace-format
 msgid "LED {n}"
 msgstr "LED {n}"
 
-#: xcontrol/input_page.py:863
+#: xcontrol/input_page.py:914
 msgid "Brightness"
 msgstr "Brilho"
 
-#: xcontrol/input_page.py:867
+#: xcontrol/input_page.py:918
 #, python-brace-format
 msgid "{s} s"
 msgstr "{s} s"
 
-#: xcontrol/input_page.py:871
+#: xcontrol/input_page.py:922
 msgid "Effect length"
 msgstr "Duração do efeito"
 
-#: xcontrol/input_page.py:884
+#: xcontrol/input_page.py:935
 msgid "Profile switched"
 msgstr "Perfil trocado"
 
-#: xcontrol/input_page.py:886
+#: xcontrol/input_page.py:937
 msgid "Could not switch profiles"
 msgstr "Não foi possível trocar de perfil"
 
-#: xcontrol/input_page.py:893
+#: xcontrol/input_page.py:944
 msgid "Saved to the mouse"
 msgstr "Salvo no mouse"
 
-#: xcontrol/input_page.py:895
+#: xcontrol/input_page.py:946
 msgid "Could not save to the mouse"
 msgstr "Não foi possível salvar no mouse"
 
-#: xcontrol/input_page.py:906
+#: xcontrol/input_page.py:957
 msgid "Mouse & Touchpad"
 msgstr "Mouse e touchpad"
 
-#: xcontrol/input_page.py:907
+#: xcontrol/input_page.py:958
 msgid "Keyboard"
 msgstr "Teclado"
 
-#: xcontrol/input_page.py:908
+#: xcontrol/input_page.py:959
 msgid "Gaming Mouse"
 msgstr "Mouse gamer"
 
-#: xcontrol/input_page.py:913
+#: xcontrol/input_page.py:964
 #, python-brace-format
 msgid "This section could not be loaded: {error}"
 msgstr "Não foi possível carregar esta seção: {error}"
