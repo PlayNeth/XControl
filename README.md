@@ -116,6 +116,27 @@ if you don't. **Restore this layout when I log in** adds an autostart entry
 that runs `mesa-panel --apply-display`. In a Wayland session xrandr can't
 change outputs, so the page explains that and disables Apply.
 
+### Scaling and color
+
+The **Scaling and color** section under the display settings shows only what the X driver offers
+for that output. xf86-video-amdgpu and modesetting both pass the kernel's connector properties
+through, so on AMD you normally get all of them:
+
+- **GPU scaling** (`scaling mode`): what happens when the resolution is below the display's
+  native one: let the display scale, stretch, center without scaling, or scale keeping the aspect
+  ratio.
+- **Underscan** (`underscan`, plus border sizes): for TVs that crop the edges.
+- **Output range** (`Broadcast RGB`): full 0–255 or limited 16–235, for gray blacks or crushed
+  shadows on HDMI.
+- **Color depth** (`max bpc`): the highest bits per color the link may use.
+- **Saturation** (`CTM`): the display engine's color matrix, 0 % (grayscale) to 200 %, applied
+  to everything on screen including games. It's the same idea as Catalyst's saturation slider or
+  NVIDIA's "digital vibrance".
+- **Gamma** (`xrandr --gamma`): night-light tools such as redshift also change gamma and win.
+
+Changes go through **Apply** with the usual 15-second revert. A saved layout only stores values
+that differ from the driver's defaults, so they come back after X restarts.
+
 ## Custom resolutions and ignoring the EDID
 
 **Resolutions…** on the Displays page opens a per-display editor:

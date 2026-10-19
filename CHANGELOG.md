@@ -2,6 +2,23 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.0 (2026-10-18)
+
+**Add scaling and color settings to the Displays page**
+
+- Add a "Scaling and color" section for the selected display, showing only the settings
+  the X driver offers for that output
+- Add GPU scaling (display scales, stretch, center, keep aspect ratio) and underscan with
+  adjustable borders for TVs that crop the edges
+- Add output range (automatic, full 0-255, limited 16-235) and maximum color depth
+- Add a saturation slider (0 to 200 %) through the display engine's color matrix, which
+  also affects games, and warn when another program set a custom matrix
+- Add a gamma slider, and never save uneven gamma left by night-light tools
+- Add "Reset to defaults" for these settings
+- Apply them with the usual 15-second revert, and restore non-default values with the
+  saved layout after X restarts
+- Add tests for the color matrix encoding and the generated xrandr arguments
+
 ## 0.6.0 (2026-10-18)
 
 **Add FreeSync control and vkBasalt post-processing**

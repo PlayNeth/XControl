@@ -1,5 +1,6 @@
 """The Displays page: arrange monitors and set resolution, refresh rate,
 rotation and primary display through xrandr."""
+import copy
 import os
 import shlex
 
@@ -8,6 +9,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
 from . import config, modelines, output_names, xrandr  # noqa: E402
+from .display_color import ColorPanel  # noqa: E402
 from .i18n import N_, _, hz, ngettext  # noqa: E402
 from .paths import autostart_file  # noqa: E402
 from .resolutions_dialog import ResolutionsDialog, mode_label, standard_of  # noqa: E402
@@ -169,7 +171,7 @@ class DisplayPage(Gtk.Box):
         self.window = window
         self.monitors = []
         self.selected = None
-        self.original_cmd = None
+        self.original = []  # the layout as read, for revert
         self.loading = False
 
         self.warning = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
@@ -237,6 +239,15 @@ class DisplayPage(Gtk.Box):
         self.controls = [w for _, w in rows[1:]]
         self.pack_start(g, False, False, 0)
 
+        self.color = ColorPanel(self._color_changed)
+        self.pack_start(self.color, False, False, 0)
+        labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
+        for child in g.get_children():
+            if g.child_get_property(child, "left-attach") == 0:
+                labels.add_widget(child)
+        for w in self.color.label_widgets():
+            labels.add_widget(w)
+
         buttons = Gtk.Box(spacing=6)
         self.autostart_check = Gtk.CheckButton(label=_("Restore this layout when I log in"))
         self.autostart_check.set_active(config.load()["display"]["autostart"])
@@ -268,18 +279,19 @@ class DisplayPage(Gtk.Box):
         self.warning_label.set_visible(bool(warn))
         self.mode_problems = {}
         try:
-            self.monitors = xrandr.query() if xrandr.available() and os.environ.get("DISPLAY") and not warn else []
+            self.monitors = (xrandr.query(with_props=True)
+                             if xrandr.available() and os.environ.get("DISPLAY") and not warn else [])
             if self.monitors:
                 renamed = output_names.migrate_saved()
                 if renamed:
                     self.window.set_status(_("Saved settings moved to the new output names: {names}").format(
                         names=", ".join(f"{a} → {b}" for a, b in renamed.items())))
             if self.monitors and self._restore_missing_modes():
-                self.monitors = xrandr.query()
+                self.monitors = xrandr.query(with_props=True)
         except Exception as e:  # noqa: BLE001 - surface any xrandr failure
             self.monitors = []
             self.window.set_status("xrandr: {error}".format(error=e))
-        self.original_cmd = xrandr.build_command(self.monitors) if self.monitors else None
+        self.original = copy.deepcopy(self.monitors)
         connected = [m for m in self.monitors if m.connected]
         self.selected = (next((m for m in connected if m.name == keep), None)
                          or next((m for m in connected if m.primary), connected[0] if connected else None))
@@ -334,7 +346,12 @@ class DisplayPage(Gtk.Box):
             self.y_spin.set_value(m.y)
             for w in (self.primary_check, self.mode_combo, self.rate_combo, self.rot_combo, self.controls[-1]):
                 w.set_sensitive(m.enabled)
+        self.color.show_monitor(m)
+        self.color.set_sensitive(bool(m and m.enabled))
         self.loading = False
+
+    def _color_changed(self):
+        self.window.set_status(_("Press Apply to use the new settings"))
 
     def _restore_missing_modes(self):
         """X forgets custom modes when it restarts; put back any saved ones that
@@ -508,8 +525,8 @@ class DisplayPage(Gtk.Box):
             self.window.message(_("At least one display must stay on"), _("Turn on a display before applying."))
             return
         xrandr.normalize_positions(self.monitors)
-        cmd = xrandr.build_command(self.monitors)
-        previous = self.original_cmd
+        cmd = xrandr.build_command(self.monitors, reference=self.original)
+        previous = xrandr.build_command(self.original, reference=self.monitors) if self.original else None
         try:
             xrandr.run(cmd)
         except Exception as e:  # noqa: BLE001
@@ -517,7 +534,7 @@ class DisplayPage(Gtk.Box):
             self.reload()
             return
         if self._confirm_keep():
-            self._remember(cmd)
+            self._remember(xrandr.build_command(self.monitors))  # only what differs from defaults
             self.reload()
             self.window.set_status(_("Display settings applied"))
         else:

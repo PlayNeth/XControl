@@ -34,6 +34,12 @@ class Monitor:
     modes: dict = field(default_factory=dict)  # mode -> [rates] in xrandr order
     width_mm: int = 0
     height_mm: int = 0
+    # scaling / colour properties (see output_props): raw values as xrandr prints them
+    props: dict = field(default_factory=dict)
+    choices: dict = field(default_factory=dict)   # enum property -> allowed values
+    ranges: dict = field(default_factory=dict)    # range property -> (min, max)
+    gamma: tuple = (1.0, 1.0, 1.0)                # as passed to --gamma
+    has_gamma: bool = False
 
     def mode_size(self, mode=None):
         m = re.match(r"(\d+)x(\d+)", mode or self.mode or "")
@@ -119,11 +125,15 @@ def _env():
     return env
 
 
-def query():
+def query(with_props=False):
     out = subprocess.run(["xrandr", "--query"], capture_output=True, text=True, timeout=10, env=_env())
     if out.returncode != 0:
         raise RuntimeError(out.stderr.strip() or "xrandr failed")
-    return parse(out.stdout)
+    monitors = parse(out.stdout)
+    if with_props:
+        from . import output_props
+        output_props.attach(monitors, query_verbose())
+    return monitors
 
 
 _VMODE_RE = re.compile(r"^  (?P<name>\S+) \(0x[0-9a-f]+\)\s+(?P<clock>[\d.]+)MHz(?P<flags>.*)$")
@@ -183,6 +193,13 @@ def parse_verbose(text):
         if rm and out[cur]["props"]:
             last = list(out[cur]["props"])[-1]
             out[cur]["props"][last + " (range)"] = rm.group(1).strip()
+            continue
+        # long integer lists (CTM) continue on the next line after 16 values
+        cm = re.fullmatch(r"\t\t((?:-?\d+ ?)+)\s*", line)
+        if cm and out[cur]["props"]:
+            last = list(out[cur]["props"])[-1]
+            if not last.endswith(" (range)"):
+                out[cur]["props"][last] += " " + cm.group(1).strip()
     if cur is not None and edid_hex:
         out[cur]["edid"] = bytes.fromhex("".join(edid_hex))
     return out
@@ -206,7 +223,11 @@ def normalize_positions(monitors):
         m.y -= dy
 
 
-def build_command(monitors):
+def build_command(monitors, reference=None):
+    """xrandr arguments for this layout. `reference` (the layout before the change)
+    makes properties that went back to their default value get set too."""
+    from . import output_props
+    ref = {m.name: m for m in reference or []}
     args = ["xrandr"]
     for m in monitors:
         if not m.connected:
@@ -223,6 +244,7 @@ def build_command(monitors):
             args += ["--pos", f"{m.x}x{m.y}", "--rotate", m.rotation]
             if m.primary:
                 args += ["--primary"]
+            args += output_props.args_for(m, ref.get(m.name))
         else:
             args += ["--off"]
     return args

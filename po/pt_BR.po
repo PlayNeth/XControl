@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.6.0\n"
+"Project-Id-Version: mesa-panel 0.7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 21:48-0300\n"
+"POT-Creation-Date: 2026-10-18 21:59-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -29,141 +29,265 @@ msgstr "Telas"
 msgid "Monitor Info"
 msgstr "Informações do monitor"
 
-#: mesa_panel/display_page.py:15
+#: mesa_panel/display_color.py:13
+msgid "Off: the display does its own scaling"
+msgstr "Desligado: a tela faz a própria escala"
+
+#: mesa_panel/display_color.py:14
+msgid "Stretch to fill the screen"
+msgstr "Esticar para preencher a tela"
+
+#: mesa_panel/display_color.py:15
+msgid "Centered, no scaling (black borders)"
+msgstr "Centralizado, sem escala (bordas pretas)"
+
+#: mesa_panel/display_color.py:16
+msgid "Scale, keeping the aspect ratio"
+msgstr "Escalar mantendo a proporção"
+
+#. TRANSLATORS: slider position meaning the feature is forced off
+#: mesa_panel/display_color.py:18 mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:38 mesa_panel/gaming_page.py:43 mesa_panel/gaming_page.py:48
+msgid "Off"
+msgstr "Desligado"
+
+#: mesa_panel/display_color.py:18
+msgid "On"
+msgstr "Ligado"
+
+#: mesa_panel/display_color.py:18
+msgid "Automatic (HDMI TVs)"
+msgstr "Automático (TVs HDMI)"
+
+#: mesa_panel/display_color.py:20
+msgid "Automatic"
+msgstr "Automático"
+
+#: mesa_panel/display_color.py:21
+msgid "Full (0–255, for PC monitors)"
+msgstr "Completo (0–255, para monitores de PC)"
+
+#: mesa_panel/display_color.py:22
+msgid "Limited (16–235, for TVs)"
+msgstr "Limitado (16–235, para TVs)"
+
+#: mesa_panel/display_color.py:68
+msgid "Scaling and color"
+msgstr "Escala e cor"
+
+#: mesa_panel/display_color.py:92
+msgid "GPU scaling"
+msgstr "Escala pela GPU"
+
+#: mesa_panel/display_color.py:93
+msgid "Used when the resolution is lower than the display's native one."
+msgstr "Usada quando a resolução é menor que a nativa da tela."
+
+#. TRANSLATORS: horizontal and vertical border sizes, in pixels
+#: mesa_panel/display_color.py:104
+msgid "Borders"
+msgstr "Bordas"
+
+#: mesa_panel/display_color.py:108
+msgid "Underscan"
+msgstr "Underscan"
+
+#: mesa_panel/display_color.py:109
+msgid "Shrinks the picture so a TV that crops the edges (overscan) shows all of it."
+msgstr "Reduz a imagem para que uma TV que corta as bordas (overscan) mostre tudo."
+
+#: mesa_panel/display_color.py:113
+msgid "Output range"
+msgstr "Faixa de saída"
+
+#: mesa_panel/display_color.py:114
+msgid "If blacks look gray or dark details are crushed, the display and the GPU disagree on the range."
+msgstr "Se o preto parece cinza ou os detalhes escuros somem, a tela e a GPU discordam sobre a faixa."
+
+#: mesa_panel/display_color.py:118 mesa_panel/monitor_info.py:136
+msgid "Color depth"
+msgstr "Profundidade de cor"
+
+#: mesa_panel/display_color.py:119
+msgid "The highest depth the link may use; the driver lowers it when bandwidth runs out."
+msgstr "A maior profundidade que a conexão pode usar; o driver reduz quando falta largura de banda."
+
+#: mesa_panel/display_color.py:121
+#, python-brace-format
+msgid "{n} %"
+msgstr "{n} %"
+
+#: mesa_panel/display_color.py:129
+msgid "Saturation"
+msgstr "Saturação"
+
+#: mesa_panel/display_color.py:130
+msgid "Done by the display engine, so it applies to everything on screen, games included. At 100 colors are unchanged."
+msgstr "Feita pelo controlador de vídeo, então vale para tudo na tela, inclusive jogos. Em 100 as cores não mudam."
+
+#: mesa_panel/display_color.py:136 mesa_panel/monitor_info.py:138
+msgid "Gamma"
+msgstr "Gama"
+
+#: mesa_panel/display_color.py:137
+msgid "Higher values brighten dark and middle tones. Night-light tools also change gamma and may override this."
+msgstr "Valores maiores clareiam os tons escuros e médios. Ferramentas de luz noturna também mudam o gama e podem sobrescrever isto."
+
+#: mesa_panel/display_color.py:140
+msgid "Reset to defaults"
+msgstr "Restaurar padrões"
+
+#: mesa_panel/display_color.py:145
+msgid "The driver offers no scaling or color settings for this display."
+msgstr "O driver não oferece configurações de escala ou cor para esta tela."
+
+#: mesa_panel/display_color.py:190 mesa_panel/display_color.py:192
+#, python-brace-format
+msgid "{bits} bits per color"
+msgstr "{bits} bits por cor"
+
+#: mesa_panel/display_color.py:198
+msgid "Another program set a custom color matrix; moving the slider replaces it."
+msgstr "Outro programa definiu uma matriz de cor personalizada; mover o controle a substitui."
+
+#: mesa_panel/display_page.py:17
 msgid "Normal"
 msgstr "Normal"
 
-#: mesa_panel/display_page.py:15
+#: mesa_panel/display_page.py:17
 msgid "Rotated left"
 msgstr "Girada à esquerda"
 
-#: mesa_panel/display_page.py:15
+#: mesa_panel/display_page.py:17
 msgid "Rotated right"
 msgstr "Girada à direita"
 
-#: mesa_panel/display_page.py:15
+#: mesa_panel/display_page.py:17
 msgid "Upside down"
 msgstr "De cabeça para baixo"
 
-#: mesa_panel/display_page.py:70
+#: mesa_panel/display_page.py:72
 msgid "No active displays"
 msgstr "Nenhuma tela ativa"
 
 #. TRANSLATORS: label drawn on the primary display in the arrangement view
-#: mesa_panel/display_page.py:100
+#: mesa_panel/display_page.py:102
 msgid "Primary"
 msgstr "Principal"
 
-#: mesa_panel/display_page.py:185
+#: mesa_panel/display_page.py:187
 msgid "Drag the displays to match how they sit on your desk."
 msgstr "Arraste as telas para que fiquem como estão na sua mesa."
 
-#: mesa_panel/display_page.py:194
+#: mesa_panel/display_page.py:196
 msgid "Make this the primary display"
 msgstr "Usar como tela principal"
 
-#: mesa_panel/display_page.py:220
+#: mesa_panel/display_page.py:222
 msgid "Details"
 msgstr "Detalhes"
 
-#: mesa_panel/display_page.py:221
+#: mesa_panel/display_page.py:223
 msgid "Show what this display reports: model, refresh range, HDR, color"
 msgstr "Mostrar o que esta tela informa: modelo, faixa de atualização, HDR, cores"
 
-#: mesa_panel/display_page.py:223
+#: mesa_panel/display_page.py:225
 msgid "Resolutions…"
 msgstr "Resoluções…"
 
-#: mesa_panel/display_page.py:224
+#: mesa_panel/display_page.py:226
 msgid "Add custom resolutions, or ignore the modes the display reports"
 msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela informa"
 
-#: mesa_panel/display_page.py:231
+#: mesa_panel/display_page.py:233
 msgid "Display"
 msgstr "Tela"
 
-#: mesa_panel/display_page.py:231 mesa_panel/monitor_info.py:178
+#: mesa_panel/display_page.py:233 mesa_panel/monitor_info.py:178
 msgid "Enabled"
 msgstr "Ativada"
 
-#: mesa_panel/display_page.py:232 mesa_panel/resolutions_dialog.py:128
+#: mesa_panel/display_page.py:234 mesa_panel/resolutions_dialog.py:128
 msgid "Resolution"
 msgstr "Resolução"
 
-#: mesa_panel/display_page.py:232
+#: mesa_panel/display_page.py:234
 msgid "Refresh rate"
 msgstr "Taxa de atualização"
 
-#: mesa_panel/display_page.py:233
+#: mesa_panel/display_page.py:235
 msgid "Orientation"
 msgstr "Orientação"
 
-#: mesa_panel/display_page.py:233
+#: mesa_panel/display_page.py:235
 msgid "Position"
 msgstr "Posição"
 
-#: mesa_panel/display_page.py:241
+#: mesa_panel/display_page.py:252
 msgid "Restore this layout when I log in"
 msgstr "Restaurar este layout ao iniciar a sessão"
 
-#: mesa_panel/display_page.py:245
+#: mesa_panel/display_page.py:256
 msgid "Apply"
 msgstr "Aplicar"
 
-#: mesa_panel/display_page.py:248
+#: mesa_panel/display_page.py:259
 msgid "Detect displays"
 msgstr "Detectar telas"
 
-#: mesa_panel/display_page.py:250
+#: mesa_panel/display_page.py:261
 msgid "Identify"
 msgstr "Identificar"
 
-#: mesa_panel/display_page.py:275
+#: mesa_panel/display_page.py:287
 #, python-brace-format
 msgid "Saved settings moved to the new output names: {names}"
 msgstr "Configurações salvas movidas para os novos nomes de saída: {names}"
 
-#: mesa_panel/display_page.py:375
+#: mesa_panel/display_page.py:354
+msgid "Press Apply to use the new settings"
+msgstr "Clique em Aplicar para usar as novas configurações"
+
+#: mesa_panel/display_page.py:392
 msgid "None of your custom resolutions are active on this display, so all modes are shown."
 msgstr "Nenhuma das suas resoluções personalizadas está ativa nesta tela, por isso todos os modos são mostrados."
 
-#: mesa_panel/display_page.py:508
+#: mesa_panel/display_page.py:525
 msgid "At least one display must stay on"
 msgstr "Pelo menos uma tela precisa ficar ligada"
 
-#: mesa_panel/display_page.py:508
+#: mesa_panel/display_page.py:525
 msgid "Turn on a display before applying."
 msgstr "Ligue uma tela antes de aplicar."
 
-#: mesa_panel/display_page.py:516
+#: mesa_panel/display_page.py:533
 msgid "xrandr could not apply this layout"
 msgstr "O xrandr não conseguiu aplicar este layout"
 
-#: mesa_panel/display_page.py:522
+#: mesa_panel/display_page.py:539
 msgid "Display settings applied"
 msgstr "Configurações de tela aplicadas"
 
-#: mesa_panel/display_page.py:528
+#: mesa_panel/display_page.py:545
 msgid "Could not restore the previous layout"
 msgstr "Não foi possível restaurar o layout anterior"
 
-#: mesa_panel/display_page.py:530
+#: mesa_panel/display_page.py:547
 msgid "Display settings reverted"
 msgstr "Configurações de tela revertidas"
 
-#: mesa_panel/display_page.py:535
+#: mesa_panel/display_page.py:552
 msgid "Keep these display settings?"
 msgstr "Manter estas configurações de tela?"
 
-#: mesa_panel/display_page.py:536
+#: mesa_panel/display_page.py:553
 msgid "Revert"
 msgstr "Reverter"
 
-#: mesa_panel/display_page.py:536
+#: mesa_panel/display_page.py:553
 msgid "Keep changes"
 msgstr "Manter alterações"
 
-#: mesa_panel/display_page.py:540
+#: mesa_panel/display_page.py:557
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
@@ -342,11 +466,6 @@ msgstr ""
 #: mesa_panel/edid_override_dialog.py:321
 msgid "Kernel parameter copied"
 msgstr "Parâmetro do kernel copiado"
-
-#. TRANSLATORS: slider position meaning the feature is forced off
-#: mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:38 mesa_panel/gaming_page.py:43 mesa_panel/gaming_page.py:48
-msgid "Off"
-msgstr "Desligado"
 
 #: mesa_panel/gaming_page.py:18
 msgid "Multisample (alpha-to-coverage)"
@@ -743,14 +862,6 @@ msgstr "(limite do driver: {limit}, ajustável de {range})"
 msgid "(driver limit: {limit})"
 msgstr "(limite do driver: {limit})"
 
-#: mesa_panel/monitor_info.py:136
-msgid "Color depth"
-msgstr "Profundidade de cor"
-
-#: mesa_panel/monitor_info.py:138
-msgid "Gamma"
-msgstr "Gama"
-
 #: mesa_panel/monitor_info.py:139
 msgid "Panel"
 msgstr "Painel"
@@ -1132,20 +1243,20 @@ msgid "Switch the display to another resolution before removing it."
 msgstr "Mude a tela para outra resolução antes de removê-la."
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
-#: mesa_panel/xrandr.py:50
+#: mesa_panel/xrandr.py:56
 #, python-brace-format
 msgid "{output} (off)"
 msgstr "{output} (desligada)"
 
-#: mesa_panel/xrandr.py:62
+#: mesa_panel/xrandr.py:68
 msgid "The xrandr command was not found. Install the xorg-xrandr package."
 msgstr "O comando xrandr não foi encontrado. Instale o pacote xorg-xrandr."
 
-#: mesa_panel/xrandr.py:65
+#: mesa_panel/xrandr.py:71
 msgid "You are in a Wayland session. xrandr only controls X11 outputs, so use your desktop's display settings here."
 msgstr "Você está em uma sessão Wayland. O xrandr só controla saídas X11, então use aqui as configurações de tela do seu ambiente gráfico."
 
-#: mesa_panel/xrandr.py:68
+#: mesa_panel/xrandr.py:74
 msgid "No X11 display found (DISPLAY is not set)."
 msgstr "Nenhuma tela X11 encontrada (DISPLAY não está definido)."
 
