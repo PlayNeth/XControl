@@ -1,6 +1,7 @@
 """What each connected display reports about itself (shown from Displays → Details)."""
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import monitor_info  # noqa: E402

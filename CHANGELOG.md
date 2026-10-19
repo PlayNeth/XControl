@@ -2,6 +2,23 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.16.0 (2026-10-19)
+
+**Add live 3D preview of graphics settings to the Gaming page**
+
+- Add a live 3D scene to the Gaming page, like the old Catalyst and NVIDIA
+  panels: glxgears' gears above a checkerboard floor with a chain-link fence
+- Show the settings being edited in the scene: multisampling on the gears'
+  edges, anisotropic filtering on the floor, transparency anti-aliasing on the
+  fence, and the frame limiter on the animation
+- Show the frame rate and OpenGL renderer in the corner; drag to turn the scene
+  and double-click to reset it
+- Let the "3D preview" heading collapse the scene, remembered between runs; it
+  only draws while visible and needs nothing extra installed (OpenGL 3.3)
+- Fix saving game profiles overwriting settings that other pages had saved in
+  the meantime
+- Add tests for the preview's geometry, textures and settings mapping
+
 ## 0.15.0 (2026-10-19)
 
 **Add Users page for managing user accounts**

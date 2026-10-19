@@ -105,6 +105,10 @@ def load():
     desk = raw.get("desktop")
     if isinstance(desk, dict):
         data["desktop"] = desk
+    # small interface preferences, e.g. {"preview": false}
+    ui = raw.get("ui")
+    if isinstance(ui, dict):
+        data["ui"] = ui
     return data
 
 

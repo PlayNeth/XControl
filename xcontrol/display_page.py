@@ -6,6 +6,7 @@ import shlex
 
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
 from . import config, modelines, output_names, output_props, xrandr  # noqa: E402

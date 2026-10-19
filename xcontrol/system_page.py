@@ -4,6 +4,7 @@ import threading
 
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, GObject, Gtk, Pango  # noqa: E402
 
 from . import kmods, sysinfo  # noqa: E402

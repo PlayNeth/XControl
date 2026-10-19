@@ -6,6 +6,7 @@ import subprocess
 
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import config, launcher, steam, vrr, widgets  # noqa: E402
@@ -196,6 +197,20 @@ class GamingPage(Gtk.Box):
         bar.pack_start(self.delete_btn, False, False, 0)
         self.pack_start(bar, False, False, 0)
 
+        # ---- live 3D preview of the settings below
+        from .preview3d import Preview3D
+        self.preview = Preview3D()
+        self.preview_box = Gtk.Expander(label=_("3D preview"))
+        self.preview_box.set_expanded(self.data.get("ui", {}).get("preview", True))
+        self.preview_box.connect("notify::expanded", self._preview_toggled)
+        inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4, margin_top=6)
+        inner.pack_start(self.preview, False, False, 0)
+        inner.pack_start(_hint(_("The gears show multisampling on their edges, the floor anisotropic filtering, "
+                                 "the fence transparency anti-aliasing. The frame limiter applies too. Drag to "
+                                 "turn the scene; double-click to reset it.")), False, False, 0)
+        self.preview_box.add(inner)
+        self.pack_start(self.preview_box, False, False, 0)
+
         # ---- game details (hidden for the global profile)
         self.details_frame, g = _section(_("Game"))
         self.name_entry = Gtk.Entry(hexpand=True)
@@ -384,6 +399,7 @@ class GamingPage(Gtk.Box):
         self.post_aa.set_active(config.POST_AA_VALUES.index(s["post_aa"]))
         self.sharpen.set_active(min(range(len(SHARPEN_VALUES)), key=lambda i: abs(SHARPEN_VALUES[i] - s["sharpen"])))
         self._update_freesync_hint(s)
+        self.preview.set_settings(s)
         self.loading = False
 
     def _settings_changed(self, *_args):
@@ -401,6 +417,11 @@ class GamingPage(Gtk.Box):
         s["post_aa"] = config.POST_AA_VALUES[max(0, self.post_aa.get_active())]
         s["sharpen"] = SHARPEN_VALUES[max(0, self.sharpen.get_active())]
         self._update_freesync_hint(s)
+        self.preview.set_settings(s)
+        self._save()
+
+    def _preview_toggled(self, exp, _pspec):
+        self.data.setdefault("ui", {})["preview"] = exp.get_expanded()
         self._save()
 
     def _update_freesync_hint(self, s):
@@ -440,7 +461,12 @@ class GamingPage(Gtk.Box):
 
     def _save(self):
         try:
-            config.save(self.data)
+            # only this page's parts: other pages save their own sections in the same file meanwhile
+            fresh = config.load()
+            fresh["global"], fresh["games"] = self.data["global"], self.data["games"]
+            if "ui" in self.data:
+                fresh["ui"] = self.data["ui"]
+            config.save(fresh)
             self.window.set_status(_("Saved"))
         except OSError as e:
             self.window.set_status(_("Could not save profiles: {error}").format(error=e))

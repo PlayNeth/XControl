@@ -68,6 +68,22 @@ too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
 - Driver and DXVK knobs (`RADV_TEX_ANISO`, `DXVK_CONFIG`, …) are set alongside
   the hooks to cover paths they can't see.
 
+## 3D preview
+
+The Gaming page opens with a live 3D scene, like the ones in the old Catalyst and NVIDIA control
+panels: glxgears' three gears turning above a checkerboard floor, with a chain-link fence
+behind them, drawn with the settings you're editing:
+
+- **Multisampling**: the gears' edges (drawn into a multisampled framebuffer).
+- **Anisotropic filtering**: the floor as it stretches to the horizon.
+- **Transparency**: the fence, alpha-tested, with alpha-to-coverage or with per-sample shading.
+- **Frame limiter**: the animation's frame rate.
+
+The corner shows the frame rate and the OpenGL renderer. Drag to turn the scene; double-click
+resets it. It only draws while it's on screen, and the **3D preview** heading collapses it
+(remembered). "Application decides" settings are shown as the plain picture. It uses OpenGL 3.3
+through GTK, nothing else to install.
+
 ## FreeSync
 
 **FreeSync** sets Mesa's `adaptive_sync` option for the game (Mesa reads its driconf options

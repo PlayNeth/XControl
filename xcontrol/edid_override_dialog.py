@@ -7,6 +7,7 @@ import tempfile
 
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import edid, edid_override, monitor_info, widgets, xrandr  # noqa: E402
