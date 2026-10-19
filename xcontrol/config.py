@@ -105,6 +105,10 @@ def load():
     desk = raw.get("desktop")
     if isinstance(desk, dict):
         data["desktop"] = desk
+    # i3: XControl's i3 config (checked by i3cfg.normalize)
+    i3 = raw.get("i3")
+    if isinstance(i3, dict):
+        data["i3"] = i3
     # small interface preferences, e.g. {"preview": false}
     ui = raw.get("ui")
     if isinstance(ui, dict):

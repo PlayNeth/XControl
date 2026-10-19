@@ -394,7 +394,7 @@ your own polybar and picom configs are neither used nor changed. Changes apply r
 (with a see-through background when a compositor runs), and the modules: workspaces, window
 title, clock, CPU, memory, CPU temperature, volume, network, disk, keyboard layout, battery
 (laptops) and the system tray, each on the left, center or right, in any order. Labels are words
-(CPU, RAM, VOL) or icons when a Nerd Font is installed (e.g. `ttf-nerd-fonts-symbols`). Clock format,
+(CPU, RAM, VOL) or icons when a Nerd Font is installed (e.g. `ttf-nerd-fonts-symbols`).
 Every module has a gear button with its settings, e.g. for the i3 workspaces: name or number,
 only this display's workspaces, urgent ones from other displays, hiding numbers ("1:web" →
 "web"), sorting, click and scroll (wrapping, reversed), a separator, label spacing, and colors
@@ -421,6 +421,38 @@ Both are started by `xcontrol --session` and restarted if they crash; if one kee
 page shows why (e.g. a backend your driver doesn't support). The page also points out
 `exec polybar`/`launch.sh`, `exec picom` lines and an i3 `bar { }` block in your i3 config, which
 would start a second bar or compositor, and can stop ones that are already running.
+
+## Window Manager (i3)
+
+When **Use XControl's i3 config** is on, XControl writes `~/.config/i3/config` itself and reloads
+i3 after every change. The config you had is moved aside as `config.before-xcontrol` (and
+`~/.i3/config`, which i3 would otherwise read first, as `~/.i3/config.before-xcontrol`); switching
+the page off offers to put it back. Every change is checked with `i3 -C` before it's written, so
+a mistake shows up on the page as an error and never replaces a working config. **Show the file…**
+shows (and copies) what's written.
+
+The first time it's switched on you can start from i3's defaults or **import** your current config:
+keys (with `$mod` and other variables resolved), modes, startup programs, window rules, workspace
+names and displays, font, borders, gaps and colors come over; lines XControl now takes care of
+(polybar/`launch.sh`, picom, feh, xss-lock, an i3 `bar { }`) are left out, and anything else lands
+in **Extra i3 config**.
+
+- **Look:** title font, borders for tiled and floating windows, title position, hiding borders
+  at the screen edge, gaps between windows and around the edge (and none for a lone window), and
+  all of i3's window colors.
+- **Keys:** the main key (Super or Alt, `$mod`), dragging windows, and every key binding in every
+  mode, with search. Add or change a binding by typing it or pressing it (**Press keys…** grabs
+  the keyboard, so even combinations i3 uses reach it). Keys used twice are shown in red.
+- **Behavior & Workspaces:** focus follows the mouse, mouse warping, what happens when a window
+  asks for attention, focus wrapping, where new windows go, new workspace layout, dialogs over
+  full-screen windows, going back to the previous workspace, and a name and display for
+  workspaces 1–10.
+- **Startup & Rules:** programs started with i3 (or on every reload), window rules (`for_window`,
+  `assign`; **Pick a window…** fills in a program's class with `xprop`), i3's own bar when
+  XControl's bar is off, and **Extra i3 config** for anything else from i3's user guide.
+
+`exec --no-startup-id xcontrol --session` is always in the generated file, so the wallpaper,
+bar, compositor, screen lock and input settings start with i3.
 
 ## Users
 

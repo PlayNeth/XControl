@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import bar as B, compositor as C, desktop as D, widgets  # noqa: E402
+from . import bar as B, compositor as C, desktop as D, i3cfg as I3, widgets  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 MODULE_LABELS = {
@@ -465,6 +465,9 @@ class PanelPage(Gtk.Box):
         try:
             D.save(fresh)
             D.notify_daemon(fresh)
+            ok, errors = I3.refresh()   # i3's own bar comes and goes with this one
+            if not ok:
+                self.window.message(_("The i3 config wasn't updated"), "\n".join(errors))
         except Exception as e:  # noqa: BLE001
             self.window.message(_("Could not save the settings"), str(e))
             return False

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 15:46-0300\n"
+"POT-Creation-Date: 2026-10-19 16:11-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,50 +17,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:50
+#: xcontrol/app.py:51
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:54
+#: xcontrol/app.py:55
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:58
+#: xcontrol/app.py:59
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:62
+#: xcontrol/app.py:63
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:66
+#: xcontrol/app.py:67
 msgid "Desktop"
 msgstr "Área de trabalho"
 
-#: xcontrol/app.py:68
+#: xcontrol/app.py:69
 msgid "Bar & Compositor"
 msgstr "Barra e Compositor"
 
-#: xcontrol/app.py:72
+#: xcontrol/app.py:70
+msgid "Window Manager (i3)"
+msgstr "Gerenciador de janelas (i3)"
+
+#: xcontrol/app.py:74
 msgid "Users"
 msgstr "Usuários"
 
-#: xcontrol/app.py:74 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:76 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:110
+#: xcontrol/app.py:112
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:111 xcontrol/appearance_page.py:390
-#: xcontrol/edid_override_dialog.py:28 xcontrol/module_params_dialog.py:119
-#: xcontrol/resolutions_dialog.py:68
+#: xcontrol/app.py:113 xcontrol/appearance_page.py:390
+#: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:865
+#: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr "Fechar"
 
-#: xcontrol/appearance_page.py:17 xcontrol/input_page.py:411
-#: xcontrol/input_page.py:464 xcontrol/sysinfo.py:822 xcontrol/sysinfo.py:830
+#: xcontrol/appearance_page.py:17 xcontrol/i3_page.py:17
+#: xcontrol/input_page.py:411 xcontrol/input_page.py:464
+#: xcontrol/sysinfo.py:822 xcontrol/sysinfo.py:830
 msgid "None"
 msgstr "Nenhum"
 
@@ -738,6 +743,7 @@ msgstr "Automático"
 
 #: xcontrol/bar_module_dialog.py:99 xcontrol/edid_override_dialog.py:253
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
+#: xcontrol/i3_page.py:80 xcontrol/i3_page.py:799
 #: xcontrol/monitors_page.py:138 xcontrol/users_page.py:358
 #: xcontrol/users_page.py:380 xcontrol/users_page.py:444
 #: xcontrol/users_page.py:456
@@ -795,8 +801,8 @@ msgstr "Uma imagem diferente por tela"
 msgid "xsecurelock (most robust)"
 msgstr "xsecurelock (o mais robusto)"
 
-#: xcontrol/desktop_page.py:46 xcontrol/system_page.py:65
-#: xcontrol/system_page.py:308
+#: xcontrol/desktop_page.py:46 xcontrol/i3_page.py:864
+#: xcontrol/system_page.py:65 xcontrol/system_page.py:308
 msgid "Copy"
 msgstr "Copiar"
 
@@ -805,7 +811,7 @@ msgstr "Copiar"
 msgid "Copied: {text}"
 msgstr "Copiado: {text}"
 
-#: xcontrol/desktop_page.py:69
+#: xcontrol/desktop_page.py:69 xcontrol/i3_page.py:50
 msgid "Never"
 msgstr "Nunca"
 
@@ -847,6 +853,7 @@ msgid "Layout"
 msgstr "Layout"
 
 #: xcontrol/desktop_page.py:140 xcontrol/display_page.py:234
+#: xcontrol/i3_page.py:480
 msgid "Display"
 msgstr "Tela"
 
@@ -1028,13 +1035,14 @@ msgstr "Escalar mantendo a proporção"
 #. TRANSLATORS: slider position meaning the feature is forced off
 #: xcontrol/display_color.py:21 xcontrol/gaming_page.py:18
 #: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
-#: xcontrol/gaming_page.py:49 xcontrol/input_page.py:26
+#: xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21 xcontrol/input_page.py:26
 #: xcontrol/input_page.py:31 xcontrol/input_page.py:42
 #: xcontrol/panel_page.py:29
 msgid "Off"
 msgstr "Desligado"
 
-#: xcontrol/display_color.py:21 xcontrol/input_page.py:42
+#: xcontrol/display_color.py:21 xcontrol/i3_page.py:21
+#: xcontrol/input_page.py:42
 msgid "On"
 msgstr "Ligado"
 
@@ -1602,7 +1610,8 @@ msgid "Add Steam game"
 msgstr "Adicionar jogo da Steam"
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/resolutions_dialog.py:153 xcontrol/users_page.py:381
+#: xcontrol/i3_page.py:582 xcontrol/resolutions_dialog.py:153
+#: xcontrol/users_page.py:381
 msgid "Add"
 msgstr "Adicionar"
 
@@ -1667,7 +1676,7 @@ msgstr "Opcional: comando para iniciar o jogo por aqui"
 msgid "Launch"
 msgstr "Iniciar"
 
-#: xcontrol/gaming_page.py:226
+#: xcontrol/gaming_page.py:226 xcontrol/i3_page.py:480
 msgid "Name"
 msgstr "Nome"
 
@@ -1675,7 +1684,7 @@ msgstr "Nome"
 msgid "Applies to"
 msgstr "Aplica-se a"
 
-#: xcontrol/gaming_page.py:230
+#: xcontrol/gaming_page.py:230 xcontrol/i3_page.py:516
 msgid "Command"
 msgstr "Comando"
 
@@ -1879,6 +1888,622 @@ msgstr "O comando não é válido"
 #: xcontrol/gaming_page.py:549
 msgid "Launch options copied"
 msgstr "Opções de inicialização copiadas"
+
+#: xcontrol/i3_page.py:17
+msgid "With title bar"
+msgstr "Com barra de título"
+
+#: xcontrol/i3_page.py:17
+msgid "Border only"
+msgstr "Só a borda"
+
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+msgid "Left"
+msgstr "Esquerda"
+
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+msgid "Center"
+msgstr "Centro"
+
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+msgid "Right"
+msgstr "Direita"
+
+#: xcontrol/i3_page.py:19
+msgid "Left and right"
+msgstr "Esquerda e direita"
+
+#: xcontrol/i3_page.py:19
+msgid "Top and bottom"
+msgstr "Em cima e embaixo"
+
+#: xcontrol/i3_page.py:19
+msgid "All"
+msgstr "Todas"
+
+#: xcontrol/i3_page.py:20
+msgid "All, when it's the only window"
+msgstr "Todas, quando é a única janela"
+
+#: xcontrol/i3_page.py:20
+msgid "All, when it's the only window and no gaps"
+msgstr "Todas, quando é a única janela e sem espaçamento"
+
+#: xcontrol/i3_page.py:21
+msgid "Outer gaps only when there are several windows"
+msgstr "Espaço externo só quando há várias janelas"
+
+#: xcontrol/i3_page.py:22
+msgid "When the gaps are 0"
+msgstr "Quando o espaçamento é 0"
+
+#: xcontrol/i3_page.py:23
+msgid "Into the display that gets focus"
+msgstr "Para a tela que recebe o foco"
+
+#: xcontrol/i3_page.py:24
+msgid "Mark it urgent"
+msgstr "Marcá-la como urgente"
+
+#: xcontrol/i3_page.py:24
+msgid "Always switch to it"
+msgstr "Sempre ir para ela"
+
+#: xcontrol/i3_page.py:25
+msgid "Wrap around"
+msgstr "Dar a volta"
+
+#: xcontrol/i3_page.py:25
+msgid "Stop at the edge"
+msgstr "Parar na borda"
+
+#: xcontrol/i3_page.py:25
+msgid "Always wrap, even inside containers"
+msgstr "Sempre dar a volta, mesmo dentro de contêineres"
+
+#: xcontrol/i3_page.py:26
+msgid "Wrap within the workspace"
+msgstr "Dar a volta dentro da área de trabalho"
+
+#: xcontrol/i3_page.py:27
+msgid "Automatic (by the display's shape)"
+msgstr "Automático (pelo formato da tela)"
+
+#: xcontrol/i3_page.py:27 xcontrol/i3_page.py:49
+msgid "Side by side"
+msgstr "Lado a lado"
+
+#: xcontrol/i3_page.py:28
+msgid "Stacked"
+msgstr "Empilhadas"
+
+#: xcontrol/i3_page.py:28
+msgid "Tabbed"
+msgstr "Em abas"
+
+#: xcontrol/i3_page.py:29
+msgid "Stay hidden behind it"
+msgstr "Fica escondido atrás dela"
+
+#: xcontrol/i3_page.py:29
+msgid "Leave fullscreen"
+msgstr "Sair da tela cheia"
+
+#: xcontrol/i3_page.py:31 xcontrol/panel_page.py:360
+msgid "Focused window"
+msgstr "Janela em foco"
+
+#: xcontrol/i3_page.py:31
+msgid "Focused, other container"
+msgstr "Em foco, outro contêiner"
+
+#: xcontrol/i3_page.py:32
+msgid "Unfocused"
+msgstr "Sem foco"
+
+#: xcontrol/i3_page.py:32 xcontrol/panel_page.py:193
+msgid "Urgent"
+msgstr "Urgente"
+
+#: xcontrol/i3_page.py:32
+msgid "Placeholder"
+msgstr "Espaço reservado"
+
+#: xcontrol/i3_page.py:33
+msgid "Title border"
+msgstr "Borda do título"
+
+#: xcontrol/i3_page.py:33
+msgid "Title background"
+msgstr "Fundo do título"
+
+#: xcontrol/i3_page.py:33
+msgid "Title text"
+msgstr "Texto do título"
+
+#: xcontrol/i3_page.py:34
+msgid "Split indicator"
+msgstr "Indicador de divisão"
+
+#: xcontrol/i3_page.py:34
+msgid "Window border"
+msgstr "Borda da janela"
+
+#: xcontrol/i3_page.py:46
+msgid "Switch to it if it's on a visible workspace, else mark it urgent"
+msgstr "Ir para ela se estiver numa área visível, senão marcá-la como urgente"
+
+#: xcontrol/i3_page.py:47
+msgid "Ignore it"
+msgstr "Ignorar"
+
+#: xcontrol/i3_page.py:48
+msgid "Show it if it belongs to the fullscreen window"
+msgstr "Mostrá-lo se pertencer à janela em tela cheia"
+
+#: xcontrol/i3_page.py:49
+msgid "One above the other"
+msgstr "Uma acima da outra"
+
+#: xcontrol/i3_page.py:78
+msgid "Key binding"
+msgstr "Atalho de teclado"
+
+#: xcontrol/i3_page.py:81 xcontrol/i3_page.py:800
+msgid "OK"
+msgstr "OK"
+
+#: xcontrol/i3_page.py:91 xcontrol/i3_page.py:227 xcontrol/i3_page.py:365
+msgid "Keys"
+msgstr "Teclas"
+
+#: xcontrol/i3_page.py:96
+msgid "Press keys…"
+msgstr "Pressionar teclas…"
+
+#: xcontrol/i3_page.py:100
+msgid "Press the combination now. Esc cancels."
+msgstr "Pressione a combinação agora. Esc cancela."
+
+#: xcontrol/i3_page.py:104 xcontrol/i3_page.py:365
+msgid "Action"
+msgstr "Ação"
+
+#: xcontrol/i3_page.py:111
+msgid ""
+"Any i3 command. \"exec\" runs a program, e.g. exec --no-startup-id flameshot"
+" gui."
+msgstr ""
+"Qualquer comando do i3. \"exec\" executa um programa, ex.: exec --no-"
+"startup-id flameshot gui."
+
+#: xcontrol/i3_page.py:114 xcontrol/i3_page.py:365
+msgid "Mode"
+msgstr "Modo"
+
+#: xcontrol/i3_page.py:120
+msgid ""
+"\"default\" is the normal mode. Other modes (like \"resize\") are entered "
+"with mode \"name\" and only their own keys work there."
+msgstr ""
+"\"default\" é o modo normal. Outros modos (como \"resize\") são ativados com"
+" mode \"nome\" e lá só funcionam as teclas deles."
+
+#: xcontrol/i3_page.py:122
+msgid "Run when the keys are released"
+msgstr "Executar ao soltar as teclas"
+
+#: xcontrol/i3_page.py:196
+msgid "Use XControl's i3 config"
+msgstr "Usar a configuração do i3 do XControl"
+
+#: xcontrol/i3_page.py:201
+msgid "Show the file…"
+msgstr "Mostrar o arquivo…"
+
+#: xcontrol/i3_page.py:204
+msgid "Import my previous config…"
+msgstr "Importar minha configuração anterior…"
+
+#: xcontrol/i3_page.py:208
+msgid ""
+"XControl writes ~/.config/i3/config from this page and reloads i3 after each"
+" change. Your current config is kept as config.before-xcontrol and can be "
+"put back by switching this off. Every change is checked with i3 first, so a "
+"mistake never replaces a working config."
+msgstr ""
+"O XControl escreve o ~/.config/i3/config a partir desta página e recarrega o"
+" i3 a cada mudança. Sua configuração atual é guardada como config.before-"
+"xcontrol e pode ser restaurada ao desligar isto. Cada mudança é verificada "
+"pelo i3 antes, então um erro nunca substitui uma configuração que funciona."
+
+#: xcontrol/i3_page.py:226
+msgid "Look"
+msgstr "Aparência"
+
+#: xcontrol/i3_page.py:228
+msgid "Behavior & Workspaces"
+msgstr "Comportamento e áreas de trabalho"
+
+#: xcontrol/i3_page.py:229
+msgid "Startup & Rules"
+msgstr "Inicialização e regras"
+
+#: xcontrol/i3_page.py:254 xcontrol/i3_page.py:466
+msgid "Windows"
+msgstr "Janelas"
+
+#: xcontrol/i3_page.py:257
+msgid "Title font"
+msgstr "Fonte do título"
+
+#: xcontrol/i3_page.py:260
+msgid "Tiled windows"
+msgstr "Janelas lado a lado"
+
+#: xcontrol/i3_page.py:263
+msgid "Floating windows"
+msgstr "Janelas flutuantes"
+
+#: xcontrol/i3_page.py:265
+msgid "Title position"
+msgstr "Posição do título"
+
+#: xcontrol/i3_page.py:267
+msgid "Hide borders at the screen edge"
+msgstr "Esconder bordas na beira da tela"
+
+#: xcontrol/i3_page.py:269
+msgid "No border when it's the only window"
+msgstr "Sem borda quando é a única janela"
+
+#: xcontrol/i3_page.py:275
+msgid "Gaps"
+msgstr "Espaçamento"
+
+#: xcontrol/i3_page.py:277
+msgid "Between windows"
+msgstr "Entre as janelas"
+
+#: xcontrol/i3_page.py:279
+msgid "Around the edge"
+msgstr "Nas bordas da tela"
+
+#: xcontrol/i3_page.py:279
+msgid "Added to the space between windows."
+msgstr "Somado ao espaço entre as janelas."
+
+#: xcontrol/i3_page.py:281
+msgid "No gaps when it's the only window"
+msgstr "Sem espaçamento quando é a única janela"
+
+#: xcontrol/i3_page.py:286 xcontrol/panel_page.py:186
+msgid "Colors"
+msgstr "Cores"
+
+#: xcontrol/i3_page.py:304
+msgid "Behind windows"
+msgstr "Atrás das janelas"
+
+#: xcontrol/i3_page.py:306
+msgid "i3's colors"
+msgstr "Cores do i3"
+
+#: xcontrol/i3_page.py:314
+msgid "px"
+msgstr "px"
+
+#: xcontrol/i3_page.py:332
+msgid "Modifier"
+msgstr "Modificador"
+
+#: xcontrol/i3_page.py:337
+msgid "Main key ($mod)"
+msgstr "Tecla principal ($mod)"
+
+#: xcontrol/i3_page.py:338
+msgid "Used by almost every shortcut. Super keeps Alt free for programs."
+msgstr ""
+"Usada em quase todos os atalhos. Super deixa o Alt livre para os programas."
+
+#: xcontrol/i3_page.py:339
+msgid "Hold it and drag to move floating windows (right button resizes)"
+msgstr ""
+"Segure-a e arraste para mover janelas flutuantes (o botão direito "
+"redimensiona)"
+
+#: xcontrol/i3_page.py:341
+msgid "Drag tiled windows by their title bar to move them"
+msgstr "Arrastar janelas lado a lado pela barra de título para movê-las"
+
+#: xcontrol/i3_page.py:348
+msgid "Search keys or actions"
+msgstr "Buscar teclas ou ações"
+
+#: xcontrol/i3_page.py:351
+msgid "Add…"
+msgstr "Adicionar…"
+
+#: xcontrol/i3_page.py:351 xcontrol/system_page.py:337
+msgid "Change…"
+msgstr "Alterar…"
+
+#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:582
+#: xcontrol/resolutions_dialog.py:242
+msgid "Remove"
+msgstr "Remover"
+
+#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:819
+msgid "i3's defaults"
+msgstr "Padrões do i3"
+
+#: xcontrol/i3_page.py:390
+#, python-brace-format
+msgid "Same keys as: {others}"
+msgstr "Mesmas teclas que: {others}"
+
+#: xcontrol/i3_page.py:395
+msgid "Some keys are used twice (shown in red); only one of them will work."
+msgstr ""
+"Algumas teclas estão em uso duas vezes (em vermelho); só uma delas vai "
+"funcionar."
+
+#: xcontrol/i3_page.py:446
+msgid "Replace all key bindings with i3's defaults?"
+msgstr "Substituir todos os atalhos pelos padrões do i3?"
+
+#: xcontrol/i3_page.py:447
+msgid "Your own bindings on this page are removed."
+msgstr "Seus próprios atalhos nesta página são removidos."
+
+#: xcontrol/i3_page.py:455
+msgid "Focus"
+msgstr "Foco"
+
+#: xcontrol/i3_page.py:456
+msgid "Focus follows the mouse"
+msgstr "O foco segue o mouse"
+
+#: xcontrol/i3_page.py:460
+msgid "Move the mouse pointer"
+msgstr "Mover o ponteiro do mouse"
+
+#: xcontrol/i3_page.py:462
+msgid "A window asks for attention"
+msgstr "Uma janela pede atenção"
+
+#: xcontrol/i3_page.py:464
+msgid "Moving focus past the last window"
+msgstr "Mover o foco além da última janela"
+
+#: xcontrol/i3_page.py:468
+msgid "New windows are placed"
+msgstr "Novas janelas ficam"
+
+#: xcontrol/i3_page.py:470
+msgid "New workspaces start"
+msgstr "Novas áreas de trabalho começam"
+
+#: xcontrol/i3_page.py:472
+msgid "A dialog opens over a fullscreen window"
+msgstr "Um diálogo abre sobre uma janela em tela cheia"
+
+#: xcontrol/i3_page.py:476 xcontrol/panel_page.py:13
+msgid "Workspaces"
+msgstr "Áreas de trabalho"
+
+#: xcontrol/i3_page.py:477
+msgid "Choosing the current workspace again goes back to the previous one"
+msgstr "Escolher a área atual de novo volta para a anterior"
+
+#: xcontrol/i3_page.py:480
+msgid "Key"
+msgstr "Tecla"
+
+#: xcontrol/i3_page.py:496
+msgid "Any"
+msgstr "Qualquer"
+
+#: xcontrol/i3_page.py:502
+msgid ""
+"A name like \"2:web\" shows \"web\" in the bar when the bar hides numbers. A"
+" workspace with a display opens there."
+msgstr ""
+"Um nome como \"2:web\" mostra \"web\" na barra quando ela esconde os "
+"números. Uma área com tela definida abre nela."
+
+#: xcontrol/i3_page.py:507
+msgid "Start with i3"
+msgstr "Iniciar com o i3"
+
+#: xcontrol/i3_page.py:508
+#, python-brace-format
+msgid ""
+"Always first: {line} (wallpaper, bar, compositor, screen lock, input "
+"settings)."
+msgstr ""
+"Sempre primeiro: {line} (papel de parede, barra, compositor, bloqueio de "
+"tela, configurações de entrada)."
+
+#: xcontrol/i3_page.py:521
+msgid "Also on reload"
+msgstr "Também ao recarregar"
+
+#: xcontrol/i3_page.py:524
+msgid ""
+"Double-click a command to change it. \"Also on reload\" runs it again on "
+"every i3 reload, not just at login."
+msgstr ""
+"Clique duas vezes num comando para alterá-lo. \"Também ao recarregar\" o "
+"executa de novo a cada recarga do i3, não só no login."
+
+#: xcontrol/i3_page.py:527
+msgid "Window rules"
+msgstr "Regras de janelas"
+
+#: xcontrol/i3_page.py:532 xcontrol/i3_page.py:538
+msgid "Do"
+msgstr "Fazer"
+
+#: xcontrol/i3_page.py:533 xcontrol/i3_page.py:538
+msgid "Open on"
+msgstr "Abrir em"
+
+#: xcontrol/i3_page.py:536
+msgid "Rule"
+msgstr "Regra"
+
+#: xcontrol/i3_page.py:540
+msgid "Windows (criteria)"
+msgstr "Janelas (critérios)"
+
+#: xcontrol/i3_page.py:540
+msgid "Action / workspace"
+msgstr "Ação / área de trabalho"
+
+#: xcontrol/i3_page.py:550
+msgid "Pick a window…"
+msgstr "Escolher uma janela…"
+
+#: xcontrol/i3_page.py:551
+msgid "Click a window to add a rule for its program"
+msgstr "Clique numa janela para adicionar uma regra para o programa dela"
+
+#: xcontrol/i3_page.py:555
+msgid ""
+"Criteria like class=\"Steam\" or title=\"Picture-in-Picture\". \"Do\" runs "
+"i3 commands on matching windows, e.g. floating enable, border none, move to "
+"workspace number 3. \"Open on\" puts them on a workspace, e.g. number 2."
+msgstr ""
+"Critérios como class=\"Steam\" ou title=\"Picture-in-Picture\". \"Fazer\" "
+"executa comandos do i3 nas janelas que combinam, ex.: floating enable, "
+"border none, move to workspace number 3. \"Abrir em\" as coloca numa área de"
+" trabalho, ex.: number 2."
+
+#: xcontrol/i3_page.py:560
+msgid "i3's bar"
+msgstr "Barra do i3"
+
+#: xcontrol/i3_page.py:561
+msgid "Show i3's own bar (i3bar) when XControl's bar is off"
+msgstr ""
+"Mostrar a barra do próprio i3 (i3bar) quando a barra do XControl está "
+"desligada"
+
+#: xcontrol/i3_page.py:565
+msgid "Extra i3 config"
+msgstr "Configuração extra do i3"
+
+#: xcontrol/i3_page.py:566
+msgid ""
+"Anything else from i3's user guide, as in an i3 config file. Checked with i3"
+" like everything else."
+msgstr ""
+"Qualquer outra coisa do guia do usuário do i3, como num arquivo de "
+"configuração do i3. Verificada pelo i3 como todo o resto."
+
+#: xcontrol/i3_page.py:656
+msgid "Click the window…"
+msgstr "Clique na janela…"
+
+#: xcontrol/i3_page.py:785
+msgid "Applied, i3 reloaded"
+msgstr "Aplicado, i3 recarregado"
+
+#: xcontrol/i3_page.py:791
+msgid "i3 doesn't accept this, so nothing was changed:"
+msgstr "O i3 não aceita isto, então nada foi alterado:"
+
+#: xcontrol/i3_page.py:811
+msgid "i3 isn't installed"
+msgstr "O i3 não está instalado"
+
+#: xcontrol/i3_page.py:811
+msgid "Install the i3-wm package first."
+msgstr "Instale o pacote i3-wm primeiro."
+
+#: xcontrol/i3_page.py:816
+msgid "Start from your current i3 config?"
+msgstr "Começar da sua configuração atual do i3?"
+
+#: xcontrol/i3_page.py:817
+msgid ""
+"Its keys, startup programs, window rules and look are brought over to this "
+"page. Otherwise the page starts from i3's defaults. Either way your file is "
+"kept as a backup."
+msgstr ""
+"Os atalhos, programas de inicialização, regras de janelas e aparência dela "
+"são trazidos para esta página. Senão a página começa com os padrões do i3. "
+"De qualquer forma seu arquivo é guardado como backup."
+
+#: xcontrol/i3_page.py:819
+msgid "Import it"
+msgstr "Importar"
+
+#: xcontrol/i3_page.py:822
+msgid "Put your previous i3 config back?"
+msgstr "Restaurar sua configuração anterior do i3?"
+
+#: xcontrol/i3_page.py:823
+msgid "XControl's config is kept as config.xcontrol."
+msgstr "A configuração do XControl é guardada como config.xcontrol."
+
+#: xcontrol/i3_page.py:823
+msgid "Put it back"
+msgstr "Restaurar"
+
+#: xcontrol/i3_page.py:823
+msgid "Keep XControl's"
+msgstr "Manter a do XControl"
+
+#: xcontrol/i3_page.py:838
+msgid "Nothing to import"
+msgstr "Nada para importar"
+
+#: xcontrol/i3_page.py:838
+msgid "No i3 config other than XControl's was found."
+msgstr "Nenhuma configuração do i3 além da do XControl foi encontrada."
+
+#: xcontrol/i3_page.py:840
+#, python-brace-format
+msgid "Import {path}?"
+msgstr "Importar {path}?"
+
+#: xcontrol/i3_page.py:841
+msgid "The settings on this page are replaced by the ones in that file."
+msgstr "As configurações desta página são substituídas pelas desse arquivo."
+
+#: xcontrol/i3_page.py:841
+msgid "Import"
+msgstr "Importar"
+
+#: xcontrol/i3_page.py:850
+msgid "Could not read the config"
+msgstr "Não foi possível ler a configuração"
+
+#: xcontrol/i3_page.py:857
+msgid "Imported"
+msgstr "Importado"
+
+#: xcontrol/i3_page.py:857
+msgid "Left out because XControl takes care of them now:"
+msgstr "Deixados de fora porque o XControl cuida deles agora:"
+
+#: xcontrol/i3_page.py:880
+msgid "i3 isn't installed."
+msgstr "O i3 não está instalado."
+
+#: xcontrol/i3_page.py:885
+msgid "~/.i3/config is in the way; it's moved aside on the next change."
+msgstr "O ~/.i3/config está no caminho; ele é movido na próxima mudança."
+
+#: xcontrol/i3_page.py:887
+msgid "XControl's config is in use."
+msgstr "A configuração do XControl está em uso."
+
+#: xcontrol/i3_page.py:889
+msgid "Your previous config is kept as config.before-xcontrol."
+msgstr "Sua configuração anterior está guardada como config.before-xcontrol."
 
 #: xcontrol/input_page.py:18
 msgid "Adaptive: faster movement goes further"
@@ -2917,10 +3542,6 @@ msgid "Could not save the EDID"
 msgstr "Não foi possível salvar o EDID"
 
 #: xcontrol/panel_page.py:13
-msgid "Workspaces"
-msgstr "Áreas de trabalho"
-
-#: xcontrol/panel_page.py:13
 msgid "i3 workspaces of that display; click to switch"
 msgstr "áreas de trabalho do i3 daquela tela; clique para trocar"
 
@@ -3007,18 +3628,6 @@ msgstr "Bandeja do sistema"
 #: xcontrol/panel_page.py:24
 msgid "icons of programs like Steam, Discord, nm-applet"
 msgstr "ícones de programas como Steam, Discord, nm-applet"
-
-#: xcontrol/panel_page.py:26
-msgid "Left"
-msgstr "Esquerda"
-
-#: xcontrol/panel_page.py:26
-msgid "Center"
-msgstr "Centro"
-
-#: xcontrol/panel_page.py:26
-msgid "Right"
-msgstr "Direita"
 
 #: xcontrol/panel_page.py:27
 msgid "OpenGL (glx, recommended)"
@@ -3154,10 +3763,6 @@ msgstr "Idioma do relógio"
 msgid "Extra bar settings…"
 msgstr "Configurações extras da barra…"
 
-#: xcontrol/panel_page.py:186
-msgid "Colors"
-msgstr "Cores"
-
 #: xcontrol/panel_page.py:189
 msgid "Background"
 msgstr "Fundo"
@@ -3177,10 +3782,6 @@ msgstr "Segundo destaque (Caps Lock)"
 #: xcontrol/panel_page.py:192
 msgid "Highlight (current workspace)"
 msgstr "Realce (área de trabalho atual)"
-
-#: xcontrol/panel_page.py:193
-msgid "Urgent"
-msgstr "Urgente"
 
 #: xcontrol/panel_page.py:193
 msgid "Dim (separators)"
@@ -3297,10 +3898,6 @@ msgstr "Velocidade do esmaecimento"
 msgid "Blur behind see-through windows"
 msgstr "Desfoque atrás de janelas transparentes"
 
-#: xcontrol/panel_page.py:360
-msgid "Focused window"
-msgstr "Janela em foco"
-
 #: xcontrol/panel_page.py:363
 msgid "Other windows"
 msgstr "Outras janelas"
@@ -3313,37 +3910,41 @@ msgstr ""
 "Opacidade em porcentagem. Janelas em tela cheia e a tela de bloqueio nunca "
 "ficam transparentes."
 
-#: xcontrol/panel_page.py:469
+#: xcontrol/panel_page.py:470
+msgid "The i3 config wasn't updated"
+msgstr "A configuração do i3 não foi atualizada"
+
+#: xcontrol/panel_page.py:472
 msgid "Could not save the settings"
 msgstr "Não foi possível salvar as configurações"
 
-#: xcontrol/panel_page.py:471
+#: xcontrol/panel_page.py:474
 msgid "Applied"
 msgstr "Aplicado"
 
-#: xcontrol/panel_page.py:492
+#: xcontrol/panel_page.py:495
 msgid "the screen"
 msgstr "a tela"
 
-#: xcontrol/panel_page.py:494
+#: xcontrol/panel_page.py:497
 msgid "polybar isn't installed."
 msgstr "O polybar não está instalado."
 
-#: xcontrol/panel_page.py:498
+#: xcontrol/panel_page.py:501
 #, python-brace-format
 msgid "Running on {displays}."
 msgstr "Rodando em {displays}."
 
-#: xcontrol/panel_page.py:501 xcontrol/panel_page.py:521
+#: xcontrol/panel_page.py:504 xcontrol/panel_page.py:524
 #, python-brace-format
 msgid "Not running: {why}"
 msgstr "Não está rodando: {why}"
 
-#: xcontrol/panel_page.py:501 xcontrol/panel_page.py:521
+#: xcontrol/panel_page.py:504 xcontrol/panel_page.py:524
 msgid "Starting…"
 msgstr "Iniciando…"
 
-#: xcontrol/panel_page.py:507
+#: xcontrol/panel_page.py:510
 msgid ""
 "Another polybar is running (started by your i3 config or a script); it will "
 "sit on top of XControl's."
@@ -3351,23 +3952,23 @@ msgstr ""
 "Há outro polybar rodando (iniciado pela config do i3 ou por um script); ele "
 "vai ficar por cima do do XControl."
 
-#: xcontrol/panel_page.py:510
+#: xcontrol/panel_page.py:513
 msgid ""
 "Remove these from your i3 config, or there will be two bars after the next "
 "login:"
 msgstr ""
 "Remova estas linhas da config do i3, ou haverá duas barras no próximo login:"
 
-#: xcontrol/panel_page.py:514
+#: xcontrol/panel_page.py:517
 msgid "picom isn't installed."
 msgstr "O picom não está instalado."
 
-#: xcontrol/panel_page.py:518
+#: xcontrol/panel_page.py:521
 #, python-brace-format
 msgid "Running (picom {v})."
 msgstr "Rodando (picom {v})."
 
-#: xcontrol/panel_page.py:527
+#: xcontrol/panel_page.py:530
 msgid ""
 "Another compositor is running, so XControl's can't start. Stop it, and "
 "remove it from your i3 config."
@@ -3375,7 +3976,7 @@ msgstr ""
 "Há outro compositor rodando, então o do XControl não consegue iniciar. "
 "Encerre-o e remova-o da config do i3."
 
-#: xcontrol/panel_page.py:530
+#: xcontrol/panel_page.py:533
 msgid ""
 "Remove these from your i3 config, or the other compositor starts first after"
 " the next login:"
@@ -3549,10 +4150,6 @@ msgstr "Lista de modos do sistema…"
 #: xcontrol/resolutions_dialog.py:225
 msgid "No custom resolutions yet."
 msgstr "Nenhuma resolução personalizada ainda."
-
-#: xcontrol/resolutions_dialog.py:242
-msgid "Remove"
-msgstr "Remover"
 
 #: xcontrol/resolutions_dialog.py:260
 #, python-brace-format
@@ -3968,10 +4565,6 @@ msgstr "Arquivos de firmware"
 #: xcontrol/system_page.py:330
 msgid "Devices it drives"
 msgstr "Dispositivos que controla"
-
-#: xcontrol/system_page.py:337
-msgid "Change…"
-msgstr "Alterar…"
 
 #: xcontrol/system_page.py:338
 msgid "Set parameters for every time the module loads (needs your password)"

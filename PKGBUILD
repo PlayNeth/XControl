@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.18.0
+pkgver=0.19.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -24,7 +24,8 @@ optdepends=(
   'xsettingsd: open apps follow theme changes right away (Appearance)'
   'xorg-xrdb: cursor and font settings for X programs (Appearance)'
   'xorg-xsetroot: desktop cursor (Appearance)'
-  'xorg-xprop: "Check an app" troubleshooter (Appearance)'
+  'xorg-xprop: "Check an app" (Appearance) and "Pick a window" (i3 page)'
+  "i3-wm: XControl's i3 config (Window Manager page)"
   'qt5ct: Qt 5 apps follow the icon theme and font'
   'qt6ct: Qt 6 apps follow the icon theme and font'
   'kmod: module descriptions and parameter help on the System page (modinfo)'

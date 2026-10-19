@@ -2,6 +2,34 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.19.0 (2026-10-19)
+
+**Add Window Manager (i3) page that writes the i3 config**
+
+- Add a Window Manager (i3) page; with "Use XControl's i3 config" on, XControl
+  writes ~/.config/i3/config itself and reloads i3 after every change
+- Move the previous config aside as config.before-xcontrol and offer to put it
+  back when the page is switched off
+- Check every change with "i3 -C" first, so a mistake shows as an error on the
+  page and never replaces a working config; "Show the file…" shows and copies it
+- Start from i3's defaults or import the current config: keys, modes, startup
+  programs, window rules, workspaces, font, borders, gaps and colors, leaving
+  out what XControl now handles and keeping the rest as "Extra i3 config"
+- Add Look settings: title font, borders, title position, hiding edge borders,
+  gaps (and none for a lone window) and all of i3's window colors
+- Add a Keys editor: the main key (Super or Alt), dragging windows and every
+  binding in every mode, with search, "Press keys…" to capture a combination,
+  and keys used twice shown in red
+- Add Behavior & Workspaces settings: focus follows mouse, mouse warping,
+  attention requests, focus wrapping, new window placement and layout, popups
+  over full-screen windows, back-and-forth, and names and displays for
+  workspaces 1–10
+- Add Startup & Rules: programs started with i3 or on every reload, window
+  rules with "Pick a window…", and i3's own bar when XControl's bar is off
+- Always include "xcontrol --session" in the generated config
+- Update the i3 config when the Bar & Compositor page turns XControl's bar on
+  or off, so i3's own bar comes and goes with it
+
 ## 0.18.0 (2026-10-19)
 
 **Add per-module settings and extra polybar options to the bar**
