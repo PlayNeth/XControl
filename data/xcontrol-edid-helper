@@ -1,5 +1,5 @@
 #!/bin/sh
-# mesa-panel-edid-helper: the only part of mesa-panel that runs as root (via pkexec).
+# xcontrol-edid-helper: the only part of xcontrol that runs as root (via pkexec).
 #
 #   test    CARD CONNECTOR FILE   load FILE as the connector's EDID until reboot
 #                                 (kernel debugfs edid_override + hotplug)
@@ -10,14 +10,14 @@
 # Arguments are validated strictly; FILE must be a real EDID.
 set -eu
 
-die() { echo "mesa-panel-edid-helper: $*" >&2; exit 1; }
+die() { echo "xcontrol-edid-helper: $*" >&2; exit 1; }
 
 DEBUGFS=/sys/kernel/debug
 FIRMWARE=/usr/lib/firmware
 # test hooks, ignored when running as root
 if [ "$(id -u)" != 0 ]; then
-    DEBUGFS=${MESAPANEL_DEBUGFS:-$DEBUGFS}
-    FIRMWARE=${MESAPANEL_FIRMWARE:-$FIRMWARE}
+    DEBUGFS=${XCONTROL_DEBUGFS:-$DEBUGFS}
+    FIRMWARE=${XCONTROL_FIRMWARE:-$FIRMWARE}
 fi
 
 check_card() { case $1 in ''|*[!0-9]*) die "invalid card number: $1";; esac; }
@@ -26,7 +26,7 @@ check_conn() {
     [ ${#1} -le 32 ] || die "invalid connector name: $1"
 }
 check_name() {
-    case $1 in mesa-panel-*.bin) ;; *) die "invalid file name: $1";; esac
+    case $1 in xcontrol-*.bin) ;; *) die "invalid file name: $1";; esac
     case ${1%.bin} in *[!A-Za-z0-9-]*) die "invalid file name: $1";; esac
 }
 check_edid() {

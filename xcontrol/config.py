@@ -1,4 +1,4 @@
-"""Profile storage: ~/.config/mesa-panel/profiles.json
+"""Profile storage: ~/.config/xcontrol/profiles.json
 
 {
   "global":  {settings},
@@ -69,7 +69,8 @@ def _path():
 
 def load():
     data = {"global": dict(DEFAULT_SETTINGS), "games": [],
-            "display": {"command": [], "autostart": False, "custom_modes": {}, "edid_ignored": []}}
+            "display": {"command": [], "autostart": False, "custom_modes": {}, "edid_ignored": []},
+            "input": {"devices": {}, "keyboard": {}}}
     try:
         with open(_path()) as f:
             raw = json.load(f)
@@ -94,6 +95,12 @@ def load():
                                        for k, v in modes.items() if isinstance(v, list)}
     # outputs where only the custom resolutions are offered
     data["display"]["edid_ignored"] = [str(o) for o in disp.get("edid_ignored", [])]
+    # input: {"devices": {device name: {setting: value}}, "keyboard": {setting: value}}
+    inp = raw.get("input") or {}
+    devs = inp.get("devices") or {}
+    data["input"]["devices"] = {str(k): dict(v) for k, v in devs.items() if isinstance(v, dict)}
+    kb = inp.get("keyboard") or {}
+    data["input"]["keyboard"] = dict(kb) if isinstance(kb, dict) else {}
     return data
 
 

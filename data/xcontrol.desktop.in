@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=XControl
+GenericName=Control Panel
+Comment=Per-game graphics settings, displays, input devices and system information
+Exec=xcontrol
+Icon=preferences-system
+Terminal=false
+Categories=Settings;HardwareSettings;System;Game;
+Keywords=graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;

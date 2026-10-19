@@ -1,17 +1,17 @@
 /*
- * mesa-panel OpenGL override shim (LD_PRELOAD)
+ * xcontrol OpenGL override shim (LD_PRELOAD)
  *
  * Forces per-game settings that Mesa has no knob for:
- *   MESAPANEL_AF=1|2|4|8|16   anisotropic filtering on linear/mipmapped textures
+ *   XCONTROL_AF=1|2|4|8|16   anisotropic filtering on linear/mipmapped textures
  *                             (1 = force it off)
- *   MESAPANEL_MSAA=1|2|4|8    multisampled default framebuffer (GLX and EGL)
+ *   XCONTROL_MSAA=1|2|4|8    multisampled default framebuffer (GLX and EGL)
  *                             (1 = force a single-sampled window)
- *   MESAPANEL_TRAA=1|2        transparency AA for alpha-tested surfaces:
+ *   XCONTROL_TRAA=1|2        transparency AA for alpha-tested surfaces:
  *                             fixed-function alpha test: 1 = alpha-to-coverage,
  *                             2 = per-sample shading; shader alpha test (discard,
  *                             as in WineD3D and modern GL): per-sample shading
- *   MESAPANEL_FPS=N           frame limiter on SwapBuffers
- *   MESAPANEL_DEBUG=1         log what gets hooked to stderr
+ *   XCONTROL_FPS=N           frame limiter on SwapBuffers
+ *   XCONTROL_DEBUG=1         log what gets hooked to stderr
  *
  * Interception paths:
  *   - exported GL/GLX/EGL symbols (apps that link libGL directly)
@@ -74,21 +74,30 @@ typedef void (*fnptr)(void);
 /* ---- configuration ----------------------------------------------------- */
 static int g_af, g_msaa, g_traa, g_fps, g_debug, g_active;
 
-#define LOG(...) do { if (g_debug) { fprintf(stderr, "[mesa-panel/gl] " __VA_ARGS__); fputc('\n', stderr); } } while (0)
+#define LOG(...) do { if (g_debug) { fprintf(stderr, "[xcontrol/gl] " __VA_ARGS__); fputc('\n', stderr); } } while (0)
 
+/* XCONTROL_<name>, or MESAPANEL_<name> from before the rename */
 static int env_int(const char *name)
 {
-    const char *v = getenv(name);
+    char key[64];
+    const char *v;
+
+    snprintf(key, sizeof key, "XCONTROL_%s", name);
+    v = getenv(key);
+    if (!v) {
+        snprintf(key, sizeof key, "MESAPANEL_%s", name);
+        v = getenv(key);
+    }
     return v ? atoi(v) : 0;
 }
 
 __attribute__((constructor)) static void mp_init(void)
 {
-    g_af = env_int("MESAPANEL_AF");
-    g_msaa = env_int("MESAPANEL_MSAA");
-    g_traa = env_int("MESAPANEL_TRAA");
-    g_fps = env_int("MESAPANEL_FPS");
-    g_debug = env_int("MESAPANEL_DEBUG");
+    g_af = env_int("AF");
+    g_msaa = env_int("MSAA");
+    g_traa = env_int("TRAA");
+    g_fps = env_int("FPS");
+    g_debug = env_int("DEBUG");
     if (g_af < 0) g_af = 0;
     if (g_af > 16) g_af = 16;
     if (g_msaa < 0) g_msaa = 0;   /* 1 = forced off, 2+ = forced sample count */

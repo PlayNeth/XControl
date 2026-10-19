@@ -1,4 +1,4 @@
-"""Compare mesa_panel.modelines against edid-decode's CVT/GTF/DMT calculators.
+"""Compare xcontrol.modelines against edid-decode's CVT/GTF/DMT calculators.
 Needs edid-decode; exits 0 (skipped) without it."""
 import os
 import re
@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from mesa_panel import modelines as M
+from xcontrol import modelines as M
 
 RES = [(640, 480), (720, 480), (800, 600), (1024, 768), (1152, 864), (1280, 720), (1280, 800), (1280, 960), (1280, 1024),
        (1366, 768), (1440, 900), (1600, 900), (1600, 1200), (1680, 1050), (1920, 1080), (1920, 1200), (2560, 1080),

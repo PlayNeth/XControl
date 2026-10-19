@@ -1,7 +1,7 @@
 PREFIX    ?= /usr
 BINDIR    ?= $(PREFIX)/bin
-LIBDIR    ?= $(PREFIX)/lib/mesa-panel
-DATADIR   ?= $(PREFIX)/share/mesa-panel
+LIBDIR    ?= $(PREFIX)/lib/xcontrol
+DATADIR   ?= $(PREFIX)/share/xcontrol
 LOCALEDIR ?= $(PREFIX)/share/locale
 LAYERDIR  ?= $(PREFIX)/share/vulkan/implicit_layer.d
 BUILDDIR  ?= build
@@ -12,67 +12,70 @@ SHIM_CFLAGS = $(CFLAGS) -fPIC -fvisibility=hidden -Wall -Wextra
 # the dlsym hook must compile to a tail jump (see gl_shim.c)
 GL_CFLAGS = $(SHIM_CFLAGS) -foptimize-sibling-calls
 
-PYFILES = $(wildcard mesa_panel/*.py)
-VERSION = $(shell sed -n 's/^__version__ = "\(.*\)"/\1/p' mesa_panel/__init__.py)
+PYFILES = $(wildcard xcontrol/*.py)
+VERSION = $(shell sed -n 's/^__version__ = "\(.*\)"/\1/p' xcontrol/__init__.py)
 LINGUAS = $(shell cat po/LINGUAS)
-MOFILES = $(foreach l,$(LINGUAS),$(BUILDDIR)/locale/$(l)/LC_MESSAGES/mesa-panel.mo)
+MOFILES = $(foreach l,$(LINGUAS),$(BUILDDIR)/locale/$(l)/LC_MESSAGES/xcontrol.mo)
 
-all: $(BUILDDIR)/libmesapanel_gl.so $(BUILDDIR)/libVkLayer_mesa_panel.so $(MOFILES) $(BUILDDIR)/mesa-panel.desktop
+all: $(BUILDDIR)/libxcontrol_gl.so $(BUILDDIR)/libVkLayer_xcontrol.so $(MOFILES) $(BUILDDIR)/xcontrol.desktop
 
-$(BUILDDIR)/libmesapanel_gl.so: shim/gl_shim.c
+$(BUILDDIR)/libxcontrol_gl.so: shim/gl_shim.c
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CPPFLAGS) $(GL_CFLAGS) $(LDFLAGS) -shared -o $@ $< -ldl -lpthread
 
-$(BUILDDIR)/libVkLayer_mesa_panel.so: shim/vk_layer.c
+$(BUILDDIR)/libVkLayer_xcontrol.so: shim/vk_layer.c
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CPPFLAGS) $(SHIM_CFLAGS) $(LDFLAGS) -shared -o $@ $< -lpthread
 
 # ---- translations -----------------------------------------------------------
-$(BUILDDIR)/locale/%/LC_MESSAGES/mesa-panel.mo: po/%.po
+$(BUILDDIR)/locale/%/LC_MESSAGES/xcontrol.mo: po/%.po
 	@mkdir -p $(dir $@)
 	msgfmt --check -o $@ $<
 
-$(BUILDDIR)/mesa-panel.desktop: data/mesa-panel.desktop.in po/LINGUAS $(wildcard po/*.po)
+$(BUILDDIR)/xcontrol.desktop: data/xcontrol.desktop.in po/LINGUAS $(wildcard po/*.po)
 	@mkdir -p $(BUILDDIR)
 	msgfmt --desktop -d po --template $< -o $@
 
 # Regenerate the template after changing user-visible strings.
 pot:
 	xgettext --from-code=UTF-8 -L Python -k_ -kN_ -kngettext:1,2 --add-comments=TRANSLATORS \
-		--package-name=mesa-panel --msgid-bugs-address=https://github.com/yourname/mesa-panel/issues \
-		-o po/mesa-panel.pot $(sort $(PYFILES))
-	xgettext -L Desktop -j -o po/mesa-panel.pot data/mesa-panel.desktop.in
-	sed -i 's/^"Project-Id-Version: .*\\n"$$/"Project-Id-Version: mesa-panel $(VERSION)\\n"/' po/mesa-panel.pot
+		--package-name=xcontrol --msgid-bugs-address=https://github.com/yourname/xcontrol/issues \
+		-o po/xcontrol.pot $(sort $(PYFILES))
+	xgettext -L Desktop -j -o po/xcontrol.pot data/xcontrol.desktop.in
+	sed -i 's/^"Project-Id-Version: .*\\n"$$/"Project-Id-Version: xcontrol $(VERSION)\\n"/' po/xcontrol.pot
 
 # Merge new strings into every translation (translators then fill them in).
 update-po: pot
-	for l in $(LINGUAS); do msgmerge -U --backup=none po/$$l.po po/mesa-panel.pot; done
+	for l in $(LINGUAS); do msgmerge -U --backup=none po/$$l.po po/xcontrol.pot; done
 
 # Start a new language: make new-po LANG_CODE=es
 new-po: pot
-	msginit -i po/mesa-panel.pot -o po/$(LANG_CODE).po -l $(LANG_CODE).UTF-8 --no-translator
+	msginit -i po/xcontrol.pot -o po/$(LANG_CODE).po -l $(LANG_CODE).UTF-8 --no-translator
 	grep -qx '$(LANG_CODE)' po/LINGUAS || echo '$(LANG_CODE)' >> po/LINGUAS
 
 # ---- install ----------------------------------------------------------------
 install: all
-	install -Dm755 $(BUILDDIR)/libmesapanel_gl.so $(DESTDIR)$(LIBDIR)/libmesapanel_gl.so
-	install -Dm755 $(BUILDDIR)/libVkLayer_mesa_panel.so $(DESTDIR)$(LIBDIR)/libVkLayer_mesa_panel.so
-	install -Dm755 data/mesa-panel-edid-helper $(DESTDIR)$(LIBDIR)/mesa-panel-edid-helper
+	install -Dm755 $(BUILDDIR)/libxcontrol_gl.so $(DESTDIR)$(LIBDIR)/libxcontrol_gl.so
+	install -Dm755 $(BUILDDIR)/libVkLayer_xcontrol.so $(DESTDIR)$(LIBDIR)/libVkLayer_xcontrol.so
+	install -Dm755 data/xcontrol-edid-helper $(DESTDIR)$(LIBDIR)/xcontrol-edid-helper
 	install -dm755 $(DESTDIR)$(LAYERDIR)
-	sed 's|@LIBDIR@|$(LIBDIR)|g' shim/VkLayer_mesa_panel.json.in > $(DESTDIR)$(LAYERDIR)/VkLayer_mesa_panel.json
-	chmod 644 $(DESTDIR)$(LAYERDIR)/VkLayer_mesa_panel.json
-	install -dm755 $(DESTDIR)$(DATADIR)/mesa_panel
-	install -m644 $(PYFILES) $(DESTDIR)$(DATADIR)/mesa_panel/
-	sed -i -e 's|@LIBDIR@|$(LIBDIR)|g' -e 's|@LOCALEDIR@|$(LOCALEDIR)|g' $(DESTDIR)$(DATADIR)/mesa_panel/paths.py
-	$(PYTHON) -m compileall -q -d $(DATADIR)/mesa_panel $(DESTDIR)$(DATADIR)/mesa_panel
+	sed 's|@LIBDIR@|$(LIBDIR)|g' shim/VkLayer_xcontrol.json.in > $(DESTDIR)$(LAYERDIR)/VkLayer_xcontrol.json
+	chmod 644 $(DESTDIR)$(LAYERDIR)/VkLayer_xcontrol.json
+	install -dm755 $(DESTDIR)$(DATADIR)/xcontrol
+	install -m644 $(PYFILES) $(DESTDIR)$(DATADIR)/xcontrol/
+	sed -i -e 's|@LIBDIR@|$(LIBDIR)|g' -e 's|@LOCALEDIR@|$(LOCALEDIR)|g' $(DESTDIR)$(DATADIR)/xcontrol/paths.py
+	$(PYTHON) -m compileall -q -d $(DATADIR)/xcontrol $(DESTDIR)$(DATADIR)/xcontrol
 	install -dm755 $(DESTDIR)$(BINDIR)
-	sed 's|@DATADIR@|$(DATADIR)|g' bin/mesa-panel.in > $(DESTDIR)$(BINDIR)/mesa-panel
-	sed 's|@DATADIR@|$(DATADIR)|g' bin/mesa-panel-run.in > $(DESTDIR)$(BINDIR)/mesa-panel-run
-	chmod 755 $(DESTDIR)$(BINDIR)/mesa-panel $(DESTDIR)$(BINDIR)/mesa-panel-run
-	install -Dm644 $(BUILDDIR)/mesa-panel.desktop $(DESTDIR)$(PREFIX)/share/applications/mesa-panel.desktop
+	sed 's|@DATADIR@|$(DATADIR)|g' bin/xcontrol.in > $(DESTDIR)$(BINDIR)/xcontrol
+	sed 's|@DATADIR@|$(DATADIR)|g' bin/xcontrol-run.in > $(DESTDIR)$(BINDIR)/xcontrol-run
+	chmod 755 $(DESTDIR)$(BINDIR)/xcontrol $(DESTDIR)$(BINDIR)/xcontrol-run
+	# old names (before the rename), so Steam launch options and login entries keep working
+	ln -sf xcontrol $(DESTDIR)$(BINDIR)/mesa-panel
+	ln -sf xcontrol-run $(DESTDIR)$(BINDIR)/mesa-panel-run
+	install -Dm644 $(BUILDDIR)/xcontrol.desktop $(DESTDIR)$(PREFIX)/share/applications/xcontrol.desktop
 	for l in $(LINGUAS); do \
-		install -Dm644 $(BUILDDIR)/locale/$$l/LC_MESSAGES/mesa-panel.mo \
-			$(DESTDIR)$(LOCALEDIR)/$$l/LC_MESSAGES/mesa-panel.mo; \
+		install -Dm644 $(BUILDDIR)/locale/$$l/LC_MESSAGES/xcontrol.mo \
+			$(DESTDIR)$(LOCALEDIR)/$$l/LC_MESSAGES/xcontrol.mo; \
 	done
 
 check:
@@ -83,7 +86,9 @@ check:
 	$(PYTHON) tests/check_output_names.py
 	$(PYTHON) tests/check_launcher.py
 	$(PYTHON) tests/check_output_props.py
-	sh -n data/mesa-panel-edid-helper
+	$(PYTHON) tests/check_input.py
+	$(PYTHON) tests/check_ratbag.py
+	sh -n data/xcontrol-edid-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

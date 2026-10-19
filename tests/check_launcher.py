@@ -5,7 +5,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from mesa_panel import config, launcher as L, vrr  # noqa: E402
+from xcontrol import config, launcher as L, vrr  # noqa: E402
 
 bad = 0
 
@@ -30,7 +30,7 @@ smaa = {"post_aa": "smaa", "sharpen": 50}
 env = L.compose_env(smaa, base)
 expect("vkbasalt enabled", env.get("ENABLE_VKBASALT"), "1")
 path = env.get("VKBASALT_CONFIG_FILE", "")
-expect("config under ~/.cache", path.startswith("/home/u/.cache/mesa-panel/vkbasalt-"), True)
+expect("config under ~/.cache", path.startswith("/home/u/.cache/xcontrol/vkbasalt-"), True)
 expect("same settings, same file", L.compose_env(dict(smaa), base)["VKBASALT_CONFIG_FILE"], path)
 expect("different settings, different file",
        L.compose_env({"post_aa": "fxaa"}, base)["VKBASALT_CONFIG_FILE"] != path, True)

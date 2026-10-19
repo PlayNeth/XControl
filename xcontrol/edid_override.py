@@ -243,7 +243,7 @@ def build(original, modes, preferred):
     elif info:
         name_descriptor = bytes([0, 0, 0, 0x10] + [0] * 14)
     else:
-        name_descriptor = _text_descriptor(0xFC, "mesa-panel")
+        name_descriptor = _text_descriptor(0xFC, "xcontrol")
     serial = info.serial if info and info.serial and not info.serial.isdigit() else ""
     descriptors = [dtds[0]]
     extra = dtds[1:]
@@ -277,7 +277,7 @@ def build(original, modes, preferred):
 def _blank_base():
     b = bytearray(128)
     b[0:8] = b"\x00\xff\xff\xff\xff\xff\xff\x00"
-    b[8], b[9] = 0x36, 0x8C  # "MPN" (mesa panel), a made-up PNP id
+    b[8], b[9] = 0x36, 0x8C  # "MPN" (XControl), a made-up PNP id
     b[16], b[17], b[18], b[19] = 1, 36, 1, 3
     b[20] = 0x80
     b[23] = 120  # gamma 2.2

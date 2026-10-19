@@ -1,6 +1,6 @@
 """Translations (gettext) and locale-aware number formatting.
 
-Translations live in /usr/share/locale/<lang>/LC_MESSAGES/mesa-panel.mo,
+Translations live in /usr/share/locale/<lang>/LC_MESSAGES/xcontrol.mo,
 built from po/<lang>.po. Without one, everything falls back to English.
 """
 import gettext
@@ -8,7 +8,7 @@ import locale
 
 from .paths import LOCALEDIR
 
-DOMAIN = "mesa-panel"
+DOMAIN = "xcontrol"
 
 try:
     locale.setlocale(locale.LC_ALL, "")

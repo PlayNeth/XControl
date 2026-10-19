@@ -1,12 +1,12 @@
 /*
- * mesa-panel Vulkan layer (VK_LAYER_MESAPANEL_overrides)
+ * xcontrol Vulkan layer (VK_LAYER_XCONTROL_overrides)
  *
- * Implicit layer, only enabled when MESAPANEL_VK=1 (set by mesa-panel-run).
+ * Implicit layer, only enabled when XCONTROL_VK=1 (set by xcontrol-run).
  * Covers native Vulkan games and Proton games (DXVK / VKD3D-Proton):
- *   MESAPANEL_AF=2|4|8|16   force anisotropic filtering in vkCreateSampler
- *   MESAPANEL_AF=1          force anisotropic filtering off
- *   MESAPANEL_FPS=N         frame limiter in vkQueuePresentKHR
- *   MESAPANEL_DEBUG=1       log to stderr
+ *   XCONTROL_AF=2|4|8|16   force anisotropic filtering in vkCreateSampler
+ *   XCONTROL_AF=1          force anisotropic filtering off
+ *   XCONTROL_FPS=N         frame limiter in vkQueuePresentKHR
+ *   XCONTROL_DEBUG=1       log to stderr
  */
 #define _GNU_SOURCE
 #include <pthread.h>
@@ -19,21 +19,30 @@
 #include <vulkan/vk_layer.h>
 
 #define EXPORT __attribute__((visibility("default")))
-#define LOG(...) do { if (g_debug) { fprintf(stderr, "[mesa-panel/vk] " __VA_ARGS__); fputc('\n', stderr); } } while (0)
+#define LOG(...) do { if (g_debug) { fprintf(stderr, "[xcontrol/vk] " __VA_ARGS__); fputc('\n', stderr); } } while (0)
 
 static int g_af, g_fps, g_debug;
 
+/* XCONTROL_<name>, or MESAPANEL_<name> from before the rename */
 static int env_int(const char *name)
 {
-    const char *v = getenv(name);
+    char key[64];
+    const char *v;
+
+    snprintf(key, sizeof key, "XCONTROL_%s", name);
+    v = getenv(key);
+    if (!v) {
+        snprintf(key, sizeof key, "MESAPANEL_%s", name);
+        v = getenv(key);
+    }
     return v ? atoi(v) : 0;
 }
 
 __attribute__((constructor)) static void mp_init(void)
 {
-    g_af = env_int("MESAPANEL_AF");
-    g_fps = env_int("MESAPANEL_FPS");
-    g_debug = env_int("MESAPANEL_DEBUG");
+    g_af = env_int("AF");
+    g_fps = env_int("FPS");
+    g_debug = env_int("DEBUG");
     if (g_af < 0) g_af = 0;
     if (g_af > 16) g_af = 16;
     if (g_fps < 0) g_fps = 0;

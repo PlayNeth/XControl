@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from mesa_panel import output_names as O  # noqa: E402
+from xcontrol import output_names as O  # noqa: E402
 
 bad = 0
 

@@ -5,7 +5,7 @@ import glob
 import os
 import sys
 
-root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "mesa_panel")
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "xcontrol")
 bad = []
 for path in sorted(glob.glob(os.path.join(root, "*.py"))):
     for fn in ast.walk(ast.parse(open(path, encoding="utf-8").read())):

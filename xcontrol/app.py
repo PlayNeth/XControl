@@ -9,14 +9,15 @@ from . import __version__, wm  # noqa: E402
 from .i18n import _  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
+from .input_page import InputPage  # noqa: E402
 from .monitors_page import MonitorsPage  # noqa: E402
 
-APP_ID = "io.github.mesa_panel"
+APP_ID = "io.github.xcontrol"
 
 
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, app):
-        super().__init__(application=app, title="Mesa Panel")
+        super().__init__(application=app, title="XControl")
         self.set_default_size(940, 780)
         self._fit_to_screen()
         self.set_icon_name("video-display")
@@ -26,7 +27,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self._status_timer = None
         self.header_bar = wm.use_header_bar()
         if self.header_bar:  # GNOME-style desktops: our own title bar, status at its end
-            header = Gtk.HeaderBar(show_close_button=True, title="Mesa Panel")
+            header = Gtk.HeaderBar(show_close_button=True, title="XControl")
             layout = wm.decoration_layout()
             if layout is not None:
                 header.set_decoration_layout(layout)
@@ -50,6 +51,10 @@ class MainWindow(Gtk.ApplicationWindow):
         self.monitors_page = MonitorsPage(self)
         monitors.add(self.monitors_page)
         stack.add_titled(monitors, "monitors", _("Monitor Info"))
+
+        inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        inputs.add(InputPage(self))
+        stack.add_titled(inputs, "input", _("Input"))
 
         self.stack = stack
         box = Gtk.Box()
@@ -123,15 +128,18 @@ class App(Gtk.Application):
 def main(argv=None):
     argv = list(sys.argv if argv is None else argv)
     if "--version" in argv:
-        print(f"mesa-panel {__version__}")
+        print(f"xcontrol {__version__}")
         return 0
     if "--apply-display" in argv:
         from .display_page import apply_saved_layout
         return apply_saved_layout()
+    if "--watch-input" in argv:  # login helper: re-apply input settings now and on hotplug
+        from . import input_devices, keyboard
+        return input_devices.watch(apply_keyboard=keyboard.apply_saved)
     page = "gaming"
     if "--page" in argv[:-1]:
         page = argv[argv.index("--page") + 1]
-    if page not in ("gaming", "displays", "monitors"):
-        print("mesa-panel: --page must be 'gaming', 'displays' or 'monitors'", file=sys.stderr)
+    if page not in ("gaming", "displays", "monitors", "input"):
+        print("xcontrol: --page must be 'gaming', 'displays', 'monitors' or 'input'", file=sys.stderr)
         return 2
     return App(page).run(argv[:1])

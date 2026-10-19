@@ -1,7 +1,7 @@
-"""mesa-panel-run: start a program with its profile applied.
+"""xcontrol-run: start a program with its profile applied.
 
-Steam:   set the game's launch options to   mesa-panel-run %command%
-Other:   mesa-panel-run [--profile NAME] [--print-env] [--] program args...
+Steam:   set the game's launch options to   xcontrol-run %command%
+Other:   xcontrol-run [--profile NAME] [--print-env] [--] program args...
          --print-env shows the settings that would be applied without starting anything.
 """
 import hashlib
@@ -12,7 +12,7 @@ import sys
 from . import config
 from .paths import GL_SHIM
 
-USAGE = "usage: mesa-panel-run [--profile NAME] [--print-env] [--] command [args...]"
+USAGE = "usage: xcontrol-run [--profile NAME] [--print-env] [--] command [args...]"
 
 VK_PRESENT = {"off": "immediate", "on": "fifo", "fast": "mailbox", "adaptive": "relaxed"}
 
@@ -32,7 +32,7 @@ def vkbasalt_config(settings):
         lines.append(f"casSharpness = {s['sharpen'] / 100:.2f}")
     if not effects:
         return None
-    return "\n".join(["# written by mesa-panel", "effects = " + ":".join(effects), *lines,
+    return "\n".join(["# written by xcontrol", "effects = " + ":".join(effects), *lines,
                       "toggleKey = Home", "enableOnLaunch = True", ""])
 
 
@@ -42,7 +42,7 @@ def vkbasalt_config_path(text, base=None):
     base = os.environ if base is None else base
     cache = base.get("XDG_CACHE_HOME") or os.path.join(base.get("HOME", "/tmp"), ".cache")
     digest = hashlib.sha1(text.encode()).hexdigest()[:12]
-    return os.path.join(cache, "mesa-panel", f"vkbasalt-{digest}.conf")
+    return os.path.join(cache, "xcontrol", f"vkbasalt-{digest}.conf")
 
 
 def write_support_files(settings, base=None):
@@ -76,7 +76,7 @@ def compose_env(settings, base=None):
     # DXVK knobs where they exist (they cover paths the hooks can't see).
     if s["af"]:
         off = s["af"] == 1
-        env["MESAPANEL_AF"] = str(s["af"])
+        env["XCONTROL_AF"] = str(s["af"])
         # driver and DXVK overrides: 0 means "no anisotropy" there
         driver = "0" if off else str(s["af"])
         env["RADV_TEX_ANISO"] = driver
@@ -88,11 +88,11 @@ def compose_env(settings, base=None):
     # "off" can also be enforced for Direct3D 11 through DXVK.
     wined3d_config = []
     if s["msaa"] == 1:
-        env["MESAPANEL_MSAA"] = "1"
+        env["XCONTROL_MSAA"] = "1"
         dxvk += ["d3d11.disableMsaa = True"]
         use_gl_shim = True
     elif s["msaa"]:
-        env["MESAPANEL_MSAA"] = str(s["msaa"])
+        env["XCONTROL_MSAA"] = str(s["msaa"])
         wined3d_config.append(f"SampleCount={s['msaa']}")
         use_gl_shim = True
 
@@ -104,7 +104,7 @@ def compose_env(settings, base=None):
 
     # Transparency AA
     if s["traa"] != "off":
-        env["MESAPANEL_TRAA"] = "1" if s["traa"] == "multisample" else "2"
+        env["XCONTROL_TRAA"] = "1" if s["traa"] == "multisample" else "2"
         use_gl_shim = True
         if s["traa"] == "supersample":
             dxvk += ["d3d9.forceSampleRateShading = True", "d3d11.forceSampleRateShading = True"]
@@ -138,11 +138,11 @@ def compose_env(settings, base=None):
 
     # Frame limiter: done in our own hooks for both APIs.
     if s["fps_limit"]:
-        env["MESAPANEL_FPS"] = str(s["fps_limit"])
+        env["XCONTROL_FPS"] = str(s["fps_limit"])
         use_gl_shim = use_vk_layer = True
 
     if use_vk_layer:
-        env["MESAPANEL_VK"] = "1"
+        env["XCONTROL_VK"] = "1"
     if use_gl_shim:
         preload = base.get("LD_PRELOAD", "")
         parts = [p for p in re.split(r"[ :]", preload) if p and p != GL_SHIM]
@@ -207,9 +207,9 @@ def main(argv=None):
     game, settings = find_settings(argv, profile_name=profile)
     env = compose_env(settings)
     if profile and not game:
-        print(f"mesa-panel-run: no profile named {profile!r}, using global settings", file=sys.stderr)
-    if print_env or os.environ.get("MESAPANEL_DEBUG"):
-        print(f"mesa-panel-run: profile = {game['name'] if game else 'global'}", file=sys.stderr)
+        print(f"xcontrol-run: no profile named {profile!r}, using global settings", file=sys.stderr)
+    if print_env or os.environ.get("XCONTROL_DEBUG"):
+        print(f"xcontrol-run: profile = {game['name'] if game else 'global'}", file=sys.stderr)
         for k, v in sorted(env.items()):
             print(f"  {k}={v}", file=sys.stderr)
     if print_env:  # dry run: show what would be applied, start nothing
@@ -218,13 +218,13 @@ def main(argv=None):
     try:
         write_support_files(settings)
     except OSError as e:
-        print(f"mesa-panel-run: cannot write the vkBasalt configuration: {e}", file=sys.stderr)
+        print(f"xcontrol-run: cannot write the vkBasalt configuration: {e}", file=sys.stderr)
     new_env = dict(os.environ)
     new_env.update(env)
     try:
         os.execvpe(argv[0], argv, new_env)
     except OSError as e:
-        print(f"mesa-panel-run: cannot run {argv[0]}: {e}", file=sys.stderr)
+        print(f"xcontrol-run: cannot run {argv[0]}: {e}", file=sys.stderr)
         return 127
 
 

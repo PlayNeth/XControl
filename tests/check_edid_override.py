@@ -8,7 +8,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from mesa_panel import edid, edid_override as O, modelines as M  # noqa: E402
+from xcontrol import edid, edid_override as O, modelines as M  # noqa: E402
 
 SAMPLES = {
     "analog CRT": bytes.fromhex("00ffffffffffff0005e36016470100001f180103682213782a00259e57529929155054a1080001010101010101010101010101010101662156aa51001e30468f330058c21000001e662150b051001b304070360058c21000001e000000fd0039461e3c09000a202020202020000000fc0031363630770a2020202020202000ac"),

@@ -463,7 +463,7 @@ def read_sysfs():
 def read_sysfs_full():
     """Connected DRM connectors with an EDID: [(card number, connector name, edid bytes)]."""
     out = []
-    base = os.environ.get("MESAPANEL_SYSFS_DRM", "/sys/class/drm")  # override for tests
+    base = os.environ.get("XCONTROL_SYSFS_DRM", "/sys/class/drm")  # override for tests
     try:
         entries = sorted(os.listdir(base))
     except OSError:

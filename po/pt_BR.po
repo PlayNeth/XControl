@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.8.0\n"
+"Project-Id-Version: xcontrol 0.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 02:00-0300\n"
+"POT-Creation-Date: 2026-10-19 12:26-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,427 +17,431 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: mesa_panel/app.py:43
+#: xcontrol/app.py:44
 msgid "Gaming"
 msgstr "Jogos"
 
-#: mesa_panel/app.py:47
+#: xcontrol/app.py:48
 msgid "Displays"
 msgstr "Telas"
 
-#: mesa_panel/app.py:52
+#: xcontrol/app.py:53
 msgid "Monitor Info"
 msgstr "Informações do monitor"
 
-#: mesa_panel/display_color.py:15
+#: xcontrol/app.py:57
+msgid "Input"
+msgstr "Entrada"
+
+#: xcontrol/display_color.py:15
 msgid "Off: the display does its own scaling"
 msgstr "Desligado: a tela faz a própria escala"
 
-#: mesa_panel/display_color.py:16
+#: xcontrol/display_color.py:16
 msgid "Stretch to fill the screen"
 msgstr "Esticar para preencher a tela"
 
-#: mesa_panel/display_color.py:17
+#: xcontrol/display_color.py:17
 msgid "Centered, no scaling (black borders)"
 msgstr "Centralizado, sem escala (bordas pretas)"
 
-#: mesa_panel/display_color.py:18
+#: xcontrol/display_color.py:18
 msgid "Scale, keeping the aspect ratio"
 msgstr "Escalar mantendo a proporção"
 
 #. TRANSLATORS: slider position meaning the feature is forced off
-#: mesa_panel/display_color.py:20 mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:38 mesa_panel/gaming_page.py:43 mesa_panel/gaming_page.py:48
+#: xcontrol/display_color.py:20 xcontrol/gaming_page.py:17 xcontrol/gaming_page.py:38 xcontrol/gaming_page.py:43 xcontrol/gaming_page.py:48 xcontrol/input_page.py:24 xcontrol/input_page.py:29 xcontrol/input_page.py:40
 msgid "Off"
 msgstr "Desligado"
 
-#: mesa_panel/display_color.py:20
+#: xcontrol/display_color.py:20 xcontrol/input_page.py:40
 msgid "On"
 msgstr "Ligado"
 
-#: mesa_panel/display_color.py:20
+#: xcontrol/display_color.py:20
 msgid "Automatic (HDMI TVs)"
 msgstr "Automático (TVs HDMI)"
 
-#: mesa_panel/display_color.py:22
+#: xcontrol/display_color.py:22
 msgid "Automatic"
 msgstr "Automático"
 
-#: mesa_panel/display_color.py:23
+#: xcontrol/display_color.py:23
 msgid "Full (0–255, for PC monitors)"
 msgstr "Completo (0–255, para monitores de PC)"
 
-#: mesa_panel/display_color.py:24
+#: xcontrol/display_color.py:24
 msgid "Limited (16–235, for TVs)"
 msgstr "Limitado (16–235, para TVs)"
 
-#: mesa_panel/display_color.py:71
+#: xcontrol/display_color.py:71
 msgid "Scaling and color"
 msgstr "Escala e cor"
 
-#: mesa_panel/display_color.py:95
+#: xcontrol/display_color.py:95
 msgid "GPU scaling"
 msgstr "Escala pela GPU"
 
-#: mesa_panel/display_color.py:96
+#: xcontrol/display_color.py:96
 msgid "Used when the resolution is lower than the display's native one."
 msgstr "Usada quando a resolução é menor que a nativa da tela."
 
 #. TRANSLATORS: horizontal and vertical border sizes, in pixels
-#: mesa_panel/display_color.py:107
+#: xcontrol/display_color.py:107
 msgid "Borders"
 msgstr "Bordas"
 
-#: mesa_panel/display_color.py:111
+#: xcontrol/display_color.py:111
 msgid "Underscan"
 msgstr "Underscan"
 
-#: mesa_panel/display_color.py:112
+#: xcontrol/display_color.py:112
 msgid "Shrinks the picture so a TV that crops the edges (overscan) shows all of it."
 msgstr "Reduz a imagem para que uma TV que corta as bordas (overscan) mostre tudo."
 
-#: mesa_panel/display_color.py:116
+#: xcontrol/display_color.py:116
 msgid "Output range"
 msgstr "Faixa de saída"
 
-#: mesa_panel/display_color.py:117
+#: xcontrol/display_color.py:117
 msgid "If blacks look gray or dark details are crushed, the display and the GPU disagree on the range."
 msgstr "Se o preto parece cinza ou os detalhes escuros somem, a tela e a GPU discordam sobre a faixa."
 
-#: mesa_panel/display_color.py:121 mesa_panel/monitor_info.py:136
+#: xcontrol/display_color.py:121 xcontrol/monitor_info.py:136
 msgid "Color depth"
 msgstr "Profundidade de cor"
 
-#: mesa_panel/display_color.py:122
+#: xcontrol/display_color.py:122
 msgid "The highest depth the link may use; the driver lowers it when bandwidth runs out."
 msgstr "A maior profundidade que a conexão pode usar; o driver reduz quando falta largura de banda."
 
-#: mesa_panel/display_color.py:124
+#: xcontrol/display_color.py:124
 #, python-brace-format
 msgid "{n} %"
 msgstr "{n} %"
 
-#: mesa_panel/display_color.py:132
+#: xcontrol/display_color.py:132
 msgid "Saturation"
 msgstr "Saturação"
 
-#: mesa_panel/display_color.py:133
+#: xcontrol/display_color.py:133
 msgid "Done by the display engine, so it applies to everything on screen, games included. At 100 colors are unchanged. Shown live while you drag; Apply keeps it."
 msgstr "Feita pelo controlador de vídeo, então vale para tudo na tela, inclusive jogos. Em 100 as cores não mudam. Aparece na hora enquanto você arrasta; Aplicar mantém."
 
-#: mesa_panel/display_color.py:139 mesa_panel/monitor_info.py:138
+#: xcontrol/display_color.py:139 xcontrol/monitor_info.py:138
 msgid "Gamma"
 msgstr "Gama"
 
-#: mesa_panel/display_color.py:140
+#: xcontrol/display_color.py:140
 msgid "Higher values brighten dark and middle tones. Night-light tools also change gamma and may override this."
 msgstr "Valores maiores clareiam os tons escuros e médios. Ferramentas de luz noturna também mudam o gama e podem sobrescrever isto."
 
-#: mesa_panel/display_color.py:143
+#: xcontrol/display_color.py:143 xcontrol/input_page.py:206
 msgid "Reset to defaults"
 msgstr "Restaurar padrões"
 
-#: mesa_panel/display_color.py:148
+#: xcontrol/display_color.py:148
 msgid "The driver offers no scaling or color settings for this display."
 msgstr "O driver não oferece configurações de escala ou cor para esta tela."
 
-#: mesa_panel/display_color.py:203 mesa_panel/display_color.py:205
+#: xcontrol/display_color.py:203 xcontrol/display_color.py:205
 #, python-brace-format
 msgid "{bits} bits per color"
 msgstr "{bits} bits por cor"
 
-#: mesa_panel/display_color.py:211
+#: xcontrol/display_color.py:211
 msgid "Another program set a custom color matrix; moving the slider replaces it."
 msgstr "Outro programa definiu uma matriz de cor personalizada; mover o controle a substitui."
 
-#: mesa_panel/display_page.py:17
+#: xcontrol/display_page.py:17
 msgid "Normal"
 msgstr "Normal"
 
-#: mesa_panel/display_page.py:17
+#: xcontrol/display_page.py:17
 msgid "Rotated left"
 msgstr "Girada à esquerda"
 
-#: mesa_panel/display_page.py:17
+#: xcontrol/display_page.py:17
 msgid "Rotated right"
 msgstr "Girada à direita"
 
-#: mesa_panel/display_page.py:17
+#: xcontrol/display_page.py:17
 msgid "Upside down"
 msgstr "De cabeça para baixo"
 
-#: mesa_panel/display_page.py:72
+#: xcontrol/display_page.py:72
 msgid "No active displays"
 msgstr "Nenhuma tela ativa"
 
 #. TRANSLATORS: label drawn on the primary display in the arrangement view
-#: mesa_panel/display_page.py:102
+#: xcontrol/display_page.py:102
 msgid "Primary"
 msgstr "Principal"
 
-#: mesa_panel/display_page.py:187
+#: xcontrol/display_page.py:187
 msgid "Drag the displays to match how they sit on your desk."
 msgstr "Arraste as telas para que fiquem como estão na sua mesa."
 
-#: mesa_panel/display_page.py:196
+#: xcontrol/display_page.py:196
 msgid "Make this the primary display"
 msgstr "Usar como tela principal"
 
-#: mesa_panel/display_page.py:222
+#: xcontrol/display_page.py:222
 msgid "Details"
 msgstr "Detalhes"
 
-#: mesa_panel/display_page.py:223
+#: xcontrol/display_page.py:223
 msgid "Show what this display reports: model, refresh range, HDR, color"
 msgstr "Mostrar o que esta tela informa: modelo, faixa de atualização, HDR, cores"
 
-#: mesa_panel/display_page.py:225
+#: xcontrol/display_page.py:225
 msgid "Resolutions…"
 msgstr "Resoluções…"
 
-#: mesa_panel/display_page.py:226
+#: xcontrol/display_page.py:226
 msgid "Add custom resolutions, or ignore the modes the display reports"
 msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela informa"
 
-#: mesa_panel/display_page.py:233
+#: xcontrol/display_page.py:233
 msgid "Display"
 msgstr "Tela"
 
-#: mesa_panel/display_page.py:233 mesa_panel/monitor_info.py:178
+#: xcontrol/display_page.py:233 xcontrol/input_page.py:697 xcontrol/monitor_info.py:178
 msgid "Enabled"
 msgstr "Ativada"
 
-#: mesa_panel/display_page.py:234 mesa_panel/resolutions_dialog.py:128
+#: xcontrol/display_page.py:234 xcontrol/resolutions_dialog.py:128
 msgid "Resolution"
 msgstr "Resolução"
 
-#: mesa_panel/display_page.py:234
+#: xcontrol/display_page.py:234
 msgid "Refresh rate"
 msgstr "Taxa de atualização"
 
-#: mesa_panel/display_page.py:235
+#: xcontrol/display_page.py:235
 msgid "Orientation"
 msgstr "Orientação"
 
-#: mesa_panel/display_page.py:235
+#: xcontrol/display_page.py:235
 msgid "Position"
 msgstr "Posição"
 
-#: mesa_panel/display_page.py:258
+#: xcontrol/display_page.py:258
 msgid "Restore this layout when I log in"
 msgstr "Restaurar este layout ao iniciar a sessão"
 
-#: mesa_panel/display_page.py:262
+#: xcontrol/display_page.py:262
 msgid "Apply"
 msgstr "Aplicar"
 
-#: mesa_panel/display_page.py:265
+#: xcontrol/display_page.py:265
 msgid "Detect displays"
 msgstr "Detectar telas"
 
-#: mesa_panel/display_page.py:267
+#: xcontrol/display_page.py:267
 msgid "Identify"
 msgstr "Identificar"
 
-#: mesa_panel/display_page.py:294
+#: xcontrol/display_page.py:294
 #, python-brace-format
 msgid "Saved settings moved to the new output names: {names}"
 msgstr "Configurações salvas movidas para os novos nomes de saída: {names}"
 
-#: mesa_panel/display_page.py:360
+#: xcontrol/display_page.py:360
 msgid "Only matters with more than one display: it gets the panels, notifications and fullscreen games."
 msgstr "Só faz diferença com mais de uma tela: ela recebe os painéis, as notificações e os jogos em tela cheia."
 
-#: mesa_panel/display_page.py:367
+#: xcontrol/display_page.py:367
 msgid "Press Apply to use the new settings"
 msgstr "Clique em Aplicar para usar as novas configurações"
 
-#: mesa_panel/display_page.py:385
+#: xcontrol/display_page.py:385
 msgid "Previewing: press Apply to keep these colors"
 msgstr "Pré-visualizando: clique em Aplicar para manter estas cores"
 
-#: mesa_panel/display_page.py:387
+#: xcontrol/display_page.py:387
 #, python-brace-format
 msgid "Preview failed: {error}"
 msgstr "A pré-visualização falhou: {error}"
 
-#: mesa_panel/display_page.py:446
+#: xcontrol/display_page.py:446
 msgid "None of your custom resolutions are active on this display, so all modes are shown."
 msgstr "Nenhuma das suas resoluções personalizadas está ativa nesta tela, por isso todos os modos são mostrados."
 
-#: mesa_panel/display_page.py:579
+#: xcontrol/display_page.py:579
 msgid "At least one display must stay on"
 msgstr "Pelo menos uma tela precisa ficar ligada"
 
-#: mesa_panel/display_page.py:579
+#: xcontrol/display_page.py:579
 msgid "Turn on a display before applying."
 msgstr "Ligue uma tela antes de aplicar."
 
-#: mesa_panel/display_page.py:587 mesa_panel/display_page.py:592
+#: xcontrol/display_page.py:587 xcontrol/display_page.py:592
 msgid "xrandr could not apply this layout"
 msgstr "O xrandr não conseguiu aplicar este layout"
 
-#: mesa_panel/display_page.py:599
+#: xcontrol/display_page.py:599
 msgid "Display settings applied"
 msgstr "Configurações de tela aplicadas"
 
-#: mesa_panel/display_page.py:606
+#: xcontrol/display_page.py:606
 msgid "Could not restore the previous layout"
 msgstr "Não foi possível restaurar o layout anterior"
 
-#: mesa_panel/display_page.py:608
+#: xcontrol/display_page.py:608
 msgid "Display settings reverted"
 msgstr "Configurações de tela revertidas"
 
-#: mesa_panel/display_page.py:613
+#: xcontrol/display_page.py:613
 msgid "Keep these display settings?"
 msgstr "Manter estas configurações de tela?"
 
-#: mesa_panel/display_page.py:614
+#: xcontrol/display_page.py:614
 msgid "Revert"
 msgstr "Reverter"
 
-#: mesa_panel/display_page.py:614
+#: xcontrol/display_page.py:614
 msgid "Keep changes"
 msgstr "Manter alterações"
 
-#: mesa_panel/display_page.py:618
+#: xcontrol/display_page.py:618
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
 msgstr[0] "As configurações anteriores serão restauradas em {n} segundo."
 msgstr[1] "As configurações anteriores serão restauradas em {n} segundos."
 
-#: mesa_panel/edid_override_dialog.py:23
+#: xcontrol/edid_override_dialog.py:23
 #, python-brace-format
 msgid "System-wide mode list for {output}"
 msgstr "Lista de modos do sistema para {output}"
 
-#: mesa_panel/edid_override_dialog.py:27 mesa_panel/resolutions_dialog.py:67
+#: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:67
 msgid "Close"
 msgstr "Fechar"
 
-#: mesa_panel/edid_override_dialog.py:43
+#: xcontrol/edid_override_dialog.py:43
 msgid "Builds a corrected EDID for this display that lists only the modes you tick. The kernel then reports exactly these modes to X, games and every other program. The display's name, serial number and colour data are kept."
 msgstr "Cria um EDID corrigido para esta tela que lista só os modos que você marcar. O kernel passa a informar exatamente esses modos ao X, aos jogos e a todos os outros programas. O nome, o número de série e os dados de cor da tela são mantidos."
 
-#: mesa_panel/edid_override_dialog.py:71
+#: xcontrol/edid_override_dialog.py:71
 #, python-brace-format
 msgid "custom, {standard}"
 msgstr "personalizado, {standard}"
 
-#: mesa_panel/edid_override_dialog.py:72
+#: xcontrol/edid_override_dialog.py:72
 msgid "from the display / driver"
 msgstr "da tela / driver"
 
-#: mesa_panel/edid_override_dialog.py:73
+#: xcontrol/edid_override_dialog.py:73
 msgid "(current)"
 msgstr "(atual)"
 
-#: mesa_panel/edid_override_dialog.py:83
+#: xcontrol/edid_override_dialog.py:83
 msgid "Native (preferred) mode"
 msgstr "Modo nativo (preferido)"
 
-#: mesa_panel/edid_override_dialog.py:93
+#: xcontrol/edid_override_dialog.py:93
 msgid "Save EDID file…"
 msgstr "Salvar arquivo EDID…"
 
-#: mesa_panel/edid_override_dialog.py:95
+#: xcontrol/edid_override_dialog.py:95
 msgid "Test now"
 msgstr "Testar agora"
 
-#: mesa_panel/edid_override_dialog.py:96
+#: xcontrol/edid_override_dialog.py:96
 msgid "Load it into the kernel until the next reboot (asks for your password)"
 msgstr "Carregar no kernel até a próxima reinicialização (pede sua senha)"
 
-#: mesa_panel/edid_override_dialog.py:98
+#: xcontrol/edid_override_dialog.py:98
 msgid "Undo test"
 msgstr "Desfazer teste"
 
-#: mesa_panel/edid_override_dialog.py:100
+#: xcontrol/edid_override_dialog.py:100
 msgid "Make permanent…"
 msgstr "Tornar permanente…"
 
-#: mesa_panel/edid_override_dialog.py:117
+#: xcontrol/edid_override_dialog.py:117
 #, python-brace-format
 msgid "Could not match {output} to a kernel connector, so the override can only be saved as a file."
 msgstr "Não foi possível associar {output} a um conector do kernel, então o EDID só pode ser salvo como arquivo."
 
-#: mesa_panel/edid_override_dialog.py:120
+#: xcontrol/edid_override_dialog.py:120
 msgid "pkexec (polkit) is needed to test or install the override; you can still save the file."
 msgstr "O pkexec (polkit) é necessário para testar ou instalar o EDID; você ainda pode salvar o arquivo."
 
-#: mesa_panel/edid_override_dialog.py:183
+#: xcontrol/edid_override_dialog.py:183
 #, python-brace-format
 msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
 msgstr "{count} modos · {blocks} blocos EDID · faixa de atualização {low}–{high} Hz"
 
-#: mesa_panel/edid_override_dialog.py:205
+#: xcontrol/edid_override_dialog.py:205
 msgid "The kernel is using the installed override, and it loads at every boot."
 msgstr "O kernel está usando a substituição instalada, e ela é carregada em toda inicialização."
 
-#: mesa_panel/edid_override_dialog.py:206
+#: xcontrol/edid_override_dialog.py:206
 #, python-brace-format
 msgid "The kernel is using the installed override, but only until the next reboot: the kernel parameter {param} is missing."
 msgstr "O kernel está usando a substituição instalada, mas só até a próxima reinicialização: falta o parâmetro de kernel {param}."
 
-#: mesa_panel/edid_override_dialog.py:208
+#: xcontrol/edid_override_dialog.py:208
 #, python-brace-format
 msgid "No permanent override is installed for {connector}. “Test now” lasts only until the next reboot."
 msgstr "Nenhuma substituição permanente instalada para {connector}. “Testar agora” vale só até a próxima reinicialização."
 
-#: mesa_panel/edid_override_dialog.py:210
+#: xcontrol/edid_override_dialog.py:210
 #, python-brace-format
 msgid "An override is installed, but the kernel isn't using it because the kernel parameter {param} is missing. Add it and reboot."
 msgstr "Há uma substituição instalada, mas o kernel não a usa porque falta o parâmetro de kernel {param}. Adicione-o e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:212
+#: xcontrol/edid_override_dialog.py:212
 #, python-brace-format
 msgid "An override is installed, but the kernel parameter is {current} instead of {param}. Fix it and reboot."
 msgstr "Há uma substituição instalada, mas o parâmetro de kernel é {current} em vez de {param}. Corrija-o e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:214
+#: xcontrol/edid_override_dialog.py:214
 #, python-brace-format
 msgid "The override is installed and the kernel parameter is set, but the file is not in the initramfs, so the graphics driver can't read it at boot. Add FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."
 msgstr "A substituição está instalada e o parâmetro de kernel está definido, mas o arquivo não está no initramfs, então o driver de vídeo não consegue lê-lo na inicialização. Adicione FILES=({file}) ao /etc/mkinitcpio.conf, execute “sudo mkinitcpio -P” e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:217
+#: xcontrol/edid_override_dialog.py:217
 msgid "The override file changed after the initramfs was built, so the old one is still loaded at boot. Run “sudo mkinitcpio -P” and reboot."
 msgstr "O arquivo de substituição mudou depois que o initramfs foi gerado, então o antigo ainda é carregado na inicialização. Execute “sudo mkinitcpio -P” e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:219
+#: xcontrol/edid_override_dialog.py:219
 msgid "The override is installed and set up, but the kernel isn't using it. If you haven't rebooted since, reboot. Otherwise “sudo dmesg | grep -i edid” shows why."
 msgstr "A substituição está instalada e configurada, mas o kernel não a está usando. Se você ainda não reiniciou desde então, reinicie. Caso contrário, “sudo dmesg | grep -i edid” mostra o motivo."
 
-#: mesa_panel/edid_override_dialog.py:246
+#: xcontrol/edid_override_dialog.py:246
 msgid "Authorization was cancelled."
 msgstr "A autorização foi cancelada."
 
-#: mesa_panel/edid_override_dialog.py:250 mesa_panel/monitors_page.py:132
+#: xcontrol/edid_override_dialog.py:250 xcontrol/monitors_page.py:132
 msgid "Save EDID"
 msgstr "Salvar EDID"
 
-#: mesa_panel/edid_override_dialog.py:251 mesa_panel/gaming_page.py:135 mesa_panel/gaming_page.py:466 mesa_panel/monitors_page.py:133
+#: xcontrol/edid_override_dialog.py:251 xcontrol/gaming_page.py:135 xcontrol/gaming_page.py:466 xcontrol/monitors_page.py:133
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: mesa_panel/edid_override_dialog.py:251 mesa_panel/monitors_page.py:133
+#: xcontrol/edid_override_dialog.py:251 xcontrol/monitors_page.py:133
 msgid "Save"
 msgstr "Salvar"
 
-#: mesa_panel/edid_override_dialog.py:260
+#: xcontrol/edid_override_dialog.py:260
 #, python-brace-format
 msgid "Saved {path}"
 msgstr "Salvo em {path}"
 
-#: mesa_panel/edid_override_dialog.py:277
+#: xcontrol/edid_override_dialog.py:277
 msgid "Loaded until reboot. The display was re-detected; check the Displays page or run xrandr. Use “Undo test” to go back."
 msgstr "Carregado até a próxima reinicialização. A tela foi detectada de novo; confira a página Telas ou rode o xrandr. Use “Desfazer teste” para voltar."
 
-#: mesa_panel/edid_override_dialog.py:284
+#: xcontrol/edid_override_dialog.py:284
 msgid "The display's own EDID is back."
 msgstr "O EDID original da tela voltou."
 
-#: mesa_panel/edid_override_dialog.py:303
+#: xcontrol/edid_override_dialog.py:303
 #, python-brace-format
 msgid ""
 "Installed {file}.\n"
@@ -476,815 +480,1329 @@ msgstr ""
 "\n"
 "Para desfazer, remova o parâmetro e a entrada FILES, recrie o initramfs e reinicie."
 
-#: mesa_panel/edid_override_dialog.py:321
+#: xcontrol/edid_override_dialog.py:321
 msgid "Kernel parameter copied"
 msgstr "Parâmetro do kernel copiado"
 
-#: mesa_panel/gaming_page.py:18
+#: xcontrol/gaming_page.py:18
 msgid "Multisample (alpha-to-coverage)"
 msgstr "Multiamostragem (alpha-to-coverage)"
 
-#: mesa_panel/gaming_page.py:19
+#: xcontrol/gaming_page.py:19
 msgid "Supersample (best quality)"
 msgstr "Superamostragem (melhor qualidade)"
 
-#: mesa_panel/gaming_page.py:22
+#: xcontrol/gaming_page.py:22
 msgid "DXVK (default)"
 msgstr "DXVK (padrão)"
 
-#: mesa_panel/gaming_page.py:23
+#: xcontrol/gaming_page.py:23
 msgid "WineD3D (needed for forced MSAA)"
 msgstr "WineD3D (necessário para forçar MSAA)"
 
-#: mesa_panel/gaming_page.py:26 mesa_panel/gaming_page.py:33
+#: xcontrol/gaming_page.py:26 xcontrol/gaming_page.py:33
 msgid "Application decides"
 msgstr "Definida pelo aplicativo"
 
-#: mesa_panel/gaming_page.py:27 mesa_panel/gaming_page.py:34
+#: xcontrol/gaming_page.py:27 xcontrol/gaming_page.py:34
 msgid "Always off"
 msgstr "Sempre desligada"
 
-#: mesa_panel/gaming_page.py:28
+#: xcontrol/gaming_page.py:28
 msgid "Always on"
 msgstr "Sempre ligada"
 
-#: mesa_panel/gaming_page.py:29
+#: xcontrol/gaming_page.py:29
 msgid "Fast sync (no tearing, uncapped; Vulkan)"
 msgstr "Sincronização rápida (sem tearing, sem limite; Vulkan)"
 
-#: mesa_panel/gaming_page.py:30
+#: xcontrol/gaming_page.py:30
 msgid "Adaptive (tears below refresh rate; Vulkan)"
 msgstr "Adaptativa (tearing abaixo da taxa de atualização; Vulkan)"
 
-#: mesa_panel/gaming_page.py:35
+#: xcontrol/gaming_page.py:35
 msgid "On for fullscreen games"
 msgstr "Ativado em jogos em tela cheia"
 
-#: mesa_panel/gaming_page.py:39
+#: xcontrol/gaming_page.py:39
 msgid "FXAA (fastest, slightly softer)"
 msgstr "FXAA (mais rápido, um pouco mais suave)"
 
-#: mesa_panel/gaming_page.py:40
+#: xcontrol/gaming_page.py:40
 msgid "SMAA (cleaner edges)"
 msgstr "SMAA (bordas mais limpas)"
 
-#: mesa_panel/gaming_page.py:43
+#: xcontrol/gaming_page.py:43
 msgid "Low"
 msgstr "Baixa"
 
-#: mesa_panel/gaming_page.py:43
+#: xcontrol/gaming_page.py:43
 msgid "Medium"
 msgstr "Média"
 
-#: mesa_panel/gaming_page.py:43
+#: xcontrol/gaming_page.py:43
 msgid "High"
 msgstr "Alta"
 
-#: mesa_panel/gaming_page.py:48
+#: xcontrol/gaming_page.py:48
 #, python-brace-format
 msgid "{n}×"
 msgstr "{n}×"
 
-#: mesa_panel/gaming_page.py:78
+#: xcontrol/gaming_page.py:78
 msgid "Use application settings"
 msgstr "Usar configurações do aplicativo"
 
-#: mesa_panel/gaming_page.py:134
+#: xcontrol/gaming_page.py:134
 msgid "Add Steam game"
 msgstr "Adicionar jogo da Steam"
 
-#: mesa_panel/gaming_page.py:135 mesa_panel/gaming_page.py:466 mesa_panel/resolutions_dialog.py:152
+#: xcontrol/gaming_page.py:135 xcontrol/gaming_page.py:466 xcontrol/resolutions_dialog.py:152
 msgid "Add"
 msgstr "Adicionar"
 
-#: mesa_panel/gaming_page.py:141
+#: xcontrol/gaming_page.py:141
 msgid "Search installed games"
 msgstr "Pesquisar jogos instalados"
 
-#: mesa_panel/gaming_page.py:177
+#: xcontrol/gaming_page.py:177 xcontrol/input_page.py:538
 msgid "Profile:"
 msgstr "Perfil:"
 
-#: mesa_panel/gaming_page.py:182
+#: xcontrol/gaming_page.py:182
 msgid "Add game"
 msgstr "Adicionar jogo"
 
-#: mesa_panel/gaming_page.py:184
+#: xcontrol/gaming_page.py:184
 msgid "Steam game…"
 msgstr "Jogo da Steam…"
 
-#: mesa_panel/gaming_page.py:184
+#: xcontrol/gaming_page.py:184
 msgid "Program or script…"
 msgstr "Programa ou script…"
 
-#: mesa_panel/gaming_page.py:191
+#: xcontrol/gaming_page.py:191
 msgid "Delete"
 msgstr "Excluir"
 
-#: mesa_panel/gaming_page.py:198
+#: xcontrol/gaming_page.py:198
 msgid "Game"
 msgstr "Jogo"
 
-#: mesa_panel/gaming_page.py:202
+#: xcontrol/gaming_page.py:202
 msgid "Comma-separated. steam:APPID matches a Steam game; any other entry matches the file name of the program or of one of its arguments (e.g. game.exe under Proton)."
 msgstr "Separado por vírgulas. steam:APPID corresponde a um jogo da Steam; qualquer outra entrada corresponde ao nome do arquivo do programa ou de um dos seus argumentos (por exemplo, game.exe no Proton)."
 
-#: mesa_panel/gaming_page.py:205
+#: xcontrol/gaming_page.py:205
 msgid "Optional: command to start the game from here"
 msgstr "Opcional: comando para iniciar o jogo por aqui"
 
-#: mesa_panel/gaming_page.py:206
+#: xcontrol/gaming_page.py:206
 msgid "Launch"
 msgstr "Iniciar"
 
-#: mesa_panel/gaming_page.py:209
+#: xcontrol/gaming_page.py:209
 msgid "Name"
 msgstr "Nome"
 
-#: mesa_panel/gaming_page.py:211
+#: xcontrol/gaming_page.py:211
 msgid "Applies to"
 msgstr "Aplica-se a"
 
-#: mesa_panel/gaming_page.py:213
+#: xcontrol/gaming_page.py:213
 msgid "Command"
 msgstr "Comando"
 
-#: mesa_panel/gaming_page.py:223
+#: xcontrol/gaming_page.py:223
 msgid "Anti-Aliasing"
 msgstr "Suavização de serrilhado"
 
-#: mesa_panel/gaming_page.py:224
+#: xcontrol/gaming_page.py:224
 msgid "Multisampling"
 msgstr "Multiamostragem"
 
-#: mesa_panel/gaming_page.py:225
+#: xcontrol/gaming_page.py:225
 msgid "Transparency"
 msgstr "Transparência"
 
 #. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
-#: mesa_panel/gaming_page.py:232
+#: xcontrol/gaming_page.py:232
 msgid "Direct3D 8/9 games"
 msgstr "Jogos Direct3D 8/9"
 
-#: mesa_panel/gaming_page.py:238
+#: xcontrol/gaming_page.py:238
 msgid "Forced multisampling works in OpenGL games and, with WineD3D selected, in Direct3D 8/9 games that draw straight to the screen (mostly older titles). DXVK cannot force it. Games with post-processing or deferred rendering ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 games running through DXVK. Transparency AA smooths alpha-tested foliage and fences while multisampling is active; in shader-based games, including WineD3D, both modes supersample just those surfaces."
 msgstr "A multiamostragem forçada funciona em jogos OpenGL e, com o WineD3D selecionado, em jogos Direct3D 8/9 que desenham direto na tela (principalmente títulos mais antigos). O DXVK não consegue forçá-la. Jogos com pós-processamento ou renderização diferida a ignoram; use as opções de AA do próprio jogo. Desligado também desativa o MSAA em jogos Direct3D 11 executados pelo DXVK. A suavização de transparência suaviza folhagens e cercas com teste alfa enquanto a multiamostragem estiver ativa; em jogos baseados em shaders, incluindo o WineD3D, os dois modos aplicam superamostragem só nessas superfícies."
 
-#: mesa_panel/gaming_page.py:248
+#: xcontrol/gaming_page.py:248
 msgid "Texture Filtering"
 msgstr "Filtragem de texturas"
 
-#: mesa_panel/gaming_page.py:249
+#: xcontrol/gaming_page.py:249
 msgid "Anisotropic filtering"
 msgstr "Filtragem anisotrópica"
 
-#: mesa_panel/gaming_page.py:250
+#: xcontrol/gaming_page.py:250
 msgid "Works in OpenGL, Vulkan and Proton (DXVK / VKD3D-Proton) games."
 msgstr "Funciona em jogos OpenGL, Vulkan e Proton (DXVK / VKD3D-Proton)."
 
-#: mesa_panel/gaming_page.py:254
+#: xcontrol/gaming_page.py:254
 msgid "Frame Rate"
 msgstr "Taxa de quadros"
 
-#: mesa_panel/gaming_page.py:255
+#: xcontrol/gaming_page.py:255
 msgid "Vertical sync"
 msgstr "Sincronização vertical"
 
-#: mesa_panel/gaming_page.py:261
+#: xcontrol/gaming_page.py:261
 msgid "Limit frame rate to"
 msgstr "Limitar a taxa de quadros a"
 
 #. TRANSLATORS: frames per second, shown after the frame limit number
-#: mesa_panel/gaming_page.py:268
+#: xcontrol/gaming_page.py:268
 msgid "FPS"
 msgstr "FPS"
 
-#: mesa_panel/gaming_page.py:269
+#: xcontrol/gaming_page.py:269
 msgid "Frame limiter"
 msgstr "Limitador de quadros"
 
 #. TRANSLATORS: AMD's name for variable refresh rate; keep it if your language uses it
-#: mesa_panel/gaming_page.py:274
+#: xcontrol/gaming_page.py:274
 msgid "FreeSync"
 msgstr "FreeSync"
 
-#: mesa_panel/gaming_page.py:286
+#: xcontrol/gaming_page.py:286
 msgid "Post-Processing"
 msgstr "Pós-processamento"
 
-#: mesa_panel/gaming_page.py:288
+#: xcontrol/gaming_page.py:288
 msgid "Edge smoothing"
 msgstr "Suavização de bordas"
 
-#: mesa_panel/gaming_page.py:294
+#: xcontrol/gaming_page.py:294
 msgid "Sharpening"
 msgstr "Nitidez"
 
-#: mesa_panel/gaming_page.py:301
+#: xcontrol/gaming_page.py:301
 msgid "Applied by vkBasalt after the game draws each frame, so it works where forced multisampling can't: Vulkan games and Windows games through DXVK or VKD3D-Proton. Not OpenGL. Press Home in the game to compare with it off."
 msgstr "Aplicado pelo vkBasalt depois que o jogo desenha cada quadro, então funciona onde o multisampling forçado não funciona: jogos Vulkan e jogos de Windows via DXVK ou VKD3D-Proton. Não funciona em OpenGL. Aperte Home no jogo para comparar com o efeito desligado."
 
-#: mesa_panel/gaming_page.py:305
+#: xcontrol/gaming_page.py:305
 msgid "Needs vkBasalt, which isn't installed. It smooths edges and sharpens the image in Vulkan games and Windows games through DXVK or VKD3D-Proton."
 msgstr "Requer o vkBasalt, que não está instalado. Ele suaviza bordas e aumenta a nitidez em jogos Vulkan e jogos de Windows via DXVK ou VKD3D-Proton."
 
-#: mesa_panel/gaming_page.py:322
+#: xcontrol/gaming_page.py:322
 msgid "Settings apply to games started through the panel's launcher. For Steam games, use these launch options:"
 msgstr "As configurações valem para jogos iniciados pelo lançador do painel. Para jogos da Steam, use estas opções de inicialização:"
 
-#: mesa_panel/gaming_page.py:327
+#: xcontrol/gaming_page.py:327
 msgid "Copy launch options"
 msgstr "Copiar opções de inicialização"
 
 #. TRANSLATORS: {program} is glxgears or vkcube
-#: mesa_panel/gaming_page.py:336
+#: xcontrol/gaming_page.py:336
 #, python-brace-format
 msgid "Test with {program}"
 msgstr "Testar com {program}"
 
-#: mesa_panel/gaming_page.py:354
+#: xcontrol/gaming_page.py:354
 msgid "Global settings (all games)"
 msgstr "Configurações globais (todos os jogos)"
 
-#: mesa_panel/gaming_page.py:406
+#: xcontrol/gaming_page.py:406
 msgid "Variable refresh is turned off for these games."
 msgstr "A taxa de atualização variável está desligada para esses jogos."
 
-#: mesa_panel/gaming_page.py:408
+#: xcontrol/gaming_page.py:408
 msgid "Works in fullscreen OpenGL, Vulkan and Proton games on a FreeSync display, while the frame rate is inside the display's FreeSync range. With a frame limit, set it a few FPS below the display's maximum refresh rate."
 msgstr "Funciona em jogos OpenGL, Vulkan e Proton em tela cheia num monitor FreeSync, enquanto a taxa de quadros estiver dentro da faixa FreeSync do monitor. Ao limitar os quadros, use alguns FPS abaixo da taxa de atualização máxima do monitor."
 
-#: mesa_panel/gaming_page.py:412
+#: xcontrol/gaming_page.py:412
 msgid "X has it disabled: add Option \"VariableRefresh\" \"true\" to the Device section of your xorg.conf and restart X."
 msgstr "O X está com ela desativada: adicione Option \"VariableRefresh\" \"true\" à seção Device do seu xorg.conf e reinicie o X."
 
-#: mesa_panel/gaming_page.py:442
+#: xcontrol/gaming_page.py:442
 msgid "Saved"
 msgstr "Salvo"
 
-#: mesa_panel/gaming_page.py:444
+#: xcontrol/gaming_page.py:444
 #, python-brace-format
 msgid "Could not save profiles: {error}"
 msgstr "Não foi possível salvar os perfis: {error}"
 
-#: mesa_panel/gaming_page.py:450
+#: xcontrol/gaming_page.py:450
 msgid "No Steam games found"
 msgstr "Nenhum jogo da Steam encontrado"
 
-#: mesa_panel/gaming_page.py:451
+#: xcontrol/gaming_page.py:451
 msgid "No installed Steam games were found in the usual Steam folders. You can still add a game with “Program or script…” and type steam:APPID into “Applies to”."
 msgstr "Nenhum jogo da Steam instalado foi encontrado nas pastas habituais da Steam. Você ainda pode adicionar um jogo com “Programa ou script…” e digitar steam:APPID em “Aplica-se a”."
 
-#: mesa_panel/gaming_page.py:464
+#: xcontrol/gaming_page.py:464
 msgid "Choose the game's executable"
 msgstr "Escolha o executável do jogo"
 
-#: mesa_panel/gaming_page.py:482
+#: xcontrol/gaming_page.py:482
 #, python-brace-format
 msgid "Delete the profile “{name}”?"
 msgstr "Excluir o perfil “{name}”?"
 
-#: mesa_panel/gaming_page.py:496
+#: xcontrol/gaming_page.py:496
 msgid "Could not write the vkBasalt configuration"
 msgstr "Não foi possível gravar a configuração do vkBasalt"
 
-#: mesa_panel/gaming_page.py:501
+#: xcontrol/gaming_page.py:501
 msgid "Could not start the program"
 msgstr "Não foi possível iniciar o programa"
 
-#: mesa_panel/gaming_page.py:510
+#: xcontrol/gaming_page.py:510
 msgid "The command is not valid"
 msgstr "O comando não é válido"
 
-#: mesa_panel/gaming_page.py:521
+#: xcontrol/gaming_page.py:521
 msgid "Launch options copied"
 msgstr "Opções de inicialização copiadas"
 
+#: xcontrol/input_page.py:16
+msgid "Adaptive: faster movement goes further"
+msgstr "Adaptativa: movimentos rápidos vão mais longe"
+
+#: xcontrol/input_page.py:17
+msgid "Flat: no acceleration (best for games)"
+msgstr "Plana: sem aceleração (melhor para jogos)"
+
+#: xcontrol/input_page.py:18
+msgid "Custom (set elsewhere)"
+msgstr "Personalizada (definida em outro lugar)"
+
+#: xcontrol/input_page.py:21
+msgid "Two fingers"
+msgstr "Dois dedos"
+
+#: xcontrol/input_page.py:22
+msgid "Right edge of the touchpad"
+msgstr "Borda direita do touchpad"
+
+#: xcontrol/input_page.py:23
+msgid "Hold a button and move"
+msgstr "Segurar um botão e mover"
+
+#: xcontrol/input_page.py:27
+msgid "Press the bottom corners (right corner = right click)"
+msgstr "Pressionar os cantos inferiores (canto direito = clique direito)"
+
+#: xcontrol/input_page.py:28
+msgid "Press with 1, 2 or 3 fingers (2 = right click)"
+msgstr "Pressionar com 1, 2 ou 3 dedos (2 = clique direito)"
+
+#: xcontrol/input_page.py:33
+msgid "Double click"
+msgstr "Clique duplo"
+
+#: xcontrol/input_page.py:33
+msgid "Wheel left"
+msgstr "Roda para a esquerda"
+
+#: xcontrol/input_page.py:33
+msgid "Wheel right"
+msgstr "Roda para a direita"
+
+#: xcontrol/input_page.py:33
+msgid "Wheel up"
+msgstr "Roda para cima"
+
+#: xcontrol/input_page.py:33
+msgid "Wheel down"
+msgstr "Roda para baixo"
+
+#: xcontrol/input_page.py:34
+msgid "Ratchet mode switch"
+msgstr "Alternar modo da roda (catraca)"
+
+#: xcontrol/input_page.py:34
+msgid "DPI cycle up"
+msgstr "Próximo DPI (em ciclo)"
+
+#: xcontrol/input_page.py:34
+msgid "DPI cycle down"
+msgstr "DPI anterior (em ciclo)"
+
+#: xcontrol/input_page.py:34
+msgid "DPI up"
+msgstr "Aumentar DPI"
+
+#: xcontrol/input_page.py:35
+msgid "DPI down"
+msgstr "Diminuir DPI"
+
+#: xcontrol/input_page.py:35
+msgid "DPI shift (sniper)"
+msgstr "DPI alternativo (sniper)"
+
+#: xcontrol/input_page.py:35
+msgid "Default DPI"
+msgstr "DPI padrão"
+
+#: xcontrol/input_page.py:35
+msgid "Profile cycle up"
+msgstr "Próximo perfil (em ciclo)"
+
+#: xcontrol/input_page.py:36
+msgid "Profile cycle down"
+msgstr "Perfil anterior (em ciclo)"
+
+#: xcontrol/input_page.py:36
+msgid "Profile up"
+msgstr "Próximo perfil"
+
+#: xcontrol/input_page.py:36
+msgid "Profile down"
+msgstr "Perfil anterior"
+
+#: xcontrol/input_page.py:36
+msgid "Second mode"
+msgstr "Segundo modo"
+
+#: xcontrol/input_page.py:37
+msgid "Battery level"
+msgstr "Nível da bateria"
+
+#: xcontrol/input_page.py:39
+msgid "Left click"
+msgstr "Clique esquerdo"
+
+#: xcontrol/input_page.py:39 xcontrol/input_page.py:199
+msgid "Right click"
+msgstr "Clique direito"
+
+#: xcontrol/input_page.py:39
+msgid "Middle click"
+msgstr "Clique do meio"
+
+#: xcontrol/input_page.py:39
+msgid "Back"
+msgstr "Voltar"
+
+#: xcontrol/input_page.py:39
+msgid "Forward"
+msgstr "Avançar"
+
+#: xcontrol/input_page.py:40
+msgid "Color cycle"
+msgstr "Ciclo de cores"
+
+#: xcontrol/input_page.py:41
+msgid "Breathing"
+msgstr "Respiração"
+
+#: xcontrol/input_page.py:145
+msgid "Device:"
+msgstr "Dispositivo:"
+
+#: xcontrol/input_page.py:149 xcontrol/input_page.py:542 xcontrol/monitors_page.py:21
+msgid "Refresh"
+msgstr "Atualizar"
+
+#: xcontrol/input_page.py:158
+msgid "Pointer"
+msgstr "Ponteiro"
+
+#: xcontrol/input_page.py:163
+msgid "Slow"
+msgstr "Lento"
+
+#: xcontrol/input_page.py:163 xcontrol/input_page.py:168 xcontrol/input_page.py:427
+msgid "Default"
+msgstr "Padrão"
+
+#: xcontrol/input_page.py:163
+msgid "Fast"
+msgstr "Rápido"
+
+#: xcontrol/input_page.py:173
+msgid "Acceleration"
+msgstr "Aceleração"
+
+#: xcontrol/input_page.py:174
+msgid "Pointer speed"
+msgstr "Velocidade do ponteiro"
+
+#: xcontrol/input_page.py:175
+msgid "Scroll speed"
+msgstr "Velocidade da rolagem"
+
+#: xcontrol/input_page.py:178
+msgid "Natural scrolling (content follows your fingers)"
+msgstr "Rolagem natural (o conteúdo segue os dedos)"
+
+#: xcontrol/input_page.py:179
+msgid "Left-handed (swap the left and right buttons)"
+msgstr "Canhoto (inverte os botões esquerdo e direito)"
+
+#: xcontrol/input_page.py:180
+msgid "Middle click by pressing left and right together"
+msgstr "Clique do meio pressionando esquerdo e direito juntos"
+
+#: xcontrol/input_page.py:181
+msgid "Horizontal scrolling"
+msgstr "Rolagem horizontal"
+
+#: xcontrol/input_page.py:187
+msgid "Touchpad"
+msgstr "Touchpad"
+
+#: xcontrol/input_page.py:188
+msgid "Tap to click"
+msgstr "Tocar para clicar"
+
+#: xcontrol/input_page.py:189
+msgid "Tap and drag"
+msgstr "Tocar e arrastar"
+
+#: xcontrol/input_page.py:190
+msgid "Drag lock (lifting the finger doesn't end the drag)"
+msgstr "Trava de arrasto (levantar o dedo não termina o arrasto)"
+
+#: xcontrol/input_page.py:191
+msgid "Disable while typing"
+msgstr "Desativar enquanto digita"
+
+#: xcontrol/input_page.py:198
+msgid "Scrolling"
+msgstr "Rolagem"
+
+#: xcontrol/input_page.py:211
+msgid "Changes apply right away and are kept for this device by name: XControl puts them back at login and whenever the device is plugged in."
+msgstr "As mudanças valem na hora e ficam guardadas para este dispositivo pelo nome: o XControl as reaplica no login e sempre que o dispositivo é conectado."
+
+#: xcontrol/input_page.py:241
+msgid "xinput was not found, or this isn't an X11 session."
+msgstr "O xinput não foi encontrado, ou esta não é uma sessão X11."
+
+#: xcontrol/input_page.py:247
+msgid "touchpad"
+msgstr "touchpad"
+
+#: xcontrol/input_page.py:247
+msgid "mouse"
+msgstr "mouse"
+
+#: xcontrol/input_page.py:251
+msgid "No mouse or touchpad using the libinput driver was found."
+msgstr "Nenhum mouse ou touchpad usando o driver libinput foi encontrado."
+
+#: xcontrol/input_page.py:318
+#, python-brace-format
+msgid "Saved for {device}"
+msgstr "Salvo para {device}"
+
+#: xcontrol/input_page.py:320
+msgid "Could not change this setting"
+msgstr "Não foi possível mudar esta configuração"
+
+#: xcontrol/input_page.py:337
+#, python-brace-format
+msgid "{device} is back to its defaults"
+msgstr "{device} voltou ao padrão"
+
+#: xcontrol/input_page.py:353
+msgid "Layout"
+msgstr "Layout"
+
+#: xcontrol/input_page.py:358
+msgid "Not set"
+msgstr "Não definido"
+
+#: xcontrol/input_page.py:359
+msgid "Default (Caps Lock)"
+msgstr "Padrão (Caps Lock)"
+
+#: xcontrol/input_page.py:360 xcontrol/input_page.py:413
+msgid "None"
+msgstr "Nenhum"
+
+#: xcontrol/input_page.py:365
+msgid "Keyboard layout"
+msgstr "Layout do teclado"
+
+#: xcontrol/input_page.py:365 xcontrol/input_page.py:366
+msgid "Variant"
+msgstr "Variante"
+
+#: xcontrol/input_page.py:366
+msgid "Second layout"
+msgstr "Segundo layout"
+
+#: xcontrol/input_page.py:367
+msgid "Switch layouts with"
+msgstr "Trocar de layout com"
+
+#: xcontrol/input_page.py:367
+msgid "Caps Lock key"
+msgstr "Tecla Caps Lock"
+
+#: xcontrol/input_page.py:368
+msgid "Compose key"
+msgstr "Tecla Compose"
+
+#: xcontrol/input_page.py:383
+msgid "Key repeat"
+msgstr "Repetição de teclas"
+
+#: xcontrol/input_page.py:384 xcontrol/input_page.py:717
+#, python-brace-format
+msgid "{ms} ms"
+msgstr "{ms} ms"
+
+#: xcontrol/input_page.py:385
+#, python-brace-format
+msgid "{n} per second"
+msgstr "{n} por segundo"
+
+#: xcontrol/input_page.py:390
+msgid "Delay before repeating"
+msgstr "Espera antes de repetir"
+
+#: xcontrol/input_page.py:390
+msgid "Repeat speed"
+msgstr "Velocidade de repetição"
+
+#: xcontrol/input_page.py:396
+msgid "Type here to test"
+msgstr "Digite aqui para testar"
+
+#: xcontrol/input_page.py:400
+msgid "Stop managing the keyboard"
+msgstr "Deixar de gerenciar o teclado"
+
+#: xcontrol/input_page.py:401
+msgid "Forget XControl's keyboard settings; your own setup (xorg.conf.d, i3 config) takes over again from the next login"
+msgstr "Esquecer as configurações de teclado do XControl; sua própria configuração (xorg.conf.d, config do i3) volta a valer a partir do próximo login"
+
+#: xcontrol/input_page.py:406
+msgid "Changes apply right away. XControl only re-applies the keyboard settings you change here, at login and when a keyboard is plugged in."
+msgstr "As mudanças valem na hora. O XControl só reaplica as configurações de teclado que você muda aqui, no login e quando um teclado é conectado."
+
+#: xcontrol/input_page.py:446
+msgid "setxkbmap was not found, or this isn't an X11 session."
+msgstr "O setxkbmap não foi encontrado, ou esta não é uma sessão X11."
+
+#: xcontrol/input_page.py:513
+msgid "Keyboard settings saved"
+msgstr "Configurações de teclado salvas"
+
+#: xcontrol/input_page.py:515
+msgid "Could not change the keyboard settings"
+msgstr "Não foi possível mudar as configurações de teclado"
+
+#: xcontrol/input_page.py:520
+msgid "XControl no longer changes the keyboard"
+msgstr "O XControl não muda mais o teclado"
+
+#: xcontrol/input_page.py:534
+msgid "Mouse:"
+msgstr "Mouse:"
+
+#: xcontrol/input_page.py:555
+msgid "Use this profile"
+msgstr "Usar este perfil"
+
+#: xcontrol/input_page.py:558
+msgid "Save to mouse"
+msgstr "Salvar no mouse"
+
+#: xcontrol/input_page.py:563
+msgid "Settings are stored in the mouse itself, so they also work on other computers. Changes take effect when you press “Save to mouse”."
+msgstr "As configurações ficam guardadas no próprio mouse, então valem também em outros computadores. As mudanças passam a valer quando você clica em “Salvar no mouse”."
+
+#: xcontrol/input_page.py:583
+msgid "Install libratbag (the ratbagd service) to set DPI, polling rate, buttons and lighting on supported gaming mice from Logitech, SteelSeries, Razer, Roccat, G.Skill and others."
+msgstr "Instale o libratbag (o serviço ratbagd) para ajustar DPI, taxa de atualização, botões e iluminação de mouses gamer compatíveis da Logitech, SteelSeries, Razer, Roccat, G.Skill e outros."
+
+#: xcontrol/input_page.py:586
+#, python-brace-format
+msgid "Could not reach ratbagd: {error}"
+msgstr "Não foi possível falar com o ratbagd: {error}"
+
+#: xcontrol/input_page.py:588
+msgid "No supported gaming mouse found. libratbag lists supported models on its website."
+msgstr "Nenhum mouse gamer compatível encontrado. O site do libratbag lista os modelos compatíveis."
+
+#: xcontrol/input_page.py:608
+#, python-brace-format
+msgid "Profile {n}"
+msgstr "Perfil {n}"
+
+#: xcontrol/input_page.py:610
+msgid "(in use)"
+msgstr "(em uso)"
+
+#: xcontrol/input_page.py:649
+msgid "Changed; press “Save to mouse” to keep it"
+msgstr "Alterado; clique em “Salvar no mouse” para manter"
+
+#: xcontrol/input_page.py:651
+msgid "The mouse didn't accept this setting"
+msgstr "O mouse não aceitou esta configuração"
+
+#: xcontrol/input_page.py:658
+msgid "Sensitivity (DPI)"
+msgstr "Sensibilidade (DPI)"
+
+#: xcontrol/input_page.py:659
+msgid "In use"
+msgstr "Em uso"
+
+#: xcontrol/input_page.py:660
+msgid "At power-on"
+msgstr "Ao ligar"
+
+#: xcontrol/input_page.py:661
+msgid "DPI"
+msgstr "DPI"
+
+#: xcontrol/input_page.py:664
+#, python-brace-format
+msgid "Stage {n}"
+msgstr "Nível {n}"
+
+#: xcontrol/input_page.py:709
+#, python-brace-format
+msgid "{hz} Hz ({ms} ms)"
+msgstr "{hz} Hz ({ms} ms)"
+
+#: xcontrol/input_page.py:712
+msgid "Polling rate"
+msgstr "Taxa de atualização (polling)"
+
+#: xcontrol/input_page.py:720
+msgid "Button debounce"
+msgstr "Debounce dos botões"
+
+#: xcontrol/input_page.py:723
+msgid "Straighten nearly straight lines"
+msgstr "Endireitar linhas quase retas"
+
+#: xcontrol/input_page.py:726
+msgid "Angle snapping"
+msgstr "Correção de ângulo"
+
+#: xcontrol/input_page.py:730
+msgid "Sensor"
+msgstr "Sensor"
+
+#: xcontrol/input_page.py:735
+msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
+msgstr "A correção de ângulo ajuda a desenhar linhas retas, mas atrapalha a mira em jogos."
+
+#: xcontrol/input_page.py:742
+msgid "Buttons"
+msgstr "Botões"
+
+#: xcontrol/input_page.py:744 xcontrol/input_page.py:749
+#, python-brace-format
+msgid "Button {n}"
+msgstr "Botão {n}"
+
+#: xcontrol/input_page.py:750
+#, python-brace-format
+msgid "{action} (button {n})"
+msgstr "{action} (botão {n})"
+
+#: xcontrol/input_page.py:756
+msgid "Disabled"
+msgstr "Desativado"
+
+#: xcontrol/input_page.py:760
+msgid "Keyboard key (set in Piper)"
+msgstr "Tecla do teclado (defina no Piper)"
+
+#: xcontrol/input_page.py:760
+msgid "Macro (set in Piper)"
+msgstr "Macro (defina no Piper)"
+
+#: xcontrol/input_page.py:761
+#, python-brace-format
+msgid "Other ({kind})"
+msgstr "Outro ({kind})"
+
+#: xcontrol/input_page.py:783
+msgid "Lighting"
+msgstr "Iluminação"
+
+#: xcontrol/input_page.py:786
+#, python-brace-format
+msgid "LED {n}"
+msgstr "LED {n}"
+
+#: xcontrol/input_page.py:816
+msgid "Brightness"
+msgstr "Brilho"
+
+#: xcontrol/input_page.py:820
+#, python-brace-format
+msgid "{s} s"
+msgstr "{s} s"
+
+#: xcontrol/input_page.py:824
+msgid "Effect length"
+msgstr "Duração do efeito"
+
+#: xcontrol/input_page.py:837
+msgid "Profile switched"
+msgstr "Perfil trocado"
+
+#: xcontrol/input_page.py:839
+msgid "Could not switch profiles"
+msgstr "Não foi possível trocar de perfil"
+
+#: xcontrol/input_page.py:846
+msgid "Saved to the mouse"
+msgstr "Salvo no mouse"
+
+#: xcontrol/input_page.py:848
+msgid "Could not save to the mouse"
+msgstr "Não foi possível salvar no mouse"
+
+#: xcontrol/input_page.py:859
+msgid "Mouse & Touchpad"
+msgstr "Mouse e touchpad"
+
+#: xcontrol/input_page.py:860
+msgid "Keyboard"
+msgstr "Teclado"
+
+#: xcontrol/input_page.py:861
+msgid "Gaming Mouse"
+msgstr "Mouse gamer"
+
+#: xcontrol/input_page.py:866
+#, python-brace-format
+msgid "This section could not be loaded: {error}"
+msgstr "Não foi possível carregar esta seção: {error}"
+
 #. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1 (kernel)"
-#: mesa_panel/monitor_info.py:82
+#: xcontrol/monitor_info.py:82
 #, python-brace-format
 msgid "{output} (kernel)"
 msgstr "{output} (kernel)"
 
-#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:240
+#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:240
 msgid "Connection"
 msgstr "Conexão"
 
-#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:212
+#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:212
 msgid "Output"
 msgstr "Saída"
 
-#: mesa_panel/monitor_info.py:86
+#: xcontrol/monitor_info.py:86
 msgid "This display did not report any information."
 msgstr "Esta tela não forneceu nenhuma informação."
 
-#: mesa_panel/monitor_info.py:87
+#: xcontrol/monitor_info.py:87
 msgid "Not reported"
 msgstr "Não informado"
 
-#: mesa_panel/monitor_info.py:91
+#: xcontrol/monitor_info.py:91
 #, python-brace-format
 msgid "Model year {year}"
 msgstr "Modelo {year}"
 
-#: mesa_panel/monitor_info.py:93
+#: xcontrol/monitor_info.py:93
 #, python-brace-format
 msgid "Week {week}, {year}"
 msgstr "Semana {week} de {year}"
 
-#: mesa_panel/monitor_info.py:96
+#: xcontrol/monitor_info.py:96
 #, python-brace-format
 msgid "version {version}"
 msgstr "versão {version}"
 
-#: mesa_panel/monitor_info.py:98
+#: xcontrol/monitor_info.py:98
 #, python-brace-format
 msgid "{list} extension"
 msgid_plural "{list} extensions"
 msgstr[0] "extensão {list}"
 msgstr[1] "extensões {list}"
 
-#: mesa_panel/monitor_info.py:101
+#: xcontrol/monitor_info.py:101
 msgid "(bad checksum)"
 msgstr "(checksum inválido)"
 
-#: mesa_panel/monitor_info.py:103
+#: xcontrol/monitor_info.py:103
 msgid "Model"
 msgstr "Modelo"
 
-#: mesa_panel/monitor_info.py:104
+#: xcontrol/monitor_info.py:104
 msgid "Manufacturer"
 msgstr "Fabricante"
 
-#: mesa_panel/monitor_info.py:105
+#: xcontrol/monitor_info.py:105
 msgid "Product code"
 msgstr "Código do produto"
 
-#: mesa_panel/monitor_info.py:106
+#: xcontrol/monitor_info.py:106
 msgid "Serial number"
 msgstr "Número de série"
 
-#: mesa_panel/monitor_info.py:107
+#: xcontrol/monitor_info.py:107
 msgid "Manufactured"
 msgstr "Fabricação"
 
-#: mesa_panel/monitor_info.py:110
+#: xcontrol/monitor_info.py:110
 msgid "Identity"
 msgstr "Identificação"
 
-#: mesa_panel/monitor_info.py:120
+#: xcontrol/monitor_info.py:120
 msgid "interlaced"
 msgstr "entrelaçado"
 
-#: mesa_panel/monitor_info.py:121
+#: xcontrol/monitor_info.py:121
 msgid "Native resolution"
 msgstr "Resolução nativa"
 
-#: mesa_panel/monitor_info.py:124
+#: xcontrol/monitor_info.py:124
 msgid "Screen size"
 msgstr "Tamanho da tela"
 
-#: mesa_panel/monitor_info.py:124
+#: xcontrol/monitor_info.py:124
 #, python-brace-format
 msgid "{inches}″ ({width} × {height} mm)"
 msgstr "{inches}″ ({width} × {height} mm)"
 
-#: mesa_panel/monitor_info.py:127
+#: xcontrol/monitor_info.py:127
 msgid "Pixel density"
 msgstr "Densidade de pixels"
 
-#: mesa_panel/monitor_info.py:127
+#: xcontrol/monitor_info.py:127
 #, python-brace-format
 msgid "{ppi} PPI"
 msgstr "{ppi} PPI"
 
-#: mesa_panel/monitor_info.py:128
+#: xcontrol/monitor_info.py:128
 #, python-brace-format
 msgid "{n} bit per color"
 msgid_plural "{n} bits per color"
 msgstr[0] "{n} bit por cor"
 msgstr[1] "{n} bits por cor"
 
-#: mesa_panel/monitor_info.py:133
+#: xcontrol/monitor_info.py:133
 #, python-brace-format
 msgid "(driver limit: {limit}, adjustable {range})"
 msgstr "(limite do driver: {limit}, ajustável de {range})"
 
-#: mesa_panel/monitor_info.py:135
+#: xcontrol/monitor_info.py:135
 #, python-brace-format
 msgid "(driver limit: {limit})"
 msgstr "(limite do driver: {limit})"
 
-#: mesa_panel/monitor_info.py:139
+#: xcontrol/monitor_info.py:139
 msgid "Panel"
 msgstr "Painel"
 
-#: mesa_panel/monitor_info.py:147 mesa_panel/monitor_info.py:154
+#: xcontrol/monitor_info.py:147 xcontrol/monitor_info.py:154
 msgid "Highest refresh rate"
 msgstr "Maior taxa de atualização"
 
-#: mesa_panel/monitor_info.py:149 mesa_panel/monitor_info.py:157
+#: xcontrol/monitor_info.py:149 xcontrol/monitor_info.py:157
 msgid "Highest resolution"
 msgstr "Maior resolução"
 
-#: mesa_panel/monitor_info.py:159
+#: xcontrol/monitor_info.py:159
 msgid "Supported refresh range"
 msgstr "Faixa de atualização suportada"
 
-#: mesa_panel/monitor_info.py:161
+#: xcontrol/monitor_info.py:161
 msgid "Horizontal scan range"
 msgstr "Faixa de varredura horizontal"
 
-#: mesa_panel/monitor_info.py:164
+#: xcontrol/monitor_info.py:164
 msgid "Supported"
 msgstr "Suportada"
 
-#: mesa_panel/monitor_info.py:166
+#: xcontrol/monitor_info.py:166
 msgid "Not available on this connection"
 msgstr "Indisponível nesta conexão"
 
-#: mesa_panel/monitor_info.py:171
+#: xcontrol/monitor_info.py:171
 #, python-brace-format
 msgid "(FreeSync {low}–{high} Hz)"
 msgstr "(FreeSync {low}–{high} Hz)"
 
-#: mesa_panel/monitor_info.py:172
+#: xcontrol/monitor_info.py:172
 #, python-brace-format
 msgid "(FreeSync up to {high} Hz)"
 msgstr "(FreeSync até {high} Hz)"
 
-#: mesa_panel/monitor_info.py:173
+#: xcontrol/monitor_info.py:173
 msgid "Variable refresh rate"
 msgstr "Taxa de atualização variável"
 
-#: mesa_panel/monitor_info.py:177
+#: xcontrol/monitor_info.py:177
 msgid "Variable refresh in X"
 msgstr "Taxa de atualização variável no X"
 
-#: mesa_panel/monitor_info.py:179
+#: xcontrol/monitor_info.py:179
 msgid "Disabled (add Option \"VariableRefresh\" \"true\" to the Device section)"
 msgstr "Desativada (adicione Option \"VariableRefresh\" \"true\" à seção Device)"
 
-#: mesa_panel/monitor_info.py:181
+#: xcontrol/monitor_info.py:181
 msgid "Max pixel clock"
 msgstr "Clock de pixel máximo"
 
-#: mesa_panel/monitor_info.py:182
+#: xcontrol/monitor_info.py:182
 msgid "Refresh & Sync"
 msgstr "Atualização e sincronização"
 
-#: mesa_panel/monitor_info.py:191
+#: xcontrol/monitor_info.py:191
 msgid "Not supported"
 msgstr "Não suportado"
 
-#: mesa_panel/monitor_info.py:193
+#: xcontrol/monitor_info.py:193
 #, python-brace-format
 msgid "{nits} cd/m² peak"
 msgstr "{nits} cd/m² de pico"
 
-#: mesa_panel/monitor_info.py:195
+#: xcontrol/monitor_info.py:195
 #, python-brace-format
 msgid "{nits} full-frame"
 msgstr "{nits} em tela cheia"
 
-#: mesa_panel/monitor_info.py:197
+#: xcontrol/monitor_info.py:197
 #, python-brace-format
 msgid "{nits} minimum"
 msgstr "{nits} mínimo"
 
-#: mesa_panel/monitor_info.py:198
+#: xcontrol/monitor_info.py:198
 msgid "Brightness (HDR metadata)"
 msgstr "Brilho (metadados HDR)"
 
-#: mesa_panel/monitor_info.py:201
+#: xcontrol/monitor_info.py:201
 msgid "Gamut (EDID primaries)"
 msgstr "Gamut (primárias do EDID)"
 
-#: mesa_panel/monitor_info.py:204
+#: xcontrol/monitor_info.py:204
 msgid "White point"
 msgstr "Ponto branco"
 
-#: mesa_panel/monitor_info.py:206
+#: xcontrol/monitor_info.py:206
 msgid "Wide color signaling"
 msgstr "Sinalização de cores amplas"
 
-#: mesa_panel/monitor_info.py:208
+#: xcontrol/monitor_info.py:208
 msgid "Driver colorspace"
 msgstr "Espaço de cor do driver"
 
-#: mesa_panel/monitor_info.py:209
+#: xcontrol/monitor_info.py:209
 msgid "Color & HDR"
 msgstr "Cor e HDR"
 
-#: mesa_panel/monitor_info.py:214
+#: xcontrol/monitor_info.py:214
 msgid "Current mode"
 msgstr "Modo atual"
 
-#: mesa_panel/monitor_info.py:216
+#: xcontrol/monitor_info.py:216
 msgid "Input type"
 msgstr "Tipo de entrada"
 
-#: mesa_panel/monitor_info.py:217
+#: xcontrol/monitor_info.py:217
 msgid "Digital"
 msgstr "Digital"
 
-#: mesa_panel/monitor_info.py:217
+#: xcontrol/monitor_info.py:217
 msgid "Analog (VGA)"
 msgstr "Analógica (VGA)"
 
-#: mesa_panel/monitor_info.py:220
+#: xcontrol/monitor_info.py:220
 msgid "HDMI 2.1 capable"
 msgstr "Compatível com HDMI 2.1"
 
-#: mesa_panel/monitor_info.py:222
+#: xcontrol/monitor_info.py:222
 msgid "HDMI 2.0 capable"
 msgstr "Compatível com HDMI 2.0"
 
-#: mesa_panel/monitor_info.py:225
+#: xcontrol/monitor_info.py:225
 msgid "HDMI support"
 msgstr "Suporte a HDMI"
 
-#: mesa_panel/monitor_info.py:227
+#: xcontrol/monitor_info.py:227
 msgid "Max TMDS clock"
 msgstr "Clock TMDS máximo"
 
-#: mesa_panel/monitor_info.py:230
+#: xcontrol/monitor_info.py:230
 msgid "HDMI FRL bandwidth"
 msgstr "Largura de banda HDMI FRL"
 
-#: mesa_panel/monitor_info.py:231
+#: xcontrol/monitor_info.py:231
 #, python-brace-format
 msgid "{rate} Gbps × {lanes} lane ({total} Gbps)"
 msgid_plural "{rate} Gbps × {lanes} lanes ({total} Gbps)"
 msgstr[0] "{rate} Gbps × {lanes} faixa ({total} Gbps)"
 msgstr[1] "{rate} Gbps × {lanes} faixas ({total} Gbps)"
 
-#: mesa_panel/monitor_info.py:234
+#: xcontrol/monitor_info.py:234
 msgid "Audio"
 msgstr "Áudio"
 
-#: mesa_panel/monitor_info.py:234
+#: xcontrol/monitor_info.py:234
 msgid "Yes"
 msgstr "Sim"
 
-#: mesa_panel/monitor_info.py:234
+#: xcontrol/monitor_info.py:234
 msgid "No"
 msgstr "Não"
 
-#: mesa_panel/monitor_info.py:236
+#: xcontrol/monitor_info.py:236
 msgid "RGB only"
 msgstr "Somente RGB"
 
-#: mesa_panel/monitor_info.py:238
+#: xcontrol/monitor_info.py:238
 msgid "standby"
 msgstr "espera"
 
-#: mesa_panel/monitor_info.py:238
+#: xcontrol/monitor_info.py:238
 msgid "suspend"
 msgstr "suspensão"
 
-#: mesa_panel/monitor_info.py:238
+#: xcontrol/monitor_info.py:238
 msgid "off"
 msgstr "desligado"
 
-#: mesa_panel/monitor_info.py:239
+#: xcontrol/monitor_info.py:239
 msgid "Power saving"
 msgstr "Economia de energia"
 
-#: mesa_panel/monitors_page.py:17
+#: xcontrol/monitors_page.py:17
 msgid "Information reported by each connected display (EDID) and its driver."
 msgstr "Dados fornecidos por cada tela conectada (EDID) e pelo seu driver."
 
-#: mesa_panel/monitors_page.py:21
-msgid "Refresh"
-msgstr "Atualizar"
-
-#: mesa_panel/monitors_page.py:38
+#: xcontrol/monitors_page.py:38
 #, python-brace-format
 msgid "Could not read monitor information: {error}"
 msgstr "Não foi possível ler as informações do monitor: {error}"
 
-#: mesa_panel/monitors_page.py:40
+#: xcontrol/monitors_page.py:40
 msgid "No connected displays with readable information were found."
 msgstr "Nenhuma tela conectada com informações legíveis foi encontrada."
 
-#: mesa_panel/monitors_page.py:64
+#: xcontrol/monitors_page.py:64
 msgid "Copy details"
 msgstr "Copiar detalhes"
 
-#: mesa_panel/monitors_page.py:68
+#: xcontrol/monitors_page.py:68
 msgid "More copy options"
 msgstr "Mais opções de cópia"
 
-#: mesa_panel/monitors_page.py:70
+#: xcontrol/monitors_page.py:70
 msgid "Copy in English (for bug reports)"
 msgstr "Copiar em inglês (para relatórios de bugs)"
 
-#: mesa_panel/monitors_page.py:78
+#: xcontrol/monitors_page.py:78
 msgid "Save EDID…"
 msgstr "Salvar EDID…"
 
-#: mesa_panel/monitors_page.py:79
+#: xcontrol/monitors_page.py:79
 msgid "Save the raw EDID, e.g. for edid-decode or a bug report"
 msgstr "Salvar o EDID bruto, por exemplo para o edid-decode ou um relatório de bug"
 
-#: mesa_panel/monitors_page.py:129
+#: xcontrol/monitors_page.py:129
 msgid "Monitor details copied"
 msgstr "Detalhes do monitor copiados"
 
-#: mesa_panel/monitors_page.py:143
+#: xcontrol/monitors_page.py:143
 msgid "EDID saved"
 msgstr "EDID salvo"
 
-#: mesa_panel/monitors_page.py:145
+#: xcontrol/monitors_page.py:145
 msgid "Could not save the EDID"
 msgstr "Não foi possível salvar o EDID"
 
-#: mesa_panel/resolutions_dialog.py:13
+#: xcontrol/resolutions_dialog.py:13
 msgid "CVT – standard blanking (CRT style)"
 msgstr "CVT – blanking padrão (estilo CRT)"
 
-#: mesa_panel/resolutions_dialog.py:14
+#: xcontrol/resolutions_dialog.py:14
 msgid "CVT – reduced blanking (LCD)"
 msgstr "CVT – blanking reduzido (LCD)"
 
-#: mesa_panel/resolutions_dialog.py:15
+#: xcontrol/resolutions_dialog.py:15
 msgid "CVT – reduced blanking v2 (exact refresh rate)"
 msgstr "CVT – blanking reduzido v2 (taxa de atualização exata)"
 
-#: mesa_panel/resolutions_dialog.py:16
+#: xcontrol/resolutions_dialog.py:16
 msgid "GTF – classic CRT formula"
 msgstr "GTF – fórmula clássica de CRT"
 
-#: mesa_panel/resolutions_dialog.py:17
+#: xcontrol/resolutions_dialog.py:17
 msgid "DMT – VESA standard timings"
 msgstr "DMT – temporizações padrão VESA"
 
-#: mesa_panel/resolutions_dialog.py:18
+#: xcontrol/resolutions_dialog.py:18
 msgid "Manual modeline"
 msgstr "Modeline manual"
 
-#: mesa_panel/resolutions_dialog.py:21
+#: xcontrol/resolutions_dialog.py:21
 msgid "manual"
 msgstr "manual"
 
 #. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz (custom, DMT)"
-#: mesa_panel/resolutions_dialog.py:40
+#: xcontrol/resolutions_dialog.py:40
 #, python-brace-format
 msgid "{w}x{h} @ {hz} (custom, {standard})"
 msgstr "{w}x{h} @ {hz} (personalizada, {standard})"
 
 #. TRANSLATORS: a resolution the user created, e.g. "1024x768 (custom, DMT)"
-#: mesa_panel/resolutions_dialog.py:43
+#: xcontrol/resolutions_dialog.py:43
 #, python-brace-format
 msgid "{w}x{h} (custom, {standard})"
 msgstr "{w}x{h} (personalizada, {standard})"
 
-#: mesa_panel/resolutions_dialog.py:45
+#: xcontrol/resolutions_dialog.py:45
 #, python-brace-format
 msgid "{mode}  (recommended)"
 msgstr "{mode}  (recomendada)"
 
-#: mesa_panel/resolutions_dialog.py:61
+#: xcontrol/resolutions_dialog.py:61
 #, python-brace-format
 msgid "Resolutions for {output}"
 msgstr "Resoluções de {output}"
 
-#: mesa_panel/resolutions_dialog.py:80
+#: xcontrol/resolutions_dialog.py:80
 msgid "Offer only my resolutions for this display"
 msgstr "Oferecer só as minhas resoluções para esta tela"
 
-#: mesa_panel/resolutions_dialog.py:86
+#: xcontrol/resolutions_dialog.py:86
 msgid "Hides every other mode: the ones the display reports in its EDID and the scaled modes some drivers add (modesetting does this on connectors that support scaling). Custom resolutions are re-created automatically when you log in or open this panel."
 msgstr "Oculta todos os outros modos: os que a tela informa no EDID e os modos escalados que alguns drivers adicionam (o modesetting faz isso em conectores com suporte a escala). As resoluções personalizadas são recriadas automaticamente quando você inicia a sessão ou abre este painel."
 
-#: mesa_panel/resolutions_dialog.py:92
+#: xcontrol/resolutions_dialog.py:92
 msgid "My resolutions"
 msgstr "Minhas resoluções"
 
-#: mesa_panel/resolutions_dialog.py:102
+#: xcontrol/resolutions_dialog.py:102
 msgid "Add a resolution"
 msgstr "Adicionar uma resolução"
 
-#: mesa_panel/resolutions_dialog.py:119
+#: xcontrol/resolutions_dialog.py:119
 msgid "Classic modes"
 msgstr "Modos clássicos"
 
-#: mesa_panel/resolutions_dialog.py:135
+#: xcontrol/resolutions_dialog.py:135
 msgid "Timing"
 msgstr "Temporização"
 
-#: mesa_panel/resolutions_dialog.py:139
+#: xcontrol/resolutions_dialog.py:139
 msgid "Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"
 msgstr "Cole uma modeline, por exemplo das ferramentas cvt ou gtf ou de um xorg.conf antigo"
 
-#: mesa_panel/resolutions_dialog.py:140
+#: xcontrol/resolutions_dialog.py:140
 msgid "Modeline"
 msgstr "Modeline"
 
-#: mesa_panel/resolutions_dialog.py:159
+#: xcontrol/resolutions_dialog.py:159
 msgid "For all programs"
 msgstr "Para todos os programas"
 
-#: mesa_panel/resolutions_dialog.py:162
+#: xcontrol/resolutions_dialog.py:162
 msgid "The options above only change what this panel offers. To hide unwanted modes from games and every other program, give the kernel a corrected EDID."
 msgstr "As opções acima só mudam o que este painel oferece. Para esconder modos indesejados dos jogos e de todos os outros programas, forneça ao kernel um EDID corrigido."
 
-#: mesa_panel/resolutions_dialog.py:164
+#: xcontrol/resolutions_dialog.py:164
 msgid "System-wide mode list…"
 msgstr "Lista de modos do sistema…"
 
-#: mesa_panel/resolutions_dialog.py:223
+#: xcontrol/resolutions_dialog.py:223
 msgid "No custom resolutions yet."
 msgstr "Nenhuma resolução personalizada ainda."
 
-#: mesa_panel/resolutions_dialog.py:240
+#: xcontrol/resolutions_dialog.py:240
 msgid "Remove"
 msgstr "Remover"
 
-#: mesa_panel/resolutions_dialog.py:258
+#: xcontrol/resolutions_dialog.py:258
 #, python-brace-format
 msgid "VESA DMT has no timing for {w} × {h}. Pick another timing standard."
 msgstr "O VESA DMT não tem temporização para {w} × {h}. Escolha outro padrão de temporização."
 
-#: mesa_panel/resolutions_dialog.py:275
+#: xcontrol/resolutions_dialog.py:275
 #, python-brace-format
 msgid "Pixel clock {clock} MHz · horizontal {hfreq} kHz · refresh {hz} Hz"
 msgstr "Clock de pixel {clock} MHz · horizontal {hfreq} kHz · atualização {hz} Hz"
 
-#: mesa_panel/resolutions_dialog.py:279
+#: xcontrol/resolutions_dialog.py:279
 msgid "Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh rate."
 msgstr "Abaixo de 25 MHz: conexões HDMI costumam recusar isto. Use DMT ou uma taxa de atualização maior."
 
-#: mesa_panel/resolutions_dialog.py:282
+#: xcontrol/resolutions_dialog.py:282
 #, python-brace-format
 msgid "Outside the {low}–{high} Hz range the display reports; it may show no picture."
 msgstr "Fora da faixa de {low}–{high} Hz que a tela informa; ela pode ficar sem imagem."
 
-#: mesa_panel/resolutions_dialog.py:285
+#: xcontrol/resolutions_dialog.py:285
 #, python-brace-format
 msgid "Above the display's reported maximum pixel clock ({clock} MHz)."
 msgstr "Acima do clock de pixel máximo informado pela tela ({clock} MHz)."
 
-#: mesa_panel/resolutions_dialog.py:301
+#: xcontrol/resolutions_dialog.py:301
 msgid "That resolution is already in the list"
 msgstr "Essa resolução já está na lista"
 
-#: mesa_panel/resolutions_dialog.py:307
+#: xcontrol/resolutions_dialog.py:307
 msgid "xrandr could not add this resolution"
 msgstr "O xrandr não conseguiu adicionar esta resolução"
 
-#: mesa_panel/resolutions_dialog.py:311
+#: xcontrol/resolutions_dialog.py:311
 msgid "The X server did not keep this resolution"
 msgstr "O servidor X não manteve esta resolução"
 
-#: mesa_panel/resolutions_dialog.py:312
+#: xcontrol/resolutions_dialog.py:312
 #, python-brace-format
 msgid "xrandr accepted {mode}, but it is not in the mode list of {output}. The display driver may have rejected it."
 msgstr "O xrandr aceitou {mode}, mas ele não está na lista de modos de {output}. O driver de vídeo pode tê-lo recusado."
 
-#: mesa_panel/resolutions_dialog.py:318
+#: xcontrol/resolutions_dialog.py:318
 msgid "Resolution added. Pick it on the Displays page and press Apply."
 msgstr "Resolução adicionada. Escolha-a na página Telas e clique em Aplicar."
 
-#: mesa_panel/resolutions_dialog.py:322
+#: xcontrol/resolutions_dialog.py:322
 msgid "This resolution is in use"
 msgstr "Esta resolução está em uso"
 
-#: mesa_panel/resolutions_dialog.py:323
+#: xcontrol/resolutions_dialog.py:323
 msgid "Switch the display to another resolution before removing it."
 msgstr "Mude a tela para outra resolução antes de removê-la."
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
-#: mesa_panel/xrandr.py:57
+#: xcontrol/xrandr.py:57
 #, python-brace-format
 msgid "{output} (off)"
 msgstr "{output} (desligada)"
 
-#: mesa_panel/xrandr.py:69
+#: xcontrol/xrandr.py:69
 msgid "The xrandr command was not found. Install the xorg-xrandr package."
 msgstr "O comando xrandr não foi encontrado. Instale o pacote xorg-xrandr."
 
-#: mesa_panel/xrandr.py:72
+#: xcontrol/xrandr.py:72
 msgid "You are in a Wayland session. xrandr only controls X11 outputs, so use your desktop's display settings here."
 msgstr "Você está em uma sessão Wayland. O xrandr só controla saídas X11, então use aqui as configurações de tela do seu ambiente gráfico."
 
-#: mesa_panel/xrandr.py:75
+#: xcontrol/xrandr.py:75
 msgid "No X11 display found (DISPLAY is not set)."
 msgstr "Nenhuma tela X11 encontrada (DISPLAY não está definido)."
 
-#: data/mesa-panel.desktop.in:4
-msgid "Mesa Panel"
-msgstr "Mesa Panel"
+#: data/xcontrol.desktop.in:4
+msgid "XControl"
+msgstr "XControl"
 
-#: data/mesa-panel.desktop.in:5
-msgid "Graphics Control Panel"
-msgstr "Painel de controle gráfico"
+#: data/xcontrol.desktop.in:5
+msgid "Control Panel"
+msgstr "Painel de controle"
 
-#: data/mesa-panel.desktop.in:6
-msgid "Per-game anti-aliasing, filtering, VSync and display settings"
-msgstr "Suavização, filtragem, VSync e configurações de tela por jogo"
+#: data/xcontrol.desktop.in:6
+msgid "Per-game graphics settings, displays, input devices and system information"
+msgstr "Configurações gráficas por jogo, telas, dispositivos de entrada e informações do sistema"
 
-#: data/mesa-panel.desktop.in:11
-msgid "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;"
-msgstr "gráficos;placa de vídeo;gpu;amd;radeon;anisotrópica;suavização;serrilhado;vsync;fps;monitor;tela;xrandr;"
+#: data/xcontrol.desktop.in:11
+msgid "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;"
+msgstr "gráficos;placa de vídeo;gpu;amd;radeon;anisotrópica;suavização;serrilhado;vsync;fps;monitor;tela;xrandr;mouse;teclado;touchpad;entrada;"

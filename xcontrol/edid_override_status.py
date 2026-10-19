@@ -31,6 +31,11 @@ class Status:
 
 
 def firmware_name(connector):
+    return f"xcontrol-{connector}.bin"
+
+
+def legacy_firmware_name(connector):
+    """The name used before the rename to XControl (still loaded if the kernel parameter names it)."""
     return f"mesa-panel-{connector}.bin"
 
 
@@ -78,6 +83,9 @@ def check(connector, current_edid, *, firmware_dir=FIRMWARE_DIR, cmdline=None,
           mkinitcpio_texts=None, initramfs_mtimes=None):
     name = firmware_name(connector)
     path = os.path.join(firmware_dir, name)
+    legacy = os.path.join(firmware_dir, legacy_firmware_name(connector))
+    if not os.path.exists(path) and os.path.exists(legacy):
+        name, path = legacy_firmware_name(connector), legacy
     expected = f"{connector}:edid/{name}"
     try:
         with open(path, "rb") as f:

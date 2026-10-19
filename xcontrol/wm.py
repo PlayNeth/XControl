@@ -40,8 +40,8 @@ HEADER_BAR_DESKTOPS = {"gnome", "pantheon", "budgie", "budgie-desktop", "unity",
 
 def use_header_bar(desktop=None, wm_name=None):
     """True: draw a GTK header bar. False: let the window manager decorate the window.
-    MESAPANEL_CSD=1/0 overrides."""
-    forced = os.environ.get("MESAPANEL_CSD")
+    XCONTROL_CSD=1/0 overrides."""
+    forced = os.environ.get("XCONTROL_CSD")
     if forced in ("0", "1"):
         return forced == "1"
     desktop = os.environ.get("XDG_CURRENT_DESKTOP", "") if desktop is None else desktop
@@ -53,8 +53,8 @@ def use_header_bar(desktop=None, wm_name=None):
 
 def decoration_layout(name=None):
     """Header bar buttons: None keeps GTK's (and the user's) setting.
-    MESAPANEL_DECORATION overrides, e.g. ":close" or "menu:minimize,maximize,close"."""
-    override = os.environ.get("MESAPANEL_DECORATION")
+    XCONTROL_DECORATION overrides, e.g. ":close" or "menu:minimize,maximize,close"."""
+    override = os.environ.get("XCONTROL_DECORATION")
     if override is not None:
         return override
     if is_tiling(window_manager_name() if name is None else name):

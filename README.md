@@ -1,7 +1,8 @@
-# Mesa Panel
+# XControl
 
-A Catalyst-style control panel for Linux with Mesa drivers: simple per-game
-graphics overrides, plus X11 display settings through xrandr.
+A Catalyst-style control panel for X11 on Linux: per-game graphics overrides for
+Mesa drivers, display settings through xrandr, and mice, touchpads, keyboards and
+gaming mice. (Formerly *mesa-panel*; see [Upgrading from mesa-panel](#upgrading-from-mesa-panel).)
 
 | Setting | OpenGL | Vulkan | Wine / Proton (DXVK / VKD3D-Proton) |
 |---|---|---|---|
@@ -32,20 +33,20 @@ too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
 
 ## Using it
 
-1. Open **Mesa Panel**, set the global settings, and use **Add game** for
+1. Open **XControl**, set the global settings, and use **Add game** for
    per-game profiles. Changes save automatically.
 2. Start games through the launcher:
-   - Steam: set the game's launch options to `mesa-panel-run %command%`
-   - Anything else: `mesa-panel-run /path/to/game`, or fill in **Command**
+   - Steam: set the game's launch options to `xcontrol-run %command%`
+   - Anything else: `xcontrol-run /path/to/game`, or fill in **Command**
      in the profile and press **Launch**.
-3. To check what would be applied: `mesa-panel-run --print-env /path/to/game`.
-   Set `MESAPANEL_DEBUG=1` to have the shim and layer log what they hook.
+3. To check what would be applied: `xcontrol-run --print-env /path/to/game`.
+   Set `XCONTROL_DEBUG=1` to have the shim and layer log what they hook.
 
 ## How it works
 
-- **`mesa-panel-run`** looks up the profile and sets environment variables, then
+- **`xcontrol-run`** looks up the profile and sets environment variables, then
   `exec`s the game.
-- **`libmesapanel_gl.so`** (`LD_PRELOAD`) intercepts GL calls through direct
+- **`libxcontrol_gl.so`** (`LD_PRELOAD`) intercepts GL calls through direct
   linking, `glXGetProcAddress`/`eglGetProcAddress`, and `dlsym` on a libGL/libEGL
   handle (the SDL path).
   - AF: forces `GL_TEXTURE_MAX_ANISOTROPY` whenever a texture or sampler gets a
@@ -59,8 +60,8 @@ too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
   - FPS: sleeps before `SwapBuffers`.
   - Other `dlsym` lookups pass through as a tail call, so other interposers
     (Steam overlay, MangoHud) keep working in either load order.
-- **`VK_LAYER_MESAPANEL_overrides`** is an implicit Vulkan layer that only loads
-  when `MESAPANEL_VK=1`.
+- **`VK_LAYER_XCONTROL_overrides`** is an implicit Vulkan layer that only loads
+  when `XCONTROL_VK=1`.
   - AF: patches `vkCreateSampler` for linear samplers and turns on the
     `samplerAnisotropy` feature if the game didn't.
   - FPS: limits in `vkQueuePresentKHR`.
@@ -89,7 +90,7 @@ it, a frame rate inside the display's FreeSync range, and usually a single activ
 [vkBasalt](https://github.com/DadSchoorse/vkBasalt) after the game draws each frame, so they work
 where forced MSAA can't: native Vulkan games and Windows games through DXVK or VKD3D-Proton. They
 don't apply to OpenGL games. The launcher writes a small vkBasalt configuration to
-`~/.cache/mesa-panel/` and sets `ENABLE_VKBASALT=1`. Press **Home** in a game to toggle the
+`~/.cache/xcontrol/` and sets `ENABLE_VKBASALT=1`. Press **Home** in a game to toggle the
 effects and compare.
 
 ## Direct3D 8/9 games and MSAA
@@ -104,7 +105,7 @@ For a game in your own Wine prefix, add a profile whose **Applies to** is the ex
 name (for example `nfshp2.exe`), then start it with:
 
 ```sh
-WINEPREFIX=~/your-prefix mesa-panel-run wine /path/to/nfshp2.exe
+WINEPREFIX=~/your-prefix xcontrol-run wine /path/to/nfshp2.exe
 ```
 
 ## Displays
@@ -113,7 +114,7 @@ The Displays page drives xrandr. You can drag monitors around (edges snap),
 change resolution, refresh rate and rotation, set the primary display, and turn
 outputs on or off. **Apply** asks you to confirm and reverts after 15 seconds
 if you don't. **Restore this layout when I log in** adds an autostart entry
-that runs `mesa-panel --apply-display`. In a Wayland session xrandr can't
+that runs `xcontrol --apply-display`. In a Wayland session xrandr can't
 change outputs, so the page explains that and disables Apply.
 
 ### Scaling and color
@@ -199,9 +200,9 @@ what's missing: the kernel parameter (or one naming the wrong connector), the in
 `FILES=` entry, an initramfs built before the file last changed, or simply a pending
 reboot. **Test now** always lasts only until the next reboot.
 
-The only code that runs as root is `mesa-panel-edid-helper`. It validates every
+The only code that runs as root is `xcontrol-edid-helper`. It validates every
 argument, accepts only real EDID files, and writes only to the connector's debugfs
-override or `/usr/lib/firmware/edid/mesa-panel-*.bin`.
+override or `/usr/lib/firmware/edid/xcontrol-*.bin`.
 
 ## Switching X drivers
 
@@ -210,6 +211,48 @@ The same connector has a different X name depending on the driver: `DisplayPort-
 Custom resolutions, the "only my resolutions" choice and the saved layout are stored under
 the X name, so when an output disappears and another appears on the same kernel connector,
 the panel moves the saved settings over (on the Displays page and at login).
+
+## Input
+
+The **Input** page has three tabs.
+
+**Mouse & Touchpad** (libinput, through `xinput`), per device:
+- acceleration: **Flat** (no acceleration, what most players want) or **Adaptive**;
+- pointer speed and scroll speed;
+- natural scrolling, left-handed, middle click by pressing both buttons, horizontal scrolling;
+- touchpads: tap to click, tap and drag, drag lock, disable while typing, how to scroll
+  (two fingers or edge) and how to right-click (bottom corner or two fingers).
+
+**Keyboard**: layout and variant, a second layout and the key to switch, Caps Lock behavior,
+the Compose key (`setxkbmap`), and key repeat delay and speed (`xset`). Only the settings you
+change here are managed; anything you don't touch is left to your own setup.
+
+Changes apply immediately. X forgets input settings when a device is unplugged or the
+session ends, so XControl saves them per device name and a small background helper
+(`xcontrol --watch-input`, started at login from `~/.config/autostart/xcontrol-input.desktop`)
+puts them back at login and whenever a device is plugged in. **Reset to defaults** and
+**Stop managing the keyboard** remove the saved settings.
+
+**Gaming Mouse** uses [libratbag](https://github.com/libratbag/libratbag)'s `ratbagd` (the
+service Piper uses) for supported Logitech, SteelSeries, Razer, Roccat, G.Skill and other mice:
+- DPI stages, which one is in use, which one the mouse starts with, and enabling or disabling stages;
+- polling rate, button debounce time and angle snapping, when the mouse supports them;
+- button remapping: any mouse button, DPI and profile switching, wheel directions, double click,
+  or disabled. Keyboard keys and macros set elsewhere (Piper) are shown and kept;
+- LEDs: off, on, color cycle or breathing, color, brightness and effect speed;
+- profiles, if the mouse has several.
+
+These settings live in the mouse's own memory and are written by **Save to mouse**.
+
+## Upgrading from mesa-panel
+
+XControl was called mesa-panel. The package replaces it, and on first start your profiles,
+display settings and login entry are carried over from `~/.config/mesa-panel`. The old
+commands `mesa-panel` and `mesa-panel-run` still work (they point to `xcontrol` and
+`xcontrol-run`), so Steam launch options don't need changing, and the `MESAPANEL_*`
+environment variables are still read. An EDID override installed as
+`/usr/lib/firmware/edid/mesa-panel-*.bin` keeps working; installing a new one uses the
+`xcontrol-*.bin` name, and the dialog tells you to update the kernel parameter.
 
 ## Monitor Info
 
@@ -255,8 +298,8 @@ it has **Copy in English**, which is more useful in bug reports.
 On GNOME-style desktops (GNOME, Pantheon, Budgie) the panel draws a GTK header bar like their
 own apps. Everywhere else, including i3 and other tiling window managers, Xfce and KDE, the
 window manager draws the title bar, the same as for Thunar, and status messages appear in a
-small bar at the bottom of the window. `MESAPANEL_CSD=1` or `0` forces either style;
-`MESAPANEL_DECORATION` picks the header bar's buttons (for example `":close"`).
+small bar at the bottom of the window. `XCONTROL_CSD=1` or `0` forces either style;
+`XCONTROL_DECORATION` picks the header bar's buttons (for example `":close"`).
 
 ## Limitations
 

@@ -666,8 +666,8 @@ def write_autostart(enabled):
         return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
-        f.write("[Desktop Entry]\nType=Application\nName=Mesa Panel display layout\n"
-                "Exec=mesa-panel --apply-display\nNoDisplay=true\nX-GNOME-Autostart-enabled=true\n")
+        f.write("[Desktop Entry]\nType=Application\nName=XControl display layout\n"
+                "Exec=xcontrol --apply-display\nNoDisplay=true\nX-GNOME-Autostart-enabled=true\n")
 
 
 def restore_custom_modes(data=None):
@@ -684,20 +684,20 @@ def restore_custom_modes(data=None):
 
 
 def apply_saved_layout():
-    """CLI entry point used at login (mesa-panel --apply-display)."""
+    """CLI entry point used at login (xcontrol --apply-display)."""
     if xrandr.session_warning():
         return 0
     output_names.migrate_saved()  # the X driver may have renamed the outputs
     data = config.load()
     for problem in restore_custom_modes(data):
-        print(f"mesa-panel: could not restore custom mode {problem}")
+        print(f"xcontrol: could not restore custom mode {problem}")
     cmd = data["display"]["command"]
     if not data["display"]["autostart"] or not cmd or cmd[0] != "xrandr":
         return 0
     try:
         xrandr.run(cmd)
     except Exception as e:  # noqa: BLE001
-        print(f"mesa-panel: could not restore layout ({shlex.join(cmd)}): {e}")
+        print(f"xcontrol: could not restore layout ({shlex.join(cmd)}): {e}")
         return 1
     return 0
 

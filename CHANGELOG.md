@@ -2,6 +2,31 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.9.0 (2026-10-19)
+
+**Rename mesa-panel to XControl and add an Input page**
+
+- Rename the program to XControl: commands xcontrol and xcontrol-run, config in
+  ~/.config/xcontrol, XCONTROL_* environment variables, libxcontrol_gl.so shim
+- Carry profiles, display settings and the login entry over from ~/.config/mesa-panel
+  on first start
+- Keep the old mesa-panel and mesa-panel-run commands and MESAPANEL_* variables working,
+  so Steam launch options need no change; the package replaces mesa-panel
+- Keep recognising EDID overrides installed under the old mesa-panel-*.bin name
+- Add an Input page with Mouse & Touchpad, Keyboard and Gaming Mouse tabs
+- Add per-device mouse and touchpad settings through xinput/libinput: flat or adaptive
+  acceleration, pointer and scroll speed, natural scrolling, left-handed, middle click emulation
+- Add touchpad settings: tap to click, tap and drag, drag lock, disable while typing,
+  two-finger or edge scrolling, and bottom-corner or two-finger right click
+- Add keyboard settings: layout and variant, a second layout and switch key, Caps Lock
+  behaviour, Compose key, and key repeat delay and speed, with a test field
+- Re-apply saved input settings at login and when a device is plugged in, through a
+  background helper (xcontrol --watch-input) started from autostart
+- Add gaming mouse settings through libratbag's ratbagd: DPI stages, polling rate, debounce,
+  angle snapping, button remapping, LED effects and profiles, written with "Save to mouse"
+- Add --page input to open the panel on the Input page
+- Add tests for the input settings and ratbag code, with fake xinput and ratbagd services
+
 ## 0.8.0 (2026-10-19)
 
 **Preview saturation and gamma live while dragging**

@@ -11,7 +11,7 @@ from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 from . import config, launcher, steam, vrr  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
-LAUNCH_OPTION = "mesa-panel-run %command%"
+LAUNCH_OPTION = "xcontrol-run %command%"
 
 TRAA_LABELS = [
     N_("Off"),

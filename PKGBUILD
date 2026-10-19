@@ -3,19 +3,24 @@
 # Local build: run `makepkg -si` from this directory.
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
-pkgname=mesa-panel
-pkgver=0.8.0
+pkgname=xcontrol
+pkgver=0.9.0
 pkgrel=1
-pkgdesc="Catalyst-style control panel for Mesa: per-game AA, anisotropic filtering, VSync and FPS limit, plus xrandr display settings"
+pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
-url="https://github.com/yourname/mesa-panel"
+url="https://github.com/yourname/xcontrol"
 license=('MIT')
-depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'xorg-xrandr')
+provides=('mesa-panel')
+conflicts=('mesa-panel')
+replaces=('mesa-panel')
+depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
 makedepends=('vulkan-headers' 'gettext')
 optdepends=(
   'vulkan-icd-loader: Vulkan and Proton game overrides'
   'wine: Direct3D 8/9 games with forced MSAA (WineD3D renderer)'
   'vkbasalt: post-process anti-aliasing and sharpening for Vulkan and DXVK games'
+  'libratbag: gaming mouse DPI, polling rate, buttons and lighting (ratbagd)'
+  'xf86-input-libinput: mouse and touchpad settings (the usual X input driver)'
   'hwdata: full monitor manufacturer names'
   'polkit: test and install EDID overrides (system-wide mode list)'
   'mesa-utils: "Test with glxgears" button'

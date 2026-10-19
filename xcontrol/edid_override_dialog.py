@@ -15,7 +15,7 @@ from .i18n import _, num  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
 from .resolutions_dialog import SHORT_NAMES, standard_of  # noqa: E402
 
-HELPER = os.path.join(LIBDIR, "mesa-panel-edid-helper")
+HELPER = os.path.join(LIBDIR, "xcontrol-edid-helper")
 
 
 class EdidOverrideDialog(Gtk.Dialog):
@@ -231,7 +231,7 @@ class EdidOverrideDialog(Gtk.Dialog):
     # ---- actions
     def _write_temp(self):
         data = self._build()
-        fd, path = tempfile.mkstemp(prefix="mesa-panel-edid-", suffix=".bin",
+        fd, path = tempfile.mkstemp(prefix="xcontrol-edid-", suffix=".bin",
                                     dir=os.environ.get("XDG_RUNTIME_DIR") or None)
         with os.fdopen(fd, "wb") as f:
             f.write(data)
@@ -250,7 +250,7 @@ class EdidOverrideDialog(Gtk.Dialog):
         dlg = Gtk.FileChooserDialog(title=_("Save EDID"), parent=self, action=Gtk.FileChooserAction.SAVE)
         dlg.add_buttons(_("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.OK)
         dlg.set_do_overwrite_confirmation(True)
-        dlg.set_current_name(f"mesa-panel-{self._connector() or self.output}.bin")
+        dlg.set_current_name(f"xcontrol-{self._connector() or self.output}.bin")
         path = dlg.get_filename() if dlg.run() == Gtk.ResponseType.OK else None
         dlg.destroy()
         if path:
@@ -286,7 +286,7 @@ class EdidOverrideDialog(Gtk.Dialog):
 
     def _install(self, *_args):
         conn = self._connector()
-        name = f"mesa-panel-{conn}.bin"
+        name = f"xcontrol-{conn}.bin"
         try:
             path = self._write_temp()
         except edid_override.OverrideError as e:
