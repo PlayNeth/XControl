@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.19.2 (2026-10-19)
+
+**Add bar workspaces module for window managers other than i3**
+
+- Add a "Workspaces (other window managers)" bar module (polybar's
+  xworkspaces) for bspwm, Openbox, Xfwm and others, off by default
+- Add its settings: name or number, only this display's workspaces, showing
+  empty workspaces, click and scroll, spacing and colors
+- Rename the existing module to "i3 workspaces" and switch off the other one
+  when either is ticked, so workspaces aren't shown twice
+- Place modules added by an update next to the module they follow by default
+  instead of at the end of the list
+
 ## 0.19.1 (2026-10-19)
 
 **Add sounds and animations settings to the Appearance page**

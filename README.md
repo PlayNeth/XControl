@@ -399,7 +399,8 @@ hand. It generates its own (`~/.config/xcontrol/polybar.ini` and `picom.conf`) f
 your own polybar and picom configs are neither used nor changed. Changes apply right away.
 
 **Bar (polybar):** top or bottom, height, on every display or only the primary one, font, colors
-(with a see-through background when a compositor runs), and the modules: workspaces, window
+(with a see-through background when a compositor runs), and the modules: i3 workspaces (polybar's
+`internal/i3`), workspaces for other window managers (`internal/xworkspaces`, off by default), window
 title, clock, CPU, memory, CPU temperature, volume, network, disk, keyboard layout, battery
 (laptops) and the system tray, each on the left, center or right, in any order. Labels are words
 (CPU, RAM, VOL) or icons when a Nerd Font is installed (e.g. `ttf-nerd-fonts-symbols`).

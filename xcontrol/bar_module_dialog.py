@@ -28,6 +28,19 @@ LABELS = {
     ("workspaces", "urgent_fg"): N_("Urgent: text"),
     ("workspaces", "urgent_bg"): N_("Urgent: background"),
     ("workspaces", "mode_bg"): N_("i3 mode (e.g. resize): background"),
+    ("xworkspaces", "label"): N_("Workspace label"),
+    ("xworkspaces", "pin_workspaces"): N_("Only the workspaces of this display"),
+    ("xworkspaces", "show_empty"): N_("Also show empty workspaces"),
+    ("xworkspaces", "enable_click"): N_("Click to switch"),
+    ("xworkspaces", "enable_scroll"): N_("Scroll over them to switch"),
+    ("xworkspaces", "reverse_scroll"): N_("Reverse the scroll direction"),
+    ("xworkspaces", "padding"): N_("Space around each label"),
+    ("xworkspaces", "active_fg"): N_("Current: text"),
+    ("xworkspaces", "active_bg"): N_("Current: background"),
+    ("xworkspaces", "active_underline"): N_("Current: underline"),
+    ("xworkspaces", "occupied_fg"): N_("With windows: text"),
+    ("xworkspaces", "empty_fg"): N_("Empty: text"),
+    ("xworkspaces", "urgent_bg"): N_("Urgent: background"),
     ("title", "max_length"): N_("Longest title (characters)"),
     ("clock", "format"): N_("Format"),
     ("clock", "alt"): N_("After a click"),
@@ -50,7 +63,7 @@ LABELS = {
     ("tray", "size"): N_("Icon size (% of the bar height)"),
 }
 CHOICES = {
-    "name": N_("Name (as i3 calls it)"), "index": N_("Number only"),
+    "name": N_("Name (as i3 calls it)"), "index": N_("Number only"), "name_ws": N_("Name"),
     "percent": N_("Percent used"), "amount": N_("Used / total (GB)"),
     "c": "°C", "f": "°F",
     "auto": N_("The one in use"), "wired": N_("Wired"), "wireless": N_("Wi-Fi"),
@@ -61,6 +74,7 @@ HINTS = {
                 "command). Spaces at the start or end are kept."),
     "volume": N_("Empty: pavucontrol when it's installed. Any command works, e.g. alacritty -e wiremix."),
     "workspaces": N_("Colors left on Automatic follow the bar's colors."),
+    "xworkspaces": N_("Colors left on Automatic follow the bar's colors."),
 }
 
 
@@ -120,7 +134,9 @@ class ModuleDialog(Gtk.Dialog):
                     if isinstance(kind, list):
                         w = Gtk.ComboBoxText()
                         for choice in kind:
-                            name = CHOICES.get("name_if" if (mid, choice) == ("network", "name") else choice, choice)
+                            renamed = {("network", "name"): "name_if", ("xworkspaces", "name"): "name_ws"}
+                            key = renamed.get((mid, choice), choice)
+                            name = CHOICES.get(key, choice)
                             w.append(choice, _(name))
                         w.set_active_id(value)
                     elif kind == "int":

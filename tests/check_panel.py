@@ -169,6 +169,17 @@ mk("/.config/i3/config", "exec --no-startup-id ~/.config/polybar/launch.sh\nexec
    "exec --no-startup-id xcontrol --session\nbar {\n    status_command i3status\n}\n")
 expect("conflicts", [k for k, _l in D.session_conflicts()], ["bar", "compositor", "i3bar"])
 
+# the generic workspaces module (other window managers), next to i3's
+b = B.normalize({"enabled": True, "modules": [["workspaces", "left", False], ["xworkspaces", "left", True]],
+                 "options": {"xworkspaces": {"label": "index", "show_empty": False}}})
+x = ini(B.generate(b, ver=(3, 7), nerd="", has_pavu=False))
+expect("xworkspaces type", x.get("module/xworkspaces", {}).get("type"), "internal/xworkspaces")
+expect("xworkspaces in the bar", x["bar/xcontrol"]["modules-left"].split()[0], "xworkspaces")
+expect("xworkspaces label", x["module/xworkspaces"]["label-active"], "%index%")
+expect("no i3 module", "module/i3" in x, False)
+mods = B.normalize({"modules": [["clock", "left", True], ["workspaces", "right", True]]})["modules"]
+expect("added after workspaces, same side", mods[2], ["xworkspaces", "right", False])
+
 print("check_panel:", "FAILED" if bad else "ok")
 shutil.rmtree(tmp, ignore_errors=True)
 sys.exit(1 if bad else 0)

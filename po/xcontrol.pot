@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 16:35-0300\n"
+"POT-Creation-Date: 2026-10-19 16:45-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgid "Slight (recommended)"
 msgstr ""
 
 #: xcontrol/appearance_page.py:17 xcontrol/gaming_page.py:44
-#: xcontrol/panel_page.py:29
+#: xcontrol/panel_page.py:32
 msgid "Medium"
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 msgid "Revert"
 msgstr ""
 
-#: xcontrol/appearance_page.py:203 xcontrol/bar_module_dialog.py:100
+#: xcontrol/appearance_page.py:203 xcontrol/bar_module_dialog.py:114
 #: xcontrol/display_page.py:263 xcontrol/input_page.py:212
 msgid "Apply"
 msgstr ""
@@ -482,11 +482,11 @@ msgstr ""
 msgid "Done. Restart the app."
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:12
+#: xcontrol/bar_module_dialog.py:12 xcontrol/bar_module_dialog.py:31
 msgid "Workspace label"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:13
+#: xcontrol/bar_module_dialog.py:13 xcontrol/bar_module_dialog.py:32
 msgid "Only the workspaces of this display"
 msgstr ""
 
@@ -502,11 +502,11 @@ msgstr ""
 msgid "Sort by number"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:17
+#: xcontrol/bar_module_dialog.py:17 xcontrol/bar_module_dialog.py:34
 msgid "Click to switch"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:18
+#: xcontrol/bar_module_dialog.py:18 xcontrol/bar_module_dialog.py:35
 msgid "Scroll over them to switch"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "Scrolling wraps around"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:20
+#: xcontrol/bar_module_dialog.py:20 xcontrol/bar_module_dialog.py:36
 msgid "Reverse the scroll direction"
 msgstr ""
 
@@ -522,19 +522,19 @@ msgstr ""
 msgid "Separator between workspaces"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:22
+#: xcontrol/bar_module_dialog.py:22 xcontrol/bar_module_dialog.py:37
 msgid "Space around each label"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:23
+#: xcontrol/bar_module_dialog.py:23 xcontrol/bar_module_dialog.py:38
 msgid "Current: text"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:24
+#: xcontrol/bar_module_dialog.py:24 xcontrol/bar_module_dialog.py:39
 msgid "Current: background"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:25
+#: xcontrol/bar_module_dialog.py:25 xcontrol/bar_module_dialog.py:40
 msgid "Current: underline"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgstr ""
 msgid "Urgent: text"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:29
+#: xcontrol/bar_module_dialog.py:29 xcontrol/bar_module_dialog.py:43
 msgid "Urgent: background"
 msgstr ""
 
@@ -558,144 +558,161 @@ msgstr ""
 msgid "i3 mode (e.g. resize): background"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:31
-msgid "Longest title (characters)"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:32
-msgid "Format"
-msgstr ""
-
 #: xcontrol/bar_module_dialog.py:33
-msgid "After a click"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:34
-msgid "Text color"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:35 xcontrol/bar_module_dialog.py:37
-msgid "Update every (seconds)"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:36 xcontrol/bar_module_dialog.py:43
-msgid "Show"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:38
-msgid "Warning at (degrees)"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:39
-msgid "Units"
-msgstr ""
-
-#: xcontrol/bar_module_dialog.py:40
-msgid "Volume step per scroll (%)"
+msgid "Also show empty workspaces"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:41
-msgid "Right-click runs"
+msgid "With windows: text"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:42
-msgid "Interface"
+msgid "Empty: text"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:44
-msgid "Drive (mount point)"
+msgid "Longest title (characters)"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:45
-msgid "Show the layout name"
+msgid "Format"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:46
-msgid "Show Caps Lock when it's on"
+msgid "After a click"
 msgstr ""
 
 #: xcontrol/bar_module_dialog.py:47
+msgid "Text color"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:48 xcontrol/bar_module_dialog.py:50
+msgid "Update every (seconds)"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:49 xcontrol/bar_module_dialog.py:56
+msgid "Show"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:51
+msgid "Warning at (degrees)"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:52
+msgid "Units"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:53
+msgid "Volume step per scroll (%)"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:54
+msgid "Right-click runs"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:55
+msgid "Interface"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:57
+msgid "Drive (mount point)"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:58
+msgid "Show the layout name"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:59
+msgid "Show Caps Lock when it's on"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:60
 msgid "Counts as full at (%)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:48
+#: xcontrol/bar_module_dialog.py:61
 msgid "Space between icons (pt)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:49
+#: xcontrol/bar_module_dialog.py:62
 msgid "Space around the tray (pt)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:50
+#: xcontrol/bar_module_dialog.py:63
 #, python-format
 msgid "Icon size (% of the bar height)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:53
+#: xcontrol/bar_module_dialog.py:66
 msgid "Name (as i3 calls it)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:53
+#: xcontrol/bar_module_dialog.py:66
 msgid "Number only"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:54
+#: xcontrol/bar_module_dialog.py:66 xcontrol/gaming_page.py:226
+#: xcontrol/i3_page.py:480
+msgid "Name"
+msgstr ""
+
+#: xcontrol/bar_module_dialog.py:67
 msgid "Percent used"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:54
+#: xcontrol/bar_module_dialog.py:67
 msgid "Used / total (GB)"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:56
+#: xcontrol/bar_module_dialog.py:69
 msgid "The one in use"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:56
+#: xcontrol/bar_module_dialog.py:69
 msgid "Wired"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:56 xcontrol/sysinfo.py:901
+#: xcontrol/bar_module_dialog.py:69 xcontrol/sysinfo.py:901
 msgid "Wi-Fi"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:57
+#: xcontrol/bar_module_dialog.py:70
 msgid "Local address"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:57
+#: xcontrol/bar_module_dialog.py:70
 msgid "Download / upload speed"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:57
+#: xcontrol/bar_module_dialog.py:70
 msgid "Interface name"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:60
+#: xcontrol/bar_module_dialog.py:73
 msgid ""
 "%H hours, %M minutes, %S seconds, %a weekday, %d day, %b month, %Y year "
 "(like the date command). Spaces at the start or end are kept."
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:62
+#: xcontrol/bar_module_dialog.py:75
 msgid ""
 "Empty: pavucontrol when it's installed. Any command works, e.g. alacritty -e "
 "wiremix."
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:63
+#: xcontrol/bar_module_dialog.py:76 xcontrol/bar_module_dialog.py:77
 msgid "Colors left on Automatic follow the bar's colors."
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:72
+#: xcontrol/bar_module_dialog.py:86
 msgid "Custom"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:83 xcontrol/display_color.py:23
+#: xcontrol/bar_module_dialog.py:97 xcontrol/display_color.py:23
 msgid "Automatic"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:99 xcontrol/edid_override_dialog.py:253
+#: xcontrol/bar_module_dialog.py:113 xcontrol/edid_override_dialog.py:253
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
 #: xcontrol/i3_page.py:80 xcontrol/i3_page.py:799 xcontrol/monitors_page.py:138
 #: xcontrol/users_page.py:358 xcontrol/users_page.py:380
@@ -703,11 +720,11 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:155
+#: xcontrol/bar_module_dialog.py:171
 msgid "Extra polybar settings"
 msgstr ""
 
-#: xcontrol/bar_module_dialog.py:162
+#: xcontrol/bar_module_dialog.py:178
 #, python-brace-format
 msgid ""
 "Any other setting from polybar's documentation, one per line as in a polybar "
@@ -792,7 +809,7 @@ msgid "Wallpaper"
 msgstr ""
 
 #: xcontrol/desktop_page.py:136 xcontrol/input_page.py:404
-#: xcontrol/panel_page.py:130
+#: xcontrol/panel_page.py:133
 msgid "Layout"
 msgstr ""
 
@@ -969,7 +986,7 @@ msgstr ""
 #: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
 #: xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21 xcontrol/input_page.py:26
 #: xcontrol/input_page.py:31 xcontrol/input_page.py:42
-#: xcontrol/panel_page.py:29
+#: xcontrol/panel_page.py:32
 msgid "Off"
 msgstr ""
 
@@ -1146,7 +1163,7 @@ msgstr ""
 msgid "Orientation"
 msgstr ""
 
-#: xcontrol/display_page.py:236 xcontrol/panel_page.py:136
+#: xcontrol/display_page.py:236 xcontrol/panel_page.py:139
 msgid "Position"
 msgstr ""
 
@@ -1537,10 +1554,6 @@ msgstr ""
 msgid "Launch"
 msgstr ""
 
-#: xcontrol/gaming_page.py:226 xcontrol/i3_page.py:480
-msgid "Name"
-msgstr ""
-
 #: xcontrol/gaming_page.py:228
 msgid "Applies to"
 msgstr ""
@@ -1557,7 +1570,7 @@ msgstr ""
 msgid "Multisampling"
 msgstr ""
 
-#: xcontrol/gaming_page.py:242 xcontrol/panel_page.py:356
+#: xcontrol/gaming_page.py:242 xcontrol/panel_page.py:366
 msgid "Transparency"
 msgstr ""
 
@@ -1730,15 +1743,15 @@ msgstr ""
 msgid "Border only"
 msgstr ""
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:29
 msgid "Left"
 msgstr ""
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:29
 msgid "Center"
 msgstr ""
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:26
+#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:29
 msgid "Right"
 msgstr ""
 
@@ -1822,7 +1835,7 @@ msgstr ""
 msgid "Leave fullscreen"
 msgstr ""
 
-#: xcontrol/i3_page.py:31 xcontrol/panel_page.py:360
+#: xcontrol/i3_page.py:31 xcontrol/panel_page.py:370
 msgid "Focused window"
 msgstr ""
 
@@ -1834,7 +1847,7 @@ msgstr ""
 msgid "Unfocused"
 msgstr ""
 
-#: xcontrol/i3_page.py:32 xcontrol/panel_page.py:193
+#: xcontrol/i3_page.py:32 xcontrol/panel_page.py:196
 msgid "Urgent"
 msgstr ""
 
@@ -2002,7 +2015,7 @@ msgstr ""
 msgid "No gaps when it's the only window"
 msgstr ""
 
-#: xcontrol/i3_page.py:286 xcontrol/panel_page.py:186
+#: xcontrol/i3_page.py:286 xcontrol/panel_page.py:189
 msgid "Colors"
 msgstr ""
 
@@ -2108,7 +2121,7 @@ msgstr ""
 msgid "A dialog opens over a fullscreen window"
 msgstr ""
 
-#: xcontrol/i3_page.py:476 xcontrol/panel_page.py:13
+#: xcontrol/i3_page.py:476
 msgid "Workspaces"
 msgstr ""
 
@@ -2565,7 +2578,7 @@ msgstr ""
 msgid "Default (Caps Lock)"
 msgstr ""
 
-#: xcontrol/input_page.py:416 xcontrol/panel_page.py:22
+#: xcontrol/input_page.py:416 xcontrol/panel_page.py:25
 msgid "Keyboard layout"
 msgstr ""
 
@@ -3310,420 +3323,436 @@ msgid "Could not save the EDID"
 msgstr ""
 
 #: xcontrol/panel_page.py:13
-msgid "i3 workspaces of that display; click to switch"
+msgid "i3 workspaces"
 msgstr ""
 
 #: xcontrol/panel_page.py:14
-msgid "Window title"
-msgstr ""
-
-#: xcontrol/panel_page.py:14
-msgid "title of the focused window"
-msgstr ""
-
-#: xcontrol/panel_page.py:15 xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
-msgid "Clock"
+msgid ""
+"polybar's i3 module: i3 names and modes (resize...), urgent workspaces; "
+"click to switch"
 msgstr ""
 
 #: xcontrol/panel_page.py:15
-msgid "click to show the date"
+msgid "Workspaces (other window managers)"
 msgstr ""
 
 #: xcontrol/panel_page.py:16
-msgid "CPU"
-msgstr ""
-
-#: xcontrol/panel_page.py:16
-msgid "processor usage"
-msgstr ""
-
-#: xcontrol/panel_page.py:17 xcontrol/sysinfo.py:823
-msgid "Memory"
+msgid ""
+"polybar's generic module for bspwm, Openbox, Xfwm and others; on i3 use the "
+"one above"
 msgstr ""
 
 #: xcontrol/panel_page.py:17
-msgid "RAM in use"
+msgid "Window title"
 msgstr ""
 
-#: xcontrol/panel_page.py:18 xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
-msgid "Temperature"
+#: xcontrol/panel_page.py:17
+msgid "title of the focused window"
+msgstr ""
+
+#: xcontrol/panel_page.py:18 xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
+msgid "Clock"
 msgstr ""
 
 #: xcontrol/panel_page.py:18
-msgid "CPU temperature, red above the warning level"
+msgid "click to show the date"
 msgstr ""
 
 #: xcontrol/panel_page.py:19
-msgid "Volume"
+msgid "CPU"
 msgstr ""
 
 #: xcontrol/panel_page.py:19
-msgid "scroll to change, click to mute (PipeWire or PulseAudio)"
+msgid "processor usage"
 msgstr ""
 
-#: xcontrol/panel_page.py:20 xcontrol/sysinfo.py:909
-msgid "Network"
+#: xcontrol/panel_page.py:20 xcontrol/sysinfo.py:823
+msgid "Memory"
 msgstr ""
 
 #: xcontrol/panel_page.py:20
-msgid "local address, or offline"
+msgid "RAM in use"
+msgstr ""
+
+#: xcontrol/panel_page.py:21 xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
+msgid "Temperature"
 msgstr ""
 
 #: xcontrol/panel_page.py:21
-msgid "Disk"
-msgstr ""
-
-#: xcontrol/panel_page.py:21
-msgid "space used on a drive"
+msgid "CPU temperature, red above the warning level"
 msgstr ""
 
 #: xcontrol/panel_page.py:22
+msgid "Volume"
+msgstr ""
+
+#: xcontrol/panel_page.py:22
+msgid "scroll to change, click to mute (PipeWire or PulseAudio)"
+msgstr ""
+
+#: xcontrol/panel_page.py:23 xcontrol/sysinfo.py:909
+msgid "Network"
+msgstr ""
+
+#: xcontrol/panel_page.py:23
+msgid "local address, or offline"
+msgstr ""
+
+#: xcontrol/panel_page.py:24
+msgid "Disk"
+msgstr ""
+
+#: xcontrol/panel_page.py:24
+msgid "space used on a drive"
+msgstr ""
+
+#: xcontrol/panel_page.py:25
 msgid "current layout, and Caps Lock"
 msgstr ""
 
-#: xcontrol/panel_page.py:23
+#: xcontrol/panel_page.py:26
 msgid "Battery"
 msgstr ""
 
-#: xcontrol/panel_page.py:23
+#: xcontrol/panel_page.py:26
 msgid "charge and charging"
 msgstr ""
 
-#: xcontrol/panel_page.py:24
+#: xcontrol/panel_page.py:27
 msgid "System tray"
 msgstr ""
 
-#: xcontrol/panel_page.py:24
+#: xcontrol/panel_page.py:27
 msgid "icons of programs like Steam, Discord, nm-applet"
 msgstr ""
 
-#: xcontrol/panel_page.py:27
+#: xcontrol/panel_page.py:30
 msgid "OpenGL (glx, recommended)"
 msgstr ""
 
-#: xcontrol/panel_page.py:27
+#: xcontrol/panel_page.py:30
 msgid "XRender (most compatible, no blur)"
 msgstr ""
 
-#: xcontrol/panel_page.py:28
+#: xcontrol/panel_page.py:31
 msgid "EGL (experimental, picom 10 or newer)"
 msgstr ""
 
-#: xcontrol/panel_page.py:29
+#: xcontrol/panel_page.py:32
 msgid "Light"
 msgstr ""
 
-#: xcontrol/panel_page.py:29
+#: xcontrol/panel_page.py:32
 msgid "Strong"
 msgstr ""
 
-#: xcontrol/panel_page.py:82
+#: xcontrol/panel_page.py:85
 msgid "Bar (polybar)"
 msgstr ""
 
-#: xcontrol/panel_page.py:83
+#: xcontrol/panel_page.py:86
 msgid "Compositor (picom)"
 msgstr ""
 
-#: xcontrol/panel_page.py:118
+#: xcontrol/panel_page.py:121
 msgid "Use XControl's bar"
 msgstr ""
 
-#: xcontrol/panel_page.py:124
+#: xcontrol/panel_page.py:127
 msgid ""
 "XControl writes its own polybar setup from scratch and starts one bar per "
 "display. Your own polybar config isn't used or changed."
 msgstr ""
 
-#: xcontrol/panel_page.py:127 xcontrol/panel_page.py:311
+#: xcontrol/panel_page.py:130 xcontrol/panel_page.py:321
 msgid "Stop them"
 msgstr ""
 
-#: xcontrol/panel_page.py:133
+#: xcontrol/panel_page.py:136
 msgid "Top"
 msgstr ""
 
-#: xcontrol/panel_page.py:134
+#: xcontrol/panel_page.py:137
 msgid "Bottom"
 msgstr ""
 
-#: xcontrol/panel_page.py:142
+#: xcontrol/panel_page.py:145
 msgid "pixels"
 msgstr ""
 
-#: xcontrol/panel_page.py:143
+#: xcontrol/panel_page.py:146
 msgid "points"
 msgstr ""
 
-#: xcontrol/panel_page.py:146 xcontrol/panel_page.py:349
+#: xcontrol/panel_page.py:149 xcontrol/panel_page.py:359
 msgid "Rounded corners"
 msgstr ""
 
-#: xcontrol/panel_page.py:150
+#: xcontrol/panel_page.py:153
 msgid "Height"
 msgstr ""
 
-#: xcontrol/panel_page.py:152
+#: xcontrol/panel_page.py:155
 msgid "Every display"
 msgstr ""
 
-#: xcontrol/panel_page.py:153
+#: xcontrol/panel_page.py:156
 msgid "Only the primary display"
 msgstr ""
 
-#: xcontrol/panel_page.py:155
+#: xcontrol/panel_page.py:158
 msgid "Show on"
 msgstr ""
 
-#: xcontrol/panel_page.py:158
+#: xcontrol/panel_page.py:161
 msgid "Font"
 msgstr ""
 
-#: xcontrol/panel_page.py:160
+#: xcontrol/panel_page.py:163
 msgid "Words (CPU, RAM, VOL)"
 msgstr ""
 
-#: xcontrol/panel_page.py:161
+#: xcontrol/panel_page.py:164
 msgid "Icons (needs a Nerd Font)"
 msgstr ""
 
-#: xcontrol/panel_page.py:163
+#: xcontrol/panel_page.py:166
 msgid "Labels"
 msgstr ""
 
-#: xcontrol/panel_page.py:165
+#: xcontrol/panel_page.py:168
 #, python-brace-format
 msgid "Icons use {font}."
 msgstr ""
 
-#: xcontrol/panel_page.py:166
+#: xcontrol/panel_page.py:169
 msgid ""
 "No Nerd Font is installed (e.g. ttf-nerd-fonts-symbols), so labels are words."
 msgstr ""
 
-#: xcontrol/panel_page.py:169
+#: xcontrol/panel_page.py:172
 msgid "Spaces count: \" | \" keeps a space on each side. Empty: none."
 msgstr ""
 
-#: xcontrol/panel_page.py:171
+#: xcontrol/panel_page.py:174
 msgid "Between modules"
 msgstr ""
 
-#: xcontrol/panel_page.py:172
+#: xcontrol/panel_page.py:175
 msgid "Scrolling anywhere on the bar switches workspaces"
 msgstr ""
 
-#: xcontrol/panel_page.py:177
+#: xcontrol/panel_page.py:180
 #, python-brace-format
 msgid "Same as the system ({locale})"
 msgstr ""
 
-#: xcontrol/panel_page.py:181
+#: xcontrol/panel_page.py:184
 msgid "Clock language"
 msgstr ""
 
-#: xcontrol/panel_page.py:182
+#: xcontrol/panel_page.py:185
 msgid "Extra bar settings…"
 msgstr ""
 
-#: xcontrol/panel_page.py:189
+#: xcontrol/panel_page.py:192
 msgid "Background"
 msgstr ""
 
-#: xcontrol/panel_page.py:189
+#: xcontrol/panel_page.py:192
 msgid "Text"
 msgstr ""
 
-#: xcontrol/panel_page.py:190
+#: xcontrol/panel_page.py:193
 msgid "Accent (labels, current workspace)"
 msgstr ""
 
-#: xcontrol/panel_page.py:191
+#: xcontrol/panel_page.py:194
 msgid "Second accent (Caps Lock)"
 msgstr ""
 
-#: xcontrol/panel_page.py:192
+#: xcontrol/panel_page.py:195
 msgid "Highlight (current workspace)"
 msgstr ""
 
-#: xcontrol/panel_page.py:193
+#: xcontrol/panel_page.py:196
 msgid "Dim (separators)"
 msgstr ""
 
-#: xcontrol/panel_page.py:203
+#: xcontrol/panel_page.py:206
 msgid "Background opacity"
 msgstr ""
 
-#: xcontrol/panel_page.py:204
+#: xcontrol/panel_page.py:207
 msgid ""
 "Below 100 the bar is see-through when a compositor runs (see the other tab)."
 msgstr ""
 
-#: xcontrol/panel_page.py:207
+#: xcontrol/panel_page.py:210
 msgid "Modules"
 msgstr ""
 
-#: xcontrol/panel_page.py:209
+#: xcontrol/panel_page.py:212
 msgid ""
 "Tick what the bar shows, pick its side, use the arrows to change the order, "
 "and the gear for each module's settings."
 msgstr ""
 
-#: xcontrol/panel_page.py:236
+#: xcontrol/panel_page.py:239
 msgid "no battery here"
 msgstr ""
 
-#: xcontrol/panel_page.py:237
+#: xcontrol/panel_page.py:240
 #, python-brace-format
 msgid "polybar {v} puts the tray at the right end"
 msgstr ""
 
-#: xcontrol/panel_page.py:250
+#: xcontrol/panel_page.py:253
 msgid "Settings of this module"
 msgstr ""
 
-#: xcontrol/panel_page.py:269
+#: xcontrol/panel_page.py:272
 msgid "Bar settings"
 msgstr ""
 
-#: xcontrol/panel_page.py:269
+#: xcontrol/panel_page.py:272
 #, python-brace-format
 msgid "{module} settings"
 msgstr ""
 
-#: xcontrol/panel_page.py:301
+#: xcontrol/panel_page.py:311
 msgid "Use XControl's compositor"
 msgstr ""
 
-#: xcontrol/panel_page.py:307
+#: xcontrol/panel_page.py:317
 msgid ""
 "A compositor adds shadows, fading, transparency and rounded corners, and "
 "stops tearing. XControl writes its own picom setup; your picom.conf isn't "
 "used or changed."
 msgstr ""
 
-#: xcontrol/panel_page.py:314
+#: xcontrol/panel_page.py:324
 msgid "Drawing"
 msgstr ""
 
-#: xcontrol/panel_page.py:320
+#: xcontrol/panel_page.py:330
 msgid "Backend"
 msgstr ""
 
-#: xcontrol/panel_page.py:321
+#: xcontrol/panel_page.py:331
 msgid "VSync (no tearing)"
 msgstr ""
 
-#: xcontrol/panel_page.py:324
+#: xcontrol/panel_page.py:334
 msgid "Let full-screen games skip the compositor"
 msgstr ""
 
-#: xcontrol/panel_page.py:327
+#: xcontrol/panel_page.py:337
 msgid ""
 "Recommended: full-screen games get lower input lag, and FreeSync only works "
 "for them this way."
 msgstr ""
 
-#: xcontrol/panel_page.py:330
+#: xcontrol/panel_page.py:340
 msgid "Effects"
 msgstr ""
 
-#: xcontrol/panel_page.py:332
+#: xcontrol/panel_page.py:342
 msgid "Shadows"
 msgstr ""
 
-#: xcontrol/panel_page.py:337
+#: xcontrol/panel_page.py:347
 msgid "Shadow size"
 msgstr ""
 
-#: xcontrol/panel_page.py:340
+#: xcontrol/panel_page.py:350
 msgid "Shadow strength"
 msgstr ""
 
-#: xcontrol/panel_page.py:341
+#: xcontrol/panel_page.py:351
 msgid "Fade windows in and out"
 msgstr ""
 
-#: xcontrol/panel_page.py:346
+#: xcontrol/panel_page.py:356
 msgid "Fade speed"
 msgstr ""
 
-#: xcontrol/panel_page.py:354
+#: xcontrol/panel_page.py:364
 msgid "Blur behind see-through windows"
 msgstr ""
 
-#: xcontrol/panel_page.py:363
+#: xcontrol/panel_page.py:373
 msgid "Other windows"
 msgstr ""
 
-#: xcontrol/panel_page.py:364
+#: xcontrol/panel_page.py:374
 msgid ""
 "Percent opacity. Full-screen windows and the lock screen are never see-"
 "through."
 msgstr ""
 
-#: xcontrol/panel_page.py:470
+#: xcontrol/panel_page.py:480
 msgid "The i3 config wasn't updated"
 msgstr ""
 
-#: xcontrol/panel_page.py:472
+#: xcontrol/panel_page.py:482
 msgid "Could not save the settings"
 msgstr ""
 
-#: xcontrol/panel_page.py:474
+#: xcontrol/panel_page.py:484
 msgid "Applied"
 msgstr ""
 
-#: xcontrol/panel_page.py:495
+#: xcontrol/panel_page.py:505
 msgid "the screen"
 msgstr ""
 
-#: xcontrol/panel_page.py:497
+#: xcontrol/panel_page.py:507
 msgid "polybar isn't installed."
 msgstr ""
 
-#: xcontrol/panel_page.py:501
+#: xcontrol/panel_page.py:511
 #, python-brace-format
 msgid "Running on {displays}."
 msgstr ""
 
-#: xcontrol/panel_page.py:504 xcontrol/panel_page.py:524
+#: xcontrol/panel_page.py:514 xcontrol/panel_page.py:534
 #, python-brace-format
 msgid "Not running: {why}"
 msgstr ""
 
-#: xcontrol/panel_page.py:504 xcontrol/panel_page.py:524
+#: xcontrol/panel_page.py:514 xcontrol/panel_page.py:534
 msgid "Starting…"
 msgstr ""
 
-#: xcontrol/panel_page.py:510
+#: xcontrol/panel_page.py:520
 msgid ""
 "Another polybar is running (started by your i3 config or a script); it will "
 "sit on top of XControl's."
 msgstr ""
 
-#: xcontrol/panel_page.py:513
+#: xcontrol/panel_page.py:523
 msgid ""
 "Remove these from your i3 config, or there will be two bars after the next "
 "login:"
 msgstr ""
 
-#: xcontrol/panel_page.py:517
+#: xcontrol/panel_page.py:527
 msgid "picom isn't installed."
 msgstr ""
 
-#: xcontrol/panel_page.py:521
+#: xcontrol/panel_page.py:531
 #, python-brace-format
 msgid "Running (picom {v})."
 msgstr ""
 
-#: xcontrol/panel_page.py:530
+#: xcontrol/panel_page.py:540
 msgid ""
 "Another compositor is running, so XControl's can't start. Stop it, and "
 "remove it from your i3 config."
 msgstr ""
 
-#: xcontrol/panel_page.py:533
+#: xcontrol/panel_page.py:543
 msgid ""
 "Remove these from your i3 config, or the other compositor starts first after "
 "the next login:"

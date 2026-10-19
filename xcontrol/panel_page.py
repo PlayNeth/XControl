@@ -10,7 +10,10 @@ from . import bar as B, compositor as C, desktop as D, i3cfg as I3, widgets  # n
 from .i18n import N_, _  # noqa: E402
 
 MODULE_LABELS = {
-    "workspaces": (N_("Workspaces"), N_("i3 workspaces of that display; click to switch")),
+    "workspaces": (N_("i3 workspaces"),
+                   N_("polybar's i3 module: i3 names and modes (resize...), urgent workspaces; click to switch")),
+    "xworkspaces": (N_("Workspaces (other window managers)"),
+                    N_("polybar's generic module for bspwm, Openbox, Xfwm and others; on i3 use the one above")),
     "title": (N_("Window title"), N_("title of the focused window")),
     "clock": (N_("Clock"), N_("click to show the date")),
     "cpu": (N_("CPU"), N_("processor usage")),
@@ -274,9 +277,16 @@ class PanelPage(Gtk.Box):
         dlg.destroy()
 
     def _module_toggled(self, check, mid):
+        other = {"workspaces": "xworkspaces", "xworkspaces": "workspaces"}.get(mid)
+        refill = False
         for m in self.desk["bar"]["modules"]:
             if m[0] == mid:
                 m[2] = check.get_active()
+            elif m[0] == other and check.get_active() and m[2]:
+                m[2] = False   # both would show the same workspaces twice
+                refill = True
+        if refill:
+            GLib.idle_add(lambda: self._fill_modules() and False)
         self._commit_later()
 
     def _module_side(self, combo, mid):

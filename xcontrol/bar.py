@@ -15,7 +15,8 @@ from .paths import config_dir
 POSITIONS = ["left", "center", "right"]
 # id: (polybar module type, label)
 MODULES = {
-    "workspaces": "internal/i3",
+    "workspaces": "internal/i3",        # i3's own: modes, urgent workspaces, i3 workspace names
+    "xworkspaces": "internal/xworkspaces",   # any EWMH window manager (bspwm, openbox, xfwm...)
     "title": "internal/xwindow",
     "clock": "internal/date",
     "cpu": "internal/cpu",
@@ -29,14 +30,14 @@ MODULES = {
     "tray": "internal/tray",
 }
 DEFAULT_MODULES = [  # [id, position, enabled], in order
-    ["workspaces", "left", True], ["title", "left", True],
+    ["workspaces", "left", True], ["xworkspaces", "left", False], ["title", "left", True],
     ["cpu", "right", True], ["memory", "right", True], ["temperature", "right", False],
     ["volume", "right", True], ["network", "right", False], ["disk", "right", False],
     ["keyboard", "right", False], ["battery", "right", True], ["tray", "right", True],
     ["clock", "right", True],
 ]
 # section names as polybar's own examples use them, so the generated file reads familiar
-SECTIONS = {"workspaces": "i3", "title": "title", "clock": "date", "cpu": "cpu", "memory": "memory",
+SECTIONS = {"workspaces": "i3", "xworkspaces": "xworkspaces", "title": "title", "clock": "date", "cpu": "cpu", "memory": "memory",
             "temperature": "temperature", "volume": "pulseaudio", "network": "network", "disk": "filesystem",
             "keyboard": "xkeyboard", "battery": "battery", "tray": "systray"}
 DEFAULT = {
@@ -60,6 +61,13 @@ OPTIONS = {
         ("focused_fg", "color", ""), ("focused_bg", "color", ""), ("focused_underline", "color", ""),
         ("unfocused_fg", "color", ""), ("visible_underline", "color", ""),
         ("urgent_fg", "color", ""), ("urgent_bg", "color", ""), ("mode_bg", "color", ""),
+    ],
+    "xworkspaces": [
+        ("label", ["name", "index"], "name"), ("pin_workspaces", "bool", True), ("show_empty", "bool", True),
+        ("enable_click", "bool", True), ("enable_scroll", "bool", False), ("reverse_scroll", "bool", False),
+        ("padding", "int", 1),
+        ("active_fg", "color", ""), ("active_bg", "color", ""), ("active_underline", "color", ""),
+        ("occupied_fg", "color", ""), ("empty_fg", "color", ""), ("urgent_bg", "color", ""),
     ],
     "title": [("max_length", "int", 60)],
     "clock": [("format", "str", "%H:%M"), ("alt", "str", "%a %d %b %Y"), ("color", "color", "")],
@@ -134,7 +142,12 @@ def normalize(b):
                     clean.append([m[0], m[1], bool(m[2])])
                     seen.add(m[0])
             # modules added in later versions show up in the list, switched off
-            clean += [[m[0], m[1], False] for m in DEFAULT_MODULES if m[0] not in seen]
+            for k, m in enumerate(DEFAULT_MODULES):
+                if m[0] not in seen:   # next to the module it follows by default
+                    prev = DEFAULT_MODULES[k - 1][0] if k else None
+                    at = next((i + 1 for i, c in enumerate(clean) if c[0] == prev), len(clean))
+                    clean.insert(at, [m[0], clean[at - 1][1] if prev and at <= len(clean) and at > 0 else m[1], False])
+                    seen.add(m[0])
             out["modules"] = clean
     out["options"] = {k: dict(v) for k, v in (out.get("options") or {}).items() if k in MODULES and isinstance(v, dict)}
     out["extra"] = {k: str(v) for k, v in (out.get("extra") or {}).items() if k == "bar" or k in MODULES}
@@ -400,6 +413,30 @@ def generate(b, ver=None, nerd=None, root="/", has_pavu=None):
             if o["separator"]:
                 body += [f"label-separator = {_q(o['separator'])}", "label-separator-padding = 1",
                          "label-separator-foreground = ${colors.disabled}"]
+        elif mid == "xworkspaces":
+            lab = "%index%" if o["label"] == "index" else "%name%"
+            pad_ws = max(0, o["padding"])
+            body += [
+                f"pin-workspaces = {str(o['pin_workspaces']).lower()}",
+                f"enable-click = {str(o['enable_click']).lower()}",
+                f"enable-scroll = {str(o['enable_scroll']).lower()}",
+                f"reverse-scroll = {str(o['reverse_scroll']).lower()}",
+                "format = <label-state>",
+                f"label-active = {lab}",
+                f"label-active-foreground = {col(o['active_fg'], '${colors.foreground}')}",
+                f"label-active-background = {col(o['active_bg'], '${colors.background-alt}')}",
+                f"label-active-underline = {col(o['active_underline'], '${colors.primary}')}",
+                f"label-active-padding = {pad_ws}",
+                f"label-occupied = {lab}",
+                *([f"label-occupied-foreground = {o['occupied_fg']}"] if o["occupied_fg"] else []),
+                f"label-occupied-padding = {pad_ws}",
+                f"label-urgent = {lab}",
+                f"label-urgent-background = {col(o['urgent_bg'], '${colors.alert}')}",
+                f"label-urgent-padding = {pad_ws}",
+                f"label-empty = {lab if o['show_empty'] else ''}",
+                f"label-empty-foreground = {col(o['empty_fg'], '${colors.disabled}')}",
+                f"label-empty-padding = {pad_ws if o['show_empty'] else 0}",
+            ]
         elif mid == "title":
             body += ["label = %title%", f"label-maxlen = {max(5, o['max_length'])}"]
         elif mid == "clock":
