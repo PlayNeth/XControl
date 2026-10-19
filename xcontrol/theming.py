@@ -338,6 +338,33 @@ def xsettingsd_conf():
     return os.path.join(config_home(), "xsettingsd", "xsettingsd.conf")
 
 
+def running_xsettingsd_conf(pid):
+    """The config file a running xsettingsd reads: its -c/--config argument, else its
+    default ~/.xsettingsd (relative paths are resolved against its working folder)."""
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            args = [a.decode(errors="replace") for a in f.read().split(b"\0") if a]
+    except OSError:
+        return None
+    path = None
+    for i, a in enumerate(args[1:], 1):
+        if a in ("-c", "--config") and i + 1 < len(args):
+            path = args[i + 1]
+        elif a.startswith("--config="):
+            path = a.split("=", 1)[1]
+        elif a.startswith("-c") and len(a) > 2:
+            path = a[2:]
+    if path is None:
+        return os.path.join(home(), ".xsettingsd")
+    path = os.path.expanduser(path)
+    if not os.path.isabs(path):
+        try:
+            path = os.path.join(os.readlink(f"/proc/{pid}/cwd"), path)
+        except OSError:
+            path = os.path.abspath(path)
+    return path
+
+
 def xsettingsd_autostart():
     return os.path.join(config_home(), "autostart", "xcontrol-xsettingsd.desktop")
 
@@ -439,6 +466,8 @@ def apply(look, qt=True, start_xsettingsd=True):
     # running apps: through whatever provides XSETTINGS
     kind, pid = xsettings_manager()
     conf = xsettingsd_conf()
+    if kind == "xsettingsd":  # write the file *that* xsettingsd reads, e.g. ~/.xsettingsd
+        conf = running_xsettingsd_conf(pid) or conf
     if kind in (None, "xsettingsd"):
         _write(conf, xsettingsd_text(_read(conf), look))
     if kind == "xsettingsd":

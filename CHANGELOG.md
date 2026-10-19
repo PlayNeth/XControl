@@ -2,6 +2,13 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.11.1 (2026-10-19)
+
+**Fix theme changes not reaching open apps with a custom xsettingsd config**
+
+- Fix Apply not updating open apps when the running xsettingsd reads another config file
+  (such as ~/.xsettingsd or one given with -c): XControl now writes the file it really uses
+
 ## 0.11.0 (2026-10-19)
 
 **Add a System information page and move monitor info into Displays**
