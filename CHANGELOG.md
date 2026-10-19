@@ -2,6 +2,14 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.4 (2026-10-19)
+
+**Show only the close button under tiling window managers**
+
+- Show only the close button in the title bar under i3, bspwm, awesome, xmonad, dwm and
+  other tiling window managers, where minimize and maximize do nothing
+- Let users choose the title bar buttons with the MESAPANEL_DECORATION variable
+
 ## 0.7.3 (2026-10-19)
 
 **Fix clearing the primary display**

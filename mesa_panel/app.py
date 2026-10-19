@@ -5,7 +5,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk  # noqa: E402
 
-from . import __version__  # noqa: E402
+from . import __version__, wm  # noqa: E402
 from .i18n import _  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
@@ -22,6 +22,9 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_icon_name("video-display")
 
         header = Gtk.HeaderBar(show_close_button=True, title="Mesa Panel")
+        layout = wm.decoration_layout()
+        if layout is not None:  # tiling window manager: minimize/maximize would do nothing
+            header.set_decoration_layout(layout)
         self.status = Gtk.Label()
         self.status.get_style_context().add_class("dim-label")
         header.pack_end(self.status)
