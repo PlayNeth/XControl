@@ -3,6 +3,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass, field
 
 from .i18n import _, hz
@@ -269,6 +270,12 @@ def remove_custom_mode(output, name):
 
 
 def run(args):
+    debug = bool(os.environ.get("MESAPANEL_DEBUG"))
+    if debug:
+        import shlex
+        print("mesa-panel: running " + shlex.join(args), file=sys.stderr)
     out = subprocess.run(args, capture_output=True, text=True, timeout=30, env=_env())
+    if debug and (out.returncode != 0 or out.stderr.strip()):
+        print(f"mesa-panel: exit {out.returncode}: {out.stderr.strip()}", file=sys.stderr)
     if out.returncode != 0:
         raise RuntimeError(out.stderr.strip() or f"xrandr exited with {out.returncode}")

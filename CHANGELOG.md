@@ -2,6 +2,13 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.1 (2026-10-19)
+
+**Log xrandr commands when debugging is on**
+
+- Print every xrandr command the panel runs, and its errors, to the terminal when
+  MESAPANEL_DEBUG is set, to help diagnose display settings that fail to apply
+
 ## 0.7.0 (2026-10-18)
 
 **Add scaling and color settings to the Displays page**
