@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.13.1 (2026-10-19)
+
+**Warn on the Appearance page about leftover gtk.css overrides**
+
+- Show a warning at the top of the Appearance page when ~/.config/gtk-4.0/gtk.css or
+  gtk-3.0/gtk.css overrides the chosen theme (as left by nwg-look's GTK 4 export and
+  some theme installers), with a "Turn it off" button that renames it
+- Check for such files again whenever the page is shown and after Apply
+
 ## 0.13.0 (2026-10-19)
 
 **Let kernel module parameters be changed from the System page**

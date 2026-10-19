@@ -88,6 +88,17 @@ class AppearancePage(Gtk.Box):
         self.applied = T.current(self.settings)     # what Revert goes back to
         self.look = T.Look(**vars(self.applied))
 
+        # ---- leftover gtk.css overrides (nwg-look's GTK 4 export, theme installers)
+        self.css_bar = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING, show_close_button=False)
+        self.css_label = Gtk.Label(xalign=0, wrap=True)
+        self.css_label.set_max_width_chars(80)
+        self.css_bar.get_content_area().add(self.css_label)
+        self.css_bar.add_button(_("Turn it off"), Gtk.ResponseType.ACCEPT)
+        self.css_bar.connect("response", self._disable_css)
+        self.css_bar.set_no_show_all(True)
+        self.connect("map", lambda *_a: self._css_note())  # also notice links made while XControl runs
+        self.pack_start(self.css_bar, False, False, 0)
+
         # ---- style
         frame, g = _section(_("Style"))
         self.theme = Gtk.ComboBoxText(hexpand=True)
@@ -239,6 +250,7 @@ class AppearancePage(Gtk.Box):
             self.rgba.set_sensitive(look.antialias)
             self._theme_note()
             self._live_note()
+            self._css_note()
         finally:
             self.loading = False
 
@@ -310,6 +322,31 @@ class AppearancePage(Gtk.Box):
         self._fill()
         self.window.set_status(_("Back to the current settings"))
 
+    def _css_note(self):
+        home = T.home().rstrip("/") + "/"
+        found = ["~/" + path[len(home):] if path.startswith(home) else path
+                 for path in (appcheck.user_css("gtk4"), appcheck.user_css("gtk3")) if path]
+        if found:
+            self.css_label.set_text(_("{files} overrides the theme you pick here, in every app of that GTK version. "
+                                      "nwg-look's GTK 4 export and some theme installers create it.").format(
+                                          files=", ".join(found)))
+            self.css_label.show()
+            self.css_bar.show()
+        else:
+            self.css_bar.hide()
+
+    def _disable_css(self, _bar, response):
+        if response != Gtk.ResponseType.ACCEPT:
+            return
+        try:
+            done = appcheck.disable_user_css()
+        except OSError as e:
+            self.window.message(_("That didn't work"), str(e))
+            return
+        self._css_note()
+        self.window.set_status(_("Renamed: {items}. Restart the app.").format(items=", ".join(done)) if done
+                               else _("There was nothing to turn off."))
+
     def _apply(self, *_args):
         try:
             notes = T.apply(self.look, qt=self.qt_check.get_active())
@@ -319,6 +356,7 @@ class AppearancePage(Gtk.Box):
             return
         self.applied = T.Look(**vars(self.look))
         self._live_note()
+        self._css_note()
         if "live" in notes or "started" in notes:
             self.window.set_status(_("Applied; open apps are updating"))
         else:
