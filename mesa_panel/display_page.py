@@ -525,8 +525,12 @@ class DisplayPage(Gtk.Box):
             self.window.message(_("At least one display must stay on"), _("Turn on a display before applying."))
             return
         xrandr.normalize_positions(self.monitors)
-        cmd = xrandr.build_command(self.monitors, reference=self.original)
-        previous = xrandr.build_command(self.original, reference=self.monitors) if self.original else None
+        try:
+            cmd = xrandr.build_command(self.monitors, reference=self.original)
+            previous = xrandr.build_command(self.original, reference=self.monitors) if self.original else None
+        except Exception as e:  # noqa: BLE001 - never fail silently
+            self.window.message(_("xrandr could not apply this layout"), f"{type(e).__name__}: {e}")
+            return
         try:
             xrandr.run(cmd)
         except Exception as e:  # noqa: BLE001

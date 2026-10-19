@@ -195,8 +195,9 @@ def parse_verbose(text):
             last = list(out[cur]["props"])[-1]
             out[cur]["props"][last + " (range)"] = rm.group(1).strip()
             continue
-        # long integer lists (CTM) continue on the next line after 16 values
-        cm = re.fullmatch(r"\t\t((?:-?\d+ ?)+)\s*", line)
+        # long number lists continue on the next lines: CTM as 18 integers (xrandr < 1.5.3,
+        # wrapped after 16) or as a 3x3 grid of decimals (xrandr >= 1.5.3)
+        cm = re.fullmatch(r"\t\t((?:-?\d+(?:\.\d+)? ?)+)\s*", line)
         if cm and out[cur]["props"]:
             last = list(out[cur]["props"])[-1]
             if not last.endswith(" (range)"):
@@ -204,6 +205,24 @@ def parse_verbose(text):
     if cur is not None and edid_hex:
         out[cur]["edid"] = bytes.fromhex("".join(edid_hex))
     return out
+
+
+_VERSION = None
+
+
+def version():
+    """xrandr's version as a tuple, e.g. (1, 5, 3); (0,) if unknown."""
+    global _VERSION
+    if _VERSION is None:
+        _VERSION = (0,)
+        try:
+            out = subprocess.run(["xrandr", "--version"], capture_output=True, text=True, timeout=10, env=_env())
+            m = re.search(r"xrandr program version\s+(\d+(?:\.\d+)*)", out.stdout)
+            if m:
+                _VERSION = tuple(int(x) for x in m.group(1).split("."))
+        except (OSError, subprocess.SubprocessError):
+            pass
+    return _VERSION
 
 
 def query_verbose():

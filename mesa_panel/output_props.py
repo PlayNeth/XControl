@@ -37,9 +37,20 @@ def ctm_encode(matrix):
 
 
 def ctm_decode(words):
-    """Matrix from the property's words; None if it isn't a full matrix.
+    """Matrix from the property as xrandr prints it: 18 32-bit words (xrandr < 1.5.3)
+    or 9 decimals (xrandr >= 1.5.3). None if it isn't a full matrix.
     A single 0 is how xf86-video-amdgpu reports "no CTM set" (identity)."""
-    words = [int(w) & 0xFFFFFFFF for w in words]
+    words = list(words)
+    if len(words) == 9 or any("." in str(w) for w in words):
+        try:
+            vals = [float(w) for w in words]
+        except ValueError:
+            return None
+        return [vals[0:3], vals[3:6], vals[6:9]] if len(vals) == 9 else None
+    try:
+        words = [int(w, 0) & 0xFFFFFFFF if isinstance(w, str) else int(w) & 0xFFFFFFFF for w in words]
+    except ValueError:
+        return None
     if words in ([], [0]):
         return copy.deepcopy(IDENTITY)
     if len(words) != 18:
@@ -64,7 +75,7 @@ def saturation_of(matrix):
         return None
     s = matrix[0][0] - matrix[1][0]
     expected = saturation_matrix(s)
-    if all(abs(matrix[i][j] - expected[i][j]) < 1e-6 for i in range(3) for j in range(3)):
+    if all(abs(matrix[i][j] - expected[i][j]) < 1e-5 for i in range(3) for j in range(3)):  # xrandr prints 6 decimals
         return s
     return None
 
@@ -81,6 +92,12 @@ def attach(monitors, verbose):
             if name not in props:
                 continue
             m.props[name] = " ".join(props[name].split())
+            if name == "CTM":
+                mat = ctm_decode(m.props[name].split())
+                if mat is None:  # a format we don't understand: leave the colour matrix alone
+                    del m.props[name]
+                    continue
+                m.props[name] = " ".join(str(w) for w in ctm_encode(mat))  # one internal format
             extra = props.get(name + " (range)", "")
             if extra.startswith("("):
                 try:
@@ -128,9 +145,14 @@ def _uniform(g):
 
 
 # ---- writing
-def ctm_value(m):
-    """The CTM as xrandr --set wants it: comma-separated words."""
+def ctm_value(m, xrandr_version=None):
+    """The CTM as this xrandr's --set reads it: xrandr 1.5.3 and later take nine
+    comma-separated decimals (and would misread raw words as decimals), older ones
+    take the 18 raw 32-bit words."""
+    from . import xrandr
     mat = ctm_decode(m.props["CTM"].split()) or IDENTITY
+    if (xrandr_version or xrandr.version()) >= (1, 5, 3):
+        return ",".join(f"{v:.10f}" for row in mat for v in row)
     return ",".join(f"0x{w:x}" for w in ctm_encode(mat))
 
 

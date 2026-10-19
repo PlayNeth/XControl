@@ -115,5 +115,36 @@ night = copy.deepcopy(mons)
 night[0].gamma = (1.0, 0.85, 0.7)
 expect("night-light gamma never saved", "--gamma" in xrandr.build_command(night), False)
 
+# ---- xrandr 1.5.3 prints and reads CTM as nine decimals
+_m = P.saturation_matrix(1.25)
+_rows = [" ".join(f"{v:f}" for v in r) for r in _m]  # exactly how xrandr 1.5.3 prints it
+V153 = VERBOSE.replace("\tCTM: 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 \n\t\t0 1 \n",
+                       f"\tCTM: \t{_rows[0]}\n\t\t{_rows[1]}\n\t\t{_rows[2]}\n")
+expect("sample has the 1.5.3 format", V153 != VERBOSE, True)
+mons = xrandr.parse(QUERY)
+P.attach(mons, xrandr.parse_verbose(V153))
+dp = mons[0]
+expect("decimal CTM parsed", round(P.saturation_of(P.ctm_decode(dp.props["CTM"].split())) or 0, 4), 1.25)
+expect("negative decimals keep their sign", P.ctm_decode(dp.props["CTM"].split())[0][1] < 0, True)
+P.set_saturation(dp, 0.0)
+new_fmt = P.ctm_value(dp, xrandr_version=(1, 5, 3)).split(",")
+expect("1.5.3 gets nine decimals", (len(new_fmt), "." in new_fmt[0]), (9, True))
+expect("decimals are the grayscale matrix", [round(float(v), 4) for v in new_fmt[:3]], [0.2126, 0.7152, 0.0722])
+old_fmt = P.ctm_value(dp, xrandr_version=(1, 5, 2)).split(",")
+expect("1.5.2 gets 18 hex words", (len(old_fmt), old_fmt[0].startswith("0x")), (18, True))
+# what xrandr 1.5.3 does with the value (ctm_from_string), and what the driver gets
+def xrandr153(value):
+    vals = [float(v) for v in value.split(",")[:9]]
+    words = []
+    for v in vals:
+        t = int(abs(v) * (1 << 32)) | ((1 << 63) if v < 0 else 0)
+        words += [t & 0xFFFFFFFF, t >> 32]
+    return words
+got = P.ctm_decode(xrandr153(P.ctm_value(dp, xrandr_version=(1, 5, 3))))
+expect("round trip through xrandr 1.5.3", round(P.saturation_of(got), 6), 0.0)
+mons = xrandr.parse(QUERY)
+P.attach(mons, xrandr.parse_verbose(VERBOSE.replace("\tCTM: 0 1", "\tCTM: garbage 1")))
+expect("unreadable CTM is left alone", "CTM" in mons[0].props, False)
+
 print("check_output_props:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

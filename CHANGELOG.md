@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.2 (2026-10-19)
+
+**Fix saturation and color settings with xrandr 1.5.3**
+
+- Fix the saturation setting with xrandr 1.5.3 and later, which read and print the color
+  matrix as nine decimals instead of raw words
+- Fix the Scaling and color section getting stuck and ignoring changes when the driver
+  reports a value in an unexpected form
+- Leave the color matrix alone, instead of misreading it, when its format isn't understood
+- Show an error message instead of failing silently when Apply can't build the xrandr
+  command
+- Add tests for the xrandr 1.5.3 color matrix format
+
 ## 0.7.1 (2026-10-19)
 
 **Log xrandr commands when debugging is on**

@@ -2,6 +2,8 @@
 
 Only properties the output really has are shown. Changes go into the Monitor
 object and are applied with the page's Apply button (with the usual revert)."""
+import traceback
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, Gtk, Pango  # noqa: E402
@@ -155,6 +157,16 @@ class ColorPanel(Gtk.Expander):
 
     # ---- model -> view
     def show_monitor(self, m):
+        """Fill the controls from `m`. Never leaves the panel stuck ignoring changes:
+        a value the driver reports in an unexpected form only disables that control."""
+        try:
+            self._show_monitor(m)
+        except Exception:  # noqa: BLE001
+            traceback.print_exc()
+        finally:
+            self.loading = False
+
+    def _show_monitor(self, m):
         self.mon = m
         self.loading = True
         props = m.props if m else {}
