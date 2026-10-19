@@ -2,6 +2,13 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.19.3 (2026-10-19)
+
+**Reword the hint for the generic workspaces bar module**
+
+- Reword the "Workspaces (other window managers)" hint to recommend
+  "i3 workspaces" on i3
+
 ## 0.19.2 (2026-10-19)
 
 **Add bar workspaces module for window managers other than i3**

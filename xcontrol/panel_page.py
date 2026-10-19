@@ -13,7 +13,8 @@ MODULE_LABELS = {
     "workspaces": (N_("i3 workspaces"),
                    N_("polybar's i3 module: i3 names and modes (resize...), urgent workspaces; click to switch")),
     "xworkspaces": (N_("Workspaces (other window managers)"),
-                    N_("polybar's generic module for bspwm, Openbox, Xfwm and others; on i3 use the one above")),
+                    N_("polybar's generic module for bspwm, Openbox, Xfwm and others; on i3, "
+                       "\"i3 workspaces\" is recommended")),
     "title": (N_("Window title"), N_("title of the focused window")),
     "clock": (N_("Clock"), N_("click to show the date")),
     "cpu": (N_("CPU"), N_("processor usage")),
