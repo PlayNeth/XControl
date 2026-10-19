@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import desktop as D, wallpaper as W  # noqa: E402
+from . import desktop as D, wallpaper as W, widgets  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 MODE_LABELS = {"fill": N_("Fill (crop to cover the display)"), "fit": N_("Fit (whole picture, borders in the color)"),
@@ -343,10 +343,7 @@ class DesktopPage(Gtk.Box):
         self._conflict(self.lock_conflict, lock["enabled"] and (lock_lines or foreign),
                        _("Another screen lock is set up; remove it from your i3 config, or two lockers will "
                          "start:"), lock_lines or foreign)
-        if D.wanted(self.desk) and D.autostart_runs() is False:
-            self.autostart_bar.show_all()  # no_show_all keeps it hidden until needed, so show its text too
-        else:
-            self.autostart_bar.hide()
+        widgets.reveal(self.autostart_bar, D.wanted(self.desk) and D.autostart_runs() is False)
 
     def _conflict(self, label, show, text, lines):
         if show:
@@ -434,8 +431,11 @@ class DesktopPage(Gtk.Box):
     def _commit(self):
         self._timer = None
         try:
-            D.save(self.desk)
-            result = D.notify_daemon(self.desk)
+            fresh = D.load()   # the Bar & Compositor page keeps its part
+            for k in ("wallpaper", "lock", "blanking"):
+                fresh[k] = self.desk[k]
+            D.save(fresh)
+            result = D.notify_daemon(fresh)
         except Exception as e:  # noqa: BLE001
             self.window.message(_("Could not save the desktop settings"), str(e))
             return False

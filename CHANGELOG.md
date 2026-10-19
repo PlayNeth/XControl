@@ -2,6 +2,27 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.17.0 (2026-10-19)
+
+**Add Bar & Compositor page to run polybar and picom**
+
+- Add a Bar & Compositor page that runs polybar and picom from generated
+  configs; your own polybar and picom configs are neither used nor changed
+- Configure the bar: top or bottom, height, every display or only the primary
+  one, font, colors and a see-through background when a compositor runs
+- Choose bar modules (workspaces, window title, clock, CPU, memory, temperature,
+  volume, network, disk, keyboard layout, battery, tray), placed left, center
+  or right in any order, with word labels or Nerd Font icons
+- Configure picom: backend, VSync, letting full-screen games skip the
+  compositor (needed for FreeSync), shadows, fading, rounded corners, blur and
+  window opacity, keeping the bar, desktop, menus and lock screen free of effects
+- Run one bar per display and restart the bars when displays change
+- Start both from "xcontrol --session", restart them if they crash, and show
+  why one keeps failing (e.g. a backend the driver doesn't support)
+- Point out polybar, picom and i3 "bar { }" lines in the i3 config that would
+  start a second bar or compositor, and offer to stop ones already running
+- Fix the Desktop page's login warning still appearing without its text
+
 ## 0.16.1 (2026-10-19)
 
 **Fix 3D preview leaving garbage on screen without a compositor**

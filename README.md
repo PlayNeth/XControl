@@ -384,6 +384,31 @@ input watcher (mouse, touchpad and keyboard settings, re-applied on hotplug) and
 service. Single flags still work and can be combined, e.g.
 `xcontrol --desktop-daemon --watch-input`. The Desktop page warns when nothing would start them.
 
+## Bar & Compositor
+
+XControl can run polybar and picom for you, so their config files don't have to be written by
+hand. It generates its own (`~/.config/xcontrol/polybar.ini` and `picom.conf`) from what you pick;
+your own polybar and picom configs are neither used nor changed. Changes apply right away.
+
+**Bar (polybar):** top or bottom, height, on every display or only the primary one, font, colors
+(with a see-through background when a compositor runs), and the modules: workspaces, window
+title, clock, CPU, memory, CPU temperature, volume, network, disk, keyboard layout, battery
+(laptops) and the system tray, each on the left, center or right, in any order. Labels are words
+(CPU, RAM, VOL) or icons when a Nerd Font is installed (e.g. `ttf-nerd-fonts-symbols`). Clock format,
+the temperature warning and the disk shown can be changed. One bar runs per display, and the
+bars are restarted when displays change; polybar picks up setting changes by itself.
+
+**Compositor (picom):** backend (glx, xrender, egl), VSync, letting full-screen games skip the
+compositor (lower input lag, and needed for FreeSync), shadows, fading, rounded corners, blur
+behind see-through windows, and the opacity of focused and other windows. The generated file
+only uses options that work from picom 9 to 12, and keeps the bar, the desktop, i3's frames,
+menus and the lock screen free of effects.
+
+Both are started by `xcontrol --session` and restarted if they crash; if one keeps failing, the
+page shows why (e.g. a backend your driver doesn't support). The page also points out
+`exec polybar`/`launch.sh`, `exec picom` lines and an i3 `bar { }` block in your i3 config, which
+would start a second bar or compositor, and can stop ones that are already running.
+
 ## Users
 
 The **Users** page lists the regular accounts (UID 1000 and up; never root or system

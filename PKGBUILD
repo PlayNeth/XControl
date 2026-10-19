@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.16.1
+pkgver=0.17.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -30,6 +30,10 @@ optdepends=(
   'kmod: module descriptions and parameter help on the System page (modinfo)'
   'xss-lock: screen lock when idle and before suspend (Desktop page)'
   'i3lock: screen locker that can show the wallpaper (or xsecurelock, slock)'
+  "polybar: XControl's bar (Bar & Compositor page)"
+  'picom: compositor: shadows, fading, transparency, no tearing (Bar & Compositor page)'
+  'ttf-nerd-fonts-symbols: icons in the bar'
+  "pavucontrol: right-click the bar's volume to open the mixer"
   'hwdata: full monitor manufacturer, graphics card and network adapter names'
   'polkit: EDID overrides, kernel module parameters and user accounts (needs a polkit agent, e.g. polkit-gnome)'
   'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'

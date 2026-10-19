@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 15:02-0300\n"
+"POT-Creation-Date: 2026-10-19 15:24-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,39 +17,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:49
+#: xcontrol/app.py:50
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:53
+#: xcontrol/app.py:54
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:57
+#: xcontrol/app.py:58
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:61
+#: xcontrol/app.py:62
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:65
+#: xcontrol/app.py:66
 msgid "Desktop"
 msgstr "Área de trabalho"
 
-#: xcontrol/app.py:69
+#: xcontrol/app.py:68
+msgid "Bar & Compositor"
+msgstr "Barra e Compositor"
+
+#: xcontrol/app.py:72
 msgid "Users"
 msgstr "Usuários"
 
-#: xcontrol/app.py:71 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:74 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:107
+#: xcontrol/app.py:110
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:108 xcontrol/appearance_page.py:390
+#: xcontrol/app.py:111 xcontrol/appearance_page.py:390
 #: xcontrol/edid_override_dialog.py:28 xcontrol/module_params_dialog.py:119
 #: xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -65,6 +69,7 @@ msgid "Slight (recommended)"
 msgstr "Leve (recomendado)"
 
 #: xcontrol/appearance_page.py:17 xcontrol/gaming_page.py:44
+#: xcontrol/panel_page.py:29
 msgid "Medium"
 msgstr "Média"
 
@@ -597,6 +602,7 @@ msgid "Wallpaper"
 msgstr "Papel de parede"
 
 #: xcontrol/desktop_page.py:136 xcontrol/input_page.py:404
+#: xcontrol/panel_page.py:130
 msgid "Layout"
 msgstr "Layout"
 
@@ -784,6 +790,7 @@ msgstr "Escalar mantendo a proporção"
 #: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
 #: xcontrol/gaming_page.py:49 xcontrol/input_page.py:26
 #: xcontrol/input_page.py:31 xcontrol/input_page.py:42
+#: xcontrol/panel_page.py:29
 msgid "Off"
 msgstr "Desligado"
 
@@ -977,7 +984,7 @@ msgstr "Taxa de atualização"
 msgid "Orientation"
 msgstr "Orientação"
 
-#: xcontrol/display_page.py:236
+#: xcontrol/display_page.py:236 xcontrol/panel_page.py:136
 msgid "Position"
 msgstr "Posição"
 
@@ -1451,7 +1458,7 @@ msgstr "Suavização de serrilhado"
 msgid "Multisampling"
 msgstr "Multiamostragem"
 
-#: xcontrol/gaming_page.py:242
+#: xcontrol/gaming_page.py:242 xcontrol/panel_page.py:341
 msgid "Transparency"
 msgstr "Transparência"
 
@@ -1905,7 +1912,7 @@ msgstr "Não definido"
 msgid "Default (Caps Lock)"
 msgstr "Padrão (Caps Lock)"
 
-#: xcontrol/input_page.py:416
+#: xcontrol/input_page.py:416 xcontrol/panel_page.py:22
 msgid "Keyboard layout"
 msgstr "Layout do teclado"
 
@@ -2680,55 +2687,500 @@ msgstr "EDID salvo"
 msgid "Could not save the EDID"
 msgstr "Não foi possível salvar o EDID"
 
-#: xcontrol/preview3d.py:269
+#: xcontrol/panel_page.py:13
+msgid "Workspaces"
+msgstr "Áreas de trabalho"
+
+#: xcontrol/panel_page.py:13
+msgid "i3 workspaces of that display; click to switch"
+msgstr "áreas de trabalho do i3 daquela tela; clique para trocar"
+
+#: xcontrol/panel_page.py:14
+msgid "Window title"
+msgstr "Título da janela"
+
+#: xcontrol/panel_page.py:14
+msgid "title of the focused window"
+msgstr "título da janela em foco"
+
+#: xcontrol/panel_page.py:15 xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
+msgid "Clock"
+msgstr "Clock"
+
+#: xcontrol/panel_page.py:15
+msgid "click to show the date"
+msgstr "clique para mostrar a data"
+
+#: xcontrol/panel_page.py:16
+msgid "CPU"
+msgstr "CPU"
+
+#: xcontrol/panel_page.py:16
+msgid "processor usage"
+msgstr "uso do processador"
+
+#: xcontrol/panel_page.py:17 xcontrol/sysinfo.py:823
+msgid "Memory"
+msgstr "Memória"
+
+#: xcontrol/panel_page.py:17
+msgid "RAM in use"
+msgstr "RAM em uso"
+
+#: xcontrol/panel_page.py:18 xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
+msgid "Temperature"
+msgstr "Temperatura"
+
+#: xcontrol/panel_page.py:18
+msgid "CPU temperature, red above the warning level"
+msgstr "temperatura da CPU, em vermelho acima do nível de alerta"
+
+#: xcontrol/panel_page.py:19
+msgid "Volume"
+msgstr "Volume"
+
+#: xcontrol/panel_page.py:19
+msgid "scroll to change, click to mute (PipeWire or PulseAudio)"
+msgstr "role para mudar, clique para silenciar (PipeWire ou PulseAudio)"
+
+#: xcontrol/panel_page.py:20 xcontrol/sysinfo.py:909
+msgid "Network"
+msgstr "Rede"
+
+#: xcontrol/panel_page.py:20
+msgid "local address, or offline"
+msgstr "endereço local, ou desconectado"
+
+#: xcontrol/panel_page.py:21
+msgid "Disk"
+msgstr "Disco"
+
+#: xcontrol/panel_page.py:21
+msgid "space used on a drive"
+msgstr "espaço usado numa unidade"
+
+#: xcontrol/panel_page.py:22
+msgid "current layout, and Caps Lock"
+msgstr "layout atual, e o Caps Lock"
+
+#: xcontrol/panel_page.py:23
+msgid "Battery"
+msgstr "Bateria"
+
+#: xcontrol/panel_page.py:23
+msgid "charge and charging"
+msgstr "carga e carregamento"
+
+#: xcontrol/panel_page.py:24
+msgid "System tray"
+msgstr "Bandeja do sistema"
+
+#: xcontrol/panel_page.py:24
+msgid "icons of programs like Steam, Discord, nm-applet"
+msgstr "ícones de programas como Steam, Discord, nm-applet"
+
+#: xcontrol/panel_page.py:26
+msgid "Left"
+msgstr "Esquerda"
+
+#: xcontrol/panel_page.py:26
+msgid "Center"
+msgstr "Centro"
+
+#: xcontrol/panel_page.py:26
+msgid "Right"
+msgstr "Direita"
+
+#: xcontrol/panel_page.py:27
+msgid "OpenGL (glx, recommended)"
+msgstr "OpenGL (glx, recomendado)"
+
+#: xcontrol/panel_page.py:27
+msgid "XRender (most compatible, no blur)"
+msgstr "XRender (mais compatível, sem desfoque)"
+
+#: xcontrol/panel_page.py:28
+msgid "EGL (experimental, picom 10 or newer)"
+msgstr "EGL (experimental, picom 10 ou mais novo)"
+
+#: xcontrol/panel_page.py:29
+msgid "Light"
+msgstr "Leve"
+
+#: xcontrol/panel_page.py:29
+msgid "Strong"
+msgstr "Forte"
+
+#: xcontrol/panel_page.py:82
+msgid "Bar (polybar)"
+msgstr "Barra (polybar)"
+
+#: xcontrol/panel_page.py:83
+msgid "Compositor (picom)"
+msgstr "Compositor (picom)"
+
+#: xcontrol/panel_page.py:118
+msgid "Use XControl's bar"
+msgstr "Usar a barra do XControl"
+
+#: xcontrol/panel_page.py:124
+msgid ""
+"XControl writes its own polybar setup from scratch and starts one bar per "
+"display. Your own polybar config isn't used or changed."
+msgstr ""
+"O XControl escreve a própria configuração do polybar do zero e inicia uma "
+"barra por tela. A sua configuração do polybar não é usada nem alterada."
+
+#: xcontrol/panel_page.py:127 xcontrol/panel_page.py:296
+msgid "Stop them"
+msgstr "Encerrá-los"
+
+#: xcontrol/panel_page.py:133
+msgid "Top"
+msgstr "Em cima"
+
+#: xcontrol/panel_page.py:134
+msgid "Bottom"
+msgstr "Embaixo"
+
+#: xcontrol/panel_page.py:141
+msgid "pixels"
+msgstr "pixels"
+
+#: xcontrol/panel_page.py:142
+msgid "Height"
+msgstr "Altura"
+
+#: xcontrol/panel_page.py:144
+msgid "Every display"
+msgstr "Todas as telas"
+
+#: xcontrol/panel_page.py:145
+msgid "Only the primary display"
+msgstr "Só a tela principal"
+
+#: xcontrol/panel_page.py:147
+msgid "Show on"
+msgstr "Mostrar em"
+
+#: xcontrol/panel_page.py:150
+msgid "Font"
+msgstr "Fonte"
+
+#: xcontrol/panel_page.py:152
+msgid "Words (CPU, RAM, VOL)"
+msgstr "Palavras (CPU, RAM, VOL)"
+
+#: xcontrol/panel_page.py:153
+msgid "Icons (needs a Nerd Font)"
+msgstr "Ícones (precisa de uma Nerd Font)"
+
+#: xcontrol/panel_page.py:155
+msgid "Labels"
+msgstr "Rótulos"
+
+#: xcontrol/panel_page.py:157
+#, python-brace-format
+msgid "Icons use {font}."
+msgstr "Os ícones usam {font}."
+
+#: xcontrol/panel_page.py:158
+msgid ""
+"No Nerd Font is installed (e.g. ttf-nerd-fonts-symbols), so labels are "
+"words."
+msgstr ""
+"Nenhuma Nerd Font instalada (ex.: ttf-nerd-fonts-symbols), então os rótulos "
+"são palavras."
+
+#: xcontrol/panel_page.py:161
+msgid "Colors"
+msgstr "Cores"
+
+#: xcontrol/panel_page.py:164
+msgid "Background"
+msgstr "Fundo"
+
+#: xcontrol/panel_page.py:164
+msgid "Text"
+msgstr "Texto"
+
+#: xcontrol/panel_page.py:165
+msgid "Accent (labels, current workspace)"
+msgstr "Destaque (rótulos, área de trabalho atual)"
+
+#: xcontrol/panel_page.py:166
+msgid "Urgent"
+msgstr "Urgente"
+
+#: xcontrol/panel_page.py:166
+msgid "Dim (separators)"
+msgstr "Apagado (separadores)"
+
+#: xcontrol/panel_page.py:174
+msgid "Background opacity"
+msgstr "Opacidade do fundo"
+
+#: xcontrol/panel_page.py:175
+msgid ""
+"Below 100 the bar is see-through when a compositor runs (see the other tab)."
+msgstr ""
+"Abaixo de 100 a barra fica transparente quando há um compositor rodando "
+"(veja a outra aba)."
+
+#: xcontrol/panel_page.py:178
+msgid "Modules"
+msgstr "Módulos"
+
+#: xcontrol/panel_page.py:180
+msgid ""
+"Tick what the bar shows, pick its side, and use the arrows to change the "
+"order."
+msgstr ""
+"Marque o que a barra mostra, escolha o lado e use as setas para mudar a "
+"ordem."
+
+#: xcontrol/panel_page.py:187
+msgid "Module options"
+msgstr "Opções dos módulos"
+
+#: xcontrol/panel_page.py:193
+msgid "Clock format"
+msgstr "Formato do relógio"
+
+#: xcontrol/panel_page.py:196
+msgid "After a click"
+msgstr "Depois de um clique"
+
+#: xcontrol/panel_page.py:197
+msgid ""
+"%H hours, %M minutes, %S seconds, %a weekday, %d day, %b month, %Y year "
+"(like the date command)."
+msgstr ""
+"%H horas, %M minutos, %S segundos, %a dia da semana, %d dia, %b mês, %Y ano "
+"(como no comando date)."
+
+#: xcontrol/panel_page.py:204
+msgid "Temperature warning at"
+msgstr "Alerta de temperatura em"
+
+#: xcontrol/panel_page.py:213
+msgid "Disk to show"
+msgstr "Disco a mostrar"
+
+#: xcontrol/panel_page.py:235
+msgid "no battery here"
+msgstr "sem bateria aqui"
+
+#: xcontrol/panel_page.py:236
+#, python-brace-format
+msgid "polybar {v} puts the tray at the right end"
+msgstr "o polybar {v} coloca a bandeja na ponta direita"
+
+#: xcontrol/panel_page.py:286
+msgid "Use XControl's compositor"
+msgstr "Usar o compositor do XControl"
+
+#: xcontrol/panel_page.py:292
+msgid ""
+"A compositor adds shadows, fading, transparency and rounded corners, and "
+"stops tearing. XControl writes its own picom setup; your picom.conf isn't "
+"used or changed."
+msgstr ""
+"Um compositor adiciona sombras, esmaecimento, transparência e cantos "
+"arredondados, e acaba com o tearing. O XControl escreve a própria "
+"configuração do picom; o seu picom.conf não é usado nem alterado."
+
+#: xcontrol/panel_page.py:299
+msgid "Drawing"
+msgstr "Desenho"
+
+#: xcontrol/panel_page.py:305
+msgid "Backend"
+msgstr "Backend"
+
+#: xcontrol/panel_page.py:306
+msgid "VSync (no tearing)"
+msgstr "VSync (sem tearing)"
+
+#: xcontrol/panel_page.py:309
+msgid "Let full-screen games skip the compositor"
+msgstr "Deixar jogos em tela cheia pularem o compositor"
+
+#: xcontrol/panel_page.py:312
+msgid ""
+"Recommended: full-screen games get lower input lag, and FreeSync only works "
+"for them this way."
+msgstr ""
+"Recomendado: jogos em tela cheia ficam com menos atraso de entrada, e o "
+"FreeSync só funciona para eles assim."
+
+#: xcontrol/panel_page.py:315
+msgid "Effects"
+msgstr "Efeitos"
+
+#: xcontrol/panel_page.py:317
+msgid "Shadows"
+msgstr "Sombras"
+
+#: xcontrol/panel_page.py:322
+msgid "Shadow size"
+msgstr "Tamanho da sombra"
+
+#: xcontrol/panel_page.py:325
+msgid "Shadow strength"
+msgstr "Intensidade da sombra"
+
+#: xcontrol/panel_page.py:326
+msgid "Fade windows in and out"
+msgstr "Esmaecer janelas ao abrir e fechar"
+
+#: xcontrol/panel_page.py:331
+msgid "Fade speed"
+msgstr "Velocidade do esmaecimento"
+
+#: xcontrol/panel_page.py:334
+msgid "Rounded corners"
+msgstr "Cantos arredondados"
+
+#: xcontrol/panel_page.py:339
+msgid "Blur behind see-through windows"
+msgstr "Desfoque atrás de janelas transparentes"
+
+#: xcontrol/panel_page.py:345
+msgid "Focused window"
+msgstr "Janela em foco"
+
+#: xcontrol/panel_page.py:348
+msgid "Other windows"
+msgstr "Outras janelas"
+
+#: xcontrol/panel_page.py:349
+msgid ""
+"Percent opacity. Full-screen windows and the lock screen are never see-"
+"through."
+msgstr ""
+"Opacidade em porcentagem. Janelas em tela cheia e a tela de bloqueio nunca "
+"ficam transparentes."
+
+#: xcontrol/panel_page.py:448
+msgid "Could not save the settings"
+msgstr "Não foi possível salvar as configurações"
+
+#: xcontrol/panel_page.py:450
+msgid "Applied"
+msgstr "Aplicado"
+
+#: xcontrol/panel_page.py:471
+msgid "the screen"
+msgstr "a tela"
+
+#: xcontrol/panel_page.py:473
+msgid "polybar isn't installed."
+msgstr "O polybar não está instalado."
+
+#: xcontrol/panel_page.py:477
+#, python-brace-format
+msgid "Running on {displays}."
+msgstr "Rodando em {displays}."
+
+#: xcontrol/panel_page.py:480 xcontrol/panel_page.py:500
+#, python-brace-format
+msgid "Not running: {why}"
+msgstr "Não está rodando: {why}"
+
+#: xcontrol/panel_page.py:480 xcontrol/panel_page.py:500
+msgid "Starting…"
+msgstr "Iniciando…"
+
+#: xcontrol/panel_page.py:486
+msgid ""
+"Another polybar is running (started by your i3 config or a script); it will "
+"sit on top of XControl's."
+msgstr ""
+"Há outro polybar rodando (iniciado pela config do i3 ou por um script); ele "
+"vai ficar por cima do do XControl."
+
+#: xcontrol/panel_page.py:489
+msgid ""
+"Remove these from your i3 config, or there will be two bars after the next "
+"login:"
+msgstr ""
+"Remova estas linhas da config do i3, ou haverá duas barras no próximo login:"
+
+#: xcontrol/panel_page.py:493
+msgid "picom isn't installed."
+msgstr "O picom não está instalado."
+
+#: xcontrol/panel_page.py:497
+#, python-brace-format
+msgid "Running (picom {v})."
+msgstr "Rodando (picom {v})."
+
+#: xcontrol/panel_page.py:506
+msgid ""
+"Another compositor is running, so XControl's can't start. Stop it, and "
+"remove it from your i3 config."
+msgstr ""
+"Há outro compositor rodando, então o do XControl não consegue iniciar. "
+"Encerre-o e remova-o da config do i3."
+
+#: xcontrol/panel_page.py:509
+msgid ""
+"Remove these from your i3 config, or the other compositor starts first after"
+" the next login:"
+msgstr ""
+"Remova estas linhas da config do i3, ou o outro compositor inicia primeiro "
+"no próximo login:"
+
+#: xcontrol/preview3d.py:339
 msgid "Drag to turn the scene"
 msgstr "Arraste para girar a cena"
 
-#: xcontrol/preview3d.py:316
+#: xcontrol/preview3d.py:389
 #, python-brace-format
 msgid "{n}× MSAA (this GPU: {max}×)"
 msgstr "{n}× MSAA (esta GPU: {max}×)"
 
-#: xcontrol/preview3d.py:319
+#: xcontrol/preview3d.py:392
 #, python-brace-format
 msgid "{n}× MSAA"
 msgstr "{n}× MSAA"
 
-#: xcontrol/preview3d.py:320
+#: xcontrol/preview3d.py:393
 msgid "No forced AA"
 msgstr "Sem AA forçado"
 
-#: xcontrol/preview3d.py:320
+#: xcontrol/preview3d.py:393
 msgid "AA off"
 msgstr "AA desligado"
 
-#: xcontrol/preview3d.py:321
+#: xcontrol/preview3d.py:394
 #, python-brace-format
 msgid "{n}× AF"
 msgstr "{n}× AF"
 
-#: xcontrol/preview3d.py:322
+#: xcontrol/preview3d.py:395
 msgid "App's filtering"
 msgstr "Filtragem do aplicativo"
 
-#: xcontrol/preview3d.py:322
+#: xcontrol/preview3d.py:395
 msgid "AF off"
 msgstr "AF desligado"
 
-#: xcontrol/preview3d.py:324
+#: xcontrol/preview3d.py:397
 msgid "supersampled fence"
 msgstr "cerca com supersampling"
 
-#: xcontrol/preview3d.py:324
+#: xcontrol/preview3d.py:397
 msgid "alpha-to-coverage fence"
 msgstr "cerca com alpha-to-coverage"
 
-#: xcontrol/preview3d.py:326
+#: xcontrol/preview3d.py:399
 #, python-brace-format
 msgid "limit {n} FPS"
 msgstr "limite de {n} FPS"
 
-#: xcontrol/preview3d.py:368 xcontrol/preview3d.py:376
+#: xcontrol/preview3d.py:448
 #, python-brace-format
 msgid "3D preview unavailable: {error}"
 msgstr "Prévia 3D indisponível: {error}"
@@ -3018,14 +3470,6 @@ msgstr "Uso"
 msgid "(max. {mhz} MHz)"
 msgstr "(máx. {mhz} MHz)"
 
-#: xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
-msgid "Clock"
-msgstr "Clock"
-
-#: xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
-msgid "Temperature"
-msgstr "Temperatura"
-
 #: xcontrol/sysinfo.py:797
 msgid "Cache"
 msgstr "Cache"
@@ -3063,10 +3507,6 @@ msgstr "Swap"
 #, python-brace-format
 msgid "{used} of {total}"
 msgstr "{used} de {total}"
-
-#: xcontrol/sysinfo.py:823
-msgid "Memory"
-msgstr "Memória"
 
 #: xcontrol/sysinfo.py:829
 msgid "Card maker"
@@ -3191,10 +3631,6 @@ msgstr "conectado"
 #: xcontrol/sysinfo.py:904
 msgid "not connected"
 msgstr "desconectado"
-
-#: xcontrol/sysinfo.py:909
-msgid "Network"
-msgstr "Rede"
 
 #: xcontrol/sysinfo.py:912
 msgid "Device"

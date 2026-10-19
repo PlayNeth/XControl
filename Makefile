@@ -100,6 +100,7 @@ check:
 	$(PYTHON) tests/check_desktop.py
 	$(PYTHON) tests/check_user_helper.py
 	$(PYTHON) tests/check_preview.py
+	$(PYTHON) tests/check_panel.py
 	sh -n data/xcontrol-edid-helper
 	sh -n data/xcontrol-module-helper
 	sh -n data/xcontrol-user-helper

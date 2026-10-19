@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-from . import config, wallpaper
+from . import bar, compositor, config, wallpaper
 
 LOCKERS = ["i3lock", "xsecurelock", "slock"]
 LOCK_DEFAULT = {"enabled": False, "locker": "i3lock", "image": "wallpaper", "color": "#000000",
@@ -45,7 +45,8 @@ def normalize(d):
     blank = dict(BLANK_DEFAULT)
     blank.update({k: v for k, v in (d.get("blanking") or {}).items() if k in BLANK_DEFAULT})
     blank["screen_off_minutes"] = max(0, int(blank["screen_off_minutes"] or 0))
-    return {"wallpaper": wp, "lock": lock, "blanking": blank}
+    return {"wallpaper": wp, "lock": lock, "blanking": blank,
+            "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
 
 def load():
@@ -111,7 +112,8 @@ def xset_commands(desk):
 
 def wanted(desk):
     """Whether the background service is needed at all."""
-    return desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
+    return (desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
+            or desk["bar"]["enabled"] or desk["picom"]["enabled"])
 
 
 # ---------------------------------------------------------------- state of the session
@@ -160,12 +162,12 @@ def _user_procs(name):
 
 def foreign_xss_lock():
     """xss-lock processes not started by XControl: {pid: command line}."""
-    ours = state().get("xss_lock")
-    return {pid: cmd for pid, cmd in _user_procs("xss-lock").items() if pid != ours}
+    return foreign(["xss-lock"])
 
 
 def session_conflicts():
-    """Lines in the i3 config that would fight with these settings: [(kind, line)]."""
+    """Lines in the i3 config that would fight with these settings: [(kind, line)], kinds
+    wallpaper, lock, bar, compositor and i3bar (an i3 `bar { }` block)."""
     out = []
     for path in (os.path.expanduser("~/.config/i3/config"), os.path.expanduser("~/.i3/config")):
         try:
@@ -175,14 +177,46 @@ def session_conflicts():
             continue
         for line in lines:
             s = line.strip()
+            if re.match(r"^bar\s*\{", s):
+                out.append(("i3bar", s))
+                continue
             if not s.startswith("exec"):
+                continue
+            if "xcontrol" in s:
                 continue
             if re.search(r"\b(feh|nitrogen|xwallpaper|hsetroot|xsetroot\s+-solid)\b|\.fehbg", s):
                 out.append(("wallpaper", s))
             elif re.search(r"\b(xss-lock|xautolock|xidlehook)\b", s):
                 out.append(("lock", s))
+            elif re.search(r"\bpolybar\b|launch\.sh", s):
+                out.append(("bar", s))
+            elif re.search(r"\b(picom|compton|xcompmgr)\b", s):
+                out.append(("compositor", s))
         break
     return out
+
+
+def foreign(names):
+    """Running programs (by name) that XControl's service didn't start: {pid: command line}."""
+    ours = set((state().get("children") or {}).values())
+    out = {}
+    for name in names:
+        out.update({pid: cmd for pid, cmd in _user_procs(name).items() if pid not in ours})
+    return out
+
+
+def stop_foreign(names):
+    """Stop bars or compositors started elsewhere so XControl's can run."""
+    for pid in foreign(names):
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except OSError:
+            pass
+
+
+def child_errors():
+    """{child: last error line} for programs that exited right after starting."""
+    return state().get("errors") or {}
 
 
 def autostart_runs():
@@ -289,6 +323,92 @@ class _RandR:
         return hit
 
 
+class _Child:
+    """A program the service keeps running: restarted when it dies (not faster than every
+    5 s), its stderr kept so the page can say why it stopped."""
+
+    def __init__(self, key, cmd, env=None):
+        self.key, self.cmd, self.env = key, cmd, env or {}
+        self.proc = None
+        self.started = 0.0
+        self.error = ""
+
+    def log_path(self):
+        return _runtime(re.sub(r"[^A-Za-z0-9_.-]", "_", self.key) + ".log")
+
+    def alive(self):
+        return self.proc is not None and self.proc.poll() is None
+
+    def ensure(self):
+        if self.alive():
+            return
+        if self.proc is not None:  # it exited: keep the reason
+            self.error = self._last_error()
+            if time.time() - self.started > 30:
+                self.error = ""  # ran fine for a while; just restart it
+        if time.time() - self.started < 5:
+            return
+        try:
+            log = open(self.log_path(), "w")
+        except OSError:
+            log = subprocess.DEVNULL
+        env = dict(os.environ, **self.env)
+        try:
+            self.proc = subprocess.Popen(self.cmd, env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
+                                         start_new_session=True)
+        except OSError as e:
+            self.proc, self.error = None, str(e)
+        self.started = time.time()
+        if log is not subprocess.DEVNULL:
+            log.close()
+
+    def _last_error(self):
+        try:
+            with open(self.log_path(), errors="replace") as f:
+                lines = [ln.strip() for ln in f if re.search(r"error|fatal|failed|cannot|could not", ln, re.I)]
+        except OSError:
+            lines = []
+        if not lines:
+            return f"exited with status {self.proc.returncode}"
+        # the first error says why; later ones are usually "exiting..."; drop picom/polybar prefixes
+        return re.sub(r"^\[[^\]]*\]\s*|^\w+\|\w+:\s*", "", lines[0])[:200]
+
+    def stop(self):
+        if self.alive():
+            self.proc.terminate()
+            try:
+                self.proc.wait(5)
+            except subprocess.TimeoutExpired:
+                self.proc.kill()
+        self.proc = None
+
+
+def _primary():
+    from . import xrandr
+    try:
+        mons = [m for m in xrandr.query() if m.enabled]
+    except Exception:  # noqa: BLE001
+        return []
+    return [m.name for m in mons if m.primary][:1] or [m.name for m in mons][:1]
+
+
+def wanted_children(desk):
+    """{key: (command, env)} of everything the service should be running now."""
+    out = {}
+    lock = desk["lock"]
+    if lock["enabled"] and shutil.which("xss-lock") and lock["locker"] in installed_lockers():
+        out["xss-lock"] = (xss_lock_command(lock, lock_image_path()), {})
+    if desk["picom"]["enabled"] and shutil.which("picom"):
+        out["picom"] = (compositor.command(), {})
+    b = desk["bar"]
+    if b["enabled"] and shutil.which("polybar"):
+        names = _primary() if b["displays"] == "primary" else [m[0] for m in wallpaper.monitors()]
+        for name in names or [""]:
+            cmd, env = bar.command(name)
+            out[f"bar:{name}"] = (cmd, env)
+    return out
+
+
 def daemon():
     """xcontrol --desktop-daemon"""
     def log(msg):
@@ -308,8 +428,7 @@ def daemon():
     signal.signal(signal.SIGINT, lambda *_a: flags.update(quit=True))
 
     rr = _RandR()
-    st = {"daemon": os.getpid(), "xss_lock": None}
-    child, child_cmd, child_started = None, None, 0.0
+    children = {}
     desk = None
     redraw_at = None
 
@@ -331,16 +450,27 @@ def daemon():
         except Exception as e:  # noqa: BLE001
             log(f"wallpaper: {e}")
 
-    def stop_child():
-        nonlocal child
-        if child and child.poll() is None:
-            child.terminate()
-            try:
-                child.wait(5)
-            except subprocess.TimeoutExpired:
-                child.kill()
-        child = None
-        st["xss_lock"] = None
+    def reconcile(restart=()):
+        """Start, stop or restart children to match the settings (keys in `restart` are
+        restarted even when unchanged, e.g. picom after its config changed)."""
+        want = wanted_children(desk)
+        for key in list(children):
+            c = children[key]
+            if key not in want or (want[key][0], want[key][1]) != (c.cmd, c.env) or key in restart:
+                c.stop()
+                del children[key]
+                log(f"stopped {key}")
+        for key, (cmd, env) in want.items():
+            if key not in children:
+                children[key] = _Child(key, cmd, env)
+
+    def write_configs():
+        changed = set()
+        if desk["picom"]["enabled"] and compositor.write(desk["picom"]):
+            changed.add("picom")      # picom reads its config once; polybar reloads by itself
+        if desk["bar"]["enabled"]:
+            bar.write(desk["bar"])
+        return changed
 
     try:
         while not flags["quit"]:
@@ -352,19 +482,13 @@ def daemon():
                 draw()
                 for cmd in xset_commands(desk):
                     subprocess.run(cmd, capture_output=True)
-                want = None
-                if desk["lock"]["enabled"] and shutil.which("xss-lock") and \
-                        desk["lock"]["locker"] in installed_lockers():
-                    want = xss_lock_command(desk["lock"], lock_image_path())
-                if want != child_cmd:
-                    stop_child()
-                    child_cmd = want
-                    child_started = 0.0
-            if child_cmd and (child is None or child.poll() is not None) and time.time() - child_started > 5:
-                child = subprocess.Popen(child_cmd, stdin=subprocess.DEVNULL)  # restarted if it dies
-                child_started = time.time()
-                st["xss_lock"] = child.pid
-                log(f"started {' '.join(child_cmd)}")
+                reconcile(restart=write_configs())
+            for c in children.values():
+                c.ensure()
+            st = {"daemon": os.getpid(),
+                  "children": {k: c.proc.pid for k, c in children.items() if c.alive()},
+                  "errors": {k: c.error for k, c in children.items() if c.error}}
+            st["xss_lock"] = st["children"].get("xss-lock")
             _write_state(st)
             try:
                 ready, _w, _x = select.select([rr.fd], [], [], 1.0)
@@ -377,8 +501,11 @@ def daemon():
                 redraw_at = None
                 log("screen changed")
                 draw()
+                # bars follow the displays: restart them on any layout change
+                reconcile(restart={k for k in children if k.startswith("bar:")})
     finally:
-        stop_child()
+        for c in children.values():
+            c.stop()
         try:
             os.remove(_runtime("json"))
         except OSError:

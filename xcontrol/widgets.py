@@ -57,3 +57,14 @@ def protect(root):
             setattr(w, _PROTECTED, True)
         if isinstance(w, Gtk.Container):
             stack.extend(w.get_children())
+
+
+def reveal(bar, visible=True):
+    """Show or hide a Gtk.InfoBar that's kept out of show_all() (set_no_show_all): show_all()
+    on such a widget does nothing, so its parts are shown explicitly."""
+    if not visible:
+        bar.hide()
+        return
+    for part in (bar.get_content_area(), bar.get_action_area()):
+        part.show_all()
+    bar.show()
