@@ -90,5 +90,21 @@ g.read(fd)   # end of file: unplugged
 expect("unplugged", g.names(), [])
 g.close()
 
+# virtual pads (made through /dev/uinput) and who could have made them
+proc = os.path.join(tmp, "proc")
+for pid, args, target in (("101", b"python3\0/usr/bin/scc-daemon\0start", "/dev/uinput"),
+                          ("102", b"/usr/bin/foo\0", "/dev/null")):
+    os.makedirs(os.path.join(proc, pid, "fd"))
+    os.symlink(target, os.path.join(proc, pid, "fd", "3"))
+    with open(os.path.join(proc, pid, "cmdline"), "wb") as f:
+        f.write(args)
+expect("uinput users", awake.uinput_users(proc), ["scc-daemon"])
+vsys = os.path.join(tmp, "vsys")
+os.makedirs(os.path.join(tmp, "devices", "virtual", "input", "input9", "event9"))
+os.makedirs(vsys)
+os.symlink(os.path.join(tmp, "devices", "virtual", "input", "input9", "event9"), os.path.join(vsys, "event9"))
+expect("virtual", awake.is_virtual("/dev/input/event9", vsys), True)
+expect("not virtual", awake.is_virtual("/dev/input/event5", sysroot), False)
+
 print("check_awake:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

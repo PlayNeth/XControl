@@ -68,6 +68,19 @@ def _hex(rgba):
     return "#{:02x}{:02x}{:02x}".format(*(round(v * 255) for v in (rgba.red, rgba.green, rgba.blue)))
 
 
+def _pad_name(p):
+    """A watched gamepad as the page shows it; virtual ones say what probably made them."""
+    if isinstance(p, str):
+        return p
+    name = p.get("name", "?")
+    if not p.get("virtual"):
+        return name
+    makers = p.get("makers") or []
+    if makers:
+        return _("{name} (virtual, made by {programs})").format(name=name, programs=" or ".join(makers))
+    return _("{name} (virtual, made by a system service)").format(name=name)
+
+
 def _minutes(n):
     return _("Never") if n == 0 else (_("{n} minute") if n == 1 else _("{n} minutes")).format(n=n)
 
@@ -301,7 +314,7 @@ class DesktopPage(Gtk.Box):
         pads, denied = info.get("gamepads") or [], info.get("denied") or []
         notes = []
         if a["gamepads"] and running:
-            notes.append(_("Watching: {names}.").format(names=", ".join(pads)) if pads else
+            notes.append(_("Watching: {names}.").format(names=", ".join(_pad_name(p) for p in pads)) if pads else
                          _("No gamepad connected right now; they're picked up when plugged in."))
             if denied:
                 notes.append(_("No permission to read: {names}. Your user needs read access to its "

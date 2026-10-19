@@ -16,6 +16,7 @@ import ctypes.util
 import glob
 import json
 import os
+import re
 import struct
 import time
 
@@ -118,6 +119,40 @@ def device_name(dev, sysroot="/sys/class/input"):
         return os.path.basename(dev)
 
 
+def is_virtual(dev, sysroot="/sys/class/input"):
+    """Made by a program through /dev/uinput (Steam Input, sc-controller, xboxdrv, input-remapper...),
+    not a device plugged in."""
+    return "/devices/virtual/" in os.path.realpath(os.path.join(sysroot, os.path.basename(dev)))
+
+
+_INTERPRETERS = {"python", "python3", "perl", "ruby", "node", "sh", "bash"}
+
+
+def uinput_users(proc="/proc"):
+    """Programs of this user that hold /dev/uinput open: the ones that can make virtual devices.
+    (System services run as root and can't be seen from here.)"""
+    names = []
+    for d in glob.glob(os.path.join(proc, "[0-9]*")):
+        try:
+            if os.stat(d).st_uid != os.getuid():
+                continue
+            if not any(os.readlink(os.path.join(d, "fd", fd)) == "/dev/uinput"
+                       for fd in os.listdir(os.path.join(d, "fd"))):
+                continue
+            with open(os.path.join(d, "cmdline"), "rb") as f:
+                args = [a.decode(errors="replace") for a in f.read().split(b"\0") if a]
+        except OSError:
+            continue
+        if not args:
+            continue
+        prog = os.path.basename(args[0])
+        if re.sub(r"[\d.]+$", "", prog) in _INTERPRETERS:   # python3 /usr/bin/scc-daemon -> scc-daemon
+            prog = next((os.path.basename(a) for a in args[1:] if not a.startswith("-")), prog)
+        if prog not in names:
+            names.append(prog)
+    return names
+
+
 class Gamepads:
     """Watch every gamepad/joystick event device; rescans for new ones every few seconds."""
 
@@ -130,6 +165,16 @@ class Gamepads:
 
     def names(self):
         return sorted({n for _p, n, _a in self.open.values()})
+
+    def details(self):
+        """[{"name", "path", "virtual", "makers"}] of the watched devices, for the page."""
+        out, makers = [], None
+        for p, n, _a in sorted(self.open.values()):
+            virtual = is_virtual(p, self.sysroot)
+            if virtual and makers is None:
+                makers = uinput_users()
+            out.append({"name": n, "path": p, "virtual": virtual, "makers": makers if virtual else []})
+        return out
 
     def rescan(self, force=False):
         if not force and time.time() - self.scanned < 3:

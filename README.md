@@ -386,6 +386,8 @@ Remove any `exec xss-lock …` line from your i3 config, or two lockers will sta
   and wakes a screen that's off. Every device udev marks as a joystick is watched, including ones
   plugged in later; motion sensors and touchpads of controllers are ignored. It reads
   `/dev/input/event*`, which the logged-in user can normally read already.
+  Virtual pads that programs create (Steam Input, sc-controller, xboxdrv, input-remapper) are
+  marked as such on the page, with the program that probably made them.
 - **Apps can keep it on**: XControl answers `org.freedesktop.ScreenSaver` on the session bus, so
   Steam, browsers, video players and SDL games that ask for the screen to stay on get their
   way while they play (and the request ends when the app quits). A desktop's own power manager

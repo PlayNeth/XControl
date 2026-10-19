@@ -551,7 +551,7 @@ def daemon():
             st = {"daemon": os.getpid(),
                   "children": {k: c.proc.pid for k, c in children.items() if c.alive()},
                   "errors": {k: c.error for k, c in children.items() if c.error},
-                  "awake": {"reasons": reasons, "gamepads": pads.names() if pads else [],
+                  "awake": {"reasons": reasons, "gamepads": pads.details() if pads else [],
                             "denied": sorted(set(pads.denied.values())) if pads else [],
                             "last_gamepad": pads.last if pads else 0,
                             "service": ("" if inhibit is None else "ok" if inhibit.owned else

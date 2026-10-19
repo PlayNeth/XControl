@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.20.1 (2026-10-19)
+
+**Show which watched gamepads are virtual and what made them**
+
+- Mark virtual gamepads (made by Steam Input, sc-controller, xboxdrv,
+  input-remapper and the like) in the Desktop page's list of watched devices
+- Name the program that probably created a virtual pad, or say it came from a
+  system service when it can't be seen
+
 ## 0.20.0 (2026-10-19)
 
 **Add a Notifications page and options to keep the screen on**
