@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.13.2 (2026-10-19)
+
+**Let the window be narrower by scrolling pages sideways**
+
+- Fix pages and dialogs forcing a wide window: the Gaming, Displays, Input, Appearance and
+  System pages, display details and the resolution, EDID and module parameter dialogs
+  now scroll sideways when the window is too narrow
+- Make the Kernel modules list narrower by default and scroll the whole tab sideways when
+  the details pane would get too small
+
 ## 0.13.1 (2026-10-19)
 
 **Warn on the Appearance page about leftover gtk.css overrides**

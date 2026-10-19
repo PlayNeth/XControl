@@ -69,7 +69,7 @@ class ResolutionsDialog(Gtk.Dialog):
         self.limits = self._edid_limits()
 
         area = self.get_content_area()
-        outer = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        outer = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         outer.set_propagate_natural_height(True)
         outer.set_max_content_height(max(320, _work_area_height(page.window) - 140))
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, border_width=16)

@@ -18,10 +18,14 @@ class SystemPage(Gtk.Box):
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         switcher = Gtk.StackSwitcher(stack=stack, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=4)
         self.pack_start(switcher, False, False, 0)
-        overview = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True)
+        overview = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         overview.add(OverviewTab(window))
         stack.add_titled(overview, "overview", _("Overview"))
-        stack.add_titled(ModulesTab(window), "modules", _("Kernel modules"))
+        # the tab fills the height itself (its lists scroll); scroll sideways when the window is narrow
+        modules = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                                     vscrollbar_policy=Gtk.PolicyType.NEVER)
+        modules.add(ModulesTab(window))
+        stack.add_titled(modules, "modules", _("Kernel modules"))
         self.pack_start(stack, True, True, 0)
 
 
@@ -209,20 +213,21 @@ class ModulesTab(Gtk.Box):
             self.view.append_column(column)
         sorted_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
         self.view.get_selection().connect("changed", self._selected)
-        left = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        left = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         left.set_shadow_type(Gtk.ShadowType.IN)
-        left.set_size_request(320, -1)
+        left.set_min_content_width(220)
         left.add(self.view)
 
         self.details = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, border_width=14)
-        right = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        right = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         right.set_shadow_type(Gtk.ShadowType.IN)
+        right.set_min_content_width(380)  # below this the whole tab scrolls sideways instead
         right.add(self.details)
 
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL, vexpand=True)
         paned.pack1(left, False, False)
         paned.pack2(right, True, False)
-        paned.set_position(340)
+        paned.set_position(300)
         self.pack_start(paned, True, True, 0)
         self.count = Gtk.Label(xalign=0)
         self.count.get_style_context().add_class("dim-label")

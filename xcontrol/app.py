@@ -42,19 +42,19 @@ class MainWindow(Gtk.ApplicationWindow):
         sidebar = Gtk.StackSidebar(stack=stack)
         sidebar.set_size_request(170, -1)
 
-        gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         gaming.add(GamingPage(self))
         stack.add_titled(gaming, "gaming", _("Gaming"))
 
-        displays = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        displays = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         displays.add(DisplayPage(self))
         stack.add_titled(displays, "displays", _("Displays"))
 
-        inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         inputs.add(InputPage(self))
         stack.add_titled(inputs, "input", _("Input"))
 
-        appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         appearance.add(AppearancePage(self))
         stack.add_titled(appearance, "appearance", _("Appearance"))
 
@@ -98,7 +98,7 @@ class MainWindow(Gtk.ApplicationWindow):
         dlg.add_button(_("Close"), Gtk.ResponseType.CLOSE)
         area = self.get_display().get_monitor_at_window(self.get_window()).get_workarea()
         dlg.set_default_size(min(900, area.width - 60), min(700, area.height - 80))
-        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True)
+        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         sw.add(MonitorsPage(self, only=output_name))
         dlg.get_content_area().pack_start(sw, True, True, 0)
         dlg.show_all()

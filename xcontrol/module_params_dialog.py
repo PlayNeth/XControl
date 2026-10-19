@@ -81,7 +81,7 @@ class ModuleParamsDialog(Gtk.Dialog):
             note.set_margin_bottom(6)
             grid.attach(note, 1, r + 1, 2, 1)
             r += 2
-        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True)
+        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         sw.add(grid)
         box.pack_start(sw, True, True, 0)
 
