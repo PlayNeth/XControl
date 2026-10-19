@@ -2,6 +2,28 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.18.0 (2026-10-19)
+
+**Add per-module settings and extra polybar options to the bar**
+
+- Add a gear button to every bar module that opens its own settings, replacing
+  the shared "Module options" section
+- Add i3 workspace settings: name or number, only this display's workspaces,
+  urgent ones from other displays, hiding numbers, sorting, click and scroll,
+  a separator, spacing and colors for each workspace state and for i3 modes
+- Add settings for the other modules: title length, clock formats and color,
+  memory as percent or amount, network address, speed or name, temperature in
+  °C or °F, volume step and right-click command, keyboard layout and Caps Lock
+  display, tray spacing and icon size
+- Add bar height in pixels or points, rounded corners, the text between
+  modules, and scrolling anywhere on the bar to switch workspaces
+- Add second accent and highlight colors (Caps Lock indicator, current workspace)
+- Add "Extra polybar settings" for the bar and each module: key = value lines
+  that are added to the generated config and override XControl's own
+- Use polybar's usual section names ([module/i3], [module/date]...) in the
+  generated file
+- Keep clock, temperature warning and disk settings made in earlier versions
+
 ## 0.17.1 (2026-10-19)
 
 **Fix bar clock showing dates in English and add a clock language**

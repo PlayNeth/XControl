@@ -63,17 +63,17 @@ bar = cfg["bar/xcontrol"]
 expect("position/height", (bar["bottom"], bar["height"]), ("false", "30"))
 expect("font", bar["font-0"], '"Inter Medium:size=11;4"')
 expect("module lists", (bar["modules-left"], bar["modules-center"], bar["modules-right"]),
-       ("workspaces", "clock", "temperature battery network tray"))
+       ("i3", "date", "temperature battery network systray"))
 expect("disabled module not defined", "module/cpu" in cfg, False)
 expect("see-through background", cfg["colors"]["background"], "#cc282a2e")
 expect("temperature from k10temp", cfg["module/temperature"]["hwmon-path"],
        os.path.realpath(os.path.join(tmp, "sys/class/hwmon/hwmon3/temp1_input")))
 expect("battery names", (cfg["module/battery"]["battery"], cfg["module/battery"]["adapter"]), ("BAT1", "AC0"))
 expect("network kind of the connected interface", cfg["module/network"]["interface-type"], "wired")
-expect("tray module on 3.7", cfg["module/tray"]["type"], "internal/tray")
+expect("tray module on 3.7", cfg["module/systray"]["type"], "internal/tray")
 expect("per-display bars", bar["monitor"], "${env:MONITOR:}")
 old = ini(B.generate(b, ver=(3, 6), nerd="", root=root, has_pavu=False))
-expect("tray on older polybar", ("tray-position" in old["bar/xcontrol"], "tray" in old["bar/xcontrol"]["modules-right"]),
+expect("tray on older polybar", ("tray-position" in old["bar/xcontrol"], "systray" in old["bar/xcontrol"]["modules-right"]),
        (True, False))
 icons = B.generate(B.normalize({"labels": "icons"}), ver=(3, 7), nerd="Symbols Nerd Font Mono", root=root,
                    has_pavu=False)
@@ -99,6 +99,52 @@ expect("dates follow the system language (set on the bar)", barsec.get("locale")
 barsec = ini(B.generate(B.normalize({"clock_locale": "en_GB.UTF-8"}), ver=(3, 7), nerd="", root=root,
                         has_pavu=False))["bar/xcontrol"]
 expect("chosen clock language", barsec.get("locale"), "en_GB.UTF-8")
+
+# ---- every module's options, the i3 module in full, extra lines
+full = B.normalize({
+    "height": 21, "height_unit": "pt", "radius": 6, "separator": " | ", "scroll_workspaces": True,
+    "modules": [["workspaces", "left", True], ["title", "left", True], ["keyboard", "right", True],
+                ["memory", "right", True], ["volume", "right", True], ["tray", "right", True], ["clock", "right", True]],
+    "options": {"workspaces": {"label": "index", "strip_wsnumbers": True, "separator": "|", "focused_fg": "#ffffff",
+                               "focused_bg": "#3f3f3f", "focused_underline": "#fba922", "visible_underline": "#555555",
+                               "urgent_fg": "#000000", "urgent_bg": "#bd2c40", "mode_bg": "#e60053", "bogus": 1},
+                "title": {"max_length": 30}, "keyboard": {"show_layout": False},
+                "volume": {"right_click": "alacritty -e wiremix", "step": 2}, "memory": {"show": "amount"},
+                "tray": {"spacing": 8, "margin": 4}, "clock": {"format": "%H:%M ", "alt": "%a, %d. %b  %H:%M "}},
+    "extra": {"workspaces": "fuzzy-match = true\nlabel-focused-padding = 2\n; a comment",
+              "bar": "cursor-scroll = ns-resize", "nonsense": "x = 1"}})
+cfg = ini(B.generate(full, ver=(3, 7), nerd="", root=root, has_pavu=False))
+bar = cfg["bar/xcontrol"]
+expect("height in points, radius", (bar["height"], bar["radius"]), ("21pt", "6"))
+expect("separator with spaces kept", bar["separator"], '" | "')
+expect("bar scroll switches workspaces", bar["scroll-down"], "i3-msg -q workspace next_on_output")
+expect("bar extra replaces the generated line", bar["cursor-scroll"], "ns-resize")
+i3 = cfg["module/i3"]
+expect("i3 type", i3["type"], "internal/i3")
+expect("i3 labels by number", (i3["label-focused"], i3["label-urgent"]), ("%index%", "%index%"))
+expect("i3 parameters", (i3["strip-wsnumbers"], i3["show-urgent"], i3["pin-workspaces"], i3["wrapping-scroll"],
+                          i3["format"], i3["label-separator"]),
+       ("true", "true", "true", "false", "<label-state> <label-mode>", "|"))
+expect("i3 colors", (i3["label-focused-foreground"], i3["label-focused-background"], i3["label-focused-underline"],
+                     i3["label-visible-underline"], i3["label-urgent-foreground"], i3["label-urgent-background"],
+                     i3["label-mode-background"]),
+       ("#ffffff", "#3f3f3f", "#fba922", "#555555", "#000000", "#bd2c40", "#e60053"))
+expect("module extra wins and adds", (i3["label-focused-padding"], i3["fuzzy-match"]), ("2", "true"))
+expect("unknown option ignored", "bogus" in str(i3), False)
+expect("title length", cfg["module/title"]["label-maxlen"], "30")
+expect("keyboard: indicators only", cfg["module/xkeyboard"]["label-layout"], "")
+expect("volume", (cfg["module/pulseaudio"]["click-right"], cfg["module/pulseaudio"]["interval"]),
+       ("alacritty -e wiremix", "2"))
+expect("memory as amount", cfg["module/memory"]["label"], "%gb_used%/%gb_total%")
+expect("tray spacing", (cfg["module/systray"]["tray-spacing"], cfg["module/systray"]["format-margin"]), ("8pt", "4pt"))
+expect("clock format keeps its trailing space (quoted)", cfg["module/date"]["date"], '"%H:%M "')
+expect("extras for unknown sections dropped", "nonsense" in full["extra"], False)
+legacy = B.normalize({"clock_format": "%H.%M", "temp_warn": 70, "disk_mount": "/home"})
+expect("pre-0.18 settings carried over", (B.module_options(legacy, "clock")["format"],
+                                          B.module_options(legacy, "temperature")["warn"],
+                                          B.module_options(legacy, "disk")["mount"]), ("%H.%M", 70, "/home"))
+expect("defaults stay neutral", (B.module_options(B.normalize({}), "workspaces")["label"],
+                                 B.module_options(B.normalize({}), "workspaces")["focused_fg"]), ("name", ""))
 
 # ---- picom
 p = C.normalize({"backend": "glx", "blur": "medium", "corner_radius": 8, "inactive_opacity": 85,

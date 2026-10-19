@@ -138,7 +138,15 @@ class PanelPage(Gtk.Box):
         self.height.connect("value-changed", self._changed)
         hb = Gtk.Box(spacing=6)
         hb.pack_start(self.height, False, False, 0)
-        hb.pack_start(Gtk.Label(label=_("pixels")), False, False, 0)
+        self.height_unit = Gtk.ComboBoxText()
+        self.height_unit.append("px", _("pixels"))
+        self.height_unit.append("pt", _("points"))
+        self.height_unit.connect("changed", self._changed)
+        hb.pack_start(self.height_unit, False, False, 0)
+        hb.pack_start(Gtk.Label(label=_("Rounded corners")), False, False, 12)
+        self.radius = Gtk.SpinButton.new_with_range(0, 30, 1)
+        self.radius.connect("value-changed", self._changed)
+        hb.pack_start(self.radius, False, False, 0)
         self._row(g, 1, _("Height"), hb)
         self.displays = Gtk.ComboBoxText()
         self.displays.append("all", _("Every display"))
@@ -157,67 +165,53 @@ class PanelPage(Gtk.Box):
         g.attach(_hint(_("Icons use {font}.").format(font=self.nerd) if self.nerd else
                        _("No Nerd Font is installed (e.g. ttf-nerd-fonts-symbols), so labels are words.")),
                  1, 5, 1, 1)
-
-        g = _section(box, _("Colors"))
-        self.bar_widgets.append(g)
-        self.colors = {}
-        for r, (key, label) in enumerate((("background", _("Background")), ("foreground", _("Text")),
-                                          ("accent", _("Accent (labels, current workspace)")),
-                                          ("urgent", _("Urgent")), ("dim", _("Dim (separators)")))):
-            btn = Gtk.ColorButton(halign=Gtk.Align.START)
-            btn.set_use_alpha(False)
-            btn.connect("color-set", self._changed)
-            self.colors[key] = btn
-            self._row(g, r, label, btn)
-        self.opacity = _scale(0, 100, 5)
-        self.opacity.connect("value-changed", self._changed)
-        self._row(g, 5, _("Background opacity"), self.opacity)
-        g.attach(_hint(_("Below 100 the bar is see-through when a compositor runs (see the other tab).")),
-                 1, 6, 1, 1)
-
-        g = _section(box, _("Modules"))
-        self.bar_widgets.append(g)
-        g.attach(_hint(_("Tick what the bar shows, pick its side, and use the arrows to change the order.")),
-                 0, 0, 2, 1)
-        self.mod_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
-        frame = Gtk.Frame()
-        frame.add(self.mod_list)
-        g.attach(frame, 0, 1, 2, 1)
-
-        g = _section(box, _("Module options"))
-        self.bar_widgets.append(g)
-        self.clock = Gtk.ComboBoxText.new_with_entry()
-        for f in B.CLOCK_FORMATS:
-            self.clock.append(f, f)
-        self.clock.connect("changed", self._changed)
-        self._row(g, 0, _("Clock format"), self.clock)
-        self.clock_alt = Gtk.Entry()
-        self.clock_alt.connect("changed", self._changed)
-        self._row(g, 1, _("After a click"), self.clock_alt)
-        g.attach(_hint(_("%H hours, %M minutes, %S seconds, %a weekday, %d day, %b month, %Y year "
-                         "(like the date command).")), 1, 2, 1, 1)
+        self.separator = Gtk.Entry(width_chars=6, halign=Gtk.Align.START)
+        self.separator.set_tooltip_text(_("Spaces count: \" | \" keeps a space on each side. Empty: none."))
+        self.separator.connect("changed", self._changed)
+        self._row(g, 6, _("Between modules"), self.separator)
+        self.scroll_ws = Gtk.CheckButton(label=_("Scrolling anywhere on the bar switches workspaces"))
+        self.scroll_ws.connect("toggled", self._changed)
+        g.attach(self.scroll_ws, 1, 7, 1, 1)
         self.clock_locale = Gtk.ComboBoxText()
         sys_loc = B.system_locale()
         self.clock_locale.append("", _("Same as the system ({locale})").format(locale=sys_loc or "C"))
         for loc in B.locales():
             self.clock_locale.append(loc, loc)
         self.clock_locale.connect("changed", self._changed)
-        self._row(g, 5, _("Clock language"), self.clock_locale)
-        self.temp_warn = Gtk.SpinButton.new_with_range(40, 110, 1)
-        self.temp_warn.connect("value-changed", self._changed)
-        tb = Gtk.Box(spacing=6)
-        tb.pack_start(self.temp_warn, False, False, 0)
-        tb.pack_start(Gtk.Label(label="°C"), False, False, 0)
-        self._row(g, 3, _("Temperature warning at"), tb)
-        self.disk = Gtk.ComboBoxText.new_with_entry()
-        try:
-            from . import sysinfo
-            for m in sysinfo.mounts():
-                self.disk.append(m.target, m.target)
-        except Exception:  # noqa: BLE001
-            self.disk.append("/", "/")
-        self.disk.connect("changed", self._changed)
-        self._row(g, 4, _("Disk to show"), self.disk)
+        self._row(g, 8, _("Clock language"), self.clock_locale)
+        more = Gtk.Button(label=_("Extra bar settings…"), halign=Gtk.Align.START)
+        more.connect("clicked", lambda *_a: self._module_settings(None, "bar"))
+        g.attach(more, 1, 9, 1, 1)
+
+        g = _section(box, _("Colors"))
+        self.bar_widgets.append(g)
+        self.colors = {}
+        for r, (key, label) in enumerate((("background", _("Background")), ("foreground", _("Text")),
+                                          ("accent", _("Accent (labels, current workspace)")),
+                                          ("secondary", _("Second accent (Caps Lock)")),
+                                          ("highlight", _("Highlight (current workspace)")),
+                                          ("urgent", _("Urgent")), ("dim", _("Dim (separators)")))):
+            btn = Gtk.ColorButton(halign=Gtk.Align.START)
+            btn.set_use_alpha(False)
+            if key == "highlight":  # automatic until picked: follows the background and text colors
+                btn.connect("color-set", lambda *_a: setattr(self, "_highlight_set", True))
+            btn.connect("color-set", self._changed)
+            self.colors[key] = btn
+            self._row(g, r, label, btn)
+        self.opacity = _scale(0, 100, 5)
+        self.opacity.connect("value-changed", self._changed)
+        self._row(g, 7, _("Background opacity"), self.opacity)
+        g.attach(_hint(_("Below 100 the bar is see-through when a compositor runs (see the other tab).")),
+                 1, 8, 1, 1)
+
+        g = _section(box, _("Modules"))
+        self.bar_widgets.append(g)
+        g.attach(_hint(_("Tick what the bar shows, pick its side, use the arrows to change the order, and the "
+                         "gear for each module's settings.")), 0, 0, 2, 1)
+        self.mod_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
+        frame = Gtk.Frame()
+        frame.add(self.mod_list)
+        g.attach(frame, 0, 1, 2, 1)
 
         self.bar_conflicts = _hint("")
         self.bar_conflicts.set_no_show_all(True)
@@ -251,6 +245,11 @@ class PanelPage(Gtk.Box):
             combo.set_active_id(pos)
             combo.connect("changed", self._module_side, mid)
             box.pack_start(combo, False, False, 0)
+            gear = Gtk.Button.new_from_icon_name("emblem-system-symbolic", Gtk.IconSize.BUTTON)
+            gear.set_relief(Gtk.ReliefStyle.NONE)
+            gear.set_tooltip_text(_("Settings of this module"))
+            gear.connect("clicked", self._module_settings, mid)
+            box.pack_start(gear, False, False, 0)
             for icon, delta in (("go-up-symbolic", -1), ("go-down-symbolic", 1)):
                 btn = Gtk.Button.new_from_icon_name(icon, Gtk.IconSize.BUTTON)
                 btn.set_relief(Gtk.ReliefStyle.NONE)
@@ -264,6 +263,15 @@ class PanelPage(Gtk.Box):
             self.mod_list.add(row)
         self.mod_list.show_all()
         widgets.protect(self.mod_list)
+
+    def _module_settings(self, _btn, mid):
+        from .bar_module_dialog import ModuleDialog
+        title = _("Bar settings") if mid == "bar" else _("{module} settings").format(module=_(MODULE_LABELS[mid][0]))
+        dlg = ModuleDialog(self.window, self.desk["bar"], mid, title)
+        if dlg.run() == Gtk.ResponseType.OK:
+            dlg.save()
+            self._commit_later()
+        dlg.destroy()
 
     def _module_toggled(self, check, mid):
         for m in self.desk["bar"]["modules"]:
@@ -371,12 +379,14 @@ class PanelPage(Gtk.Box):
         self.labels_combo.set_active_id(b["labels"] if self.nerd else "words")
         self.labels_combo.set_sensitive(bool(self.nerd))
         for key, btn in self.colors.items():
-            btn.set_rgba(_rgba(b[key]))
+            btn.set_rgba(_rgba(b[key] or (B._mix(b["background"], b["foreground"], 0.12) if key == "highlight"
+                                          else "#000000")))
+        self._highlight_set = bool(b["highlight"])
         self.opacity.set_value(b["opacity"])
-        self.clock.get_child().set_text(b["clock_format"])
-        self.clock_alt.set_text(b["clock_alt"])
-        self.temp_warn.set_value(b["temp_warn"])
-        self.disk.get_child().set_text(b["disk_mount"])
+        self.height_unit.set_active_id(b["height_unit"])
+        self.radius.set_value(b["radius"])
+        self.separator.set_text(b["separator"])
+        self.scroll_ws.set_active(b["scroll_workspaces"])
         if not self.clock_locale.set_active_id(b["clock_locale"]):
             self.clock_locale.append(b["clock_locale"], b["clock_locale"])
             self.clock_locale.set_active_id(b["clock_locale"])
@@ -418,12 +428,12 @@ class PanelPage(Gtk.Box):
         b["font"] = self.font.get_font() or b["font"]
         b["labels"] = self.labels_combo.get_active_id() or "words"
         for key, btn in self.colors.items():
-            b[key] = _hex(btn.get_rgba())
+            b[key] = _hex(btn.get_rgba()) if key != "highlight" or self._highlight_set else ""
         b["opacity"] = int(self.opacity.get_value())
-        b["clock_format"] = self.clock.get_child().get_text().strip() or "%H:%M"
-        b["clock_alt"] = self.clock_alt.get_text().strip() or "%a %d %b %Y"
-        b["temp_warn"] = int(self.temp_warn.get_value())
-        b["disk_mount"] = self.disk.get_child().get_text().strip() or "/"
+        b["height_unit"] = self.height_unit.get_active_id() or "px"
+        b["radius"] = int(self.radius.get_value())
+        b["separator"] = self.separator.get_text()
+        b["scroll_workspaces"] = self.scroll_ws.get_active()
         b["clock_locale"] = self.clock_locale.get_active_id() or ""
         p["enabled"] = self.pic_switch.get_active()
         p["backend"] = self.backend.get_active_id() or "glx"
