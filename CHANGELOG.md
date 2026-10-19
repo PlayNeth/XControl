@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.11.2 (2026-10-19)
+
+**Fix the dark preference being ignored by GTK 4.20 and later**
+
+- Fix GTK 4.20+ apps ignoring Prefer dark: write gtk-interface-color-scheme to the GTK 4
+  settings file when that GTK version is installed (older GTK 4 is left alone)
+- Note that open GTK 4 apps switch between light and dark only when they restart
+- Add tests for the new GTK 4 setting
+
 ## 0.11.1 (2026-10-19)
 
 **Fix theme changes not reaching open apps with a custom xsettingsd config**

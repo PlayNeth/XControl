@@ -93,6 +93,7 @@ class AppearancePage(Gtk.Box):
         self.theme = Gtk.ComboBoxText(hexpand=True)
         self.theme.connect("changed", self._changed)
         self.dark = Gtk.CheckButton(label=_("Prefer dark (apps that offer a dark variant, libadwaita apps too)"))
+        self.dark.set_tooltip_text(_("Open GTK 4 apps switch between light and dark when they restart."))
         self.dark.connect("toggled", self._changed)
         self.theme_note = _hint("")
         self.theme_note.set_no_show_all(True)

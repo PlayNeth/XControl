@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:25-0300\n"
+"POT-Creation-Date: 2026-10-19 13:38-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -41,7 +41,7 @@ msgstr "Sistema"
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:100 xcontrol/appearance_page.py:351
+#: xcontrol/app.py:100 xcontrol/appearance_page.py:352
 #: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr "Fechar"
@@ -227,36 +227,42 @@ msgstr ""
 "Preferir escuro (aplicativos com variante escura, inclusive os de "
 "libadwaita)"
 
-#: xcontrol/appearance_page.py:99
+#: xcontrol/appearance_page.py:96
+msgid "Open GTK 4 apps switch between light and dark when they restart."
+msgstr ""
+"Aplicativos GTK 4 abertos alternam entre claro e escuro quando são "
+"reiniciados."
+
+#: xcontrol/appearance_page.py:100
 msgid "Theme"
 msgstr "Tema"
 
-#: xcontrol/appearance_page.py:103
+#: xcontrol/appearance_page.py:104
 msgid "Icons"
 msgstr "Ícones"
 
-#: xcontrol/appearance_page.py:112
+#: xcontrol/appearance_page.py:113
 msgid "Icon theme"
 msgstr "Tema de ícones"
 
-#: xcontrol/appearance_page.py:116
+#: xcontrol/appearance_page.py:117
 msgid "Cursor"
 msgstr "Cursor"
 
-#: xcontrol/appearance_page.py:121 xcontrol/appearance_page.py:232
+#: xcontrol/appearance_page.py:122 xcontrol/appearance_page.py:233
 #, python-brace-format
 msgid "{px} px"
 msgstr "{px} px"
 
-#: xcontrol/appearance_page.py:125
+#: xcontrol/appearance_page.py:126
 msgid "Size"
 msgstr "Tamanho"
 
-#: xcontrol/appearance_page.py:127
+#: xcontrol/appearance_page.py:128
 msgid "Cursor theme"
 msgstr "Tema do cursor"
 
-#: xcontrol/appearance_page.py:128
+#: xcontrol/appearance_page.py:129
 msgid ""
 "i3 and other window managers load the cursor when they start; restart them "
 "(i3: Mod+Shift+R) to see it on the desktop and window borders."
@@ -265,36 +271,36 @@ msgstr ""
 "reinicie-os (i3: Mod+Shift+R) para vê-lo na área de trabalho e nas bordas "
 "das janelas."
 
-#: xcontrol/appearance_page.py:133
+#: xcontrol/appearance_page.py:134
 msgid "Fonts"
 msgstr "Fontes"
 
-#: xcontrol/appearance_page.py:137
+#: xcontrol/appearance_page.py:138
 msgid "Smooth edges (antialiasing)"
 msgstr "Suavizar bordas (antialiasing)"
 
-#: xcontrol/appearance_page.py:147
+#: xcontrol/appearance_page.py:148
 msgid "Interface font"
 msgstr "Fonte da interface"
 
-#: xcontrol/appearance_page.py:148
+#: xcontrol/appearance_page.py:149
 msgid "Hinting"
 msgstr "Hinting"
 
-#: xcontrol/appearance_page.py:148
+#: xcontrol/appearance_page.py:149
 msgid "Subpixel order"
 msgstr "Ordem dos subpixels"
 
-#: xcontrol/appearance_page.py:153
+#: xcontrol/appearance_page.py:154
 msgid "Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"
 msgstr ""
 "Aplicar também o tema de ícones e a fonte aos aplicativos Qt (qt5ct/qt6ct)"
 
-#: xcontrol/appearance_page.py:157 xcontrol/appearance_page.py:163
+#: xcontrol/appearance_page.py:158 xcontrol/appearance_page.py:164
 msgid "Qt applications"
 msgstr "Aplicativos Qt"
 
-#: xcontrol/appearance_page.py:158
+#: xcontrol/appearance_page.py:159
 #, python-brace-format
 msgid ""
 "Qt apps take their colors, icons and font from the GTK settings above, "
@@ -303,12 +309,12 @@ msgstr ""
 "Os aplicativos Qt pegam cores, ícones e fonte das configurações GTK acima, "
 "porque QT_QPA_PLATFORMTHEME={value}. Não é preciso mais nada."
 
-#: xcontrol/appearance_page.py:164
+#: xcontrol/appearance_page.py:165
 #, python-brace-format
 msgid "Qt apps follow this because QT_QPA_PLATFORMTHEME={value}."
 msgstr "Os aplicativos Qt seguem isto porque QT_QPA_PLATFORMTHEME={value}."
 
-#: xcontrol/appearance_page.py:166
+#: xcontrol/appearance_page.py:167
 msgid ""
 "Qt apps only use these settings when QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) "
 "is set in your session, e.g. in ~/.xprofile. It isn't set now."
@@ -317,16 +323,16 @@ msgstr ""
 " (ou qt6ct) está definido na sessão, por exemplo em ~/.xprofile. No momento "
 "não está."
 
-#: xcontrol/appearance_page.py:175 xcontrol/display_page.py:614
+#: xcontrol/appearance_page.py:176 xcontrol/display_page.py:614
 msgid "Revert"
 msgstr "Reverter"
 
-#: xcontrol/appearance_page.py:178 xcontrol/display_page.py:262
+#: xcontrol/appearance_page.py:179 xcontrol/display_page.py:262
 #: xcontrol/input_page.py:212
 msgid "Apply"
 msgstr "Aplicar"
 
-#: xcontrol/appearance_page.py:183
+#: xcontrol/appearance_page.py:184
 msgid ""
 "Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
 "cursors, libadwaita's dark preference and Qt, and updates open apps."
@@ -335,15 +341,15 @@ msgstr ""
 "2, 3 e 4, cursores do X, preferência escura da libadwaita e Qt, e atualiza "
 "os aplicativos abertos."
 
-#: xcontrol/appearance_page.py:188
+#: xcontrol/appearance_page.py:189
 msgid "An app ignores the theme?"
 msgstr "Um aplicativo ignora o tema?"
 
-#: xcontrol/appearance_page.py:189 xcontrol/appearance_page.py:342
+#: xcontrol/appearance_page.py:190 xcontrol/appearance_page.py:343
 msgid "Check an app…"
 msgstr "Verificar um aplicativo…"
 
-#: xcontrol/appearance_page.py:192
+#: xcontrol/appearance_page.py:193
 msgid ""
 "Click the button, then click the app's window. XControl looks at how the app"
 " runs and tells you why it doesn't follow the theme."
@@ -351,7 +357,7 @@ msgstr ""
 "Clique no botão e depois na janela do aplicativo. O XControl examina como "
 "ele roda e explica por que ele não segue o tema."
 
-#: xcontrol/appearance_page.py:247
+#: xcontrol/appearance_page.py:248
 msgid ""
 "This theme isn't in any theme folder (it may be built into a program), so "
 "other apps probably can't find it. Pick one from the list."
@@ -360,7 +366,7 @@ msgstr ""
 "programa), então outros aplicativos provavelmente não o encontram. Escolha "
 "um da lista."
 
-#: xcontrol/appearance_page.py:251
+#: xcontrol/appearance_page.py:252
 #, python-brace-format
 msgid ""
 "This theme has no version for {kits}; apps using those keep their default "
@@ -369,18 +375,18 @@ msgstr ""
 "Este tema não tem versão para {kits}; aplicativos que usam esses mantêm a "
 "aparência padrão."
 
-#: xcontrol/appearance_page.py:259
+#: xcontrol/appearance_page.py:260
 msgid "Open apps update right away (xsettingsd is running)."
 msgstr ""
 "Os aplicativos abertos são atualizados na hora (o xsettingsd está rodando)."
 
-#: xcontrol/appearance_page.py:261
+#: xcontrol/appearance_page.py:262
 msgid "Open apps update right away through your desktop's settings service."
 msgstr ""
 "Os aplicativos abertos são atualizados na hora pelo serviço de configurações"
 " do seu ambiente."
 
-#: xcontrol/appearance_page.py:263
+#: xcontrol/appearance_page.py:264
 msgid ""
 "Another program manages live settings; open apps may only update after a "
 "restart."
@@ -388,7 +394,7 @@ msgstr ""
 "Outro programa gerencia as configurações ao vivo; os aplicativos abertos "
 "talvez só atualizem depois de reiniciados."
 
-#: xcontrol/appearance_page.py:265
+#: xcontrol/appearance_page.py:266
 msgid ""
 "Apply starts xsettingsd (and adds it to your login), so open apps update "
 "right away."
@@ -396,7 +402,7 @@ msgstr ""
 "Aplicar inicia o xsettingsd (e o adiciona ao login), para que os aplicativos"
 " abertos atualizem na hora."
 
-#: xcontrol/appearance_page.py:267
+#: xcontrol/appearance_page.py:268
 msgid ""
 "Install xsettingsd so open apps update right away; until then they pick up "
 "changes when they restart."
@@ -404,83 +410,83 @@ msgstr ""
 "Instale o xsettingsd para que os aplicativos abertos atualizem na hora; até "
 "lá, eles pegam as mudanças quando reiniciam."
 
-#: xcontrol/appearance_page.py:290
+#: xcontrol/appearance_page.py:291
 msgid "Previewing here; press Apply to use it everywhere"
 msgstr "Pré-visualizando aqui; clique em Aplicar para usar em todo lugar"
 
-#: xcontrol/appearance_page.py:310
+#: xcontrol/appearance_page.py:311
 msgid "Back to the current settings"
 msgstr "De volta às configurações atuais"
 
-#: xcontrol/appearance_page.py:317
+#: xcontrol/appearance_page.py:318
 msgid "Could not apply the appearance settings"
 msgstr "Não foi possível aplicar as configurações de aparência"
 
-#: xcontrol/appearance_page.py:322
+#: xcontrol/appearance_page.py:323
 msgid "Applied; open apps are updating"
 msgstr "Aplicado; os aplicativos abertos estão atualizando"
 
-#: xcontrol/appearance_page.py:324
+#: xcontrol/appearance_page.py:325
 msgid "Applied; open apps update when they restart"
 msgstr "Aplicado; os aplicativos abertos atualizam quando reiniciarem"
 
-#: xcontrol/appearance_page.py:329
+#: xcontrol/appearance_page.py:330
 msgid "Click the app's window…"
 msgstr "Clique na janela do aplicativo…"
 
-#: xcontrol/appearance_page.py:344
+#: xcontrol/appearance_page.py:345
 msgid "xprop is needed for this (package xorg-xprop)."
 msgstr "É preciso o xprop para isso (pacote xorg-xprop)."
 
-#: xcontrol/appearance_page.py:345
+#: xcontrol/appearance_page.py:346
 msgid "That window doesn't say which program it belongs to."
 msgstr "Essa janela não informa a qual programa pertence."
 
-#: xcontrol/appearance_page.py:346
+#: xcontrol/appearance_page.py:347
 msgid "No window was clicked."
 msgstr "Nenhuma janela foi clicada."
 
-#: xcontrol/appearance_page.py:347
+#: xcontrol/appearance_page.py:348
 msgid "Couldn't check the app"
 msgstr "Não foi possível verificar o aplicativo"
 
-#: xcontrol/appearance_page.py:349
+#: xcontrol/appearance_page.py:350
 #, python-brace-format
 msgid "Why {app} looks different"
 msgstr "Por que {app} está com outra aparência"
 
-#: xcontrol/appearance_page.py:355
+#: xcontrol/appearance_page.py:356
 msgid "none found"
 msgstr "nenhum encontrado"
 
-#: xcontrol/appearance_page.py:359
+#: xcontrol/appearance_page.py:360
 #, python-brace-format
 msgid "Toolkit: {kits}"
 msgstr "Toolkit: {kits}"
 
-#: xcontrol/appearance_page.py:379
+#: xcontrol/appearance_page.py:380
 #, python-brace-format
 msgid "Renamed: {items}. Restart the app."
 msgstr "Renomeado: {items}. Reinicie o aplicativo."
 
-#: xcontrol/appearance_page.py:380
+#: xcontrol/appearance_page.py:381
 msgid "There was nothing to turn off."
 msgstr "Não havia nada para desativar."
 
-#: xcontrol/appearance_page.py:383
+#: xcontrol/appearance_page.py:384
 #, python-brace-format
 msgid "Linked into your home folder: {items}. Restart the app."
 msgstr "Links criados na sua pasta pessoal: {items}. Reinicie o aplicativo."
 
-#: xcontrol/appearance_page.py:384
+#: xcontrol/appearance_page.py:385
 msgid "The themes are already in your home folder."
 msgstr "Os temas já estão na sua pasta pessoal."
 
-#: xcontrol/appearance_page.py:387
+#: xcontrol/appearance_page.py:388
 msgid "Done. Restart the app."
 msgstr "Pronto. Reinicie o aplicativo."
 
-#: xcontrol/appearance_page.py:393
+#: xcontrol/appearance_page.py:394
 msgid "That didn't work"
 msgstr "Não funcionou"
 

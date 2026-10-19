@@ -170,6 +170,17 @@ def _set_ini(path, section, values):
 
 
 # ---- what each toolkit gets
+def gtk4_version():
+    """(major, minor) of the installed GTK 4 from its library name (libgtk-4.so.1.2400.x
+    is 4.24), or None when it can't be told."""
+    for pattern in ("/usr/lib/libgtk-4.so.1.*", "/usr/lib64/libgtk-4.so.1.*", "/usr/lib/*-linux-gnu/libgtk-4.so.1.*"):
+        for path in glob.glob(pattern):
+            m = re.search(r"libgtk-4\.so\.1\.(\d+)\d\d\.", path)
+            if m:
+                return 4, int(m.group(1))
+    return None
+
+
 def gtk_ini_values(look, gtk4=False):
     v = {
         "gtk-theme-name": look.gtk_theme,
@@ -187,6 +198,12 @@ def gtk_ini_values(look, gtk4=False):
     if gtk4:  # GTK 4 dropped these
         for k in ("gtk-xft-antialias", "gtk-xft-hinting", "gtk-xft-hintstyle", "gtk-xft-rgba"):
             v.pop(k)
+        # GTK 4.20+ picks the theme's dark variant from this setting only; on X11 nothing else
+        # provides it (no XSETTINGS key), and prefer-dark-theme in this file no longer counts.
+        # Older GTK 4 warns about unknown keys, so only write it where it exists.
+        version = gtk4_version()
+        if version is None or version >= (4, 20):
+            v["gtk-interface-color-scheme"] = "dark" if look.prefer_dark else "default"
     return v
 
 

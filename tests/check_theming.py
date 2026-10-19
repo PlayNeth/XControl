@@ -95,6 +95,16 @@ expect("updated size", "Xcursor.size: 24" in xr, True)
 g3 = read(f"{tmp}/.config/gtk-3.0/settings.ini")
 expect("one theme line", g3.count("gtk-theme-name="), 1)
 
+real = T.gtk4_version
+T.gtk4_version = lambda: (4, 24)
+expect("gtk 4.20+ dark variant", T.gtk_ini_values(T.Look(prefer_dark=True), gtk4=True)
+       .get("gtk-interface-color-scheme"), "dark")
+expect("gtk 4.20+ default", T.gtk_ini_values(T.Look(), gtk4=True).get("gtk-interface-color-scheme"), "default")
+T.gtk4_version = lambda: (4, 14)
+expect("older gtk 4: key left out", "gtk-interface-color-scheme" in T.gtk_ini_values(T.Look(), gtk4=True), False)
+expect("gtk 3 never gets it", "gtk-interface-color-scheme" in T.gtk_ini_values(T.Look(prefer_dark=True)), False)
+T.gtk4_version = real
+
 expect("qt font", T.qt_font("Noto Sans 10.5"), '"Noto Sans,10.5,-1,5,50,0,0,0,0,0"')
 
 # a leftover ~/.config/gtk-4.0/gtk.css overrides every theme in GTK 4 apps

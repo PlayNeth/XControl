@@ -270,6 +270,11 @@ XControl; **Apply** writes them everywhere an X11 program looks:
   reloads it, or starts it (and adds it to your login) if none is running. With GNOME, MATE
   or Xfce's own settings daemon, it goes through those instead.
 
+GTK 4.20 and later choose a theme's dark variant only from `gtk-interface-color-scheme`, which
+on X11 comes from nothing but `~/.config/gtk-4.0/settings.ini` (there's no XSETTINGS key for
+it, and the old `gtk-application-prefer-dark-theme` there no longer counts). XControl writes it
+when that GTK 4 is installed; GTK 4 apps pick up a light/dark change when they restart.
+
 On i3 and similar window managers, restart the window manager (i3: Mod+Shift+R) to get the new
 cursor on the desktop and window borders.
 
