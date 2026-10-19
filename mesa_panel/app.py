@@ -21,15 +21,18 @@ class MainWindow(Gtk.ApplicationWindow):
         self._fit_to_screen()
         self.set_icon_name("video-display")
 
-        header = Gtk.HeaderBar(show_close_button=True, title="Mesa Panel")
-        layout = wm.decoration_layout()
-        if layout is not None:  # tiling window manager: minimize/maximize would do nothing
-            header.set_decoration_layout(layout)
         self.status = Gtk.Label()
         self.status.get_style_context().add_class("dim-label")
-        header.pack_end(self.status)
-        self.set_titlebar(header)
         self._status_timer = None
+        self.header_bar = wm.use_header_bar()
+        if self.header_bar:  # GNOME-style desktops: our own title bar, status at its end
+            header = Gtk.HeaderBar(show_close_button=True, title="Mesa Panel")
+            layout = wm.decoration_layout()
+            if layout is not None:
+                header.set_decoration_layout(layout)
+            header.pack_end(self.status)
+            self.set_titlebar(header)
+        # otherwise the window manager draws the title bar, like it does for Thunar
 
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         sidebar = Gtk.StackSidebar(stack=stack)
@@ -53,7 +56,20 @@ class MainWindow(Gtk.ApplicationWindow):
         box.pack_start(sidebar, False, False, 0)
         box.pack_start(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL), False, False, 0)
         box.pack_start(stack, True, True, 0)
-        self.add(box)
+        if self.header_bar:
+            self.add(box)
+        else:  # status messages in a small bar at the bottom instead
+            outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            outer.pack_start(box, True, True, 0)
+            outer.pack_start(Gtk.Separator(), False, False, 0)
+            self.status.set_xalign(1.0)
+            self.status.set_margin_start(8)
+            self.status.set_margin_end(8)
+            self.status.set_margin_top(3)
+            self.status.set_margin_bottom(3)
+            self.status.set_text(" ")  # keep the bar's height when empty
+            outer.pack_start(self.status, False, False, 0)
+            self.add(outer)
 
     def _fit_to_screen(self, *_args):
         """Never open taller or wider than the monitor's work area (e.g. 1024x768)."""
@@ -76,7 +92,7 @@ class MainWindow(Gtk.ApplicationWindow):
             GLib.source_remove(self._status_timer)
 
         def clear():
-            self.status.set_text("")
+            self.status.set_text("" if self.header_bar else " ")
             self._status_timer = None
             return False
 

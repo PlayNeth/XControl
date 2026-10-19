@@ -1,7 +1,8 @@
-"""Which window manager is running, so the header bar only shows buttons that work.
+"""How the window gets its title bar.
 
-Tiling window managers (i3 and friends) don't minimize or maximize windows, so
-GTK's minimize/maximize buttons do nothing there.
+GNOME-style desktops expect apps to draw their own (a GTK header bar). Everywhere
+else (i3 and other tiling window managers, Xfce, KDE, Openbox, ...) the window
+manager draws it, like it does for Thunar or Firefox with its native title bar.
 """
 import os
 
@@ -31,6 +32,23 @@ def window_manager_name():
 def is_tiling(name):
     n = name.strip().lower()
     return n in TILING or n.startswith(("i3", "dwm", "xmonad", "awesome"))
+
+
+# desktops whose own apps use header bars (XDG_CURRENT_DESKTOP entries)
+HEADER_BAR_DESKTOPS = {"gnome", "pantheon", "budgie", "budgie-desktop", "unity", "phosh"}
+
+
+def use_header_bar(desktop=None, wm_name=None):
+    """True: draw a GTK header bar. False: let the window manager decorate the window.
+    MESAPANEL_CSD=1/0 overrides."""
+    forced = os.environ.get("MESAPANEL_CSD")
+    if forced in ("0", "1"):
+        return forced == "1"
+    desktop = os.environ.get("XDG_CURRENT_DESKTOP", "") if desktop is None else desktop
+    names = {d.strip().lower() for d in desktop.split(":") if d.strip()}
+    if names & HEADER_BAR_DESKTOPS:
+        return not is_tiling(window_manager_name() if wm_name is None else wm_name)
+    return False
 
 
 def decoration_layout(name=None):

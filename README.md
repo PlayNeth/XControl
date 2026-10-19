@@ -248,12 +248,13 @@ translation is included, and the app follows your desktop language.
 **Copy details** on the Monitor Info page copies in your language. The arrow next to
 it has **Copy in English**, which is more useful in bug reports.
 
-## Tiling window managers
+## Title bar
 
-Under i3, bspwm, awesome, xmonad, dwm and other tiling window managers (detected from the name
-the window manager reports to X), the title bar shows only the close button, since minimize and
-maximize do nothing there. To choose the buttons yourself, set `MESAPANEL_DECORATION`, for
-example `MESAPANEL_DECORATION=":"` for no buttons or `"menu:minimize,maximize,close"` for all.
+On GNOME-style desktops (GNOME, Pantheon, Budgie) the panel draws a GTK header bar like their
+own apps. Everywhere else, including i3 and other tiling window managers, Xfce and KDE, the
+window manager draws the title bar, the same as for Thunar, and status messages appear in a
+small bar at the bottom of the window. `MESAPANEL_CSD=1` or `0` forces either style;
+`MESAPANEL_DECORATION` picks the header bar's buttons (for example `":close"`).
 
 ## Limitations
 

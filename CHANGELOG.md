@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.5 (2026-10-19)
+
+**Let the window manager draw the title bar outside GNOME-style desktops**
+
+- Use the window manager's own title bar on i3 and other tiling window managers, Xfce,
+  KDE and similar desktops; keep the GTK header bar only on GNOME, Pantheon and Budgie
+- Show status messages in a small bar at the bottom of the window when there is no
+  header bar
+- Add MESAPANEL_CSD=1 or 0 to force either title bar style
+
 ## 0.7.4 (2026-10-19)
 
 **Show only the close button under tiling window managers**

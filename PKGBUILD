@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=mesa-panel
-pkgver=0.7.4
+pkgver=0.7.5
 pkgrel=1
 pkgdesc="Catalyst-style control panel for Mesa: per-game AA, anisotropic filtering, VSync and FPS limit, plus xrandr display settings"
 arch=('x86_64')
