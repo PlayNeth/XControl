@@ -97,6 +97,17 @@ expect("one theme line", g3.count("gtk-theme-name="), 1)
 
 expect("qt font", T.qt_font("Noto Sans 10.5"), '"Noto Sans,10.5,-1,5,50,0,0,0,0,0"')
 
+# a leftover ~/.config/gtk-4.0/gtk.css overrides every theme in GTK 4 apps
+from xcontrol import appcheck  # noqa: E402
+mk(f"{tmp}/.config/gtk-3.0/gtk.css", "/* nothing but a comment */\n")
+mk(f"{tmp}/.config/gtk-4.0/gtk.css", "@define-color accent_bg_color #e01b24;\n")
+os.makedirs(f"{tmp}/.config/gtk-4.0/assets")
+expect("user css found", (bool(appcheck.user_css("gtk4")), bool(appcheck.user_css("gtk3"))), (True, False))
+appcheck.disable_user_css()
+expect("user css renamed", sorted(os.listdir(f"{tmp}/.config/gtk-4.0")),
+       ["assets.xcontrol-disabled", "gtk.css.xcontrol-disabled", "settings.ini"])
+expect("comment-only css kept", os.path.exists(f"{tmp}/.config/gtk-3.0/gtk.css"), True)
+
 print("check_theming:", "FAILED" if bad else "ok")
 shutil.rmtree(tmp, ignore_errors=True)
 sys.exit(1 if bad else 0)

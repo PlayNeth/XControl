@@ -1,4 +1,4 @@
-"""The Monitors page: what each connected display reports about itself."""
+"""What each connected display reports about itself (shown from Displays → Details)."""
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
@@ -8,9 +8,10 @@ from .i18n import _  # noqa: E402
 
 
 class MonitorsPage(Gtk.Box):
-    def __init__(self, window):
+    def __init__(self, window, only=None):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
         self.window = window
+        self.only = only  # output name: show just that display
         self.cards = {}
 
         bar = Gtk.Box(spacing=6)
@@ -33,6 +34,8 @@ class MonitorsPage(Gtk.Box):
         self.cards = {}
         try:
             records = monitor_info.collect()
+            if self.only:
+                records = [r for r in records if self.only in (r.x_name, r.drm_name)] or records
         except Exception as e:  # noqa: BLE001
             records = []
             self.window.set_status(_("Could not read monitor information: {error}").format(error=e))
@@ -41,7 +44,7 @@ class MonitorsPage(Gtk.Box):
             empty.get_style_context().add_class("dim-label")
             self.list.pack_start(empty, False, False, 0)
         for n, rec in enumerate(records, 1):
-            card = self._card(n, rec)
+            card = self._card(None if len(records) == 1 else n, rec)
             self.list.pack_start(card, False, False, 0)
             for key in (rec.x_name, rec.drm_name):
                 if key:
@@ -56,7 +59,8 @@ class MonitorsPage(Gtk.Box):
 
         head = Gtk.Box(spacing=8)
         title = Gtk.Label(xalign=0)
-        title.set_markup(f"<span size='x-large' weight='bold'>{n}. {GLib.markup_escape_text(rec.title())}</span>")
+        number = f"{n}. " if n else ""
+        title.set_markup(f"<span size='x-large' weight='bold'>{number}{GLib.markup_escape_text(rec.title())}</span>")
         title.set_ellipsize(Pango.EllipsizeMode.END)
         head.pack_start(title, True, True, 0)
         copy_box = Gtk.Box()

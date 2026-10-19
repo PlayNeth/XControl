@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.10.1\n"
+"Project-Id-Version: xcontrol 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:13-0300\n"
+"POT-Creation-Date: 2026-10-19 13:25-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,28 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: xcontrol/app.py:45
+#: xcontrol/app.py:47
 msgid "Gaming"
 msgstr ""
 
-#: xcontrol/app.py:49
+#: xcontrol/app.py:51
 msgid "Displays"
 msgstr ""
 
-#: xcontrol/app.py:54
-msgid "Monitor Info"
-msgstr ""
-
-#: xcontrol/app.py:58
+#: xcontrol/app.py:55
 msgid "Input"
 msgstr ""
 
-#: xcontrol/app.py:62
+#: xcontrol/app.py:59
 msgid "Appearance"
 msgstr ""
 
+#: xcontrol/app.py:63 xcontrol/sysinfo.py:757
+msgid "System"
+msgstr ""
+
+#: xcontrol/app.py:99
+msgid "Display details"
+msgstr ""
+
+#: xcontrol/app.py:100 xcontrol/appearance_page.py:351
+#: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:68
+msgid "Close"
+msgstr ""
+
 #: xcontrol/appearance_page.py:17 xcontrol/input_page.py:411
-#: xcontrol/input_page.py:464
+#: xcontrol/input_page.py:464 xcontrol/sysinfo.py:822 xcontrol/sysinfo.py:830
 msgid "None"
 msgstr ""
 
@@ -148,255 +157,271 @@ msgid ""
 msgstr ""
 
 #: xcontrol/appearance_page.py:47
+#, python-brace-format
+msgid ""
+"{detail} exists. GTK loads it on top of every theme, so whatever it styles "
+"wins. Theme installers (their \"libadwaita\" or \"GTK 4\" option) and style "
+"editors leave it there."
+msgstr ""
+
+#: xcontrol/appearance_page.py:49
 msgid ""
 "Nothing tells running apps about theme changes (no XSETTINGS manager). Apply "
 "once here so XControl starts one; until then, restart the app after a change."
 msgstr ""
 
-#: xcontrol/appearance_page.py:49
+#: xcontrol/appearance_page.py:51
 msgid ""
 "Nothing blocks the theme. If it still looks wrong, restart the app once: it "
 "may have been started before live updates were set up."
 msgstr ""
 
-#: xcontrol/appearance_page.py:53
+#: xcontrol/appearance_page.py:55
 msgid "Link the themes into my home folder"
 msgstr ""
 
-#: xcontrol/appearance_page.py:54
+#: xcontrol/appearance_page.py:56
 msgid "Copy the theme to my home folder and let Flatpak apps read it"
 msgstr ""
 
-#: xcontrol/appearance_page.py:89
-msgid "Style"
+#: xcontrol/appearance_page.py:57
+msgid "Turn the override off (renames it, nothing is deleted)"
 msgstr ""
 
 #: xcontrol/appearance_page.py:92
+msgid "Style"
+msgstr ""
+
+#: xcontrol/appearance_page.py:95
 msgid "Prefer dark (apps that offer a dark variant, libadwaita apps too)"
 msgstr ""
 
-#: xcontrol/appearance_page.py:96
+#: xcontrol/appearance_page.py:99
 msgid "Theme"
 msgstr ""
 
-#: xcontrol/appearance_page.py:100
+#: xcontrol/appearance_page.py:103
 msgid "Icons"
 msgstr ""
 
-#: xcontrol/appearance_page.py:109
+#: xcontrol/appearance_page.py:112
 msgid "Icon theme"
 msgstr ""
 
-#: xcontrol/appearance_page.py:113
+#: xcontrol/appearance_page.py:116
 msgid "Cursor"
 msgstr ""
 
-#: xcontrol/appearance_page.py:118 xcontrol/appearance_page.py:229
+#: xcontrol/appearance_page.py:121 xcontrol/appearance_page.py:232
 #, python-brace-format
 msgid "{px} px"
 msgstr ""
 
-#: xcontrol/appearance_page.py:122
+#: xcontrol/appearance_page.py:125
 msgid "Size"
 msgstr ""
 
-#: xcontrol/appearance_page.py:124
+#: xcontrol/appearance_page.py:127
 msgid "Cursor theme"
 msgstr ""
 
-#: xcontrol/appearance_page.py:125
+#: xcontrol/appearance_page.py:128
 msgid ""
 "i3 and other window managers load the cursor when they start; restart them "
 "(i3: Mod+Shift+R) to see it on the desktop and window borders."
 msgstr ""
 
-#: xcontrol/appearance_page.py:130
+#: xcontrol/appearance_page.py:133
 msgid "Fonts"
 msgstr ""
 
-#: xcontrol/appearance_page.py:134
+#: xcontrol/appearance_page.py:137
 msgid "Smooth edges (antialiasing)"
 msgstr ""
 
-#: xcontrol/appearance_page.py:144
+#: xcontrol/appearance_page.py:147
 msgid "Interface font"
 msgstr ""
 
-#: xcontrol/appearance_page.py:145
+#: xcontrol/appearance_page.py:148
 msgid "Hinting"
 msgstr ""
 
-#: xcontrol/appearance_page.py:145
+#: xcontrol/appearance_page.py:148
 msgid "Subpixel order"
 msgstr ""
 
-#: xcontrol/appearance_page.py:150
+#: xcontrol/appearance_page.py:153
 msgid "Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"
 msgstr ""
 
-#: xcontrol/appearance_page.py:154 xcontrol/appearance_page.py:160
+#: xcontrol/appearance_page.py:157 xcontrol/appearance_page.py:163
 msgid "Qt applications"
 msgstr ""
 
-#: xcontrol/appearance_page.py:155
+#: xcontrol/appearance_page.py:158
 #, python-brace-format
 msgid ""
 "Qt apps take their colors, icons and font from the GTK settings above, "
 "because QT_QPA_PLATFORMTHEME={value}. Nothing else is needed."
 msgstr ""
 
-#: xcontrol/appearance_page.py:161
+#: xcontrol/appearance_page.py:164
 #, python-brace-format
 msgid "Qt apps follow this because QT_QPA_PLATFORMTHEME={value}."
 msgstr ""
 
-#: xcontrol/appearance_page.py:163
+#: xcontrol/appearance_page.py:166
 msgid ""
 "Qt apps only use these settings when QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) "
 "is set in your session, e.g. in ~/.xprofile. It isn't set now."
 msgstr ""
 
-#: xcontrol/appearance_page.py:172 xcontrol/display_page.py:614
+#: xcontrol/appearance_page.py:175 xcontrol/display_page.py:614
 msgid "Revert"
 msgstr ""
 
-#: xcontrol/appearance_page.py:175 xcontrol/display_page.py:262
+#: xcontrol/appearance_page.py:178 xcontrol/display_page.py:262
 #: xcontrol/input_page.py:212
 msgid "Apply"
 msgstr ""
 
-#: xcontrol/appearance_page.py:180
+#: xcontrol/appearance_page.py:183
 msgid ""
 "Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
 "cursors, libadwaita's dark preference and Qt, and updates open apps."
 msgstr ""
 
-#: xcontrol/appearance_page.py:185
+#: xcontrol/appearance_page.py:188
 msgid "An app ignores the theme?"
 msgstr ""
 
-#: xcontrol/appearance_page.py:186 xcontrol/appearance_page.py:339
+#: xcontrol/appearance_page.py:189 xcontrol/appearance_page.py:342
 msgid "Check an app…"
 msgstr ""
 
-#: xcontrol/appearance_page.py:189
+#: xcontrol/appearance_page.py:192
 msgid ""
 "Click the button, then click the app's window. XControl looks at how the app "
 "runs and tells you why it doesn't follow the theme."
 msgstr ""
 
-#: xcontrol/appearance_page.py:244
+#: xcontrol/appearance_page.py:247
 msgid ""
 "This theme isn't in any theme folder (it may be built into a program), so "
 "other apps probably can't find it. Pick one from the list."
 msgstr ""
 
-#: xcontrol/appearance_page.py:248
+#: xcontrol/appearance_page.py:251
 #, python-brace-format
 msgid ""
 "This theme has no version for {kits}; apps using those keep their default "
 "look."
 msgstr ""
 
-#: xcontrol/appearance_page.py:256
+#: xcontrol/appearance_page.py:259
 msgid "Open apps update right away (xsettingsd is running)."
 msgstr ""
 
-#: xcontrol/appearance_page.py:258
+#: xcontrol/appearance_page.py:261
 msgid "Open apps update right away through your desktop's settings service."
 msgstr ""
 
-#: xcontrol/appearance_page.py:260
+#: xcontrol/appearance_page.py:263
 msgid ""
 "Another program manages live settings; open apps may only update after a "
 "restart."
 msgstr ""
 
-#: xcontrol/appearance_page.py:262
+#: xcontrol/appearance_page.py:265
 msgid ""
 "Apply starts xsettingsd (and adds it to your login), so open apps update "
 "right away."
 msgstr ""
 
-#: xcontrol/appearance_page.py:264
+#: xcontrol/appearance_page.py:267
 msgid ""
 "Install xsettingsd so open apps update right away; until then they pick up "
 "changes when they restart."
 msgstr ""
 
-#: xcontrol/appearance_page.py:287
+#: xcontrol/appearance_page.py:290
 msgid "Previewing here; press Apply to use it everywhere"
 msgstr ""
 
-#: xcontrol/appearance_page.py:307
+#: xcontrol/appearance_page.py:310
 msgid "Back to the current settings"
 msgstr ""
 
-#: xcontrol/appearance_page.py:314
+#: xcontrol/appearance_page.py:317
 msgid "Could not apply the appearance settings"
 msgstr ""
 
-#: xcontrol/appearance_page.py:319
+#: xcontrol/appearance_page.py:322
 msgid "Applied; open apps are updating"
 msgstr ""
 
-#: xcontrol/appearance_page.py:321
+#: xcontrol/appearance_page.py:324
 msgid "Applied; open apps update when they restart"
 msgstr ""
 
-#: xcontrol/appearance_page.py:326
+#: xcontrol/appearance_page.py:329
 msgid "Click the app's window…"
 msgstr ""
 
-#: xcontrol/appearance_page.py:341
+#: xcontrol/appearance_page.py:344
 msgid "xprop is needed for this (package xorg-xprop)."
 msgstr ""
 
-#: xcontrol/appearance_page.py:342
+#: xcontrol/appearance_page.py:345
 msgid "That window doesn't say which program it belongs to."
 msgstr ""
 
-#: xcontrol/appearance_page.py:343
+#: xcontrol/appearance_page.py:346
 msgid "No window was clicked."
 msgstr ""
 
-#: xcontrol/appearance_page.py:344
+#: xcontrol/appearance_page.py:347
 msgid "Couldn't check the app"
 msgstr ""
 
-#: xcontrol/appearance_page.py:346
+#: xcontrol/appearance_page.py:349
 #, python-brace-format
 msgid "Why {app} looks different"
 msgstr ""
 
-#: xcontrol/appearance_page.py:348 xcontrol/edid_override_dialog.py:27
-#: xcontrol/resolutions_dialog.py:68
-msgid "Close"
-msgstr ""
-
-#: xcontrol/appearance_page.py:352
+#: xcontrol/appearance_page.py:355
 msgid "none found"
 msgstr ""
 
-#: xcontrol/appearance_page.py:356
+#: xcontrol/appearance_page.py:359
 #, python-brace-format
 msgid "Toolkit: {kits}"
 msgstr ""
 
-#: xcontrol/appearance_page.py:376
+#: xcontrol/appearance_page.py:379
+#, python-brace-format
+msgid "Renamed: {items}. Restart the app."
+msgstr ""
+
+#: xcontrol/appearance_page.py:380
+msgid "There was nothing to turn off."
+msgstr ""
+
+#: xcontrol/appearance_page.py:383
 #, python-brace-format
 msgid "Linked into your home folder: {items}. Restart the app."
 msgstr ""
 
-#: xcontrol/appearance_page.py:377
+#: xcontrol/appearance_page.py:384
 msgid "The themes are already in your home folder."
 msgstr ""
 
-#: xcontrol/appearance_page.py:380
+#: xcontrol/appearance_page.py:387
 msgid "Done. Restart the app."
 msgstr ""
 
-#: xcontrol/appearance_page.py:386
+#: xcontrol/appearance_page.py:393
 msgid "That didn't work"
 msgstr ""
 
@@ -813,16 +838,16 @@ msgstr ""
 msgid "Authorization was cancelled."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:251 xcontrol/monitors_page.py:132
+#: xcontrol/edid_override_dialog.py:251 xcontrol/monitors_page.py:136
 msgid "Save EDID"
 msgstr ""
 
 #: xcontrol/edid_override_dialog.py:252 xcontrol/gaming_page.py:137
-#: xcontrol/gaming_page.py:468 xcontrol/monitors_page.py:133
+#: xcontrol/gaming_page.py:468 xcontrol/monitors_page.py:137
 msgid "Cancel"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:252 xcontrol/monitors_page.py:133
+#: xcontrol/edid_override_dialog.py:252 xcontrol/monitors_page.py:137
 msgid "Save"
 msgstr ""
 
@@ -1309,7 +1334,7 @@ msgid "Device:"
 msgstr ""
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:21
+#: xcontrol/monitors_page.py:22
 msgid "Refresh"
 msgstr ""
 
@@ -1596,7 +1621,7 @@ msgstr ""
 msgid "Sensitivity (DPI)"
 msgstr ""
 
-#: xcontrol/input_page.py:845
+#: xcontrol/input_page.py:845 xcontrol/sysinfo.py:813
 msgid "In use"
 msgstr ""
 
@@ -1774,7 +1799,7 @@ msgstr[1] ""
 msgid "(bad checksum)"
 msgstr ""
 
-#: xcontrol/monitor_info.py:103
+#: xcontrol/monitor_info.py:103 xcontrol/sysinfo.py:784 xcontrol/sysinfo.py:827
 msgid "Model"
 msgstr ""
 
@@ -1986,7 +2011,7 @@ msgid_plural "{rate} Gbps × {lanes} lanes ({total} Gbps)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: xcontrol/monitor_info.py:234
+#: xcontrol/monitor_info.py:234 xcontrol/sysinfo.py:916
 msgid "Audio"
 msgstr ""
 
@@ -2018,48 +2043,48 @@ msgstr ""
 msgid "Power saving"
 msgstr ""
 
-#: xcontrol/monitors_page.py:17
+#: xcontrol/monitors_page.py:18
 msgid "Information reported by each connected display (EDID) and its driver."
 msgstr ""
 
-#: xcontrol/monitors_page.py:38
+#: xcontrol/monitors_page.py:41
 #, python-brace-format
 msgid "Could not read monitor information: {error}"
 msgstr ""
 
-#: xcontrol/monitors_page.py:40
+#: xcontrol/monitors_page.py:43
 msgid "No connected displays with readable information were found."
 msgstr ""
 
-#: xcontrol/monitors_page.py:64
+#: xcontrol/monitors_page.py:68
 msgid "Copy details"
 msgstr ""
 
-#: xcontrol/monitors_page.py:68
+#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:51
 msgid "More copy options"
 msgstr ""
 
-#: xcontrol/monitors_page.py:70
+#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:53
 msgid "Copy in English (for bug reports)"
 msgstr ""
 
-#: xcontrol/monitors_page.py:78
+#: xcontrol/monitors_page.py:82
 msgid "Save EDID…"
 msgstr ""
 
-#: xcontrol/monitors_page.py:79
+#: xcontrol/monitors_page.py:83
 msgid "Save the raw EDID, e.g. for edid-decode or a bug report"
 msgstr ""
 
-#: xcontrol/monitors_page.py:129
+#: xcontrol/monitors_page.py:133
 msgid "Monitor details copied"
 msgstr ""
 
-#: xcontrol/monitors_page.py:143
+#: xcontrol/monitors_page.py:147
 msgid "EDID saved"
 msgstr ""
 
-#: xcontrol/monitors_page.py:145
+#: xcontrol/monitors_page.py:149
 msgid "Could not save the EDID"
 msgstr ""
 
@@ -2228,6 +2253,307 @@ msgstr ""
 
 #: xcontrol/resolutions_dialog.py:325
 msgid "Switch the display to another resolution before removing it."
+msgstr ""
+
+#: xcontrol/sysinfo.py:721
+#, python-brace-format
+msgid "{h} h {m} min"
+msgstr ""
+
+#: xcontrol/sysinfo.py:721
+#, python-brace-format
+msgid "{m} min"
+msgstr ""
+
+#: xcontrol/sysinfo.py:723
+#, python-brace-format
+msgid "{n} day"
+msgid_plural "{n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: xcontrol/sysinfo.py:733
+msgid "Checking…"
+msgstr ""
+
+#: xcontrol/sysinfo.py:739 xcontrol/sysinfo.py:784
+msgid "Unknown"
+msgstr ""
+
+#: xcontrol/sysinfo.py:742
+msgid "Distribution"
+msgstr ""
+
+#: xcontrol/sysinfo.py:743
+msgid "Kernel"
+msgstr ""
+
+#: xcontrol/sysinfo.py:745
+msgid "Running for"
+msgstr ""
+
+#: xcontrol/sysinfo.py:747
+msgid "Init system"
+msgstr ""
+
+#: xcontrol/sysinfo.py:749 xcontrol/sysinfo.py:751
+msgid "Packages"
+msgstr ""
+
+#: xcontrol/sysinfo.py:753
+msgid "Computer name"
+msgstr ""
+
+#: xcontrol/sysinfo.py:754
+msgid "User"
+msgstr ""
+
+#: xcontrol/sysinfo.py:756
+msgid "Shell"
+msgstr ""
+
+#: xcontrol/sysinfo.py:762
+msgid "Window manager"
+msgstr ""
+
+#: xcontrol/sysinfo.py:764
+msgid "Display server"
+msgstr ""
+
+#: xcontrol/sysinfo.py:766
+msgid "X driver"
+msgstr ""
+
+#: xcontrol/sysinfo.py:772
+msgid "Install mesa-utils (glxinfo) to show this"
+msgstr ""
+
+#: xcontrol/sysinfo.py:779
+msgid "Install vulkan-tools (vulkaninfo) to show this"
+msgstr ""
+
+#: xcontrol/sysinfo.py:781
+msgid "Graphics stack"
+msgstr ""
+
+#: xcontrol/sysinfo.py:785
+msgid "Cores"
+msgstr ""
+
+#: xcontrol/sysinfo.py:785
+#, python-brace-format
+msgid "{cores} cores, {threads} threads"
+msgstr ""
+
+#: xcontrol/sysinfo.py:788 xcontrol/sysinfo.py:839
+msgid "Usage"
+msgstr ""
+
+#: xcontrol/sysinfo.py:792
+#, python-brace-format
+msgid "(max. {mhz} MHz)"
+msgstr ""
+
+#: xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
+msgid "Clock"
+msgstr ""
+
+#: xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
+msgid "Temperature"
+msgstr ""
+
+#: xcontrol/sysinfo.py:797
+msgid "Cache"
+msgstr ""
+
+#: xcontrol/sysinfo.py:801
+msgid "Frequency driver"
+msgstr ""
+
+#: xcontrol/sysinfo.py:803
+msgid "Microcode"
+msgstr ""
+
+#: xcontrol/sysinfo.py:804
+msgid "Processor"
+msgstr ""
+
+#: xcontrol/sysinfo.py:812
+msgid "Installed"
+msgstr ""
+
+#: xcontrol/sysinfo.py:813
+#, python-brace-format
+msgid "{used} ({percent} %)"
+msgstr ""
+
+#: xcontrol/sysinfo.py:815
+msgid "Available"
+msgstr ""
+
+#: xcontrol/sysinfo.py:819 xcontrol/sysinfo.py:822
+msgid "Swap"
+msgstr ""
+
+#: xcontrol/sysinfo.py:819 xcontrol/sysinfo.py:836
+#, python-brace-format
+msgid "{used} of {total}"
+msgstr ""
+
+#: xcontrol/sysinfo.py:823
+msgid "Memory"
+msgstr ""
+
+#: xcontrol/sysinfo.py:829
+msgid "Card maker"
+msgstr ""
+
+#: xcontrol/sysinfo.py:830
+msgid "Kernel driver"
+msgstr ""
+
+#: xcontrol/sysinfo.py:833
+msgid "Video memory (taken from RAM)"
+msgstr ""
+
+#: xcontrol/sysinfo.py:833
+msgid "Video memory"
+msgstr ""
+
+#: xcontrol/sysinfo.py:840
+#, python-brace-format
+msgid "memory {clock}"
+msgstr ""
+
+#: xcontrol/sysinfo.py:846
+msgid "Power"
+msgstr ""
+
+#: xcontrol/sysinfo.py:848
+msgid "Fan"
+msgstr ""
+
+#: xcontrol/sysinfo.py:850
+msgid "Connected displays"
+msgstr ""
+
+#: xcontrol/sysinfo.py:854
+msgid "PCI slot"
+msgstr ""
+
+#: xcontrol/sysinfo.py:855
+msgid "Graphics"
+msgstr ""
+
+#: xcontrol/sysinfo.py:855
+#, python-brace-format
+msgid "Graphics {n}"
+msgstr ""
+
+#: xcontrol/sysinfo.py:866
+msgid "Computer"
+msgstr ""
+
+#: xcontrol/sysinfo.py:868 xcontrol/sysinfo.py:878
+msgid "Motherboard"
+msgstr ""
+
+#: xcontrol/sysinfo.py:870
+#, python-brace-format
+msgid "from {date}"
+msgstr ""
+
+#: xcontrol/sysinfo.py:873
+msgid "Legacy BIOS"
+msgstr ""
+
+#: xcontrol/sysinfo.py:875
+msgid "Secure Boot on"
+msgstr ""
+
+#: xcontrol/sysinfo.py:875
+msgid "Secure Boot off"
+msgstr ""
+
+#: xcontrol/sysinfo.py:876
+msgid "Boot mode"
+msgstr ""
+
+#: xcontrol/sysinfo.py:881
+msgid "SATA SSD"
+msgstr ""
+
+#: xcontrol/sysinfo.py:881
+msgid "Hard disk"
+msgstr ""
+
+#: xcontrol/sysinfo.py:882
+msgid "SD card / eMMC"
+msgstr ""
+
+#: xcontrol/sysinfo.py:882
+msgid "Virtual disk"
+msgstr ""
+
+#: xcontrol/sysinfo.py:887
+msgid "removable"
+msgstr ""
+
+#: xcontrol/sysinfo.py:890
+msgid "Drives"
+msgstr ""
+
+#: xcontrol/sysinfo.py:893
+#, python-brace-format
+msgid "{used} of {total} used ({percent} %), {fs}"
+msgstr ""
+
+#: xcontrol/sysinfo.py:896
+msgid "Disk space"
+msgstr ""
+
+#: xcontrol/sysinfo.py:901
+msgid "Wi-Fi"
+msgstr ""
+
+#: xcontrol/sysinfo.py:901
+msgid "Ethernet"
+msgstr ""
+
+#: xcontrol/sysinfo.py:904
+msgid "connected"
+msgstr ""
+
+#: xcontrol/sysinfo.py:904
+msgid "not connected"
+msgstr ""
+
+#: xcontrol/sysinfo.py:909
+msgid "Network"
+msgstr ""
+
+#: xcontrol/sysinfo.py:912
+msgid "Device"
+msgstr ""
+
+#: xcontrol/sysinfo.py:914
+msgid "Sound server"
+msgstr ""
+
+#: xcontrol/sysinfo.py:924
+msgid "Sensors"
+msgstr ""
+
+#: xcontrol/system_page.py:46
+msgid "Copy"
+msgstr ""
+
+#: xcontrol/system_page.py:47
+msgid "Copy this information (without your computer and user names)"
+msgstr ""
+
+#: xcontrol/system_page.py:141
+msgid "System information copied"
 msgstr ""
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"

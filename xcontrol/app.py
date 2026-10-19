@@ -12,8 +12,10 @@ from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
 from .input_page import InputPage  # noqa: E402
 from .monitors_page import MonitorsPage  # noqa: E402
+from .system_page import SystemPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
+PAGES = ("gaming", "displays", "input", "appearance", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -48,11 +50,6 @@ class MainWindow(Gtk.ApplicationWindow):
         displays.add(DisplayPage(self))
         stack.add_titled(displays, "displays", _("Displays"))
 
-        monitors = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
-        self.monitors_page = MonitorsPage(self)
-        monitors.add(self.monitors_page)
-        stack.add_titled(monitors, "monitors", _("Monitor Info"))
-
         inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
         inputs.add(InputPage(self))
         stack.add_titled(inputs, "input", _("Input"))
@@ -60,6 +57,10 @@ class MainWindow(Gtk.ApplicationWindow):
         appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
         appearance.add(AppearancePage(self))
         stack.add_titled(appearance, "appearance", _("Appearance"))
+
+        system = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        system.add(SystemPage(self))
+        stack.add_titled(system, "system", _("System"))
 
         self.stack = stack
         widgets.protect(stack)  # the wheel scrolls pages instead of changing settings under the pointer
@@ -94,8 +95,17 @@ class MainWindow(Gtk.ApplicationWindow):
             pass
 
     def show_monitor_info(self, output_name):
-        self.stack.set_visible_child_name("monitors")
-        self.monitors_page.show_monitor(output_name)
+        """What the display reports about itself (EDID), in a window of its own."""
+        dlg = Gtk.Dialog(title=_("Display details"), transient_for=self, modal=True)
+        dlg.add_button(_("Close"), Gtk.ResponseType.CLOSE)
+        area = self.get_display().get_monitor_at_window(self.get_window()).get_workarea()
+        dlg.set_default_size(min(900, area.width - 60), min(700, area.height - 80))
+        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True)
+        sw.add(MonitorsPage(self, only=output_name))
+        dlg.get_content_area().pack_start(sw, True, True, 0)
+        dlg.show_all()
+        dlg.run()
+        dlg.destroy()
 
     def set_status(self, text):
         self.status.set_text(text)
@@ -136,6 +146,10 @@ def main(argv=None):
     if "--version" in argv:
         print(f"xcontrol {__version__}")
         return 0
+    if "--sysinfo" in argv:  # the System page as text, e.g. for bug reports
+        from . import sysinfo
+        print(sysinfo.as_text(sysinfo.snapshot(), english="--english" in argv), end="")
+        return 0
     if "--apply-display" in argv:
         from .display_page import apply_saved_layout
         return apply_saved_layout()
@@ -145,8 +159,7 @@ def main(argv=None):
     page = "gaming"
     if "--page" in argv[:-1]:
         page = argv[argv.index("--page") + 1]
-    if page not in ("gaming", "displays", "monitors", "input", "appearance"):
-        print("xcontrol: --page must be 'gaming', 'displays', 'monitors', 'input' or 'appearance'",
-              file=sys.stderr)
+    if page not in PAGES:
+        print("xcontrol: --page must be one of: " + ", ".join(PAGES), file=sys.stderr)
         return 2
     return App(page).run(argv[:1])

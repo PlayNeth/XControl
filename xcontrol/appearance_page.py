@@ -44,6 +44,8 @@ FINDINGS = {
                               "~/.xprofile, and a new login."),
     "own-toolkit": N_("It doesn't use GTK or Qt (games, Java, Tk, Electron and similar draw their own interface), "
                       "so desktop themes don't apply to it."),
+    "user-css": N_("{detail} exists. GTK loads it on top of every theme, so whatever it styles wins. Theme "
+                   "installers (their \"libadwaita\" or \"GTK 4\" option) and style editors leave it there."),
     "no-live-updates": N_("Nothing tells running apps about theme changes (no XSETTINGS manager). Apply once here "
                           "so XControl starts one; until then, restart the app after a change."),
     "restart": N_("Nothing blocks the theme. If it still looks wrong, restart the app once: it may have been "
@@ -52,6 +54,7 @@ FINDINGS = {
 FIXES = {
     "link-home": N_("Link the themes into my home folder"),
     "flatpak": N_("Copy the theme to my home folder and let Flatpak apps read it"),
+    "user-css": N_("Turn the override off (renames it, nothing is deleted)"),
 }
 
 
@@ -371,7 +374,11 @@ class AppearancePage(Gtk.Box):
 
     def _run_fix(self, button, fix, dlg):
         try:
-            if fix == "link-home":
+            if fix == "user-css":
+                done = appcheck.disable_user_css()
+                msg = _("Renamed: {items}. Restart the app.").format(items=", ".join(done)) if done else \
+                    _("There was nothing to turn off.")
+            elif fix == "link-home":
                 done = appcheck.link_into_home(self.applied)
                 msg = (_("Linked into your home folder: {items}. Restart the app.").format(
                        items=", ".join(done)) if done else _("The themes are already in your home folder."))

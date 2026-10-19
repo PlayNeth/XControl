@@ -108,6 +108,12 @@ def analyze(pid, name="", look=None, xsettings=None):
         r.fixes.append("link-home")
     if "libadwaita" in r.toolkits:
         r.findings.append(("libadwaita", ""))
+    for kit in ("gtk3", "gtk4", "libadwaita"):
+        css = user_css(kit)
+        if css and kit in r.toolkits:
+            r.findings.append(("user-css", css))
+            if "user-css" not in r.fixes:
+                r.fixes.append("user-css")
     if look is not None:
         theme = next((t for t in T.gtk_themes() if t.name == look.gtk_theme), None)
         kits = theme.toolkits if theme else []
@@ -131,7 +137,44 @@ def analyze(pid, name="", look=None, xsettings=None):
     return r
 
 
+def user_css(kit):
+    """~/.config/gtk-N.0/gtk.css when it has content: it is loaded on top of any theme.
+    Theme installers (\"libadwaita\" or \"GTK 4\" options) and style editors leave it there."""
+    folder = "gtk-3.0" if kit == "gtk3" else "gtk-4.0"
+    path = os.path.join(T.config_home(), folder, "gtk.css")
+    try:
+        with open(path, errors="replace") as f:
+            text = f.read()
+    except OSError:
+        return ""
+    code = re.sub(r"/\*.*?\*/", "", text, flags=re.S).strip()
+    return path if code else ""
+
+
 # ---- fixes
+def disable_user_css():
+    """Rename the override files (and the assets/ links that come with them) out of the
+    way; nothing is deleted. Returns the new names."""
+    done = []
+    for folder in ("gtk-3.0", "gtk-4.0"):
+        base = os.path.join(T.config_home(), folder)
+        if not user_css("gtk3" if folder == "gtk-3.0" else "gtk4"):
+            continue
+        for name in ("gtk.css", "gtk-dark.css", "assets"):
+            path = os.path.join(base, name)
+            if not os.path.lexists(path):
+                continue
+            target = path + ".xcontrol-disabled"
+            n = 1
+            while os.path.lexists(target):
+                n += 1
+                target = f"{path}.xcontrol-disabled{n}"
+            os.rename(path, target)
+            done.append(target)
+    return done
+
+
+
 def _theme_source(name, dirs):
     for base in dirs:
         path = os.path.join(base, name)

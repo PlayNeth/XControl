@@ -80,7 +80,7 @@ xorg.conf (xf86-video-amdgpu and modesetting both support it) and restart X:
 
     Option "VariableRefresh" "true"
 
-The Monitor Info page shows whether the display supports it and whether X has it enabled (read
+The display details (Displays → **Details**) show whether the display supports it and whether X has it enabled (read
 from the X server log). It also needs a fullscreen game with the compositor off or unredirecting
 it, a frame rate inside the display's FreeSync range, and usually a single active display.
 
@@ -285,6 +285,9 @@ really loads, how it's packaged, its environment and the user it runs as. Usual 
 - **libadwaita** apps: they only follow the dark preference, by design
 - the theme has no version for the app's GTK (e.g. a GTK 3 theme and a GTK 4 app)
 - Qt apps without `QT_QPA_PLATFORMTHEME=qt5ct` (or `qt6ct`) in the session environment
+- a leftover `~/.config/gtk-4.0/gtk.css` (or `gtk-3.0/gtk.css`): GTK loads it on top of every
+  theme. Theme installers with a "libadwaita"/"GTK 4" option and style editors leave one behind;
+  one click renames it (and the `assets` link next to it) so nothing is lost
 - the app runs as another user (sudo), or draws its own interface
 
 ## Mouse wheel
@@ -303,9 +306,26 @@ environment variables are still read. An EDID override installed as
 `/usr/lib/firmware/edid/mesa-panel-*.bin` keeps working; installing a new one uses the
 `xcontrol-*.bin` name, and the dialog tells you to update the kernel parameter.
 
-## Monitor Info
+## System
 
-The **Monitor Info** page shows what each connected display reports in its EDID,
+The **System** page shows the distribution, kernel, uptime, package count, window manager,
+X server and X driver (from the server's log), OpenGL, Mesa and Vulkan versions, the
+processor (cores, cache, clock, frequency driver and policy, microcode), memory and swap,
+each graphics card (model and card maker, kernel driver, video memory, and on amdgpu its
+load, clocks, temperature and power), motherboard and BIOS, UEFI and Secure Boot, drives,
+disk space, network adapters, sound cards and sound server, and every temperature and fan
+sensor. Usage, clocks, temperatures and memory refresh every 2 seconds while the page is
+open. Everything is read from `/proc` and `/sys` without root; OpenGL and Vulkan details
+need `glxinfo` (mesa-utils) and `vulkaninfo` (vulkan-tools), and device names come from
+hwdata.
+
+**Copy** puts it on the clipboard as text, leaving out your computer and user names (the arrow
+has **Copy in English** for bug reports). `xcontrol --sysinfo` prints the same text in a
+terminal (`--sysinfo --english` for English).
+
+## Display details
+
+**Details** on the Displays page opens what the selected display reports in its EDID,
 plus what the driver exposes through xrandr:
 
 - **Identity:** model, manufacturer, product code, serial number, manufacture date.
@@ -319,10 +339,9 @@ plus what the driver exposes through xrandr:
 - **Connection:** X11 and kernel output names, current mode, input type, HDMI 2.0/2.1
   capability (TMDS clock, FRL bandwidth), audio, YCbCr formats, power saving.
 
-The **Details** button on the Displays page jumps to the selected monitor.
 **Copy details** copies a plain-text summary, and **Save EDID…** writes the raw EDID
 for `edid-decode` or bug reports. The data comes from the kernel
-(`/sys/class/drm`), so this page also works on Wayland.
+(`/sys/class/drm`).
 
 Keep in mind that this is what the monitor *claims*. Gamut and brightness figures in
 EDIDs are often rounded or copied between models, so treat them as approximate.
@@ -339,7 +358,7 @@ translation is included, and the app follows your desktop language.
 - `make` checks each translation with `msgfmt --check`, which also catches
   broken `{placeholders}`, and translates the app-menu entry.
 
-**Copy details** on the Monitor Info page copies in your language. The arrow next to
+**Copy** on the System page and **Copy details** in the display details copy in your language. The arrow next to
 it has **Copy in English**, which is more useful in bug reports.
 
 ## Title bar

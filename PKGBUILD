@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.10.1
+pkgver=0.11.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -27,10 +27,10 @@ optdepends=(
   'xorg-xprop: "Check an app" troubleshooter (Appearance)'
   'qt5ct: Qt 5 apps follow the icon theme and font'
   'qt6ct: Qt 6 apps follow the icon theme and font'
-  'hwdata: full monitor manufacturer names'
+  'hwdata: full monitor manufacturer, graphics card and network adapter names'
   'polkit: test and install EDID overrides (system-wide mode list)'
-  'mesa-utils: "Test with glxgears" button'
-  'vulkan-tools: "Test with vkcube" button'
+  'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'
+  'vulkan-tools: Vulkan version on the System page, "Test with vkcube" button'
 )
 source=()
 sha256sums=()

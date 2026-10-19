@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.11.0 (2026-10-19)
+
+**Add a System information page and move monitor info into Displays**
+
+- Add a System page: distribution, kernel, uptime, packages, window manager, X server and
+  driver, OpenGL, Mesa and Vulkan versions, processor, memory and swap
+- Show each graphics card's model, maker, driver and video memory, plus load, clocks,
+  temperature and power on amdgpu
+- Show motherboard and BIOS, UEFI and Secure Boot, drives, disk space, network adapters,
+  sound cards and server, and all temperature and fan sensors
+- Refresh usage, clocks, temperatures and memory every 2 seconds while the page is open
+- Add Copy (and Copy in English) for the system report, leaving out computer and user
+  names, and xcontrol --sysinfo [--english] to print it in a terminal
+- Remove the Monitor Info page: Details on the Displays page now opens the selected
+  display's EDID information in its own window
+- Detect a leftover ~/.config/gtk-3.0 or gtk-4.0 gtk.css in "Check an app…" and offer to
+  turn it off by renaming it (and its assets link), deleting nothing
+- Add tests for the system information code
+
 ## 0.10.1 (2026-10-19)
 
 **Recognise Qt apps that already follow the GTK theme**
