@@ -39,6 +39,13 @@ class Look:
     hinting: bool = True
     hint_style: str = "hintslight"
     subpixel: str = "none"
+    event_sounds: bool = True       # "bell" sounds apps play (dialogs, errors, emptying the trash)
+    input_sounds: bool = True       # clicks and key sounds as feedback
+    animations: bool = True         # fades and slides in menus, popovers, switches, tabs
+
+
+def _b(v):
+    return "true" if v else "false"
 
 
 @dataclass
@@ -191,6 +198,9 @@ def gtk_ini_values(look, gtk4=False):
         "gtk-xft-hinting": "1" if look.hinting else "0",
         "gtk-xft-hintstyle": look.hint_style,
         "gtk-xft-rgba": look.subpixel,
+        "gtk-enable-event-sounds": _b(look.event_sounds),
+        "gtk-enable-input-feedback-sounds": _b(look.input_sounds),
+        "gtk-enable-animations": _b(look.animations),
     }
     if look.cursor_theme:
         v["gtk-cursor-theme-name"] = look.cursor_theme
@@ -217,6 +227,9 @@ def gtkrc2_text(existing, look):
         "gtk-xft-hinting": "1" if look.hinting else "0",
         "gtk-xft-hintstyle": f'"{look.hint_style}"',
         "gtk-xft-rgba": f'"{look.subpixel}"',
+        "gtk-enable-event-sounds": "1" if look.event_sounds else "0",
+        "gtk-enable-input-feedback-sounds": "1" if look.input_sounds else "0",
+        "gtk-enable-animations": "1" if look.animations else "0",
     }
     if look.cursor_theme:
         values["gtk-cursor-theme-name"] = f'"{look.cursor_theme}"'
@@ -242,6 +255,9 @@ def xsettings_values(look):
         "Xft/Hinting": "1" if look.hinting else "0",
         "Xft/HintStyle": f'"{look.hint_style}"',
         "Xft/RGBA": f'"{look.subpixel}"',
+        "Net/EnableEventSounds": "1" if look.event_sounds else "0",
+        "Net/EnableInputFeedbackSounds": "1" if look.input_sounds else "0",
+        "Gtk/EnableAnimations": "1" if look.animations else "0",
     }
     if look.cursor_theme:
         v["Gtk/CursorThemeName"] = f'"{look.cursor_theme}"'
@@ -413,8 +429,11 @@ def _gsettings(look):
                                "hintfull": "full"}[look.hint_style] if look.hinting else "none")]
     if look.cursor_theme:
         pairs += [("cursor-theme", look.cursor_theme), ("cursor-size", str(look.cursor_size))]
+    pairs.append(("enable-animations", _b(look.animations)))   # libadwaita and GNOME apps
     for key, value in pairs:
         _run(["gsettings", "set", s, key, value])
+    for key, value in (("event-sounds", look.event_sounds), ("input-feedback-sounds", look.input_sounds)):
+        _run(["gsettings", "set", "org.gnome.desktop.sound", key, _b(value)])   # fails quietly without it
     return True
 
 
@@ -429,7 +448,10 @@ def _xfconf(look):
                               ("/Xft/Antialias", "int", "1" if look.antialias else "0"),
                               ("/Xft/Hinting", "int", "1" if look.hinting else "0"),
                               ("/Xft/HintStyle", "string", look.hint_style),
-                              ("/Xft/RGBA", "string", look.subpixel)):
+                              ("/Xft/RGBA", "string", look.subpixel),
+                              ("/Net/EnableEventSounds", "bool", _b(look.event_sounds)),
+                              ("/Net/EnableInputFeedbackSounds", "bool", _b(look.input_sounds)),
+                              ("/Gtk/EnableAnimations", "bool", _b(look.animations))):
         if value:
             _run(["xfconf-query", "-c", "xsettings", "-p", prop, "-n", "-t", kind, "-s", value])
 
@@ -532,6 +554,9 @@ def current(gtk_settings=None):
         look.hinting = p.gtk_xft_hinting != 0
         look.hint_style = p.gtk_xft_hintstyle or look.hint_style
         look.subpixel = p.gtk_xft_rgba or look.subpixel
+        look.event_sounds = bool(p.gtk_enable_event_sounds)
+        look.input_sounds = bool(p.gtk_enable_input_feedback_sounds)
+        look.animations = bool(p.gtk_enable_animations)
     if not look.cursor_theme:  # GTK leaves it empty when only X's default is used
         cp = configparser.ConfigParser(interpolation=None, strict=False)
         for base in icon_dirs():

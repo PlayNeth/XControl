@@ -160,6 +160,19 @@ class AppearancePage(Gtk.Box):
                        (_("Hinting"), self.hint), (_("Subpixel order"), self.rgba)])
         self.pack_start(frame, False, False, 0)
 
+        # ---- sounds and effects
+        frame, g = _section(_("Sounds and effects"))
+        self.event_sounds = Gtk.CheckButton(label=_("Event sounds (alerts, errors, finished tasks)"))
+        self.input_sounds = Gtk.CheckButton(label=_("Feedback sounds on clicks and key presses"))
+        self.animations = Gtk.CheckButton(label=_("Animations (fading and sliding in menus, popups, switches, "
+                                                  "tabs)"))
+        for w in (self.event_sounds, self.input_sounds, self.animations):
+            w.connect("toggled", self._changed)
+        self._rows(g, [("", self.event_sounds), ("", self.input_sounds), ("", self.animations),
+                       ("", _hint(_("For GTK and libadwaita apps. Windows fading in and out as they open and close "
+                                    "is the compositor's (Bar & Compositor → \"Fade windows in and out\").")))])
+        self.pack_start(frame, False, False, 0)
+
         # ---- Qt
         self.qt_tools, qt_env = T.qt_tools()
         self.qt_check = Gtk.CheckButton(label=_("Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"))
@@ -248,6 +261,9 @@ class AppearancePage(Gtk.Box):
             self.hint.set_active_id(look.hint_style if look.hinting else "hintnone")
             self.rgba.set_active_id(look.subpixel)
             self.rgba.set_sensitive(look.antialias)
+            self.event_sounds.set_active(look.event_sounds)
+            self.input_sounds.set_active(look.input_sounds)
+            self.animations.set_active(look.animations)
             self._theme_note()
             self._live_note()
             self._css_note()
@@ -297,6 +313,9 @@ class AppearancePage(Gtk.Box):
         look.hinting = hint != "hintnone"
         look.hint_style = hint
         look.subpixel = self.rgba.get_active_id() or "none"
+        look.event_sounds = self.event_sounds.get_active()
+        look.input_sounds = self.input_sounds.get_active()
+        look.animations = self.animations.get_active()
         self.rgba.set_sensitive(look.antialias)
         self._preview(look)
         self._theme_note()
@@ -315,6 +334,9 @@ class AppearancePage(Gtk.Box):
         p.gtk_xft_hinting = 1 if look.hinting else 0
         p.gtk_xft_hintstyle = look.hint_style
         p.gtk_xft_rgba = look.subpixel
+        p.gtk_enable_event_sounds = look.event_sounds
+        p.gtk_enable_input_feedback_sounds = look.input_sounds
+        p.gtk_enable_animations = look.animations
 
     def _revert(self, *_args):
         self.look = T.Look(**vars(self.applied))

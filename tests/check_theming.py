@@ -58,7 +58,7 @@ expect("current cursor from default/index.theme", T.current().cursor_theme, "Bre
 
 # ---- existing user files with other settings that must survive
 mk(f"{tmp}/.config/gtk-3.0/settings.ini",
-   "[Settings]\ngtk-theme-name=Adwaita\ngtk-enable-animations=0\n\n[Other]\nkeep=1\n")
+   "[Settings]\ngtk-theme-name=Adwaita\ngtk-decoration-layout=menu:close\n\n[Other]\nkeep=1\n")
 mk(f"{tmp}/.gtkrc-2.0", '# my rc\ngtk-theme-name="Adwaita"\ngtk-menu-images=1\n')
 mk(f"{tmp}/.Xresources", "XTerm*faceName: Monospace\n")
 mk(f"{tmp}/.config/xsettingsd/xsettingsd.conf", "Xft/DPI 98304\nNet/ThemeName \"Adwaita\"\n")
@@ -69,7 +69,7 @@ notes = T.apply(look, qt=False, start_xsettingsd=False)
 
 g3 = read(f"{tmp}/.config/gtk-3.0/settings.ini")
 expect("gtk3 theme", "gtk-theme-name=Arc-Dark" in g3, True)
-expect("gtk3 keeps other keys", "gtk-enable-animations=0" in g3 and "[Other]\nkeep=1" in g3, True)
+expect("gtk3 keeps other keys", "gtk-decoration-layout=menu:close" in g3 and "[Other]\nkeep=1" in g3, True)
 expect("gtk3 dark", "gtk-application-prefer-dark-theme=true" in g3, True)
 expect("gtk3 cursor", "gtk-cursor-theme-name=Breeze_Snow" in g3 and "gtk-cursor-theme-size=32" in g3, True)
 g4 = read(f"{tmp}/.config/gtk-4.0/settings.ini")
@@ -102,6 +102,14 @@ expect("gtk 4.20+ dark variant", T.gtk_ini_values(T.Look(prefer_dark=True), gtk4
 expect("gtk 4.20+ default", T.gtk_ini_values(T.Look(), gtk4=True).get("gtk-interface-color-scheme"), "default")
 T.gtk4_version = lambda: (4, 14)
 expect("older gtk 4: key left out", "gtk-interface-color-scheme" in T.gtk_ini_values(T.Look(), gtk4=True), False)
+quiet = T.Look(event_sounds=False, input_sounds=False, animations=False)
+expect("gtk3 sounds/animations off", {k: v for k, v in T.gtk_ini_values(quiet).items() if "enable" in k},
+       {"gtk-enable-event-sounds": "false", "gtk-enable-input-feedback-sounds": "false",
+        "gtk-enable-animations": "false"})
+expect("gtk4 sounds/animations off", T.gtk_ini_values(quiet, gtk4=True)["gtk-enable-animations"], "false")
+expect("xsettings off", [T.xsettings_values(quiet)[k] for k in ("Net/EnableEventSounds",
+       "Net/EnableInputFeedbackSounds", "Gtk/EnableAnimations")], ["0", "0", "0"])
+expect("gtkrc-2.0 off", "gtk-enable-event-sounds=0" in T.gtkrc2_text("", quiet), True)
 expect("gtk 3 never gets it", "gtk-interface-color-scheme" in T.gtk_ini_values(T.Look(prefer_dark=True)), False)
 T.gtk4_version = real
 

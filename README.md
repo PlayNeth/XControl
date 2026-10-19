@@ -272,7 +272,9 @@ see presses of the mouse's own DPI button, so pick the stage you want there befo
 ## Appearance
 
 One place to pick the GTK theme, icon theme, cursor (theme and size), interface font
-(antialiasing, hinting, subpixel order) and the dark preference. Choices preview inside
+(antialiasing, hinting, subpixel order), the dark preference, and **sounds and effects**:
+event sounds (the alert/error "bell" sounds apps play), click and key feedback sounds, and
+animations (the fades and slides in menus, popovers, switches and tabs). Choices preview inside
 XControl; **Apply** writes them everywhere an X11 program looks:
 
 - `~/.config/gtk-3.0/settings.ini`, `~/.config/gtk-4.0/settings.ini` and `~/.gtkrc-2.0`
@@ -292,6 +294,12 @@ GTK 4.20 and later choose a theme's dark variant only from `gtk-interface-color-
 on X11 comes from nothing but `~/.config/gtk-4.0/settings.ini` (there's no XSETTINGS key for
 it, and the old `gtk-application-prefer-dark-theme` there no longer counts). XControl writes it
 when that GTK 4 is installed; GTK 4 apps pick up a light/dark change when they restart.
+
+Sounds and animations go through the same places (`gtk-enable-event-sounds`,
+`gtk-enable-input-feedback-sounds`, `gtk-enable-animations`; `Net/EnableEventSounds`,
+`Net/EnableInputFeedbackSounds`, `Gtk/EnableAnimations` over XSETTINGS; GNOME's
+`enable-animations`, `event-sounds` and `input-feedback-sounds`), so open apps follow right away.
+Windows fading as they open and close is picom's, on the Bar & Compositor page.
 
 On i3 and similar window managers, restart the window manager (i3: Mod+Shift+R) to get the new
 cursor on the desktop and window borders.

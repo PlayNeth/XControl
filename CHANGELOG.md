@@ -2,6 +2,18 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.19.1 (2026-10-19)
+
+**Add sounds and animations settings to the Appearance page**
+
+- Add a "Sounds and effects" section to the Appearance page: event sounds
+  (alerts and errors), click and key feedback sounds, and animations in menus,
+  popups, switches and tabs
+- Apply them through GTK 2/3/4 settings files, XSETTINGS and GNOME's settings,
+  so open apps follow right away
+- Point to the compositor's "Fade windows in and out" for window open and
+  close fades
+
 ## 0.19.0 (2026-10-19)
 
 **Add Window Manager (i3) page that writes the i3 config**

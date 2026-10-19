@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.19.0\n"
+"Project-Id-Version: xcontrol 0.19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 16:11-0300\n"
+"POT-Creation-Date: 2026-10-19 16:35-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,8 +58,8 @@ msgstr ""
 msgid "Display details"
 msgstr ""
 
-#: xcontrol/app.py:113 xcontrol/appearance_page.py:390
-#: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:865
+#: xcontrol/app.py:113 xcontrol/appearance_page.py:412
+#: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:866
 #: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr ""
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Cursor"
 msgstr ""
 
-#: xcontrol/appearance_page.py:133 xcontrol/appearance_page.py:244
+#: xcontrol/appearance_page.py:133 xcontrol/appearance_page.py:257
 #, python-brace-format
 msgid "{px} px"
 msgstr ""
@@ -278,185 +278,207 @@ msgstr ""
 msgid "Subpixel order"
 msgstr ""
 
+#: xcontrol/appearance_page.py:164
+msgid "Sounds and effects"
+msgstr ""
+
 #: xcontrol/appearance_page.py:165
+msgid "Event sounds (alerts, errors, finished tasks)"
+msgstr ""
+
+#: xcontrol/appearance_page.py:166
+msgid "Feedback sounds on clicks and key presses"
+msgstr ""
+
+#: xcontrol/appearance_page.py:167
+msgid "Animations (fading and sliding in menus, popups, switches, tabs)"
+msgstr ""
+
+#: xcontrol/appearance_page.py:172
+msgid ""
+"For GTK and libadwaita apps. Windows fading in and out as they open and "
+"close is the compositor's (Bar & Compositor → \"Fade windows in and out\")."
+msgstr ""
+
+#: xcontrol/appearance_page.py:178
 msgid "Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"
 msgstr ""
 
-#: xcontrol/appearance_page.py:169 xcontrol/appearance_page.py:175
+#: xcontrol/appearance_page.py:182 xcontrol/appearance_page.py:188
 msgid "Qt applications"
 msgstr ""
 
-#: xcontrol/appearance_page.py:170
+#: xcontrol/appearance_page.py:183
 #, python-brace-format
 msgid ""
 "Qt apps take their colors, icons and font from the GTK settings above, "
 "because QT_QPA_PLATFORMTHEME={value}. Nothing else is needed."
 msgstr ""
 
-#: xcontrol/appearance_page.py:176
+#: xcontrol/appearance_page.py:189
 #, python-brace-format
 msgid "Qt apps follow this because QT_QPA_PLATFORMTHEME={value}."
 msgstr ""
 
-#: xcontrol/appearance_page.py:178
+#: xcontrol/appearance_page.py:191
 msgid ""
 "Qt apps only use these settings when QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) "
 "is set in your session, e.g. in ~/.xprofile. It isn't set now."
 msgstr ""
 
-#: xcontrol/appearance_page.py:187 xcontrol/display_page.py:615
+#: xcontrol/appearance_page.py:200 xcontrol/display_page.py:615
 msgid "Revert"
 msgstr ""
 
-#: xcontrol/appearance_page.py:190 xcontrol/bar_module_dialog.py:100
+#: xcontrol/appearance_page.py:203 xcontrol/bar_module_dialog.py:100
 #: xcontrol/display_page.py:263 xcontrol/input_page.py:212
 msgid "Apply"
 msgstr ""
 
-#: xcontrol/appearance_page.py:195
+#: xcontrol/appearance_page.py:208
 msgid ""
 "Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
 "cursors, libadwaita's dark preference and Qt, and updates open apps."
 msgstr ""
 
-#: xcontrol/appearance_page.py:200
+#: xcontrol/appearance_page.py:213
 msgid "An app ignores the theme?"
 msgstr ""
 
-#: xcontrol/appearance_page.py:201 xcontrol/appearance_page.py:381
+#: xcontrol/appearance_page.py:214 xcontrol/appearance_page.py:403
 msgid "Check an app…"
 msgstr ""
 
-#: xcontrol/appearance_page.py:204
+#: xcontrol/appearance_page.py:217
 msgid ""
 "Click the button, then click the app's window. XControl looks at how the app "
 "runs and tells you why it doesn't follow the theme."
 msgstr ""
 
-#: xcontrol/appearance_page.py:260
+#: xcontrol/appearance_page.py:276
 msgid ""
 "This theme isn't in any theme folder (it may be built into a program), so "
 "other apps probably can't find it. Pick one from the list."
 msgstr ""
 
-#: xcontrol/appearance_page.py:264
+#: xcontrol/appearance_page.py:280
 #, python-brace-format
 msgid ""
 "This theme has no version for {kits}; apps using those keep their default "
 "look."
 msgstr ""
 
-#: xcontrol/appearance_page.py:272
+#: xcontrol/appearance_page.py:288
 msgid "Open apps update right away (xsettingsd is running)."
 msgstr ""
 
-#: xcontrol/appearance_page.py:274
+#: xcontrol/appearance_page.py:290
 msgid "Open apps update right away through your desktop's settings service."
 msgstr ""
 
-#: xcontrol/appearance_page.py:276
+#: xcontrol/appearance_page.py:292
 msgid ""
 "Another program manages live settings; open apps may only update after a "
 "restart."
 msgstr ""
 
-#: xcontrol/appearance_page.py:278
+#: xcontrol/appearance_page.py:294
 msgid ""
 "Apply starts xsettingsd (and adds it to your login), so open apps update "
 "right away."
 msgstr ""
 
-#: xcontrol/appearance_page.py:280
+#: xcontrol/appearance_page.py:296
 msgid ""
 "Install xsettingsd so open apps update right away; until then they pick up "
 "changes when they restart."
 msgstr ""
 
-#: xcontrol/appearance_page.py:303
+#: xcontrol/appearance_page.py:322
 msgid "Previewing here; press Apply to use it everywhere"
 msgstr ""
 
-#: xcontrol/appearance_page.py:323
+#: xcontrol/appearance_page.py:345
 msgid "Back to the current settings"
 msgstr ""
 
-#: xcontrol/appearance_page.py:330
+#: xcontrol/appearance_page.py:352
 #, python-brace-format
 msgid ""
 "{files} overrides the theme you pick here, in every app of that GTK version. "
 "nwg-look's GTK 4 export and some theme installers create it."
 msgstr ""
 
-#: xcontrol/appearance_page.py:344 xcontrol/appearance_page.py:432
+#: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:454
 #: xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr ""
 
-#: xcontrol/appearance_page.py:347 xcontrol/appearance_page.py:418
+#: xcontrol/appearance_page.py:369 xcontrol/appearance_page.py:440
 #, python-brace-format
 msgid "Renamed: {items}. Restart the app."
 msgstr ""
 
-#: xcontrol/appearance_page.py:348 xcontrol/appearance_page.py:419
+#: xcontrol/appearance_page.py:370 xcontrol/appearance_page.py:441
 msgid "There was nothing to turn off."
 msgstr ""
 
-#: xcontrol/appearance_page.py:355
+#: xcontrol/appearance_page.py:377
 msgid "Could not apply the appearance settings"
 msgstr ""
 
-#: xcontrol/appearance_page.py:361
+#: xcontrol/appearance_page.py:383
 msgid "Applied; open apps are updating"
 msgstr ""
 
-#: xcontrol/appearance_page.py:363
+#: xcontrol/appearance_page.py:385
 msgid "Applied; open apps update when they restart"
 msgstr ""
 
-#: xcontrol/appearance_page.py:368
+#: xcontrol/appearance_page.py:390
 msgid "Click the app's window…"
 msgstr ""
 
-#: xcontrol/appearance_page.py:383
+#: xcontrol/appearance_page.py:405
 msgid "xprop is needed for this (package xorg-xprop)."
 msgstr ""
 
-#: xcontrol/appearance_page.py:384
+#: xcontrol/appearance_page.py:406
 msgid "That window doesn't say which program it belongs to."
 msgstr ""
 
-#: xcontrol/appearance_page.py:385
+#: xcontrol/appearance_page.py:407
 msgid "No window was clicked."
 msgstr ""
 
-#: xcontrol/appearance_page.py:386
+#: xcontrol/appearance_page.py:408
 msgid "Couldn't check the app"
 msgstr ""
 
-#: xcontrol/appearance_page.py:388
+#: xcontrol/appearance_page.py:410
 #, python-brace-format
 msgid "Why {app} looks different"
 msgstr ""
 
-#: xcontrol/appearance_page.py:394
+#: xcontrol/appearance_page.py:416
 msgid "none found"
 msgstr ""
 
-#: xcontrol/appearance_page.py:398
+#: xcontrol/appearance_page.py:420
 #, python-brace-format
 msgid "Toolkit: {kits}"
 msgstr ""
 
-#: xcontrol/appearance_page.py:422
+#: xcontrol/appearance_page.py:444
 #, python-brace-format
 msgid "Linked into your home folder: {items}. Restart the app."
 msgstr ""
 
-#: xcontrol/appearance_page.py:423
+#: xcontrol/appearance_page.py:445
 msgid "The themes are already in your home folder."
 msgstr ""
 
-#: xcontrol/appearance_page.py:426
+#: xcontrol/appearance_page.py:448
 msgid "Done. Restart the app."
 msgstr ""
 
@@ -729,7 +751,7 @@ msgstr ""
 msgid "xsecurelock (most robust)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:46 xcontrol/i3_page.py:864
+#: xcontrol/desktop_page.py:46 xcontrol/i3_page.py:865
 #: xcontrol/system_page.py:65 xcontrol/system_page.py:308
 msgid "Copy"
 msgstr ""
@@ -2033,7 +2055,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:819
+#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:820
 msgid "i3's defaults"
 msgstr ""
 
@@ -2198,91 +2220,91 @@ msgstr ""
 msgid "i3 doesn't accept this, so nothing was changed:"
 msgstr ""
 
-#: xcontrol/i3_page.py:811
+#: xcontrol/i3_page.py:812
 msgid "i3 isn't installed"
 msgstr ""
 
-#: xcontrol/i3_page.py:811
+#: xcontrol/i3_page.py:812
 msgid "Install the i3-wm package first."
 msgstr ""
 
-#: xcontrol/i3_page.py:816
+#: xcontrol/i3_page.py:817
 msgid "Start from your current i3 config?"
 msgstr ""
 
-#: xcontrol/i3_page.py:817
+#: xcontrol/i3_page.py:818
 msgid ""
 "Its keys, startup programs, window rules and look are brought over to this "
 "page. Otherwise the page starts from i3's defaults. Either way your file is "
 "kept as a backup."
 msgstr ""
 
-#: xcontrol/i3_page.py:819
+#: xcontrol/i3_page.py:820
 msgid "Import it"
 msgstr ""
 
-#: xcontrol/i3_page.py:822
+#: xcontrol/i3_page.py:823
 msgid "Put your previous i3 config back?"
 msgstr ""
 
-#: xcontrol/i3_page.py:823
+#: xcontrol/i3_page.py:824
 msgid "XControl's config is kept as config.xcontrol."
 msgstr ""
 
-#: xcontrol/i3_page.py:823
+#: xcontrol/i3_page.py:824
 msgid "Put it back"
 msgstr ""
 
-#: xcontrol/i3_page.py:823
+#: xcontrol/i3_page.py:824
 msgid "Keep XControl's"
 msgstr ""
 
-#: xcontrol/i3_page.py:838
+#: xcontrol/i3_page.py:839
 msgid "Nothing to import"
 msgstr ""
 
-#: xcontrol/i3_page.py:838
+#: xcontrol/i3_page.py:839
 msgid "No i3 config other than XControl's was found."
 msgstr ""
 
-#: xcontrol/i3_page.py:840
+#: xcontrol/i3_page.py:841
 #, python-brace-format
 msgid "Import {path}?"
 msgstr ""
 
-#: xcontrol/i3_page.py:841
+#: xcontrol/i3_page.py:842
 msgid "The settings on this page are replaced by the ones in that file."
 msgstr ""
 
-#: xcontrol/i3_page.py:841
+#: xcontrol/i3_page.py:842
 msgid "Import"
 msgstr ""
 
-#: xcontrol/i3_page.py:850
+#: xcontrol/i3_page.py:851
 msgid "Could not read the config"
 msgstr ""
 
-#: xcontrol/i3_page.py:857
+#: xcontrol/i3_page.py:858
 msgid "Imported"
 msgstr ""
 
-#: xcontrol/i3_page.py:857
+#: xcontrol/i3_page.py:858
 msgid "Left out because XControl takes care of them now:"
 msgstr ""
 
-#: xcontrol/i3_page.py:880
+#: xcontrol/i3_page.py:881
 msgid "i3 isn't installed."
 msgstr ""
 
-#: xcontrol/i3_page.py:885
+#: xcontrol/i3_page.py:886
 msgid "~/.i3/config is in the way; it's moved aside on the next change."
 msgstr ""
 
-#: xcontrol/i3_page.py:887
+#: xcontrol/i3_page.py:888
 msgid "XControl's config is in use."
 msgstr ""
 
-#: xcontrol/i3_page.py:889
+#: xcontrol/i3_page.py:890
 msgid "Your previous config is kept as config.before-xcontrol."
 msgstr ""
 
