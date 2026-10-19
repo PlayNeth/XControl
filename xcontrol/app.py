@@ -14,9 +14,10 @@ from .gaming_page import GamingPage  # noqa: E402
 from .input_page import InputPage  # noqa: E402
 from .monitors_page import MonitorsPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
+from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "appearance", "desktop", "system")
+PAGES = ("gaming", "displays", "input", "appearance", "desktop", "users", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -62,6 +63,10 @@ class MainWindow(Gtk.ApplicationWindow):
         desktop = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         desktop.add(DesktopPage(self))
         stack.add_titled(desktop, "desktop", _("Desktop"))
+
+        users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        users.add(UsersPage(self))
+        stack.add_titled(users, "users", _("Users"))
 
         stack.add_titled(SystemPage(self), "system", _("System"))  # scrolls inside its tabs
 

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.14.1\n"
+"Project-Id-Version: xcontrol 0.15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 14:37-0300\n"
+"POT-Creation-Date: 2026-10-19 14:49-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: xcontrol/app.py:48
+#: xcontrol/app.py:49
 msgid "Gaming"
 msgstr ""
 
-#: xcontrol/app.py:52
+#: xcontrol/app.py:53
 msgid "Displays"
 msgstr ""
 
-#: xcontrol/app.py:56
+#: xcontrol/app.py:57
 msgid "Input"
 msgstr ""
 
-#: xcontrol/app.py:60
+#: xcontrol/app.py:61
 msgid "Appearance"
 msgstr ""
 
-#: xcontrol/app.py:64
+#: xcontrol/app.py:65
 msgid "Desktop"
 msgstr ""
 
-#: xcontrol/app.py:66 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:69
+msgid "Users"
+msgstr ""
+
+#: xcontrol/app.py:71 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr ""
 
-#: xcontrol/app.py:102
+#: xcontrol/app.py:107
 msgid "Display details"
 msgstr ""
 
-#: xcontrol/app.py:103 xcontrol/appearance_page.py:390
+#: xcontrol/app.py:108 xcontrol/appearance_page.py:390
 #: xcontrol/edid_override_dialog.py:27 xcontrol/module_params_dialog.py:119
 #: xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -374,6 +378,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/appearance_page.py:344 xcontrol/appearance_page.py:432
+#: xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr ""
 
@@ -481,189 +486,198 @@ msgstr ""
 msgid "xsecurelock (most robust)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:45
+#: xcontrol/desktop_page.py:46 xcontrol/system_page.py:64
+#: xcontrol/system_page.py:307
+msgid "Copy"
+msgstr ""
+
+#: xcontrol/desktop_page.py:51
+#, python-brace-format
+msgid "Copied: {text}"
+msgstr ""
+
+#: xcontrol/desktop_page.py:69
 msgid "Never"
 msgstr ""
 
-#: xcontrol/desktop_page.py:45
+#: xcontrol/desktop_page.py:69
 #, python-brace-format
 msgid "{n} minute"
 msgstr ""
 
-#: xcontrol/desktop_page.py:45
+#: xcontrol/desktop_page.py:69
 #, python-brace-format
 msgid "{n} minutes"
 msgstr ""
 
-#: xcontrol/desktop_page.py:60
+#: xcontrol/desktop_page.py:84
 msgid ""
-"i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next "
-"login nothing would set the wallpaper or start the screen lock. Add this "
-"line to your i3 config (it also brings back your display layout, mouse and "
-"keyboard settings and live theme updates):\n"
-"<tt>exec --no-startup-id xcontrol --session</tt>"
+"i3 doesn't run ~/.config/autostart by itself, so after the next login "
+"nothing would set the wallpaper or start the screen lock. Add this line to "
+"your i3 config (it also brings back your display layout, mouse and keyboard "
+"settings and live theme updates):"
 msgstr ""
 
-#: xcontrol/desktop_page.py:99
+#: xcontrol/desktop_page.py:123
 msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:101
+#: xcontrol/desktop_page.py:125
 msgid "Wallpaper"
 msgstr ""
 
-#: xcontrol/desktop_page.py:112 xcontrol/input_page.py:404
+#: xcontrol/desktop_page.py:136 xcontrol/input_page.py:404
 msgid "Layout"
 msgstr ""
 
-#: xcontrol/desktop_page.py:116 xcontrol/display_page.py:233
+#: xcontrol/desktop_page.py:140 xcontrol/display_page.py:233
 msgid "Display"
 msgstr ""
 
-#: xcontrol/desktop_page.py:119
+#: xcontrol/desktop_page.py:143 xcontrol/users_page.py:454
 msgid "Choose a picture"
 msgstr ""
 
-#: xcontrol/desktop_page.py:122
+#: xcontrol/desktop_page.py:146 xcontrol/users_page.py:458
 msgid "Pictures"
 msgstr ""
 
-#: xcontrol/desktop_page.py:128
+#: xcontrol/desktop_page.py:152
 msgid "No picture, only the color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:131
+#: xcontrol/desktop_page.py:155
 msgid "Picture"
 msgstr ""
 
-#: xcontrol/desktop_page.py:137
+#: xcontrol/desktop_page.py:161
 msgid "Placement"
 msgstr ""
 
-#: xcontrol/desktop_page.py:142
+#: xcontrol/desktop_page.py:166
 msgid "Background color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:152
+#: xcontrol/desktop_page.py:176
 msgid "Screen lock"
 msgstr ""
 
-#: xcontrol/desktop_page.py:156
+#: xcontrol/desktop_page.py:180
 msgid "Locker"
 msgstr ""
 
-#: xcontrol/desktop_page.py:165
+#: xcontrol/desktop_page.py:189
 msgid "Lock after being idle for"
 msgstr ""
 
-#: xcontrol/desktop_page.py:167
+#: xcontrol/desktop_page.py:191
 msgid "Lock before suspend and hibernate"
 msgstr ""
 
-#: xcontrol/desktop_page.py:173
+#: xcontrol/desktop_page.py:197
 msgid "The wallpaper"
 msgstr ""
 
-#: xcontrol/desktop_page.py:174
+#: xcontrol/desktop_page.py:198
 msgid "A plain color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:181
+#: xcontrol/desktop_page.py:205
 msgid "Lock screen shows"
 msgstr ""
 
-#: xcontrol/desktop_page.py:183
+#: xcontrol/desktop_page.py:207
 msgid "Show the number of failed attempts"
 msgstr ""
 
-#: xcontrol/desktop_page.py:188
+#: xcontrol/desktop_page.py:212
 msgid "Lock now"
 msgstr ""
 
-#: xcontrol/desktop_page.py:194
+#: xcontrol/desktop_page.py:218
 msgid "To lock with a key, add to your i3 config:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:202
+#: xcontrol/desktop_page.py:226
 msgid "Screen power"
 msgstr ""
 
-#: xcontrol/desktop_page.py:204
+#: xcontrol/desktop_page.py:228
 msgid "Leave as it is"
 msgstr ""
 
-#: xcontrol/desktop_page.py:208
+#: xcontrol/desktop_page.py:232
 msgid "Turn the screen off after"
 msgstr ""
 
-#: xcontrol/desktop_page.py:209
+#: xcontrol/desktop_page.py:233
 msgid ""
 "Counted from the last time you used the mouse or keyboard. On a CRT this "
 "also saves the tube."
 msgstr ""
 
-#: xcontrol/desktop_page.py:236
+#: xcontrol/desktop_page.py:260
 msgid "(not installed)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:289
+#: xcontrol/desktop_page.py:313
 msgid ""
 "Install xss-lock: it starts the locker when you're idle and before the "
 "computer sleeps."
 msgstr ""
 
-#: xcontrol/desktop_page.py:292
+#: xcontrol/desktop_page.py:316
 msgid "Install a locker: i3lock, xsecurelock or slock."
 msgstr ""
 
-#: xcontrol/desktop_page.py:294
+#: xcontrol/desktop_page.py:318
 msgid ""
 "slock is set up when it's compiled (config.h); XControl can only start it."
 msgstr ""
 
-#: xcontrol/desktop_page.py:296
+#: xcontrol/desktop_page.py:320
 msgid ""
 "xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
 "show the wallpaper."
 msgstr ""
 
-#: xcontrol/desktop_page.py:307
+#: xcontrol/desktop_page.py:331
 msgid "Active: xss-lock is running."
 msgstr ""
 
-#: xcontrol/desktop_page.py:309
+#: xcontrol/desktop_page.py:333
 msgid "Not running yet."
 msgstr ""
 
-#: xcontrol/desktop_page.py:317
+#: xcontrol/desktop_page.py:341
 msgid ""
 "Your i3 config also sets the wallpaper; remove these lines or they'll "
 "replace XControl's at login:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:320
+#: xcontrol/desktop_page.py:344
 msgid ""
 "Another screen lock is set up; remove it from your i3 config, or two lockers "
 "will start:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:416
+#: xcontrol/desktop_page.py:440
 msgid "Could not save the desktop settings"
 msgstr ""
 
-#: xcontrol/desktop_page.py:418
+#: xcontrol/desktop_page.py:442
 msgid "Desktop settings applied"
 msgstr ""
 
-#: xcontrol/desktop_page.py:419
+#: xcontrol/desktop_page.py:443
 msgid "XControl no longer manages the desktop"
 msgstr ""
 
-#: xcontrol/desktop_page.py:425
+#: xcontrol/desktop_page.py:449
 msgid "Could not lock the screen"
 msgstr ""
 
-#: xcontrol/desktop_page.py:425
+#: xcontrol/desktop_page.py:449
 msgid "Install i3lock, xsecurelock or slock."
 msgstr ""
 
@@ -1082,11 +1096,13 @@ msgstr ""
 
 #: xcontrol/edid_override_dialog.py:252 xcontrol/gaming_page.py:137
 #: xcontrol/gaming_page.py:468 xcontrol/monitors_page.py:137
+#: xcontrol/users_page.py:358 xcontrol/users_page.py:380
+#: xcontrol/users_page.py:444 xcontrol/users_page.py:456
 msgid "Cancel"
 msgstr ""
 
 #: xcontrol/edid_override_dialog.py:252 xcontrol/module_params_dialog.py:120
-#: xcontrol/monitors_page.py:137
+#: xcontrol/monitors_page.py:137 xcontrol/users_page.py:234
 msgid "Save"
 msgstr ""
 
@@ -1204,7 +1220,7 @@ msgid "Add Steam game"
 msgstr ""
 
 #: xcontrol/gaming_page.py:137 xcontrol/gaming_page.py:468
-#: xcontrol/resolutions_dialog.py:153
+#: xcontrol/resolutions_dialog.py:153 xcontrol/users_page.py:381
 msgid "Add"
 msgstr ""
 
@@ -2901,10 +2917,6 @@ msgstr ""
 msgid "Kernel modules"
 msgstr ""
 
-#: xcontrol/system_page.py:64 xcontrol/system_page.py:307
-msgid "Copy"
-msgstr ""
-
 #: xcontrol/system_page.py:65
 msgid "Copy this information (without your computer and user names)"
 msgstr ""
@@ -3001,6 +3013,299 @@ msgstr ""
 
 #: xcontrol/system_page.py:418
 msgid "Module details copied"
+msgstr ""
+
+#: xcontrol/users_page.py:18
+msgid "Use sound devices directly (rarely needed with PipeWire)"
+msgstr ""
+
+#: xcontrol/users_page.py:19
+msgid "Use video devices directly (webcams, some brightness controls)"
+msgstr ""
+
+#: xcontrol/users_page.py:20
+msgid ""
+"Read input devices directly (needed by sc-controller and some gamepad tools)"
+msgstr ""
+
+#: xcontrol/users_page.py:21
+msgid "Mount removable drives"
+msgstr ""
+
+#: xcontrol/users_page.py:22
+msgid "Use CD/DVD drives"
+msgstr ""
+
+#: xcontrol/users_page.py:23
+msgid "Use scanners"
+msgstr ""
+
+#: xcontrol/users_page.py:24
+msgid "Manage printers"
+msgstr ""
+
+#: xcontrol/users_page.py:25
+msgid "Games that keep shared high scores"
+msgstr ""
+
+#: xcontrol/users_page.py:26
+msgid "Change network settings"
+msgstr ""
+
+#: xcontrol/users_page.py:27
+msgid "Turn Wi-Fi and Bluetooth radios on and off"
+msgstr ""
+
+#: xcontrol/users_page.py:28
+msgid "Use serial ports (Arduino, modems, consoles)"
+msgstr ""
+
+#: xcontrol/users_page.py:29
+msgid "Use hardware virtualization directly"
+msgstr ""
+
+#: xcontrol/users_page.py:30
+msgid "Manage virtual machines (libvirt)"
+msgstr ""
+
+#: xcontrol/users_page.py:31
+msgid "Use Docker (gives root-equivalent access)"
+msgstr ""
+
+#: xcontrol/users_page.py:32
+msgid "Capture network traffic (Wireshark)"
+msgstr ""
+
+#: xcontrol/users_page.py:34
+msgid "Weak: use at least 8 characters"
+msgstr ""
+
+#: xcontrol/users_page.py:34
+msgid "Fair"
+msgstr ""
+
+#: xcontrol/users_page.py:34
+msgid "Good"
+msgstr ""
+
+#: xcontrol/users_page.py:35
+msgid "Only lowercase letters, digits, - and _ (starting with a letter)."
+msgstr ""
+
+#: xcontrol/users_page.py:36
+msgid "At most 32 characters."
+msgstr ""
+
+#: xcontrol/users_page.py:81
+msgid "New password"
+msgstr ""
+
+#: xcontrol/users_page.py:84
+msgid "Repeat it"
+msgstr ""
+
+#: xcontrol/users_page.py:92
+msgid "Show or hide"
+msgstr ""
+
+#: xcontrol/users_page.py:107
+msgid "No line breaks."
+msgstr ""
+
+#: xcontrol/users_page.py:109
+msgid "The two passwords are different."
+msgstr ""
+
+#: xcontrol/users_page.py:138
+msgid "Add user…"
+msgstr ""
+
+#: xcontrol/users_page.py:141
+msgid "Remove…"
+msgstr ""
+
+#: xcontrol/users_page.py:172 xcontrol/users_page.py:266
+#: xcontrol/users_page.py:390
+msgid "Administrator"
+msgstr ""
+
+#: xcontrol/users_page.py:172
+msgid "Standard"
+msgstr ""
+
+#: xcontrol/users_page.py:174
+msgid "you"
+msgstr ""
+
+#: xcontrol/users_page.py:200
+msgid "No regular user accounts were found."
+msgstr ""
+
+#: xcontrol/users_page.py:204
+msgid ""
+"pkexec (polkit) is needed to change accounts; only your own picture can be "
+"changed without it."
+msgstr ""
+
+#: xcontrol/users_page.py:210
+msgid "Change the picture"
+msgstr ""
+
+#: xcontrol/users_page.py:238
+msgid "Full name saved"
+msgstr ""
+
+#: xcontrol/users_page.py:240 xcontrol/users_page.py:391
+msgid "Full name"
+msgstr ""
+
+#: xcontrol/users_page.py:243
+msgid "Rename"
+msgstr ""
+
+#: xcontrol/users_page.py:250 xcontrol/users_page.py:393
+msgid "Login name"
+msgstr ""
+
+#: xcontrol/users_page.py:252
+msgid ""
+"You can't rename the account you're logged in with; log in as another "
+"administrator to do it."
+msgstr ""
+
+#: xcontrol/users_page.py:254
+msgid "This account has programs running; log it out to rename it."
+msgstr ""
+
+#: xcontrol/users_page.py:257
+msgid "Change password…"
+msgstr ""
+
+#: xcontrol/users_page.py:259
+msgid "Password"
+msgstr ""
+
+#: xcontrol/users_page.py:264
+msgid "Administrator rights changed"
+msgstr ""
+
+#: xcontrol/users_page.py:267
+msgid ""
+"Administrators (the wheel group) can use sudo and approve system changes "
+"like these."
+msgstr ""
+
+#: xcontrol/users_page.py:268
+msgid "You can't remove this from your own account."
+msgstr ""
+
+#: xcontrol/users_page.py:280
+msgid "Login shell changed (from the next login)"
+msgstr ""
+
+#: xcontrol/users_page.py:281
+msgid "Login shell"
+msgstr ""
+
+#: xcontrol/users_page.py:291
+msgid "Save groups"
+msgstr ""
+
+#: xcontrol/users_page.py:307
+msgid "Groups saved; they apply from the next login"
+msgstr ""
+
+#: xcontrol/users_page.py:310
+msgid "Group changes take effect after logging out and back in."
+msgstr ""
+
+#: xcontrol/users_page.py:333
+msgid "Cancelled"
+msgstr ""
+
+#: xcontrol/users_page.py:345
+#, python-brace-format
+msgid "Rename {old} to {new}?"
+msgstr ""
+
+#: xcontrol/users_page.py:348
+#, python-brace-format
+msgid "The home folder moves to /home/{new}. "
+msgstr ""
+
+#: xcontrol/users_page.py:349
+msgid "Programs that saved the old path (some games, scripts) may need fixing."
+msgstr ""
+
+#: xcontrol/users_page.py:353
+msgid "Renamed"
+msgstr ""
+
+#: xcontrol/users_page.py:356
+#, python-brace-format
+msgid "Password for {user}"
+msgstr ""
+
+#: xcontrol/users_page.py:359
+msgid "Change"
+msgstr ""
+
+#: xcontrol/users_page.py:366
+msgid ""
+"You'll be asked for an administrator's password (yours, if you're one) to "
+"confirm."
+msgstr ""
+
+#: xcontrol/users_page.py:376
+msgid "Password changed"
+msgstr ""
+
+#: xcontrol/users_page.py:379
+msgid "Add a user"
+msgstr ""
+
+#: xcontrol/users_page.py:407
+msgid "That login name is taken."
+msgstr ""
+
+#: xcontrol/users_page.py:433
+msgid "User added"
+msgstr ""
+
+#: xcontrol/users_page.py:441
+#, python-brace-format
+msgid "Remove {user}?"
+msgstr ""
+
+#: xcontrol/users_page.py:442
+#, python-brace-format
+msgid ""
+"The account is deleted. Its home folder ({home}) can be kept, so its files "
+"stay on the disk."
+msgstr ""
+
+#: xcontrol/users_page.py:445
+msgid "Keep the files"
+msgstr ""
+
+#: xcontrol/users_page.py:446
+msgid "Delete the files too"
+msgstr ""
+
+#: xcontrol/users_page.py:451
+msgid "User removed"
+msgstr ""
+
+#: xcontrol/users_page.py:456
+msgid "Open"
+msgstr ""
+
+#: xcontrol/users_page.py:474
+msgid "Could not use that picture"
+msgstr ""
+
+#: xcontrol/users_page.py:487
+msgid "Picture changed"
 msgstr ""
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"

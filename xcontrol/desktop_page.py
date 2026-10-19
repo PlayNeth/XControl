@@ -20,7 +20,8 @@ PREVIEW_W = 420
 
 
 def _hint(text, markup=False):
-    lbl = Gtk.Label(xalign=0, wrap=True)
+    lbl = Gtk.Label(xalign=0, wrap=True, selectable=True)
+    lbl.set_can_focus(False)  # selectable without grabbing focus (that would scroll the page)
     lbl.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
     lbl.set_max_width_chars(80)
     if markup:
@@ -29,6 +30,29 @@ def _hint(text, markup=False):
         lbl.set_text(text)
     lbl.get_style_context().add_class("dim-label")
     return lbl
+
+
+def _command(intro, command, window):
+    """An explanation, then a command to put somewhere, with a Copy button."""
+    box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+    box.pack_start(_hint(intro), False, False, 0)
+    row = Gtk.Box(spacing=6)
+    cmd = Gtk.Label(label=command, xalign=0, selectable=True)
+    cmd.set_can_focus(False)
+    cmd.get_style_context().add_class("monospace")
+    cmd.set_ellipsize(Pango.EllipsizeMode.NONE)
+    row.pack_start(cmd, False, False, 0)
+    copy = Gtk.Button.new_from_icon_name("edit-copy-symbolic", Gtk.IconSize.BUTTON)
+    copy.set_tooltip_text(_("Copy"))
+    copy.set_relief(Gtk.ReliefStyle.NONE)
+
+    def do_copy(*_a):
+        Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(command, -1)
+        window.set_status(_("Copied: {text}").format(text=command))
+    copy.connect("clicked", do_copy)
+    row.pack_start(copy, False, False, 0)
+    box.pack_start(row, False, False, 0)
+    return box
 
 
 def _rgba(text):
@@ -56,11 +80,11 @@ class DesktopPage(Gtk.Box):
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
         self.autostart_bar = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
-        self.autostart_bar.get_content_area().add(_hint(
-            _("i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next login nothing would set "
-              "the wallpaper or start the screen lock. Add this line to your i3 config (it also brings back your "
-              "display layout, mouse and keyboard settings and live theme updates):\n"
-              "<tt>exec --no-startup-id xcontrol --session</tt>"), markup=True))
+        self.autostart_bar.get_content_area().add(_command(
+            _("i3 doesn't run ~/.config/autostart by itself, so after the next login nothing would set the wallpaper "
+              "or start the screen lock. Add this line to your i3 config (it also brings back your display layout, "
+              "mouse and keyboard settings and live theme updates):"),
+            "exec --no-startup-id xcontrol --session", window))
         self.autostart_bar.set_no_show_all(True)
         self.pack_start(self.autostart_bar, False, False, 0)
 
@@ -191,8 +215,8 @@ class DesktopPage(Gtk.Box):
         self.lock_status = _hint("")
         bar.pack_start(self.lock_status, True, True, 0)
         g.attach(bar, 1, 6, 1, 1)
-        g.attach(_hint(_("To lock with a key, add to your i3 config:") +
-                       "\n<tt>bindsym $mod+Shift+x exec --no-startup-id xcontrol --lock</tt>", markup=True), 1, 7, 1, 1)
+        g.attach(_command(_("To lock with a key, add to your i3 config:"),
+                          "bindsym $mod+Shift+x exec --no-startup-id xcontrol --lock", self.window), 1, 7, 1, 1)
         self.lock_conflict = _hint("")
         self.lock_conflict.set_no_show_all(True)
         g.attach(self.lock_conflict, 1, 8, 1, 1)

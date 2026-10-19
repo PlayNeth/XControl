@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.14.1
+pkgver=0.15.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -31,7 +31,7 @@ optdepends=(
   'xss-lock: screen lock when idle and before suspend (Desktop page)'
   'i3lock: screen locker that can show the wallpaper (or xsecurelock, slock)'
   'hwdata: full monitor manufacturer, graphics card and network adapter names'
-  'polkit: install EDID overrides and set kernel module parameters'
+  'polkit: EDID overrides, kernel module parameters and user accounts (needs a polkit agent, e.g. polkit-gnome)'
   'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'
   'vulkan-tools: Vulkan version on the System page, "Test with vkcube" button'
 )

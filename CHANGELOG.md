@@ -2,6 +2,28 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.15.0 (2026-10-19)
+
+**Add Users page for managing user accounts**
+
+- Add a Users page that lists the regular accounts (never root or system accounts)
+- Change an account's full name, login name, password (with a strength hint),
+  administrator rights (wheel group), login shell and picture
+- Rename accounts, moving /home/OLD to /home/NEW; not allowed for the account
+  you're logged in with or one with programs running
+- Choose optional groups (input, uucp, video, audio, storage, rfkill...), each
+  explained in plain words; they apply from the next login
+- Add new users and remove users, keeping or deleting their home folder
+- Write your own picture to ~/.face and copy pictures for login screens that use
+  AccountsService (LightDM, GDM, SDDM)
+- Refuse to delete, rename or remove admin rights from the account running
+  XControl, so you can't lock yourself out
+- Add a polkit policy for all root helpers so the password is asked only once
+  for a few minutes of changes
+- Add Copy buttons to the i3 config lines shown on the Desktop page and make
+  its hints selectable
+- Add xcontrol-user-helper, a third root helper run through pkexec, with tests
+
 ## 0.14.1 (2026-10-19)
 
 **Add xcontrol --session to start all login helpers with one line**

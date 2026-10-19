@@ -1,0 +1,213 @@
+#!/bin/sh
+# xcontrol-user-helper: user accounts for XControl (runs as root via pkexec).
+#
+#   realname USER NAME          set the full name (GECOS)
+#   password USER               set the password, read as one line from stdin
+#   add USER NAME ADMIN         create USER (ADMIN 1 = in the wheel group) with a home
+#                               folder; the password is read from stdin
+#   delete USER keep|remove     delete USER, keeping or removing the home folder
+#   admin USER 0|1              add to / remove from the wheel group
+#   groups USER [GROUP...]      set membership of the optional groups below to exactly these
+#   shell USER PATH             set the login shell (must be listed in /etc/shells)
+#   rename OLD NEW              change the login name and move the home folder
+#   icon USER FILE|-            set (or remove with -) the picture login screens show
+#
+# Only regular accounts (UID_MIN..UID_MAX from /etc/login.defs) can be changed, never
+# root or system accounts. You can't delete, rename or take admin rights away from the
+# account that's running XControl, and accounts with running processes can't be
+# deleted or renamed.
+set -eu
+
+die() { echo "xcontrol-user-helper: $*" >&2; exit 1; }
+
+PASSWD=/etc/passwd
+GROUP=/etc/group
+SHELLS=/etc/shells
+LOGINDEFS=/etc/login.defs
+ICONDIR=/var/lib/AccountsService
+CALLER_UID=${PKEXEC_UID:-}
+DRY=0
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    PASSWD=${XCONTROL_PASSWD:-$PASSWD}
+    GROUP=${XCONTROL_GROUP:-$GROUP}
+    SHELLS=${XCONTROL_SHELLS:-$SHELLS}
+    LOGINDEFS=${XCONTROL_LOGINDEFS:-$LOGINDEFS}
+    ICONDIR=${XCONTROL_ICONDIR:-$ICONDIR}
+    CALLER_UID=${XCONTROL_CALLER_UID:-$(id -u)}
+    DRY=1   # print the commands instead of running them
+fi
+[ -n "$CALLER_UID" ] || die "must be run through pkexec"
+
+OPTIONAL_GROUPS="audio video input storage optical scanner lp games network rfkill uucp kvm libvirt docker wireshark"
+
+run() {
+    if [ $DRY = 1 ]; then echo "would run: $*"; else "$@"; fi
+}
+
+logindef() { sed -n "s/^[[:space:]]*$1[[:space:]]\{1,\}\([0-9]\{1,\}\).*/\1/p" "$LOGINDEFS" 2>/dev/null | tail -n1; }
+UID_MIN=$(logindef UID_MIN); UID_MIN=${UID_MIN:-1000}
+UID_MAX=$(logindef UID_MAX); UID_MAX=${UID_MAX:-60000}
+
+check_name() {
+    case $1 in ''|-*|*[!a-z0-9_-]*) die "invalid user name: $1";; esac
+    case $1 in [a-z_]*) ;; *) die "invalid user name: $1";; esac
+    [ ${#1} -le 32 ] || die "user name too long: $1"
+}
+user_uid() { awk -F: -v u="$1" '$1 == u { print $3; exit }' "$PASSWD"; }
+check_regular() {
+    check_name "$1"
+    uid=$(user_uid "$1")
+    [ -n "$uid" ] || die "no such user: $1"
+    [ "$uid" -ge "$UID_MIN" ] && [ "$uid" -le "$UID_MAX" ] || die "$1 is not a regular account"
+}
+is_caller() { [ "$(user_uid "$1")" = "$CALLER_UID" ]; }
+not_running() {
+    uid=$(user_uid "$1")
+    if [ $DRY = 0 ] && pgrep -U "$uid" >/dev/null 2>&1; then
+        die "$1 is logged in or has programs running; log it out first"
+    fi
+}
+check_fullname() {
+    nl='
+'
+    case $1 in *[:,=]*|*"$nl"*) die "the full name can't contain : , = or line breaks";; esac
+    [ ${#1} -le 100 ] || die "full name too long"
+}
+read_password() {
+    IFS= read -r pw || [ -n "${pw:-}" ] || die "no password given"
+    [ -n "$pw" ] || die "empty password"
+    [ ${#pw} -le 512 ] || die "password too long"
+}
+set_password() {
+    if [ $DRY = 1 ]; then echo "would set the password of $1"; else printf '%s:%s\n' "$1" "$pw" | chpasswd; fi
+}
+in_group() { awk -F: -v g="$2" -v u="$1" '$1 == g { n = split($4, m, ","); for (i = 1; i <= n; i++) if (m[i] == u) f = 1 } END { exit !f }' "$GROUP"; }
+group_exists() { awk -F: -v g="$1" '$1 == g { f = 1 } END { exit !f }' "$GROUP"; }
+
+[ $# -ge 1 ] || die "usage: realname|password|add|delete|admin|groups|shell|rename|icon ..."
+cmd=$1; shift
+case $cmd in
+    realname)
+        [ $# -eq 2 ] || die "usage: realname USER NAME"
+        check_regular "$1"; check_fullname "$2"
+        if command -v chfn >/dev/null 2>&1; then run chfn -f "$2" "$1"; else run usermod -c "$2" "$1"; fi
+        echo "full name of $1 set"
+        ;;
+    password)
+        [ $# -eq 1 ] || die "usage: password USER"
+        check_regular "$1"; read_password
+        set_password "$1"
+        echo "password of $1 changed"
+        ;;
+    add)
+        [ $# -eq 3 ] || die "usage: add USER NAME ADMIN"
+        check_name "$1"; check_fullname "$2"
+        case $3 in 0|1) ;; *) die "ADMIN must be 0 or 1";; esac
+        [ -z "$(user_uid "$1")" ] || die "$1 already exists"
+        ! group_exists "$1" || [ $DRY = 1 ] || die "a group named $1 already exists"
+        read_password
+        if [ "$3" = 1 ] && group_exists wheel; then
+            run useradd -m -c "$2" -G wheel "$1"
+        else
+            run useradd -m -c "$2" "$1"
+        fi
+        set_password "$1"
+        echo "user $1 created"
+        ;;
+    delete)
+        [ $# -eq 2 ] || die "usage: delete USER keep|remove"
+        check_regular "$1"
+        ! is_caller "$1" || die "you can't delete the account you're using"
+        not_running "$1"
+        case $2 in
+            keep) run userdel "$1" ;;
+            remove) run userdel -r "$1" ;;
+            *) die "expected keep or remove" ;;
+        esac
+        [ ! -e "$ICONDIR/icons/$1" ] || run rm -f "$ICONDIR/icons/$1"
+        echo "user $1 deleted"
+        ;;
+    admin)
+        [ $# -eq 2 ] || die "usage: admin USER 0|1"
+        check_regular "$1"
+        group_exists wheel || die "there is no wheel group"
+        case $2 in
+            1) run gpasswd -a "$1" wheel ;;
+            0) ! is_caller "$1" || die "you can't take administrator rights away from yourself"
+               run gpasswd -d "$1" wheel ;;
+            *) die "expected 0 or 1" ;;
+        esac
+        ;;
+    groups)
+        [ $# -ge 1 ] || die "usage: groups USER [GROUP...]"
+        user=$1; shift
+        check_regular "$user"
+        for g in "$@"; do
+            case " $OPTIONAL_GROUPS " in *" $g "*) ;; *) die "not an optional group: $g";; esac
+            group_exists "$g" || die "no such group: $g"
+        done
+        for g in $OPTIONAL_GROUPS; do
+            group_exists "$g" || continue
+            want=0
+            for w in "$@"; do [ "$w" != "$g" ] || want=1; done
+            if [ $want = 1 ] && ! in_group "$user" "$g"; then run gpasswd -a "$user" "$g"
+            elif [ $want = 0 ] && in_group "$user" "$g"; then run gpasswd -d "$user" "$g"; fi
+        done
+        echo "groups of $user set"
+        ;;
+    shell)
+        [ $# -eq 2 ] || die "usage: shell USER PATH"
+        check_regular "$1"
+        case $2 in /*) ;; *) die "invalid shell: $2";; esac
+        grep -qxF -- "$2" "$SHELLS" || die "$2 is not listed in /etc/shells"
+        [ $DRY = 1 ] || [ -x "$2" ] || die "$2 is not installed"
+        run usermod -s "$2" "$1"
+        echo "login shell of $1 set to $2"
+        ;;
+    rename)
+        [ $# -eq 2 ] || die "usage: rename OLD NEW"
+        check_regular "$1"; check_name "$2"
+        ! is_caller "$1" || die "you can't rename the account you're using; log in as another administrator"
+        [ -z "$(user_uid "$2")" ] || die "$2 already exists"
+        not_running "$1"
+        home=$(awk -F: -v u="$1" '$1 == u { print $6; exit }' "$PASSWD")
+        if [ "$home" = "/home/$1" ]; then
+            run usermod -l "$2" -d "/home/$2" -m "$1"
+        else
+            run usermod -l "$2" "$1"
+        fi
+        if group_exists "$1" && ! group_exists "$2"; then run groupmod -n "$2" "$1"; fi
+        [ ! -e "$ICONDIR/icons/$1" ] || run mv -f "$ICONDIR/icons/$1" "$ICONDIR/icons/$2"
+        echo "user $1 renamed to $2"
+        ;;
+    icon)
+        [ $# -eq 2 ] || die "usage: icon USER FILE|-"
+        check_regular "$1"
+        if [ "$2" = - ]; then
+            run rm -f "$ICONDIR/icons/$1"
+        else
+            [ -f "$2" ] && [ ! -L "$2" ] || die "not a regular file: $2"
+            size=$(wc -c < "$2")
+            [ "$size" -le 1048576 ] || die "picture too large (over 1 MB)"
+            magic=$(od -An -tx1 -N4 "$2" | tr -d ' \n')
+            case $magic in 89504e47|ffd8ff*) ;; *) die "the picture must be PNG or JPEG";; esac
+            run install -Dm644 "$2" "$ICONDIR/icons/$1"
+            conf="$ICONDIR/users/$1"
+            if [ $DRY = 1 ]; then echo "would set Icon=$ICONDIR/icons/$1 in $conf"
+            else
+                mkdir -p "$ICONDIR/users"
+                if [ -f "$conf" ] && grep -q '^Icon=' "$conf"; then
+                    sed -i "s|^Icon=.*|Icon=$ICONDIR/icons/$1|" "$conf"
+                elif [ -f "$conf" ]; then
+                    printf 'Icon=%s\n' "$ICONDIR/icons/$1" >> "$conf"
+                else
+                    printf '[User]\nIcon=%s\n' "$ICONDIR/icons/$1" > "$conf"
+                fi
+                chmod 600 "$conf"
+            fi
+        fi
+        echo "picture of $1 set"
+        ;;
+    *) die "unknown command: $cmd" ;;
+esac
