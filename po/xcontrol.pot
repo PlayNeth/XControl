@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.12.0\n"
+"Project-Id-Version: xcontrol 0.13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:46-0300\n"
+"POT-Creation-Date: 2026-10-19 13:50-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,8 @@ msgid "Display details"
 msgstr ""
 
 #: xcontrol/app.py:98 xcontrol/appearance_page.py:352
-#: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:68
+#: xcontrol/edid_override_dialog.py:27 xcontrol/module_params_dialog.py:119
+#: xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr ""
 
@@ -838,7 +839,7 @@ msgid ""
 "why."
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:247
+#: xcontrol/edid_override_dialog.py:247 xcontrol/module_params_dialog.py:174
 msgid "Authorization was cancelled."
 msgstr ""
 
@@ -851,7 +852,8 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: xcontrol/edid_override_dialog.py:252 xcontrol/monitors_page.py:137
+#: xcontrol/edid_override_dialog.py:252 xcontrol/module_params_dialog.py:120
+#: xcontrol/monitors_page.py:137
 msgid "Save"
 msgstr ""
 
@@ -1755,20 +1757,118 @@ msgstr ""
 msgid "This section could not be loaded: {error}"
 msgstr ""
 
-#: xcontrol/kmods.py:242
+#: xcontrol/kmods.py:248
 msgid "Devices"
 msgstr ""
 
-#: xcontrol/kmods.py:244 xcontrol/system_page.py:328
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:329
 msgid "Parameters"
 msgstr ""
 
-#: xcontrol/kmods.py:247 xcontrol/system_page.py:336
+#: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
+#: xcontrol/system_page.py:347
 msgid "(only readable by root)"
 msgstr ""
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:356
+#: xcontrol/kmods.py:256 xcontrol/system_page.py:367
 msgid "Set in modprobe.d"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:18
+#, python-brace-format
+msgid "Parameters for {module}"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:36
+#, python-brace-format
+msgid ""
+"Values are saved in <tt>{file}</tt> and used every time the module loads. "
+"Leave a field empty to use the module's default."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:45
+#, python-brace-format
+msgid ""
+"The kernel command line sets {items}. Those win over anything saved here."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:53
+msgid "default"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:59
+#, python-brace-format
+msgid "now: {value}"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:71
+#, python-brace-format
+msgid "Also set to {value} in {file}."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:73
+#, python-brace-format
+msgid "Set to {value} on the kernel command line, which wins."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:76
+msgid "Takes effect when the module loads (reboot)."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:89
+msgid "Also change it now, where the kernel allows it while running"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:95
+#, python-brace-format
+msgid "Rebuild the boot image (initramfs) with {tool}"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:101
+#, python-brace-format
+msgid ""
+"{module} loads early in boot, from the initramfs, which holds its own copy "
+"of modprobe.d: rebuild it or the change won't reach the module. That takes a "
+"minute."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:117
+msgid "Remove XControl's settings"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:126
+msgid "pkexec (polkit) is needed to change module parameters."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:142
+msgid "Only letters, digits and . , : + / - _ are allowed, without spaces."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:144
+#, python-brace-format
+msgid "Not a valid {type} value."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:167
+msgid "Rebuilding the initramfs, this takes a minute…"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:168
+msgid "Saving…"
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:191
+msgid ""
+"Saved. It applies the next time the module loads (usually: after a reboot)."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:192
+msgid "XControl's settings for this module were removed."
+msgstr ""
+
+#: xcontrol/module_params_dialog.py:196
+#, python-brace-format
+msgid "That didn't work: {error}"
 msgstr ""
 
 #. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1 (kernel)"
@@ -2645,17 +2745,32 @@ msgstr ""
 msgid "Devices it drives"
 msgstr ""
 
-#: xcontrol/system_page.py:354
-msgid "This module has no parameters."
+#: xcontrol/system_page.py:331
+msgid "Change…"
+msgstr ""
+
+#: xcontrol/system_page.py:332
+msgid "Set parameters for every time the module loads (needs your password)"
+msgstr ""
+
+#: xcontrol/system_page.py:337
+#, python-brace-format
+msgid ""
+"This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
+"on the kernel command line as {example}."
 msgstr ""
 
 #: xcontrol/system_page.py:365
+msgid "This module has no parameters."
+msgstr ""
+
+#: xcontrol/system_page.py:376
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
 
-#: xcontrol/system_page.py:393
+#: xcontrol/system_page.py:413
 msgid "Module details copied"
 msgstr ""
 

@@ -325,7 +325,18 @@ class ModulesTab(Gtk.Box):
             self.details.pack_start(self._grid([(f"{bus} {addr}", desc or "—") for bus, addr, desc in d.devices]),
                                     False, False, 0)
 
-        self.details.pack_start(self._heading(_("Parameters")), False, False, 0)
+        phead = Gtk.Box(spacing=8)
+        phead.pack_start(self._heading(_("Parameters")), False, False, 0)
+        if d.params and not kmods.is_builtin(name):
+            change = Gtk.Button(label=_("Change…"))
+            change.set_tooltip_text(_("Set parameters for every time the module loads (needs your password)"))
+            change.connect("clicked", lambda *_a: self._change(d))
+            phead.pack_end(change, False, False, 0)
+        self.details.pack_start(phead, False, False, 0)
+        if d.params and kmods.is_builtin(name):
+            self.details.pack_start(self._dim(_("This part is built into the kernel, so modprobe.d doesn't reach "
+                                                "it. Set it on the kernel command line as {example}.").format(
+                                                    example=f"{name}.{d.params[0].name}=VALUE")), False, False, 0)
         if d.params:
             grid = Gtk.Grid(column_spacing=14, row_spacing=6)
             for r, prm in enumerate(d.params):
@@ -365,6 +376,15 @@ class ModulesTab(Gtk.Box):
             self.details.pack_start(self._dim(_("Nothing; the module runs with its defaults and anything on the "
                                                 "kernel command line.")), False, False, 0)
         self.details.show_all()
+
+    def _change(self, d):
+        from .module_params_dialog import ModuleParamsDialog
+        dlg = ModuleParamsDialog(self.window, d)
+        dlg.run()
+        changed = dlg.changed
+        dlg.destroy()
+        if changed:
+            self._show(d.name)
 
     def _heading(self, text):
         lbl = Gtk.Label(xalign=0)

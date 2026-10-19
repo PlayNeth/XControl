@@ -1,0 +1,106 @@
+#!/bin/sh
+# xcontrol-module-helper: sets kernel module parameters for XControl (runs as root via pkexec).
+#
+#   apply [--live] [--initramfs] MODULE [PARAM=VALUE ...]
+#
+#     Writes /etc/modprobe.d/xcontrol-MODULE.conf with "options MODULE PARAM=VALUE ...",
+#     or removes that file when no PARAM=VALUE is given. Only that file is ever touched.
+#     --live       also write each value to /sys/module/MODULE/parameters/PARAM when the
+#                  kernel allows changing it while running (others apply at the next load)
+#     --initramfs  rebuild the initramfs afterwards (mkinitcpio, dracut or update-initramfs),
+#                  for modules that load before the root filesystem
+#
+# Names and values are validated strictly: no spaces, quotes or shell characters.
+set -eu
+
+die() { echo "xcontrol-module-helper: $*" >&2; exit 1; }
+
+CONFDIR=/etc/modprobe.d
+SYSMODULE=/sys/module
+INITRAMFS=1
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    CONFDIR=${XCONTROL_MODPROBE_DIR:-$CONFDIR}
+    SYSMODULE=${XCONTROL_SYSMODULE:-$SYSMODULE}
+    INITRAMFS=${XCONTROL_INITRAMFS:-1}
+fi
+
+check_module() {
+    case $1 in ''|*[!a-z0-9_]*) die "invalid module name: $1";; esac
+    [ ${#1} -le 64 ] || die "invalid module name: $1"
+    [ -d "$SYSMODULE/$1" ] || die "no such module: $1"
+    [ -e "$SYSMODULE/$1/initstate" ] || die "$1 is built into the kernel; set it on the kernel command line"
+}
+check_assignment() {
+    param=${1%%=*}
+    value=${1#*=}
+    [ "$param" != "$1" ] || die "expected PARAM=VALUE: $1"
+    case $param in ''|*[!A-Za-z0-9_]*) die "invalid parameter name: $param";; esac
+    [ ${#param} -le 64 ] || die "invalid parameter name: $param"
+    case $value in *[!A-Za-z0-9_.,:+/-]*) die "invalid value for $param: $value";; esac
+    [ ${#value} -le 256 ] || die "value too long for $param"
+    [ -e "$SYSMODULE/$2/parameters/$param" ] || die "$2 has no parameter $param"
+}
+
+rebuild_initramfs() {
+    if command -v mkinitcpio >/dev/null 2>&1; then
+        mkinitcpio -P
+    elif command -v dracut >/dev/null 2>&1; then
+        dracut --regenerate-all --force
+    elif command -v update-initramfs >/dev/null 2>&1; then
+        update-initramfs -u -k all
+    else
+        die "no initramfs tool found (mkinitcpio, dracut or update-initramfs)"
+    fi
+}
+
+[ $# -ge 1 ] || die "usage: apply [--live] [--initramfs] MODULE [PARAM=VALUE ...]"
+cmd=$1; shift
+[ "$cmd" = apply ] || die "unknown command: $cmd"
+
+live=0; initramfs=0
+while [ $# -gt 0 ]; do
+    case $1 in
+        --live) live=1; shift ;;
+        --initramfs) initramfs=1; shift ;;
+        --*) die "unknown option: $1" ;;
+        *) break ;;
+    esac
+done
+[ $# -ge 1 ] || die "usage: apply [--live] [--initramfs] MODULE [PARAM=VALUE ...]"
+module=$1; shift
+check_module "$module"
+for a in "$@"; do check_assignment "$a" "$module"; done
+
+file="$CONFDIR/xcontrol-$module.conf"
+if [ $# -eq 0 ]; then
+    rm -f "$file"
+    echo "removed $file"
+else
+    mkdir -p "$CONFDIR"
+    tmp="$file.tmp.$$"
+    {
+        echo "# Written by XControl (System > Kernel modules). Edits here are replaced."
+        echo "options $module $*"
+    } > "$tmp"
+    chmod 644 "$tmp"
+    mv -f "$tmp" "$file"
+    echo "wrote $file"
+fi
+
+if [ $live = 1 ]; then
+    for a in "$@"; do
+        param=${a%%=*}; value=${a#*=}
+        f="$SYSMODULE/$module/parameters/$param"
+        mode=$(stat -c %A "$f")
+        case $mode in
+            ??w*) if printf '%s' "$value" > "$f" 2>/dev/null; then echo "live: $param=$value"
+                  else echo "live: $param refused the value; it applies at the next load"; fi ;;
+            *) echo "live: $param can't change while running; it applies at the next load" ;;
+        esac
+    done
+fi
+
+if [ $initramfs = 1 ]; then
+    if [ "$INITRAMFS" = 1 ]; then rebuild_initramfs; else echo "initramfs: skipped (test)"; fi
+fi

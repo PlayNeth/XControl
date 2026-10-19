@@ -335,7 +335,24 @@ Search by module, device or parameter name; select one to see what it is (from `
 devices it drives, the modules that need it, each parameter with its current value and
 description, and the `options`/`blacklist` lines about it in `/etc/modprobe.d` and
 `/usr/lib/modprobe.d`. **Include parts built into the kernel** adds the built-in parts that
-have parameters. Everything is read-only; a few parameters can only be read by root.
+have parameters. A few parameters can only be read by root.
+
+**Change…** next to a module's parameters sets values for every time the module loads. They're
+saved in `/etc/modprobe.d/xcontrol-MODULE.conf` (XControl never edits other files there) by
+`xcontrol-module-helper`, the second small root helper, run through pkexec like the EDID one.
+It accepts only module and parameter names that exist and plain values (letters, digits and
+`. , : + / - _`), and XControl checks each value against the parameter's type first. Leave a
+field empty for the module's default; **Remove XControl's settings** deletes the file.
+
+- **Also change it now** writes the value to `/sys/module/MODULE/parameters/` for the
+  parameters the kernel allows changing while the module runs; the rest apply at the next load.
+- **Rebuild the boot image** runs `mkinitcpio -P` (or dracut / update-initramfs). It's needed
+  for modules that load from the initramfs, which carries its own copy of modprobe.d; XControl
+  ticks it for modules listed in mkinitcpio's `MODULES` and for GPU drivers with the `kms` hook.
+- Values set on the kernel command line (`amdgpu.ppfeaturemask=…`) win over modprobe.d; the
+  dialog warns about those, and about other modprobe.d files setting the same parameter.
+- Parts built into the kernel can't be set through modprobe.d; the page shows the command-line
+  form instead.
 
 ## Display details
 

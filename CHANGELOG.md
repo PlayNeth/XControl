@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.13.0 (2026-10-19)
+
+**Let kernel module parameters be changed from the System page**
+
+- Add Change… next to a module's parameters to set values used every time it loads,
+  saved in /etc/modprobe.d/xcontrol-MODULE.conf; other modprobe.d files are never edited
+- Check each value against the parameter's type before saving, and leave empty fields
+  at the module's default
+- Add "Also change it now" to write values to the running module where the kernel allows
+- Add "Rebuild the boot image" (mkinitcpio, dracut or update-initramfs), ticked for modules
+  that load from the initramfs, such as GPU drivers with the kms hook
+- Warn when the kernel command line or another modprobe.d file sets the same parameter
+- Add "Remove XControl's settings" to delete the module's XControl file
+- Show the kernel command-line form for parts built into the kernel, which modprobe.d
+  can't reach
+- Add xcontrol-module-helper, a second root helper run through pkexec, which accepts only
+  existing module and parameter names and plain values
+- Add tests for the module helper
+
 ## 0.12.0 (2026-10-19)
 
 **Add a Kernel modules tab to the System page**

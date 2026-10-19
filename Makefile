@@ -58,6 +58,7 @@ install: all
 	install -Dm755 $(BUILDDIR)/libxcontrol_gl.so $(DESTDIR)$(LIBDIR)/libxcontrol_gl.so
 	install -Dm755 $(BUILDDIR)/libVkLayer_xcontrol.so $(DESTDIR)$(LIBDIR)/libVkLayer_xcontrol.so
 	install -Dm755 data/xcontrol-edid-helper $(DESTDIR)$(LIBDIR)/xcontrol-edid-helper
+	install -Dm755 data/xcontrol-module-helper $(DESTDIR)$(LIBDIR)/xcontrol-module-helper
 	install -dm755 $(DESTDIR)$(LAYERDIR)
 	sed 's|@LIBDIR@|$(LIBDIR)|g' shim/VkLayer_xcontrol.json.in > $(DESTDIR)$(LAYERDIR)/VkLayer_xcontrol.json
 	chmod 644 $(DESTDIR)$(LAYERDIR)/VkLayer_xcontrol.json
@@ -91,7 +92,9 @@ check:
 	$(PYTHON) tests/check_theming.py
 	$(PYTHON) tests/check_sysinfo.py
 	$(PYTHON) tests/check_kmods.py
+	$(PYTHON) tests/check_module_helper.py
 	sh -n data/xcontrol-edid-helper
+	sh -n data/xcontrol-module-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

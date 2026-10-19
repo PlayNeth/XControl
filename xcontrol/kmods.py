@@ -11,7 +11,13 @@ import shutil
 import subprocess
 from dataclasses import dataclass, field
 
+from .paths import LIBDIR
 from .sysinfo import _pci_dev, device_name, p, pci_names, read, short_vendor, unroot
+
+HELPER = os.path.join(LIBDIR, "xcontrol-module-helper")
+OUR_DIR = "/etc/modprobe.d"
+VALUE_RE = re.compile(r"^[A-Za-z0-9_.,:+/-]{0,256}$")
+GPU_DRIVERS = {"amdgpu", "radeon", "i915", "xe", "nouveau", "nvidia", "nvidia_drm", "nvidia_modeset"}
 
 MODPROBE_DIRS = ("/etc/modprobe.d", "/run/modprobe.d", "/usr/local/lib/modprobe.d", "/usr/lib/modprobe.d",
                  "/lib/modprobe.d")
@@ -249,3 +255,127 @@ def as_text(d, english=False):
     if d.options:
         lines += ["", _("Set in modprobe.d")] + [f"  {line}    ({path})" for path, line in d.options]
     return "\n".join(lines) + "\n"
+
+
+# ---------------------------------------------------------------- changing parameters
+def our_file(name):
+    return f"{OUR_DIR}/xcontrol-{norm(name)}.conf"
+
+
+def our_values(name):
+    """{param: value} from XControl's own modprobe.d file for this module."""
+    out = {}
+    for path, line in modprobe_options(name):
+        if path == our_file(name) and line.startswith("options "):
+            for item in line.split()[2:]:
+                k, sep, v = item.partition("=")
+                if sep:
+                    out[k] = v
+    return out
+
+
+def other_values(name):
+    """{param: (value, file)} set by other modprobe.d files."""
+    out = {}
+    for path, line in modprobe_options(name):
+        if path != our_file(name) and line.startswith("options "):
+            for item in line.split()[2:]:
+                k, sep, v = item.partition("=")
+                if sep:
+                    out[k] = (v, path)
+    return out
+
+
+def cmdline_values(name, text=None):
+    """{param: value} for MODULE.PARAM=VALUE on the kernel command line (these win)."""
+    want = norm(name)
+    out = {}
+    for tok in (cmdline() if text is None else text).split():
+        if tok == "--":
+            break
+        key, sep, value = tok.partition("=")
+        mod, dot, param = key.rpartition(".")
+        if sep and dot and norm(mod) == want:
+            out[param] = value.strip('"')
+    return out
+
+
+def live_writable(name, param):
+    """The kernel lets root change this one while the module runs (mode u+w)."""
+    try:
+        return bool(os.stat(p(f"/sys/module/{norm(name)}/parameters/{param}")).st_mode & 0o200)
+    except OSError:
+        return False
+
+
+def is_builtin(name):
+    return os.path.isdir(p(f"/sys/module/{norm(name)}")) and not os.path.exists(
+        p(f"/sys/module/{norm(name)}/initstate"))
+
+
+def initramfs_tool():
+    for tool in ("mkinitcpio", "dracut", "update-initramfs"):
+        if shutil.which(tool):
+            return tool
+    return None
+
+
+def _mkinitcpio_conf():
+    text = read("/etc/mkinitcpio.conf")
+    for f in sorted(glob.glob(p("/etc/mkinitcpio.conf.d/*.conf"))):
+        text += "\n" + read(unroot(f))
+    return text
+
+
+def loads_early(name):
+    """Best guess whether the module loads from the initramfs, where modprobe.d is a copy
+    made when the initramfs was built (so it has to be rebuilt)."""
+    want = norm(name)
+    tool = initramfs_tool()
+    if tool == "mkinitcpio":
+        conf = _mkinitcpio_conf()
+        for m in re.finditer(r"^\s*MODULES\s*=\s*\(([^)]*)\)", conf, re.M):
+            if want in {norm(x.strip("'\"")) for x in m.group(1).split()}:
+                return True
+        hooks = " ".join(m.group(1) for m in re.finditer(r"^\s*HOOKS\s*=\s*\(([^)]*)\)", conf, re.M))
+        return want in GPU_DRIVERS and "kms" in hooks.split()
+    if tool in ("dracut", "update-initramfs"):
+        return want in GPU_DRIVERS
+    return False
+
+
+_INT = {"int": r"-?\d+", "short": r"-?\d+", "long": r"-?\d+", "llong": r"-?\d+",
+        "uint": r"\d+", "ushort": r"\d+", "ulong": r"\d+", "ullong": r"\d+", "byte": r"\d+",
+        "hexint": r"(0[xX][0-9a-fA-F]+|\d+)"}
+_BOOL = r"([yYnN01]|on|off|true|false)"
+
+
+def check_value(value, typ):
+    """None when `value` is fine for a parameter of modinfo type `typ`, else a reason code:
+    'chars' (not allowed here at all) or 'type'. Empty means "the module's default"."""
+    if value == "":
+        return None
+    if not VALUE_RE.match(value):
+        return "chars"
+    t = (typ or "").strip()
+    array = t.startswith("array of ")
+    t = t[len("array of "):] if array else t
+    pattern = _INT.get(t) or (_BOOL if t in ("bool", "invbool", "bint") else None)
+    if pattern is None:
+        return None  # charp, string or unknown: anything allowed by VALUE_RE
+    full = rf"^{pattern}(,{pattern})*$" if array else rf"^{pattern}$"
+    if t == "byte" and not array:
+        return None if re.match(full, value) and int(value) < 256 else "type"
+    return None if re.match(full, value, re.I if pattern == _BOOL else 0) else "type"
+
+
+def helper_args(name, values, live=False, initramfs=False):
+    """Arguments for the helper; `values` maps param -> value ('' entries are left out)."""
+    args = ["apply"]
+    if live:
+        args.append("--live")
+    if initramfs:
+        args.append("--initramfs")
+    args.append(norm(name))
+    args += [f"{k}={v}" for k, v in sorted(values.items()) if v != ""]
+    return args
