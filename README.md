@@ -227,11 +227,14 @@ The **Input** page has three tabs.
 the Compose key (`setxkbmap`), and key repeat delay and speed (`xset`). Only the settings you
 change here are managed; anything you don't touch is left to your own setup.
 
-Changes apply immediately. X forgets input settings when a device is unplugged or the
+Mouse and touchpad changes are used when you press **Apply** (they're kept per device until
+then, so you can change several devices first). **Reset to defaults** puts the driver's
+defaults in the controls; Apply uses them and forgets that device's saved settings. Keyboard
+changes apply immediately. X forgets input settings when a device is unplugged or the
 session ends, so XControl saves them per device name and a small background helper
 (`xcontrol --watch-input`, started at login from `~/.config/autostart/xcontrol-input.desktop`)
-puts them back at login and whenever a device is plugged in. **Reset to defaults** and
-**Stop managing the keyboard** remove the saved settings.
+puts them back at login and whenever a device is plugged in. **Stop managing the keyboard**
+removes the saved keyboard settings.
 
 **Gaming Mouse** uses [libratbag](https://github.com/libratbag/libratbag)'s `ratbagd` (the
 service Piper uses) for supported Logitech, SteelSeries, Razer, Roccat, G.Skill and other mice:

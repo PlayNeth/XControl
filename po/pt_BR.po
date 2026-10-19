@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.9.0\n"
+"Project-Id-Version: xcontrol 0.9.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 12:26-0300\n"
+"POT-Creation-Date: 2026-10-19 12:40-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -136,7 +136,7 @@ msgstr "Gama"
 msgid "Higher values brighten dark and middle tones. Night-light tools also change gamma and may override this."
 msgstr "Valores maiores clareiam os tons escuros e médios. Ferramentas de luz noturna também mudam o gama e podem sobrescrever isto."
 
-#: xcontrol/display_color.py:143 xcontrol/input_page.py:206
+#: xcontrol/display_color.py:143 xcontrol/input_page.py:203
 msgid "Reset to defaults"
 msgstr "Restaurar padrões"
 
@@ -206,7 +206,7 @@ msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela inf
 msgid "Display"
 msgstr "Tela"
 
-#: xcontrol/display_page.py:233 xcontrol/input_page.py:697 xcontrol/monitor_info.py:178
+#: xcontrol/display_page.py:233 xcontrol/input_page.py:744 xcontrol/monitor_info.py:178
 msgid "Enabled"
 msgstr "Ativada"
 
@@ -230,7 +230,7 @@ msgstr "Posição"
 msgid "Restore this layout when I log in"
 msgstr "Restaurar este layout ao iniciar a sessão"
 
-#: xcontrol/display_page.py:262
+#: xcontrol/display_page.py:262 xcontrol/input_page.py:208
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -251,7 +251,7 @@ msgstr "Configurações salvas movidas para os novos nomes de saída: {names}"
 msgid "Only matters with more than one display: it gets the panels, notifications and fullscreen games."
 msgstr "Só faz diferença com mais de uma tela: ela recebe os painéis, as notificações e os jogos em tela cheia."
 
-#: xcontrol/display_page.py:367
+#: xcontrol/display_page.py:367 xcontrol/input_page.py:336
 msgid "Press Apply to use the new settings"
 msgstr "Clique em Aplicar para usar as novas configurações"
 
@@ -565,7 +565,7 @@ msgstr "Adicionar"
 msgid "Search installed games"
 msgstr "Pesquisar jogos instalados"
 
-#: xcontrol/gaming_page.py:177 xcontrol/input_page.py:538
+#: xcontrol/gaming_page.py:177 xcontrol/input_page.py:585
 msgid "Profile:"
 msgstr "Perfil:"
 
@@ -872,7 +872,7 @@ msgstr "Nível da bateria"
 msgid "Left click"
 msgstr "Clique esquerdo"
 
-#: xcontrol/input_page.py:39 xcontrol/input_page.py:199
+#: xcontrol/input_page.py:39 xcontrol/input_page.py:196
 msgid "Right click"
 msgstr "Clique direito"
 
@@ -896,388 +896,390 @@ msgstr "Ciclo de cores"
 msgid "Breathing"
 msgstr "Respiração"
 
-#: xcontrol/input_page.py:145
+#: xcontrol/input_page.py:147
 msgid "Device:"
 msgstr "Dispositivo:"
 
-#: xcontrol/input_page.py:149 xcontrol/input_page.py:542 xcontrol/monitors_page.py:21
+#: xcontrol/input_page.py:151 xcontrol/input_page.py:589 xcontrol/monitors_page.py:21
 msgid "Refresh"
 msgstr "Atualizar"
 
-#: xcontrol/input_page.py:158
+#: xcontrol/input_page.py:160
 msgid "Pointer"
 msgstr "Ponteiro"
 
-#: xcontrol/input_page.py:163
+#: xcontrol/input_page.py:165
 msgid "Slow"
 msgstr "Lento"
 
-#: xcontrol/input_page.py:163 xcontrol/input_page.py:168 xcontrol/input_page.py:427
+#: xcontrol/input_page.py:165 xcontrol/input_page.py:167 xcontrol/input_page.py:474
 msgid "Default"
 msgstr "Padrão"
 
-#: xcontrol/input_page.py:163
+#: xcontrol/input_page.py:165
 msgid "Fast"
 msgstr "Rápido"
 
-#: xcontrol/input_page.py:173
+#: xcontrol/input_page.py:170
 msgid "Acceleration"
 msgstr "Aceleração"
 
-#: xcontrol/input_page.py:174
+#: xcontrol/input_page.py:171
 msgid "Pointer speed"
 msgstr "Velocidade do ponteiro"
 
-#: xcontrol/input_page.py:175
+#: xcontrol/input_page.py:172
 msgid "Scroll speed"
 msgstr "Velocidade da rolagem"
 
-#: xcontrol/input_page.py:178
+#: xcontrol/input_page.py:175
 msgid "Natural scrolling (content follows your fingers)"
 msgstr "Rolagem natural (o conteúdo segue os dedos)"
 
-#: xcontrol/input_page.py:179
+#: xcontrol/input_page.py:176
 msgid "Left-handed (swap the left and right buttons)"
 msgstr "Canhoto (inverte os botões esquerdo e direito)"
 
-#: xcontrol/input_page.py:180
+#: xcontrol/input_page.py:177
 msgid "Middle click by pressing left and right together"
 msgstr "Clique do meio pressionando esquerdo e direito juntos"
 
-#: xcontrol/input_page.py:181
+#: xcontrol/input_page.py:178
 msgid "Horizontal scrolling"
 msgstr "Rolagem horizontal"
 
-#: xcontrol/input_page.py:187
+#: xcontrol/input_page.py:184
 msgid "Touchpad"
 msgstr "Touchpad"
 
-#: xcontrol/input_page.py:188
+#: xcontrol/input_page.py:185
 msgid "Tap to click"
 msgstr "Tocar para clicar"
 
-#: xcontrol/input_page.py:189
+#: xcontrol/input_page.py:186
 msgid "Tap and drag"
 msgstr "Tocar e arrastar"
 
-#: xcontrol/input_page.py:190
+#: xcontrol/input_page.py:187
 msgid "Drag lock (lifting the finger doesn't end the drag)"
 msgstr "Trava de arrasto (levantar o dedo não termina o arrasto)"
 
-#: xcontrol/input_page.py:191
+#: xcontrol/input_page.py:188
 msgid "Disable while typing"
 msgstr "Desativar enquanto digita"
 
-#: xcontrol/input_page.py:198
+#: xcontrol/input_page.py:195
 msgid "Scrolling"
 msgstr "Rolagem"
 
-#: xcontrol/input_page.py:211
-msgid "Changes apply right away and are kept for this device by name: XControl puts them back at login and whenever the device is plugged in."
-msgstr "As mudanças valem na hora e ficam guardadas para este dispositivo pelo nome: o XControl as reaplica no login e sempre que o dispositivo é conectado."
+#: xcontrol/input_page.py:204
+msgid "Set this device back to its driver defaults (press Apply to use them)"
+msgstr "Voltar este dispositivo ao padrão do driver (clique em Aplicar para usar)"
 
-#: xcontrol/input_page.py:241
+#: xcontrol/input_page.py:214
+msgid "Changes are used when you press Apply, and kept for each device by name: XControl puts them back at login and whenever the device is plugged in. Refresh discards changes you haven't applied."
+msgstr "As mudanças valem quando você clica em Aplicar e ficam guardadas para cada dispositivo pelo nome: o XControl as reaplica no login e sempre que o dispositivo é conectado. Atualizar descarta as mudanças ainda não aplicadas."
+
+#: xcontrol/input_page.py:247
 msgid "xinput was not found, or this isn't an X11 session."
 msgstr "O xinput não foi encontrado, ou esta não é uma sessão X11."
 
-#: xcontrol/input_page.py:247
+#: xcontrol/input_page.py:253
 msgid "touchpad"
 msgstr "touchpad"
 
-#: xcontrol/input_page.py:247
+#: xcontrol/input_page.py:253
 msgid "mouse"
 msgstr "mouse"
 
-#: xcontrol/input_page.py:251
+#: xcontrol/input_page.py:257
 msgid "No mouse or touchpad using the libinput driver was found."
 msgstr "Nenhum mouse ou touchpad usando o driver libinput foi encontrado."
 
-#: xcontrol/input_page.py:318
-#, python-brace-format
-msgid "Saved for {device}"
-msgstr "Salvo para {device}"
+#: xcontrol/input_page.py:353
+msgid "Defaults shown; press Apply to use them"
+msgstr "Padrões exibidos; clique em Aplicar para usá-los"
 
-#: xcontrol/input_page.py:320
+#: xcontrol/input_page.py:382
 msgid "Could not change this setting"
 msgstr "Não foi possível mudar esta configuração"
 
-#: xcontrol/input_page.py:337
-#, python-brace-format
-msgid "{device} is back to its defaults"
-msgstr "{device} voltou ao padrão"
+#: xcontrol/input_page.py:384
+msgid "Settings applied"
+msgstr "Configurações aplicadas"
 
-#: xcontrol/input_page.py:353
+#: xcontrol/input_page.py:400
 msgid "Layout"
 msgstr "Layout"
 
-#: xcontrol/input_page.py:358
+#: xcontrol/input_page.py:405
 msgid "Not set"
 msgstr "Não definido"
 
-#: xcontrol/input_page.py:359
+#: xcontrol/input_page.py:406
 msgid "Default (Caps Lock)"
 msgstr "Padrão (Caps Lock)"
 
-#: xcontrol/input_page.py:360 xcontrol/input_page.py:413
+#: xcontrol/input_page.py:407 xcontrol/input_page.py:460
 msgid "None"
 msgstr "Nenhum"
 
-#: xcontrol/input_page.py:365
+#: xcontrol/input_page.py:412
 msgid "Keyboard layout"
 msgstr "Layout do teclado"
 
-#: xcontrol/input_page.py:365 xcontrol/input_page.py:366
+#: xcontrol/input_page.py:412 xcontrol/input_page.py:413
 msgid "Variant"
 msgstr "Variante"
 
-#: xcontrol/input_page.py:366
+#: xcontrol/input_page.py:413
 msgid "Second layout"
 msgstr "Segundo layout"
 
-#: xcontrol/input_page.py:367
+#: xcontrol/input_page.py:414
 msgid "Switch layouts with"
 msgstr "Trocar de layout com"
 
-#: xcontrol/input_page.py:367
+#: xcontrol/input_page.py:414
 msgid "Caps Lock key"
 msgstr "Tecla Caps Lock"
 
-#: xcontrol/input_page.py:368
+#: xcontrol/input_page.py:415
 msgid "Compose key"
 msgstr "Tecla Compose"
 
-#: xcontrol/input_page.py:383
+#: xcontrol/input_page.py:430
 msgid "Key repeat"
 msgstr "Repetição de teclas"
 
-#: xcontrol/input_page.py:384 xcontrol/input_page.py:717
+#: xcontrol/input_page.py:431 xcontrol/input_page.py:764
 #, python-brace-format
 msgid "{ms} ms"
 msgstr "{ms} ms"
 
-#: xcontrol/input_page.py:385
+#: xcontrol/input_page.py:432
 #, python-brace-format
 msgid "{n} per second"
 msgstr "{n} por segundo"
 
-#: xcontrol/input_page.py:390
+#: xcontrol/input_page.py:437
 msgid "Delay before repeating"
 msgstr "Espera antes de repetir"
 
-#: xcontrol/input_page.py:390
+#: xcontrol/input_page.py:437
 msgid "Repeat speed"
 msgstr "Velocidade de repetição"
 
-#: xcontrol/input_page.py:396
+#: xcontrol/input_page.py:443
 msgid "Type here to test"
 msgstr "Digite aqui para testar"
 
-#: xcontrol/input_page.py:400
+#: xcontrol/input_page.py:447
 msgid "Stop managing the keyboard"
 msgstr "Deixar de gerenciar o teclado"
 
-#: xcontrol/input_page.py:401
+#: xcontrol/input_page.py:448
 msgid "Forget XControl's keyboard settings; your own setup (xorg.conf.d, i3 config) takes over again from the next login"
 msgstr "Esquecer as configurações de teclado do XControl; sua própria configuração (xorg.conf.d, config do i3) volta a valer a partir do próximo login"
 
-#: xcontrol/input_page.py:406
+#: xcontrol/input_page.py:453
 msgid "Changes apply right away. XControl only re-applies the keyboard settings you change here, at login and when a keyboard is plugged in."
 msgstr "As mudanças valem na hora. O XControl só reaplica as configurações de teclado que você muda aqui, no login e quando um teclado é conectado."
 
-#: xcontrol/input_page.py:446
+#: xcontrol/input_page.py:493
 msgid "setxkbmap was not found, or this isn't an X11 session."
 msgstr "O setxkbmap não foi encontrado, ou esta não é uma sessão X11."
 
-#: xcontrol/input_page.py:513
+#: xcontrol/input_page.py:560
 msgid "Keyboard settings saved"
 msgstr "Configurações de teclado salvas"
 
-#: xcontrol/input_page.py:515
+#: xcontrol/input_page.py:562
 msgid "Could not change the keyboard settings"
 msgstr "Não foi possível mudar as configurações de teclado"
 
-#: xcontrol/input_page.py:520
+#: xcontrol/input_page.py:567
 msgid "XControl no longer changes the keyboard"
 msgstr "O XControl não muda mais o teclado"
 
-#: xcontrol/input_page.py:534
+#: xcontrol/input_page.py:581
 msgid "Mouse:"
 msgstr "Mouse:"
 
-#: xcontrol/input_page.py:555
+#: xcontrol/input_page.py:602
 msgid "Use this profile"
 msgstr "Usar este perfil"
 
-#: xcontrol/input_page.py:558
+#: xcontrol/input_page.py:605
 msgid "Save to mouse"
 msgstr "Salvar no mouse"
 
-#: xcontrol/input_page.py:563
+#: xcontrol/input_page.py:610
 msgid "Settings are stored in the mouse itself, so they also work on other computers. Changes take effect when you press “Save to mouse”."
 msgstr "As configurações ficam guardadas no próprio mouse, então valem também em outros computadores. As mudanças passam a valer quando você clica em “Salvar no mouse”."
 
-#: xcontrol/input_page.py:583
+#: xcontrol/input_page.py:630
 msgid "Install libratbag (the ratbagd service) to set DPI, polling rate, buttons and lighting on supported gaming mice from Logitech, SteelSeries, Razer, Roccat, G.Skill and others."
 msgstr "Instale o libratbag (o serviço ratbagd) para ajustar DPI, taxa de atualização, botões e iluminação de mouses gamer compatíveis da Logitech, SteelSeries, Razer, Roccat, G.Skill e outros."
 
-#: xcontrol/input_page.py:586
+#: xcontrol/input_page.py:633
 #, python-brace-format
 msgid "Could not reach ratbagd: {error}"
 msgstr "Não foi possível falar com o ratbagd: {error}"
 
-#: xcontrol/input_page.py:588
+#: xcontrol/input_page.py:635
 msgid "No supported gaming mouse found. libratbag lists supported models on its website."
 msgstr "Nenhum mouse gamer compatível encontrado. O site do libratbag lista os modelos compatíveis."
 
-#: xcontrol/input_page.py:608
+#: xcontrol/input_page.py:655
 #, python-brace-format
 msgid "Profile {n}"
 msgstr "Perfil {n}"
 
-#: xcontrol/input_page.py:610
+#: xcontrol/input_page.py:657
 msgid "(in use)"
 msgstr "(em uso)"
 
-#: xcontrol/input_page.py:649
+#: xcontrol/input_page.py:696
 msgid "Changed; press “Save to mouse” to keep it"
 msgstr "Alterado; clique em “Salvar no mouse” para manter"
 
-#: xcontrol/input_page.py:651
+#: xcontrol/input_page.py:698
 msgid "The mouse didn't accept this setting"
 msgstr "O mouse não aceitou esta configuração"
 
-#: xcontrol/input_page.py:658
+#: xcontrol/input_page.py:705
 msgid "Sensitivity (DPI)"
 msgstr "Sensibilidade (DPI)"
 
-#: xcontrol/input_page.py:659
+#: xcontrol/input_page.py:706
 msgid "In use"
 msgstr "Em uso"
 
-#: xcontrol/input_page.py:660
+#: xcontrol/input_page.py:707
 msgid "At power-on"
 msgstr "Ao ligar"
 
-#: xcontrol/input_page.py:661
+#: xcontrol/input_page.py:708
 msgid "DPI"
 msgstr "DPI"
 
-#: xcontrol/input_page.py:664
+#: xcontrol/input_page.py:711
 #, python-brace-format
 msgid "Stage {n}"
 msgstr "Nível {n}"
 
-#: xcontrol/input_page.py:709
+#: xcontrol/input_page.py:756
 #, python-brace-format
 msgid "{hz} Hz ({ms} ms)"
 msgstr "{hz} Hz ({ms} ms)"
 
-#: xcontrol/input_page.py:712
+#: xcontrol/input_page.py:759
 msgid "Polling rate"
 msgstr "Taxa de atualização (polling)"
 
-#: xcontrol/input_page.py:720
+#: xcontrol/input_page.py:767
 msgid "Button debounce"
 msgstr "Debounce dos botões"
 
-#: xcontrol/input_page.py:723
+#: xcontrol/input_page.py:770
 msgid "Straighten nearly straight lines"
 msgstr "Endireitar linhas quase retas"
 
-#: xcontrol/input_page.py:726
+#: xcontrol/input_page.py:773
 msgid "Angle snapping"
 msgstr "Correção de ângulo"
 
-#: xcontrol/input_page.py:730
+#: xcontrol/input_page.py:777
 msgid "Sensor"
 msgstr "Sensor"
 
-#: xcontrol/input_page.py:735
+#: xcontrol/input_page.py:782
 msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
 msgstr "A correção de ângulo ajuda a desenhar linhas retas, mas atrapalha a mira em jogos."
 
-#: xcontrol/input_page.py:742
+#: xcontrol/input_page.py:789
 msgid "Buttons"
 msgstr "Botões"
 
-#: xcontrol/input_page.py:744 xcontrol/input_page.py:749
+#: xcontrol/input_page.py:791 xcontrol/input_page.py:796
 #, python-brace-format
 msgid "Button {n}"
 msgstr "Botão {n}"
 
-#: xcontrol/input_page.py:750
+#: xcontrol/input_page.py:797
 #, python-brace-format
 msgid "{action} (button {n})"
 msgstr "{action} (botão {n})"
 
-#: xcontrol/input_page.py:756
+#: xcontrol/input_page.py:803
 msgid "Disabled"
 msgstr "Desativado"
 
-#: xcontrol/input_page.py:760
+#: xcontrol/input_page.py:807
 msgid "Keyboard key (set in Piper)"
 msgstr "Tecla do teclado (defina no Piper)"
 
-#: xcontrol/input_page.py:760
+#: xcontrol/input_page.py:807
 msgid "Macro (set in Piper)"
 msgstr "Macro (defina no Piper)"
 
-#: xcontrol/input_page.py:761
+#: xcontrol/input_page.py:808
 #, python-brace-format
 msgid "Other ({kind})"
 msgstr "Outro ({kind})"
 
-#: xcontrol/input_page.py:783
+#: xcontrol/input_page.py:830
 msgid "Lighting"
 msgstr "Iluminação"
 
-#: xcontrol/input_page.py:786
+#: xcontrol/input_page.py:833
 #, python-brace-format
 msgid "LED {n}"
 msgstr "LED {n}"
 
-#: xcontrol/input_page.py:816
+#: xcontrol/input_page.py:863
 msgid "Brightness"
 msgstr "Brilho"
 
-#: xcontrol/input_page.py:820
+#: xcontrol/input_page.py:867
 #, python-brace-format
 msgid "{s} s"
 msgstr "{s} s"
 
-#: xcontrol/input_page.py:824
+#: xcontrol/input_page.py:871
 msgid "Effect length"
 msgstr "Duração do efeito"
 
-#: xcontrol/input_page.py:837
+#: xcontrol/input_page.py:884
 msgid "Profile switched"
 msgstr "Perfil trocado"
 
-#: xcontrol/input_page.py:839
+#: xcontrol/input_page.py:886
 msgid "Could not switch profiles"
 msgstr "Não foi possível trocar de perfil"
 
-#: xcontrol/input_page.py:846
+#: xcontrol/input_page.py:893
 msgid "Saved to the mouse"
 msgstr "Salvo no mouse"
 
-#: xcontrol/input_page.py:848
+#: xcontrol/input_page.py:895
 msgid "Could not save to the mouse"
 msgstr "Não foi possível salvar no mouse"
 
-#: xcontrol/input_page.py:859
+#: xcontrol/input_page.py:906
 msgid "Mouse & Touchpad"
 msgstr "Mouse e touchpad"
 
-#: xcontrol/input_page.py:860
+#: xcontrol/input_page.py:907
 msgid "Keyboard"
 msgstr "Teclado"
 
-#: xcontrol/input_page.py:861
+#: xcontrol/input_page.py:908
 msgid "Gaming Mouse"
 msgstr "Mouse gamer"
 
-#: xcontrol/input_page.py:866
+#: xcontrol/input_page.py:913
 #, python-brace-format
 msgid "This section could not be loaded: {error}"
 msgstr "Não foi possível carregar esta seção: {error}"

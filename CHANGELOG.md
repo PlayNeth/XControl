@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.9.1 (2026-10-19)
+
+**Add an Apply button for mouse and touchpad settings**
+
+- Add an Apply button to the Mouse & Touchpad tab: changes are kept per device until
+  you press it, so several devices can be changed before applying
+- Make Reset to defaults only show the driver defaults in the controls; Apply uses them
+  and forgets that device's saved settings, keeping any changes made after the reset
+- Discard unapplied changes when pressing Refresh
+- Report all settings that failed to apply in one message
+
 ## 0.9.0 (2026-10-19)
 
 **Rename mesa-panel to XControl and add an Input page**

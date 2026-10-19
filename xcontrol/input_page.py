@@ -140,6 +140,8 @@ class PointerTab(Gtk.Box):
         self.devices = []
         self.dev = None
         self.loading = False
+        self.pending = {}       # device name -> {setting: value} waiting for Apply
+        self.resetting = set()  # device names whose saved settings Apply should forget
 
         bar = Gtk.Box(spacing=6)
         bar.pack_start(Gtk.Label(label=_("Device:")), False, False, 0)
@@ -161,14 +163,9 @@ class PointerTab(Gtk.Box):
         self.profile.connect("changed", self._combo_changed, "accel_profile")
         self.speed = _scale(-1, 1, 0.05, 2, lambda v: f"{v:+.2f}",
                             [(-1, _("Slow")), (0, _("Default")), (1, _("Fast"))])
-        # slider changes are applied once the slider stops, to the device they were made on
-        self._speed_later = _Debounce(150, lambda dv: self._set("accel_speed", round(dv[1], 2), dv[0]))
-        self.speed.connect("value-changed",
-                           lambda s: None if self.loading else self._speed_later((self.dev, s.get_value())))
+        self.speed.connect("value-changed", lambda s: self._set("accel_speed", round(s.get_value(), 2)))
         self.scroll = _scale(0.25, 4, 0.25, 2, lambda v: f"{v:.2f}×", [(1, _("Default"))])
-        self._scroll_later = _Debounce(150, lambda dv: self._set("scroll_factor", round(dv[1], 2), dv[0]))
-        self.scroll.connect("value-changed",
-                            lambda s: None if self.loading else self._scroll_later((self.dev, s.get_value())))
+        self.scroll.connect("value-changed", lambda s: self._set("scroll_factor", round(s.get_value(), 2)))
         self.checks = {}
         rows = [("accel_profile", _("Acceleration"), self.profile),
                 ("accel_speed", _("Pointer speed"), self.speed),
@@ -204,12 +201,19 @@ class PointerTab(Gtk.Box):
 
         foot = Gtk.Box(spacing=6)
         reset = Gtk.Button(label=_("Reset to defaults"))
+        reset.set_tooltip_text(_("Set this device back to its driver defaults (press Apply to use them)"))
         reset.connect("clicked", self._reset)
         self.reset_btn = reset
         foot.pack_start(reset, False, False, 0)
+        self.apply_btn = Gtk.Button(label=_("Apply"))
+        self.apply_btn.get_style_context().add_class("suggested-action")
+        self.apply_btn.connect("clicked", self._apply)
+        self.apply_btn.set_sensitive(False)
+        foot.pack_end(self.apply_btn, False, False, 0)
         self.pack_start(foot, False, False, 0)
-        self.pack_start(_hint(_("Changes apply right away and are kept for this device by name: XControl "
-                                "puts them back at login and whenever the device is plugged in.")), False, False, 0)
+        self.pack_start(_hint(_("Changes are used when you press Apply, and kept for each device by name: "
+                                "XControl puts them back at login and whenever the device is plugged in. "
+                                "Refresh discards changes you haven't applied.")), False, False, 0)
 
         # line up label columns
         group = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -236,6 +240,8 @@ class PointerTab(Gtk.Box):
     # ---- model -> view
     def reload(self):
         keep = self.dev.name if self.dev else None
+        self.pending, self.resetting = {}, set()
+        self.apply_btn.set_sensitive(False)
         try:
             self.devices = D.pointers() if D.available() else []
             msg = "" if D.available() else _("xinput was not found, or this isn't an X11 session.")
@@ -261,16 +267,21 @@ class PointerTab(Gtk.Box):
     def _device_chosen(self, combo):
         if self.loading:
             return
-        for pending in (self._speed_later, self._scroll_later):
-            pending.flush()  # finish a slider change on the previous device first
         name = combo.get_active_id()
         self.dev = next((d for d in self.devices if d.name == name), None)
         self._fill()
+
+    def value(self, key):
+        """What the controls show: an unapplied change, or the device's current value."""
+        d = self.dev
+        pending = self.pending.get(d.name, {})
+        return pending[key] if key in pending else d.get(key)
 
     def _fill(self):
         d = self.dev
         if not d:
             return
+        val = self.value
         self.loading = True
         try:
             for key, widgets in self.rows.items():
@@ -279,23 +290,23 @@ class PointerTab(Gtk.Box):
                     w.set_no_show_all(not d.has(key))
             self.profile.remove_all()
             for p in d.choices("accel_profile"):
-                if p != "custom" or d.get("accel_profile") == "custom":
+                if p != "custom" or val("accel_profile") == "custom":
                     self.profile.append(p, _(PROFILE_LABELS[p]))
-            self.profile.set_active_id(d.get("accel_profile") or "")
+            self.profile.set_active_id(val("accel_profile") or "")
             if d.has("accel_speed"):
-                self.speed.set_value(d.get("accel_speed"))
-                self.speed.set_sensitive(d.get("accel_profile") != "custom")
+                self.speed.set_value(val("accel_speed"))
+                self.speed.set_sensitive(val("accel_profile") != "custom")
             if d.has("scroll_factor"):
-                self.scroll.set_value(d.get("scroll_factor"))
+                self.scroll.set_value(val("scroll_factor"))
             for key, c in self.checks.items():
                 if d.has(key):
-                    c.set_active(bool(d.get(key)))
+                    c.set_active(bool(val(key)))
             for combo, key, labels in ((self.scroll_method, "scroll_method", SCROLL_LABELS),
                                        (self.click_method, "click_method", CLICK_LABELS)):
                 combo.remove_all()
                 for c in d.choices(key):
                     combo.append(c, _(labels[c]))
-                combo.set_active_id(d.get(key) or "none")
+                combo.set_active_id(val(key) or "none")
             self.pad_frame.set_visible(d.is_touchpad)
         finally:
             self.loading = False
@@ -307,34 +318,70 @@ class PointerTab(Gtk.Box):
             if key == "accel_profile":
                 self.speed.set_sensitive(combo.get_active_id() != "custom")
 
-    def _set(self, key, value, device=None):
-        d = device or self.dev
-        if not d or (self.loading and device is None):
+    def _set(self, key, value):
+        """Remember a change for Apply."""
+        d = self.dev
+        if not d or self.loading:
             return
-        try:
-            D.apply(d, key, value)
-            D.save_setting(d.name, key, value)
-            sync_autostart()
-            self.window.set_status(_("Saved for {device}").format(device=d.name))
-        except Exception as e:  # noqa: BLE001
-            self.window.message(_("Could not change this setting"), str(e))
+        changes = self.pending.setdefault(d.name, {})
+        if value == d.get(key) and d.name not in self.resetting:
+            changes.pop(key, None)  # back to what the device already has
+        else:
+            changes[key] = value
+        if not changes and d.name not in self.resetting:
+            self.pending.pop(d.name, None)
+        dirty = bool(self.pending) or bool(self.resetting)
+        self.apply_btn.set_sensitive(dirty)
+        if dirty:
+            self.window.set_status(_("Press Apply to use the new settings"))
 
     def _reset(self, *_args):
+        """Put the driver's defaults in the controls; Apply uses them and forgets the saved settings."""
         d = self.dev
         if not d:
             return
+        defaults = {}
         for key in D.SETTINGS:
             if d.has(key):
                 default = d.get(key, default=True)
-                if default is not None and default != d.get(key):
-                    try:
-                        D.apply(d, key, default)
-                    except Exception:  # noqa: BLE001
-                        traceback.print_exc()
-        D.forget_device(d.name)
+                if default is not None:
+                    defaults[key] = default
+        self.pending[d.name] = defaults
+        self.resetting.add(d.name)
+        self.apply_btn.set_sensitive(True)
+        self._fill()
+        self.window.set_status(_("Defaults shown; press Apply to use them"))
+
+    def _apply(self, *_args):
+        by_name = {d.name: d for d in self.devices}
+        errors = []
+        for name in sorted(set(self.pending) | self.resetting):
+            d = by_name.get(name)
+            if not d:
+                continue
+            changes = self.pending.get(name, {})
+            for key, value in changes.items():
+                if value == d.get(key):
+                    continue
+                try:
+                    D.apply(d, key, value)
+                except Exception as e:  # noqa: BLE001
+                    errors.append(f"{name}: {key}: {e}")
+            if name in self.resetting:
+                # keep only what differs from the defaults (changes made after Reset)
+                D.forget_device(name)
+                for key, value in changes.items():
+                    if value != d.get(key, default=True):
+                        D.save_setting(name, key, value)
+            else:
+                for key, value in changes.items():
+                    D.save_setting(name, key, value)
         sync_autostart()
         self.reload()
-        self.window.set_status(_("{device} is back to its defaults").format(device=d.name))
+        if errors:
+            self.window.message(_("Could not change this setting"), "\n".join(errors))
+        else:
+            self.window.set_status(_("Settings applied"))
 
 
 # ---------------------------------------------------------------------------
