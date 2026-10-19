@@ -251,6 +251,42 @@ with onboard profiles (most Logitech G mice), saving makes the mouse reload its 
 switch to the DPI stage chosen under **After saving, use** next to the button. libratbag can't
 see presses of the mouse's own DPI button, so pick the stage you want there before saving.
 
+## Appearance
+
+One place to pick the GTK theme, icon theme, cursor (theme and size), interface font
+(antialiasing, hinting, subpixel order) and the dark preference. Choices preview inside
+XControl; **Apply** writes them everywhere an X11 program looks:
+
+- `~/.config/gtk-3.0/settings.ini`, `~/.config/gtk-4.0/settings.ini` and `~/.gtkrc-2.0`
+  (other settings in those files are kept)
+- `~/.icons/default/index.theme` and `Xcursor.*`/`Xft.*` in `~/.Xresources` (merged with
+  `xrdb`) for the cursor and fonts of plain X programs; the root window cursor is set too
+- GNOME's `org.gnome.desktop.interface` (including `color-scheme`, which libadwaita apps
+  follow), Xfce's xfconf when present, and qt5ct/qt6ct when installed
+- the XSETTINGS manager, which is what makes **open apps change without a restart**. On X,
+  GTK apps read `settings.ini` only when they start, and ignore it altogether while an
+  XSETTINGS manager runs. That is the usual reason a theme tool "doesn't apply": a leftover
+  `xsettingsd` keeps announcing the old theme. XControl updates `xsettingsd`'s config and
+  reloads it, or starts it (and adds it to your login) if none is running. With GNOME, MATE
+  or Xfce's own settings daemon, it goes through those instead.
+
+On i3 and similar window managers, restart the window manager (i3: Mod+Shift+R) to get the new
+cursor on the desktop and window borders.
+
+### An app ignores the theme?
+
+**Check an app…** lets you click the app's window and inspects that process: the toolkit it
+really loads, how it's packaged, its environment and the user it runs as. Usual causes:
+
+- `GTK_THEME` set in its environment (overrides everything)
+- an **AppImage** whose bundled GTK doesn't search `/usr/share/themes`: one click links the
+  theme into `~/.local/share/themes`, where every GTK looks
+- **Flatpak**: copies the theme to your home folder and grants Flatpak apps read access
+- **libadwaita** apps: they only follow the dark preference, by design
+- the theme has no version for the app's GTK (e.g. a GTK 3 theme and a GTK 4 app)
+- Qt apps without `QT_QPA_PLATFORMTHEME=qt5ct` (or `qt6ct`) in the session environment
+- the app runs as another user (sudo), or draws its own interface
+
 ## Mouse wheel
 
 Turning the wheel over a dropdown, number field or slider scrolls the page instead of changing

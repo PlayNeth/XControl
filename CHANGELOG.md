@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.10.0 (2026-10-19)
+
+**Add an Appearance page for themes, icons, cursor and fonts**
+
+- Add an Appearance page to pick the GTK theme, icon theme, cursor theme and size,
+  interface font, antialiasing, hinting, subpixel order and the dark preference
+- Preview choices inside XControl, with Apply and Revert, and warn when a theme has
+  no version for GTK 2, 3 or 4
+- Write the choices to GTK 2/3/4 settings files, the default cursor theme, ~/.Xresources
+  (merged with xrdb), GNOME settings, Xfce's xfconf, and qt5ct/qt6ct when installed
+- Make open apps change without a restart by updating and reloading xsettingsd, or
+  starting it and adding it to the login, or going through the desktop's settings daemon
+- Add "Check an app…": click a window to see why it ignores the theme (GTK_THEME set,
+  AppImage, Flatpak, Snap, libadwaita, missing theme version, Qt setup, another user)
+- Offer one-click fixes: link themes into the home folder for AppImages, and copy the
+  theme and grant read access for Flatpak apps
+- Add --page appearance to open the panel on the Appearance page
+- Add tests for the theme settings code
+
 ## 0.9.3 (2026-10-19)
 
 **Stop the mouse wheel changing settings and keep the window responsive**

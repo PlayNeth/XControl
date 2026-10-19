@@ -88,6 +88,7 @@ check:
 	$(PYTHON) tests/check_output_props.py
 	$(PYTHON) tests/check_input.py
 	$(PYTHON) tests/check_ratbag.py
+	$(PYTHON) tests/check_theming.py
 	sh -n data/xcontrol-edid-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 

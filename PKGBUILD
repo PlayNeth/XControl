@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.9.3
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -21,6 +21,12 @@ optdepends=(
   'vkbasalt: post-process anti-aliasing and sharpening for Vulkan and DXVK games'
   'libratbag: gaming mouse DPI, polling rate, buttons and lighting (ratbagd)'
   'xf86-input-libinput: mouse and touchpad settings (the usual X input driver)'
+  'xsettingsd: open apps follow theme changes right away (Appearance)'
+  'xorg-xrdb: cursor and font settings for X programs (Appearance)'
+  'xorg-xsetroot: desktop cursor (Appearance)'
+  'xorg-xprop: "Check an app" troubleshooter (Appearance)'
+  'qt5ct: Qt 5 apps follow the icon theme and font'
+  'qt6ct: Qt 6 apps follow the icon theme and font'
   'hwdata: full monitor manufacturer names'
   'polkit: test and install EDID overrides (system-wide mode list)'
   'mesa-utils: "Test with glxgears" button'

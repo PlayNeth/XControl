@@ -7,6 +7,7 @@ from gi.repository import Gio, GLib, Gtk  # noqa: E402
 
 from . import __version__, widgets, wm  # noqa: E402
 from .i18n import _  # noqa: E402
+from .appearance_page import AppearancePage  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
 from .input_page import InputPage  # noqa: E402
@@ -55,6 +56,10 @@ class MainWindow(Gtk.ApplicationWindow):
         inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
         inputs.add(InputPage(self))
         stack.add_titled(inputs, "input", _("Input"))
+
+        appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        appearance.add(AppearancePage(self))
+        stack.add_titled(appearance, "appearance", _("Appearance"))
 
         self.stack = stack
         widgets.protect(stack)  # the wheel scrolls pages instead of changing settings under the pointer
@@ -140,7 +145,8 @@ def main(argv=None):
     page = "gaming"
     if "--page" in argv[:-1]:
         page = argv[argv.index("--page") + 1]
-    if page not in ("gaming", "displays", "monitors", "input"):
-        print("xcontrol: --page must be 'gaming', 'displays', 'monitors' or 'input'", file=sys.stderr)
+    if page not in ("gaming", "displays", "monitors", "input", "appearance"):
+        print("xcontrol: --page must be 'gaming', 'displays', 'monitors', 'input' or 'appearance'",
+              file=sys.stderr)
         return 2
     return App(page).run(argv[:1])
