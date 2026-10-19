@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 16:49-0300\n"
+"POT-Creation-Date: 2026-10-19 17:47-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,47 +17,51 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:51
+#: xcontrol/app.py:52
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:55
+#: xcontrol/app.py:56
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:59
+#: xcontrol/app.py:60
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:63
+#: xcontrol/app.py:64
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:67
+#: xcontrol/app.py:68
 msgid "Desktop"
 msgstr "Área de trabalho"
 
-#: xcontrol/app.py:69
+#: xcontrol/app.py:70
 msgid "Bar & Compositor"
 msgstr "Barra e Compositor"
 
-#: xcontrol/app.py:70
+#: xcontrol/app.py:73
+msgid "Notifications"
+msgstr "Notificações"
+
+#: xcontrol/app.py:74
 msgid "Window Manager (i3)"
 msgstr "Gerenciador de janelas (i3)"
 
-#: xcontrol/app.py:74
+#: xcontrol/app.py:78
 msgid "Users"
 msgstr "Usuários"
 
-#: xcontrol/app.py:76 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:80 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:112
+#: xcontrol/app.py:116
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:113 xcontrol/appearance_page.py:412
+#: xcontrol/app.py:117 xcontrol/appearance_page.py:412
 #: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:866
 #: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -803,67 +807,88 @@ msgstr ""
 "numa config do polybar (chave = valor). Elas vão para a seção [{section}] e "
 "substituem a linha do próprio XControl com a mesma chave."
 
-#: xcontrol/desktop_page.py:12
+#: xcontrol/desktop_page.py:13
 msgid "Fill (crop to cover the display)"
 msgstr "Preencher (corta para cobrir a tela)"
 
-#: xcontrol/desktop_page.py:12
+#: xcontrol/desktop_page.py:13
 msgid "Fit (whole picture, borders in the color)"
 msgstr "Ajustar (imagem inteira, bordas na cor)"
 
-#: xcontrol/desktop_page.py:13
+#: xcontrol/desktop_page.py:14
 msgid "Center (original size)"
 msgstr "Centralizar (tamanho original)"
 
-#: xcontrol/desktop_page.py:13
+#: xcontrol/desktop_page.py:14
 msgid "Tile"
 msgstr "Lado a lado"
 
-#: xcontrol/desktop_page.py:13
+#: xcontrol/desktop_page.py:14
 msgid "Stretch (distort)"
 msgstr "Esticar (distorce)"
 
-#: xcontrol/desktop_page.py:14
+#: xcontrol/desktop_page.py:15
 msgid "Same picture on every display"
 msgstr "A mesma imagem em todas as telas"
 
-#: xcontrol/desktop_page.py:14
+#: xcontrol/desktop_page.py:15
 msgid "One picture across all displays"
 msgstr "Uma imagem atravessando todas as telas"
 
-#: xcontrol/desktop_page.py:15
+#: xcontrol/desktop_page.py:16
 msgid "A different picture per display"
 msgstr "Uma imagem diferente por tela"
 
-#: xcontrol/desktop_page.py:16
+#: xcontrol/desktop_page.py:17
 msgid "xsecurelock (most robust)"
 msgstr "xsecurelock (o mais robusto)"
 
-#: xcontrol/desktop_page.py:46 xcontrol/i3_page.py:865
+#: xcontrol/desktop_page.py:21
+msgid "Until I turn it off"
+msgstr "Até eu desligar"
+
+#: xcontrol/desktop_page.py:21
+msgid "For 30 minutes"
+msgstr "Por 30 minutos"
+
+#: xcontrol/desktop_page.py:21
+msgid "For 1 hour"
+msgstr "Por 1 hora"
+
+#: xcontrol/desktop_page.py:22
+msgid "For 2 hours"
+msgstr "Por 2 horas"
+
+#: xcontrol/desktop_page.py:22
+msgid "For 4 hours"
+msgstr "Por 4 horas"
+
+#: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:865
 #: xcontrol/system_page.py:65 xcontrol/system_page.py:308
 msgid "Copy"
 msgstr "Copiar"
 
-#: xcontrol/desktop_page.py:51
+#: xcontrol/desktop_page.py:54
 #, python-brace-format
 msgid "Copied: {text}"
 msgstr "Copiado: {text}"
 
-#: xcontrol/desktop_page.py:69 xcontrol/i3_page.py:50
+#: xcontrol/desktop_page.py:72 xcontrol/i3_page.py:50
+#: xcontrol/notify_page.py:34
 msgid "Never"
 msgstr "Nunca"
 
-#: xcontrol/desktop_page.py:69
+#: xcontrol/desktop_page.py:72
 #, python-brace-format
 msgid "{n} minute"
 msgstr "{n} minuto"
 
-#: xcontrol/desktop_page.py:69
+#: xcontrol/desktop_page.py:72
 #, python-brace-format
 msgid "{n} minutes"
 msgstr "{n} minutos"
 
-#: xcontrol/desktop_page.py:84
+#: xcontrol/desktop_page.py:87
 msgid ""
 "i3 doesn't run ~/.config/autostart by itself, so after the next login "
 "nothing would set the wallpaper or start the screen lock. Add this line to "
@@ -875,103 +900,103 @@ msgstr ""
 "linha à config do i3 (ela também restaura o layout das telas, as "
 "configurações de mouse e teclado e as atualizações de tema ao vivo):"
 
-#: xcontrol/desktop_page.py:123
+#: xcontrol/desktop_page.py:128
 msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
 msgstr ""
 "Deixar o XControl definir o fundo da área de trabalho (em vez do feh ou "
 "nitrogen)"
 
-#: xcontrol/desktop_page.py:125
+#: xcontrol/desktop_page.py:130
 msgid "Wallpaper"
 msgstr "Papel de parede"
 
-#: xcontrol/desktop_page.py:136 xcontrol/input_page.py:404
+#: xcontrol/desktop_page.py:141 xcontrol/input_page.py:404
 #: xcontrol/panel_page.py:134
 msgid "Layout"
 msgstr "Layout"
 
-#: xcontrol/desktop_page.py:140 xcontrol/display_page.py:234
-#: xcontrol/i3_page.py:480
+#: xcontrol/desktop_page.py:145 xcontrol/display_page.py:234
+#: xcontrol/i3_page.py:480 xcontrol/notify_page.py:170
 msgid "Display"
 msgstr "Tela"
 
-#: xcontrol/desktop_page.py:143 xcontrol/users_page.py:454
+#: xcontrol/desktop_page.py:148 xcontrol/users_page.py:454
 msgid "Choose a picture"
 msgstr "Escolha uma imagem"
 
-#: xcontrol/desktop_page.py:146 xcontrol/users_page.py:458
+#: xcontrol/desktop_page.py:151 xcontrol/users_page.py:458
 msgid "Pictures"
 msgstr "Imagens"
 
-#: xcontrol/desktop_page.py:152
+#: xcontrol/desktop_page.py:157
 msgid "No picture, only the color"
 msgstr "Sem imagem, só a cor"
 
-#: xcontrol/desktop_page.py:155
+#: xcontrol/desktop_page.py:160
 msgid "Picture"
 msgstr "Imagem"
 
-#: xcontrol/desktop_page.py:161
+#: xcontrol/desktop_page.py:166
 msgid "Placement"
 msgstr "Posicionamento"
 
-#: xcontrol/desktop_page.py:166
+#: xcontrol/desktop_page.py:171
 msgid "Background color"
 msgstr "Cor de fundo"
 
-#: xcontrol/desktop_page.py:176
+#: xcontrol/desktop_page.py:181
 msgid "Screen lock"
 msgstr "Bloqueio de tela"
 
-#: xcontrol/desktop_page.py:180
+#: xcontrol/desktop_page.py:185
 msgid "Locker"
 msgstr "Bloqueador"
 
-#: xcontrol/desktop_page.py:189
+#: xcontrol/desktop_page.py:194
 msgid "Lock after being idle for"
 msgstr "Bloquear após ficar ocioso por"
 
-#: xcontrol/desktop_page.py:191
+#: xcontrol/desktop_page.py:196
 msgid "Lock before suspend and hibernate"
 msgstr "Bloquear antes de suspender e hibernar"
 
-#: xcontrol/desktop_page.py:197
+#: xcontrol/desktop_page.py:202
 msgid "The wallpaper"
 msgstr "O papel de parede"
 
-#: xcontrol/desktop_page.py:198
+#: xcontrol/desktop_page.py:203
 msgid "A plain color"
 msgstr "Uma cor sólida"
 
-#: xcontrol/desktop_page.py:205
+#: xcontrol/desktop_page.py:210
 msgid "Lock screen shows"
 msgstr "A tela de bloqueio mostra"
 
-#: xcontrol/desktop_page.py:207
+#: xcontrol/desktop_page.py:212
 msgid "Show the number of failed attempts"
 msgstr "Mostrar o número de tentativas erradas"
 
-#: xcontrol/desktop_page.py:212
+#: xcontrol/desktop_page.py:217
 msgid "Lock now"
 msgstr "Bloquear agora"
 
-#: xcontrol/desktop_page.py:218
+#: xcontrol/desktop_page.py:223
 msgid "To lock with a key, add to your i3 config:"
 msgstr "Para bloquear com uma tecla, adicione à config do i3:"
 
-#: xcontrol/desktop_page.py:226
+#: xcontrol/desktop_page.py:231
 msgid "Screen power"
 msgstr "Energia da tela"
 
-#: xcontrol/desktop_page.py:228
+#: xcontrol/desktop_page.py:233
 msgid "Leave as it is"
 msgstr "Deixar como está"
 
-#: xcontrol/desktop_page.py:232
+#: xcontrol/desktop_page.py:237
 msgid "Turn the screen off after"
 msgstr "Desligar a tela após"
 
-#: xcontrol/desktop_page.py:233
+#: xcontrol/desktop_page.py:238
 msgid ""
 "Counted from the last time you used the mouse or keyboard. On a CRT this "
 "also saves the tube."
@@ -979,11 +1004,99 @@ msgstr ""
 "Contado a partir do último uso do mouse ou teclado. Num CRT isso também "
 "poupa o tubo."
 
-#: xcontrol/desktop_page.py:260
+#: xcontrol/desktop_page.py:243
+msgid "Keep the screen on"
+msgstr "Manter a tela ligada"
+
+#: xcontrol/desktop_page.py:253
+msgid "Stay awake now"
+msgstr "Ficar acordado agora"
+
+#: xcontrol/desktop_page.py:256
+msgid ""
+"No screen lock and no screen-off while it's on, e.g. for a movie or a long "
+"download."
+msgstr ""
+"Sem bloqueio e sem desligar a tela enquanto estiver ligado, ex.: para um "
+"filme ou um download longo."
+
+#: xcontrol/desktop_page.py:259
+msgid "Gamepads and joysticks count as activity"
+msgstr "Controles e joysticks contam como atividade"
+
+#: xcontrol/desktop_page.py:264
+msgid "Apps can keep it on (games, Steam, video players, browsers)"
+msgstr ""
+"Apps podem mantê-la ligada (jogos, Steam, players de vídeo, navegadores)"
+
+#: xcontrol/desktop_page.py:269
+msgid "While the focused window is full screen"
+msgstr "Enquanto a janela em foco estiver em tela cheia"
+
+#: xcontrol/desktop_page.py:274
+msgid ""
+"To switch it from a key, add a binding like this to your i3 config (or on "
+"the Window Manager page):"
+msgstr ""
+"Para alternar por uma tecla, adicione um atalho assim à configuração do i3 "
+"(ou na página Gerenciador de janelas):"
+
+#: xcontrol/desktop_page.py:296
+#, python-brace-format
+msgid "Until {time}."
+msgstr "Até {time}."
+
+#: xcontrol/desktop_page.py:304
+#, python-brace-format
+msgid "Watching: {names}."
+msgstr "Monitorando: {names}."
+
+#: xcontrol/desktop_page.py:305
+msgid "No gamepad connected right now; they're picked up when plugged in."
+msgstr ""
+"Nenhum controle conectado agora; eles são detectados ao serem conectados."
+
+#: xcontrol/desktop_page.py:307
+#, python-brace-format
+msgid ""
+"No permission to read: {names}. Your user needs read access to its /dev/"
+"input device (normally given to the logged-in user automatically)."
+msgstr ""
+"Sem permissão para ler: {names}. Seu usuário precisa de acesso de leitura ao "
+"dispositivo em /dev/input (normalmente dado automaticamente a quem está "
+"logado)."
+
+#: xcontrol/desktop_page.py:315
+msgid ""
+"Another program (probably a power manager) already answers these requests, "
+"so it decides instead of XControl."
+msgstr ""
+"Outro programa (provavelmente um gerenciador de energia) já responde a esses "
+"pedidos, então ele decide no lugar do XControl."
+
+#: xcontrol/desktop_page.py:322
+msgid "you turned it on"
+msgstr "você ligou"
+
+#: xcontrol/desktop_page.py:324
+#, python-brace-format
+msgid "{app} asked"
+msgstr "{app} pediu"
+
+#: xcontrol/desktop_page.py:326
+msgid "a full-screen window"
+msgstr "uma janela em tela cheia"
+
+#: xcontrol/desktop_page.py:327
+#, python-brace-format
+msgid "Kept on now: {why}."
+msgstr "Mantida ligada agora: {why}."
+
+#: xcontrol/desktop_page.py:356
 msgid "(not installed)"
 msgstr "(não instalado)"
 
-#: xcontrol/desktop_page.py:313
+#: xcontrol/desktop_page.py:413
 msgid ""
 "Install xss-lock: it starts the locker when you're idle and before the "
 "computer sleeps."
@@ -991,18 +1104,18 @@ msgstr ""
 "Instale o xss-lock: ele inicia o bloqueador quando você fica ocioso e antes "
 "de o computador dormir."
 
-#: xcontrol/desktop_page.py:316
+#: xcontrol/desktop_page.py:416
 msgid "Install a locker: i3lock, xsecurelock or slock."
 msgstr "Instale um bloqueador: i3lock, xsecurelock ou slock."
 
-#: xcontrol/desktop_page.py:318
+#: xcontrol/desktop_page.py:418
 msgid ""
 "slock is set up when it's compiled (config.h); XControl can only start it."
 msgstr ""
 "O slock é configurado na compilação (config.h); o XControl só consegue "
 "iniciá-lo."
 
-#: xcontrol/desktop_page.py:320
+#: xcontrol/desktop_page.py:420
 msgid ""
 "xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
 "show the wallpaper."
@@ -1010,15 +1123,15 @@ msgstr ""
 "O xsecurelock é configurado com variáveis de ambiente XSECURELOCK_*; ele não "
 "mostra o papel de parede."
 
-#: xcontrol/desktop_page.py:331
+#: xcontrol/desktop_page.py:431
 msgid "Active: xss-lock is running."
 msgstr "Ativo: o xss-lock está rodando."
 
-#: xcontrol/desktop_page.py:333
+#: xcontrol/desktop_page.py:433
 msgid "Not running yet."
 msgstr "Ainda não está rodando."
 
-#: xcontrol/desktop_page.py:341
+#: xcontrol/desktop_page.py:441
 msgid ""
 "Your i3 config also sets the wallpaper; remove these lines or they'll "
 "replace XControl's at login:"
@@ -1026,7 +1139,7 @@ msgstr ""
 "Sua config do i3 também define o papel de parede; remova estas linhas ou "
 "elas vão substituir o do XControl no login:"
 
-#: xcontrol/desktop_page.py:344
+#: xcontrol/desktop_page.py:444
 msgid ""
 "Another screen lock is set up; remove it from your i3 config, or two lockers "
 "will start:"
@@ -1034,23 +1147,23 @@ msgstr ""
 "Há outro bloqueio de tela configurado; remova-o da config do i3, ou dois "
 "bloqueadores vão iniciar:"
 
-#: xcontrol/desktop_page.py:440
+#: xcontrol/desktop_page.py:542
 msgid "Could not save the desktop settings"
 msgstr "Não foi possível salvar as configurações da área de trabalho"
 
-#: xcontrol/desktop_page.py:442
+#: xcontrol/desktop_page.py:544
 msgid "Desktop settings applied"
 msgstr "Configurações da área de trabalho aplicadas"
 
-#: xcontrol/desktop_page.py:443
+#: xcontrol/desktop_page.py:545
 msgid "XControl no longer manages the desktop"
 msgstr "O XControl não gerencia mais a área de trabalho"
 
-#: xcontrol/desktop_page.py:449
+#: xcontrol/desktop_page.py:551
 msgid "Could not lock the screen"
 msgstr "Não foi possível bloquear a tela"
 
-#: xcontrol/desktop_page.py:449
+#: xcontrol/desktop_page.py:551
 msgid "Install i3lock, xsecurelock or slock."
 msgstr "Instale o i3lock, xsecurelock ou slock."
 
@@ -1075,7 +1188,7 @@ msgstr "Escalar mantendo a proporção"
 #: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
 #: xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21 xcontrol/input_page.py:26
 #: xcontrol/input_page.py:31 xcontrol/input_page.py:42
-#: xcontrol/panel_page.py:33
+#: xcontrol/notify_page.py:36 xcontrol/panel_page.py:33
 msgid "Off"
 msgstr "Desligado"
 
@@ -1198,7 +1311,7 @@ msgstr ""
 "Outro programa definiu uma matriz de cor personalizada; mover o controle a "
 "substitui."
 
-#: xcontrol/display_page.py:18
+#: xcontrol/display_page.py:18 xcontrol/notify_page.py:30
 msgid "Normal"
 msgstr "Normal"
 
@@ -1633,7 +1746,7 @@ msgstr "FXAA (mais rápido, um pouco mais suave)"
 msgid "SMAA (cleaner edges)"
 msgstr "SMAA (bordas mais limpas)"
 
-#: xcontrol/gaming_page.py:44
+#: xcontrol/gaming_page.py:44 xcontrol/notify_page.py:30
 msgid "Low"
 msgstr "Baixa"
 
@@ -1655,8 +1768,8 @@ msgid "Add Steam game"
 msgstr "Adicionar jogo da Steam"
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:582 xcontrol/resolutions_dialog.py:153
-#: xcontrol/users_page.py:381
+#: xcontrol/i3_page.py:582 xcontrol/notify_page.py:314
+#: xcontrol/resolutions_dialog.py:153 xcontrol/users_page.py:381
 msgid "Add"
 msgstr "Adicionar"
 
@@ -1936,15 +2049,18 @@ msgstr "Com barra de título"
 msgid "Border only"
 msgstr "Só a borda"
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Left"
 msgstr "Esquerda"
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:17 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Center"
 msgstr "Centro"
 
-#: xcontrol/i3_page.py:18 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Right"
 msgstr "Direita"
 
@@ -2156,7 +2272,7 @@ msgstr ""
 "xcontrol e pode ser restaurada ao desligar isto. Cada mudança é verificada "
 "pelo i3 antes, então um erro nunca substitui uma configuração que funciona."
 
-#: xcontrol/i3_page.py:226
+#: xcontrol/i3_page.py:226 xcontrol/notify_page.py:183
 msgid "Look"
 msgstr "Aparência"
 
@@ -2267,7 +2383,7 @@ msgstr "Adicionar…"
 msgid "Change…"
 msgstr "Alterar…"
 
-#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:582
+#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:582 xcontrol/notify_page.py:316
 #: xcontrol/resolutions_dialog.py:242
 msgid "Remove"
 msgstr "Remover"
@@ -2648,15 +2764,16 @@ msgstr "Segundo modo"
 msgid "Battery level"
 msgstr "Nível da bateria"
 
-#: xcontrol/input_page.py:41
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:266
 msgid "Left click"
 msgstr "Clique esquerdo"
 
 #: xcontrol/input_page.py:41 xcontrol/input_page.py:200
+#: xcontrol/notify_page.py:267
 msgid "Right click"
 msgstr "Clique direito"
 
-#: xcontrol/input_page.py:41
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:266
 msgid "Middle click"
 msgstr "Clique do meio"
 
@@ -3579,6 +3696,545 @@ msgstr "EDID salvo"
 msgid "Could not save the EDID"
 msgstr "Não foi possível salvar o EDID"
 
+#: xcontrol/notify_page.py:16
+msgid "Top left"
+msgstr "Em cima à esquerda"
+
+#: xcontrol/notify_page.py:16
+msgid "Top center"
+msgstr "Em cima no centro"
+
+#: xcontrol/notify_page.py:16
+msgid "Top right"
+msgstr "Em cima à direita"
+
+#: xcontrol/notify_page.py:17
+msgid "Left, middle"
+msgstr "À esquerda, no meio"
+
+#: xcontrol/notify_page.py:17
+msgid "Right, middle"
+msgstr "À direita, no meio"
+
+#: xcontrol/notify_page.py:18
+msgid "Bottom left"
+msgstr "Embaixo à esquerda"
+
+#: xcontrol/notify_page.py:18
+msgid "Bottom center"
+msgstr "Embaixo no centro"
+
+#: xcontrol/notify_page.py:19
+msgid "Bottom right"
+msgstr "Embaixo à direita"
+
+#: xcontrol/notify_page.py:20
+msgid "The one with the focused window"
+msgstr "A da janela em foco"
+
+#: xcontrol/notify_page.py:20
+msgid "The one with the mouse pointer"
+msgstr "A do ponteiro do mouse"
+
+#: xcontrol/notify_page.py:21
+msgid "Always the first one"
+msgstr "Sempre a primeira"
+
+#: xcontrol/notify_page.py:22
+msgid "Above the text"
+msgstr "Acima do texto"
+
+#: xcontrol/notify_page.py:22
+msgid "No icons"
+msgstr "Sem ícones"
+
+#: xcontrol/notify_page.py:24
+msgid "Title and text"
+msgstr "Título e texto"
+
+#: xcontrol/notify_page.py:24
+msgid "App name, title and text"
+msgstr "Nome do app, título e texto"
+
+#: xcontrol/notify_page.py:25
+msgid "Title only"
+msgstr "Só o título"
+
+#: xcontrol/notify_page.py:25
+msgid "Title, progress and text"
+msgstr "Título, progresso e texto"
+
+#: xcontrol/notify_page.py:26
+msgid "Custom…"
+msgstr "Personalizado…"
+
+#: xcontrol/notify_page.py:27
+msgid "Close it"
+msgstr "Fechá-la"
+
+#: xcontrol/notify_page.py:27
+msgid "Open it (default action)"
+msgstr "Abri-la (ação padrão)"
+
+#: xcontrol/notify_page.py:28
+msgid "Close all"
+msgstr "Fechar todas"
+
+#: xcontrol/notify_page.py:28
+msgid "Choose an action from a menu"
+msgstr "Escolher uma ação num menu"
+
+#: xcontrol/notify_page.py:29
+msgid "Open its link"
+msgstr "Abrir o link dela"
+
+#: xcontrol/notify_page.py:29
+msgid "Nothing"
+msgstr "Nada"
+
+#: xcontrol/notify_page.py:30
+msgid "Critical"
+msgstr "Crítica"
+
+#: xcontrol/notify_page.py:31
+msgid "Don't show, don't keep"
+msgstr "Não mostrar, não guardar"
+
+#: xcontrol/notify_page.py:31
+msgid "Only keep in the history"
+msgstr "Só guardar no histórico"
+
+#: xcontrol/notify_page.py:32
+msgid "Stay until clicked"
+msgstr "Ficar até clicar"
+
+#: xcontrol/notify_page.py:32
+msgid "Treat as low"
+msgstr "Tratar como baixa"
+
+#: xcontrol/notify_page.py:32
+msgid "Treat as critical"
+msgstr "Tratar como crítica"
+
+#: xcontrol/notify_page.py:33 xcontrol/notify_page.py:284
+msgid "No sound"
+msgstr "Sem som"
+
+#: xcontrol/notify_page.py:34
+msgid "After 30 seconds"
+msgstr "Depois de 30 segundos"
+
+#: xcontrol/notify_page.py:34 xcontrol/notify_page.py:36
+msgid "After 1 minute"
+msgstr "Depois de 1 minuto"
+
+#: xcontrol/notify_page.py:35 xcontrol/notify_page.py:37
+msgid "After 5 minutes"
+msgstr "Depois de 5 minutos"
+
+#: xcontrol/notify_page.py:36
+msgid "After 2 minutes"
+msgstr "Depois de 2 minutos"
+
+#: xcontrol/notify_page.py:65
+msgid "Use XControl's notifications (dunst)"
+msgstr "Usar as notificações do XControl (dunst)"
+
+#: xcontrol/notify_page.py:71
+msgid ""
+"XControl writes its own dunst setup and runs dunst for the session. Your own "
+"~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
+"notification."
+msgstr ""
+"O XControl escreve sua própria configuração do dunst e o executa na sessão. "
+"Seu ~/.config/dunst/dunstrc não é usado nem alterado. As mudanças aparecem "
+"na próxima notificação."
+
+#: xcontrol/notify_page.py:80
+msgid "Stop it"
+msgstr "Encerrá-lo"
+
+#: xcontrol/notify_page.py:145
+msgid "Try it"
+msgstr "Experimentar"
+
+#: xcontrol/notify_page.py:151
+msgid "Send a test notification"
+msgstr "Enviar uma notificação de teste"
+
+#: xcontrol/notify_page.py:156
+msgid "Do not disturb"
+msgstr "Não perturbe"
+
+#: xcontrol/notify_page.py:157
+msgid "Notifications wait while it's on and show when you turn it off."
+msgstr ""
+"As notificações esperam enquanto estiver ligado e aparecem quando você "
+"desligar."
+
+#: xcontrol/notify_page.py:160
+msgid "Where they show"
+msgstr "Onde aparecem"
+
+#: xcontrol/notify_page.py:162
+msgid "Corner"
+msgstr "Canto"
+
+#: xcontrol/notify_page.py:165
+msgid "sideways"
+msgstr "na horizontal"
+
+#: xcontrol/notify_page.py:165
+msgid "up/down"
+msgstr "na vertical"
+
+#: xcontrol/notify_page.py:167
+#, python-brace-format
+msgid "px {direction}"
+msgstr "px {direction}"
+
+#: xcontrol/notify_page.py:168
+msgid "Distance from the edge"
+msgstr "Distância da borda"
+
+#: xcontrol/notify_page.py:172
+msgid "Width (px)"
+msgstr "Largura (px)"
+
+#: xcontrol/notify_page.py:174
+msgid "Tallest (px)"
+msgstr "Altura máxima (px)"
+
+#: xcontrol/notify_page.py:176
+msgid "Most at once"
+msgstr "Máximo ao mesmo tempo"
+
+#: xcontrol/notify_page.py:176
+msgid "0 shows them all; the rest wait their turn."
+msgstr "0 mostra todas; as outras esperam a vez."
+
+#: xcontrol/notify_page.py:178
+msgid "Space between them (px)"
+msgstr "Espaço entre elas (px)"
+
+#: xcontrol/notify_page.py:185
+msgid "The interface font"
+msgstr "A fonte da interface"
+
+#: xcontrol/notify_page.py:189 xcontrol/panel_page.py:162
+msgid "Font"
+msgstr "Fonte"
+
+#: xcontrol/notify_page.py:191
+msgid "Rounded corners (px)"
+msgstr "Cantos arredondados (px)"
+
+#: xcontrol/notify_page.py:193
+msgid "Border (px)"
+msgstr "Borda (px)"
+
+#: xcontrol/notify_page.py:195
+msgid "Space inside (px)"
+msgstr "Espaço interno (px)"
+
+#: xcontrol/notify_page.py:197
+msgid "Icon"
+msgstr "Ícone"
+
+#: xcontrol/notify_page.py:199
+msgid "Largest icon (px)"
+msgstr "Ícone máximo (px)"
+
+#: xcontrol/notify_page.py:201
+msgid "Text alignment"
+msgstr "Alinhamento do texto"
+
+#: xcontrol/notify_page.py:203
+msgid "Shows"
+msgstr "Mostra"
+
+#: xcontrol/notify_page.py:206
+msgid ""
+"%a app, %s title, %b text, %p progress, \\n a new line; Pango markup like "
+"<b>, <i>."
+msgstr ""
+"%a app, %s título, %b texto, %p progresso, \\n nova linha; marcação Pango "
+"como <b>, <i>."
+
+#: xcontrol/notify_page.py:208
+msgid "See-through (%)"
+msgstr "Transparência (%)"
+
+#: xcontrol/notify_page.py:208
+msgid "Needs the compositor."
+msgstr "Precisa do compositor."
+
+#: xcontrol/notify_page.py:209
+msgid "A line between notifications shown together"
+msgstr "Uma linha entre notificações mostradas juntas"
+
+#: xcontrol/notify_page.py:215
+msgid "Colors and timing"
+msgstr "Cores e tempo"
+
+#: xcontrol/notify_page.py:216 xcontrol/panel_page.py:193
+msgid "Background"
+msgstr "Fundo"
+
+#: xcontrol/notify_page.py:216 xcontrol/panel_page.py:193
+msgid "Text"
+msgstr "Texto"
+
+#: xcontrol/notify_page.py:216
+msgid "Border"
+msgstr "Borda"
+
+#: xcontrol/notify_page.py:216
+msgid "Disappears after (s)"
+msgstr "Some depois de (s)"
+
+#: xcontrol/notify_page.py:235
+msgid ""
+"0 seconds: it stays until you click it. Programs choose how urgent a "
+"notification is (a finished download is low, a low battery critical)."
+msgstr ""
+"0 segundos: fica até você clicar. Os programas escolhem a urgência (um "
+"download concluído é baixa, bateria fraca é crítica)."
+
+#: xcontrol/notify_page.py:237
+msgid "Critical ones show even with \"Do not disturb\" on"
+msgstr "As críticas aparecem mesmo com \"Não perturbe\" ligado"
+
+#: xcontrol/notify_page.py:240
+msgid "Default colors"
+msgstr "Cores padrão"
+
+#: xcontrol/notify_page.py:245
+msgid "Behavior"
+msgstr "Comportamento"
+
+#: xcontrol/notify_page.py:247
+msgid "Show how old it is"
+msgstr "Mostrar há quanto tempo chegou"
+
+#: xcontrol/notify_page.py:249
+msgid "Keep them while you're away"
+msgstr "Mantê-las enquanto você está ausente"
+
+#: xcontrol/notify_page.py:250
+msgid ""
+"When you haven't touched the mouse or keyboard for this long, notifications "
+"don't disappear until you're back."
+msgstr ""
+"Quando você não mexe no mouse ou teclado por esse tempo, as notificações não "
+"somem até você voltar."
+
+#: xcontrol/notify_page.py:253
+msgid "History keeps"
+msgstr "O histórico guarda"
+
+#: xcontrol/notify_page.py:255
+msgid "Show repeated notifications once, with a count"
+msgstr "Mostrar notificações repetidas uma vez, com contagem"
+
+#: xcontrol/notify_page.py:256
+msgid "Ones brought back from the history stay until clicked"
+msgstr "As trazidas de volta do histórico ficam até clicar"
+
+#: xcontrol/notify_page.py:257
+msgid "Show how many are waiting"
+msgstr "Mostrar quantas estão esperando"
+
+#: xcontrol/notify_page.py:258
+msgid "Mark ones that have actions (A) or links (U)"
+msgstr "Marcar as que têm ações (A) ou links (U)"
+
+#: xcontrol/notify_page.py:259
+msgid "Show progress bars (e.g. volume, downloads)"
+msgstr "Mostrar barras de progresso (ex.: volume, downloads)"
+
+#: xcontrol/notify_page.py:273
+msgid "Notification sound"
+msgstr "Som de notificação"
+
+#: xcontrol/notify_page.py:275
+msgid "Sounds"
+msgstr "Sons"
+
+#: xcontrol/notify_page.py:287
+msgid "Sound"
+msgstr "Som"
+
+#: xcontrol/notify_page.py:287
+msgid "Played for normal and critical notifications (pw-play or paplay)."
+msgstr "Tocado nas notificações normais e críticas (pw-play ou paplay)."
+
+#: xcontrol/notify_page.py:290
+msgid "Per app"
+msgstr "Por app"
+
+#: xcontrol/notify_page.py:295
+msgid "App"
+msgstr "App"
+
+#: xcontrol/notify_page.py:303
+msgid "What happens"
+msgstr "O que acontece"
+
+#: xcontrol/notify_page.py:324
+msgid ""
+"The app name is the one the program gives (as shown with \"App name, title "
+"and text\"); * matches anything, e.g. Steam*."
+msgstr ""
+"O nome do app é o que o programa informa (como aparece em \"Nome do app, "
+"título e texto\"); * combina com qualquer coisa, ex.: Steam*."
+
+#: xcontrol/notify_page.py:328
+msgid "Keyboard shortcuts"
+msgstr "Atalhos de teclado"
+
+#: xcontrol/notify_page.py:329
+msgid ""
+"These commands control the notifications. Bind them to keys in your i3 "
+"config (or on the Window Manager page):"
+msgstr ""
+"Estes comandos controlam as notificações. Associe-os a teclas na "
+"configuração do i3 (ou na página Gerenciador de janelas):"
+
+#: xcontrol/notify_page.py:331
+msgid "Close the newest notification:"
+msgstr "Fechar a notificação mais recente:"
+
+#: xcontrol/notify_page.py:332
+msgid "Close all of them:"
+msgstr "Fechar todas:"
+
+#: xcontrol/notify_page.py:333
+msgid "Bring back the last closed one:"
+msgstr "Trazer de volta a última fechada:"
+
+#: xcontrol/notify_page.py:334
+msgid "Choose one of its actions from a menu:"
+msgstr "Escolher uma das ações dela num menu:"
+
+#: xcontrol/notify_page.py:335
+msgid "Do not disturb on/off:"
+msgstr "Não perturbe liga/desliga:"
+
+#: xcontrol/notify_page.py:339
+msgid "Extra dunst settings"
+msgstr "Configurações extras do dunst"
+
+#: xcontrol/notify_page.py:340
+msgid ""
+"Anything else from dunst's documentation, as in a dunstrc. Lines before any "
+"[section] go into [global] and replace XControl's line with the same key; "
+"[sections] are added as they are."
+msgstr ""
+"Qualquer outra coisa da documentação do dunst, como num dunstrc. Linhas "
+"antes de qualquer [seção] vão para [global] e substituem a linha do XControl "
+"com a mesma chave; [seções] são adicionadas como estão."
+
+#: xcontrol/notify_page.py:378 xcontrol/notify_page.py:381
+#, python-brace-format
+msgid "After {n} seconds"
+msgstr "Depois de {n} segundos"
+
+#: xcontrol/notify_page.py:463 xcontrol/panel_page.py:483
+msgid "Could not save the settings"
+msgstr "Não foi possível salvar as configurações"
+
+#: xcontrol/notify_page.py:465 xcontrol/panel_page.py:485
+msgid "Applied"
+msgstr "Aplicado"
+
+#: xcontrol/notify_page.py:525
+msgid "Add a recent app…"
+msgstr "Adicionar um app recente…"
+
+#: xcontrol/notify_page.py:533
+msgid "A low notification"
+msgstr "Uma notificação baixa"
+
+#: xcontrol/notify_page.py:533
+msgid "Like a finished download."
+msgstr "Como um download concluído."
+
+#: xcontrol/notify_page.py:534
+msgid "A normal notification"
+msgstr "Uma notificação normal"
+
+#: xcontrol/notify_page.py:534
+msgid "Like a new message. <i>Formatting</i> works too."
+msgstr "Como uma mensagem nova. <i>Formatação</i> também funciona."
+
+#: xcontrol/notify_page.py:535
+msgid "A critical notification"
+msgstr "Uma notificação crítica"
+
+#: xcontrol/notify_page.py:535
+msgid "Like a low battery. It stays until clicked."
+msgstr "Como bateria fraca. Fica até clicar."
+
+#: xcontrol/notify_page.py:539
+msgid "Nothing shows notifications right now"
+msgstr "Nada mostra notificações agora"
+
+#: xcontrol/notify_page.py:545
+msgid "Could not change it"
+msgstr "Não foi possível alterar"
+
+#: xcontrol/notify_page.py:545
+msgid "dunst isn't running."
+msgstr "O dunst não está rodando."
+
+#: xcontrol/notify_page.py:565
+msgid "dunst isn't installed."
+msgstr "O dunst não está instalado."
+
+#: xcontrol/notify_page.py:567
+#, python-brace-format
+msgid "Notifications are shown by {name} now."
+msgstr "As notificações são mostradas por {name} agora."
+
+#: xcontrol/notify_page.py:568
+msgid "Nothing shows notifications right now."
+msgstr "Nada mostra notificações agora."
+
+#: xcontrol/notify_page.py:570
+#, python-brace-format
+msgid "Running (dunst {v})."
+msgstr "Rodando (dunst {v})."
+
+#: xcontrol/notify_page.py:572 xcontrol/panel_page.py:515
+#: xcontrol/panel_page.py:535
+#, python-brace-format
+msgid "Not running: {why}"
+msgstr "Não está rodando: {why}"
+
+#: xcontrol/notify_page.py:572 xcontrol/panel_page.py:515
+#: xcontrol/panel_page.py:535
+msgid "Starting…"
+msgstr "Iniciando…"
+
+#: xcontrol/notify_page.py:575
+#, python-brace-format
+msgid ""
+"{name} (process {pid}) is showing notifications, so XControl's dunst can't "
+"start. Stop it, and remove it from your i3 config or autostart."
+msgstr ""
+"{name} (processo {pid}) está mostrando as notificações, então o dunst do "
+"XControl não pode iniciar. Encerre-o e remova-o da configuração do i3 ou da "
+"inicialização automática."
+
+#: xcontrol/notify_page.py:583
+msgid ""
+"Remove these from your i3 config, or another notification program starts "
+"first after the next login:"
+msgstr ""
+"Remova estas linhas da configuração do i3, ou outro programa de notificações "
+"inicia primeiro no próximo login:"
+
 #: xcontrol/panel_page.py:13
 msgid "i3 workspaces"
 msgstr "Áreas de trabalho do i3"
@@ -3767,10 +4423,6 @@ msgstr "Só a tela principal"
 msgid "Show on"
 msgstr "Mostrar em"
 
-#: xcontrol/panel_page.py:162
-msgid "Font"
-msgstr "Fonte"
-
 #: xcontrol/panel_page.py:164
 msgid "Words (CPU, RAM, VOL)"
 msgstr "Palavras (CPU, RAM, VOL)"
@@ -3820,14 +4472,6 @@ msgstr "Idioma do relógio"
 #: xcontrol/panel_page.py:186
 msgid "Extra bar settings…"
 msgstr "Configurações extras da barra…"
-
-#: xcontrol/panel_page.py:193
-msgid "Background"
-msgstr "Fundo"
-
-#: xcontrol/panel_page.py:193
-msgid "Text"
-msgstr "Texto"
 
 #: xcontrol/panel_page.py:194
 msgid "Accent (labels, current workspace)"
@@ -3972,14 +4616,6 @@ msgstr ""
 msgid "The i3 config wasn't updated"
 msgstr "A configuração do i3 não foi atualizada"
 
-#: xcontrol/panel_page.py:483
-msgid "Could not save the settings"
-msgstr "Não foi possível salvar as configurações"
-
-#: xcontrol/panel_page.py:485
-msgid "Applied"
-msgstr "Aplicado"
-
 #: xcontrol/panel_page.py:506
 msgid "the screen"
 msgstr "a tela"
@@ -3992,15 +4628,6 @@ msgstr "O polybar não está instalado."
 #, python-brace-format
 msgid "Running on {displays}."
 msgstr "Rodando em {displays}."
-
-#: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
-#, python-brace-format
-msgid "Not running: {why}"
-msgstr "Não está rodando: {why}"
-
-#: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
-msgid "Starting…"
-msgstr "Iniciando…"
 
 #: xcontrol/panel_page.py:521
 msgid ""
@@ -5007,6 +5634,3 @@ msgid ""
 msgstr ""
 "gráficos;placa de vídeo;gpu;amd;radeon;anisotrópica;suavização;serrilhado;"
 "vsync;fps;monitor;tela;xrandr;mouse;teclado;touchpad;entrada;"
-
-#~ msgid "i3 workspaces of that display; click to switch"
-#~ msgstr "áreas de trabalho do i3 daquela tela; clique para trocar"

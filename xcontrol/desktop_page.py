@@ -1,5 +1,6 @@
-"""The Desktop page: wallpaper, screen lock and screen power."""
+"""The Desktop page: wallpaper, screen lock, screen power and keeping the screen on."""
 import shutil
+import time
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -17,6 +18,8 @@ LOCKER_LABELS = {"i3lock": "i3lock", "xsecurelock": N_("xsecurelock (most robust
 IDLE_CHOICES = [0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60]
 OFF_CHOICES = [0, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120]
 PREVIEW_W = 420
+AWAKE_FOR = [("on", N_("Until I turn it off")), ("30", N_("For 30 minutes")), ("60", N_("For 1 hour")),
+             ("120", N_("For 2 hours")), ("240", N_("For 4 hours"))]
 
 
 def _hint(text, markup=False):
@@ -91,7 +94,9 @@ class DesktopPage(Gtk.Box):
         self._build_wallpaper()
         self._build_lock()
         self._build_power()
+        self._build_awake()
         self.connect("map", lambda *_a: (self._sensitivity(), self._refresh_status()))  # after show_all
+        GLib.timeout_add_seconds(2, self._poll_awake)
         self._fill()
         self.loading = False
 
@@ -233,6 +238,97 @@ class DesktopPage(Gtk.Box):
         g.attach(_hint(_("Counted from the last time you used the mouse or keyboard. On a CRT this also saves the "
                          "tube.")), 1, 1, 1, 1)
 
+    # ---------------------------------------------------------------- keep the screen on
+    def _build_awake(self):
+        g = self._section(_("Keep the screen on"))
+        box = Gtk.Box(spacing=10)
+        self.awake_now = Gtk.Switch(valign=Gtk.Align.CENTER)
+        self.awake_now.connect("notify::active", self._awake_toggled)
+        box.pack_start(self.awake_now, False, False, 0)
+        self.awake_for = Gtk.ComboBoxText()
+        for k, label in AWAKE_FOR:
+            self.awake_for.append(k, _(label))
+        self.awake_for.set_active_id("on")
+        box.pack_start(self.awake_for, False, False, 0)
+        self._row(g, 0, _("Stay awake now"), box)
+        self.awake_until = _hint("")
+        g.attach(self.awake_until, 1, 1, 1, 1)
+        g.attach(_hint(_("No screen lock and no screen-off while it's on, e.g. for a movie or a long download.")),
+                 1, 2, 1, 1)
+
+        self.awake_pads = Gtk.CheckButton(label=_("Gamepads and joysticks count as activity"))
+        self.awake_pads.connect("toggled", self._changed)
+        g.attach(self.awake_pads, 1, 3, 1, 1)
+        self.pads_note = _hint("")
+        g.attach(self.pads_note, 1, 4, 1, 1)
+        self.awake_apps = Gtk.CheckButton(label=_("Apps can keep it on (games, Steam, video players, browsers)"))
+        self.awake_apps.connect("toggled", self._changed)
+        g.attach(self.awake_apps, 1, 5, 1, 1)
+        self.apps_note = _hint("")
+        g.attach(self.apps_note, 1, 6, 1, 1)
+        self.awake_full = Gtk.CheckButton(label=_("While the focused window is full screen"))
+        self.awake_full.connect("toggled", self._changed)
+        g.attach(self.awake_full, 1, 7, 1, 1)
+        self.awake_status = Gtk.Label(xalign=0, wrap=True)
+        g.attach(self.awake_status, 1, 8, 1, 1)
+        g.attach(_command(_("To switch it from a key, add a binding like this to your i3 config (or on the "
+                            "Window Manager page):"),
+                          "bindsym $mod+Shift+a exec --no-startup-id xcontrol --awake toggle", self.window),
+                 1, 9, 1, 1)
+
+    def _awake_toggled(self, *_a):
+        if self.loading:
+            return
+        on = self.awake_now.get_active()
+        D.set_awake((self.awake_for.get_active_id() or "on") if on else "off")
+        self.awake_for.set_sensitive(not on)
+        GLib.timeout_add(1200, lambda: self._poll_awake() and False)
+
+    def _poll_awake(self):
+        if not self.get_mapped():
+            return True
+        until = D.set_awake("status")
+        self.loading, was = True, self.loading
+        self.awake_now.set_active(until is not None)
+        self.loading = was
+        self.awake_for.set_sensitive(until is None)
+        self.awake_until.set_text("" if not until else
+                                  _("Until {time}.").format(time=time.strftime("%H:%M", time.localtime(until))))
+        self.awake_until.set_visible(bool(until))
+        a = self.desk["awake"]
+        info = D.state().get("awake") or {}
+        running = bool(D.state())
+        pads, denied = info.get("gamepads") or [], info.get("denied") or []
+        notes = []
+        if a["gamepads"] and running:
+            notes.append(_("Watching: {names}.").format(names=", ".join(pads)) if pads else
+                         _("No gamepad connected right now; they're picked up when plugged in."))
+            if denied:
+                notes.append(_("No permission to read: {names}. Your user needs read access to its "
+                               "/dev/input device (normally given to the logged-in user automatically).")
+                             .format(names=", ".join(denied)))
+        self.pads_note.set_text(" ".join(notes))
+        self.pads_note.set_visible(bool(notes))
+        service = info.get("service", "")
+        note = ""
+        if a["apps"] and running and service and service not in ("ok", "starting"):
+            note = _("Another program (probably a power manager) already answers these requests, so it decides "
+                     "instead of XControl.")
+        self.apps_note.set_text(note)
+        self.apps_note.set_visible(bool(note))
+        why = []
+        for r in info.get("reasons") or []:
+            if r.get("kind") == "manual":
+                why.append(_("you turned it on"))
+            elif r.get("kind") == "app":
+                why.append(_("{app} asked").format(app=r.get("name") or "?"))
+            elif r.get("kind") == "fullscreen":
+                why.append(_("a full-screen window"))
+        text = ("☀ " + _("Kept on now: {why}.").format(why=", ".join(why))) if why else ""
+        self.awake_status.set_text(text)
+        self.awake_status.set_visible(bool(text))
+        return True
+
     # ---------------------------------------------------------------- model -> view
     def _monitors(self):
         try:
@@ -268,6 +364,10 @@ class DesktopPage(Gtk.Box):
         self.lock_color.set_rgba(_rgba(lock["color"]))
         self.show_failed.set_active(lock["show_failed"])
 
+        a = self.desk["awake"]
+        self.awake_pads.set_active(a["gamepads"])
+        self.awake_apps.set_active(a["apps"])
+        self.awake_full.set_active(a["fullscreen"])
         off = str(blank["screen_off_minutes"]) if blank["managed"] else "default"
         if not self.screen_off.set_active_id(off):
             self.screen_off.append(off, _minutes(blank["screen_off_minutes"]))
@@ -422,6 +522,8 @@ class DesktopPage(Gtk.Box):
         off = self.screen_off.get_active_id() or "default"
         blank["managed"] = off != "default"
         blank["screen_off_minutes"] = int(off) if off != "default" else blank["screen_off_minutes"]
+        self.desk["awake"] = {"gamepads": self.awake_pads.get_active(), "apps": self.awake_apps.get_active(),
+                              "fullscreen": self.awake_full.get_active()}
         self._sensitivity()
         self._update_preview()
         if self._timer:
@@ -432,7 +534,7 @@ class DesktopPage(Gtk.Box):
         self._timer = None
         try:
             fresh = D.load()   # the Bar & Compositor page keeps its part
-            for k in ("wallpaper", "lock", "blanking"):
+            for k in ("wallpaper", "lock", "blanking", "awake"):
                 fresh[k] = self.desk[k]
             D.save(fresh)
             result = D.notify_daemon(fresh)

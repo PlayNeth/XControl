@@ -102,6 +102,8 @@ check:
 	$(PYTHON) tests/check_preview.py
 	$(PYTHON) tests/check_panel.py
 	$(PYTHON) tests/check_i3.py
+	$(PYTHON) tests/check_awake.py
+	$(PYTHON) tests/check_notify.py
 	sh -n data/xcontrol-edid-helper
 	sh -n data/xcontrol-module-helper
 	sh -n data/xcontrol-user-helper

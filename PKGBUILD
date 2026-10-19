@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.19.3
+pkgver=0.20.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -13,7 +13,7 @@ license=('MIT')
 provides=('mesa-panel')
 conflicts=('mesa-panel')
 replaces=('mesa-panel')
-depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
+depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset' 'libxss')
 makedepends=('vulkan-headers' 'gettext')
 optdepends=(
   'vulkan-icd-loader: Vulkan and Proton game overrides'
@@ -33,6 +33,7 @@ optdepends=(
   'i3lock: screen locker that can show the wallpaper (or xsecurelock, slock)'
   "polybar: XControl's bar (Bar & Compositor page)"
   'picom: compositor: shadows, fading, transparency, no tearing (Bar & Compositor page)'
+  'dunst: notifications (Notifications page)'
   'ttf-nerd-fonts-symbols: icons in the bar'
   "pavucontrol: right-click the bar's volume to open the mixer"
   'hwdata: full monitor manufacturer, graphics card and network adapter names'

@@ -15,11 +15,12 @@ from .input_page import InputPage  # noqa: E402
 from .monitors_page import MonitorsPage  # noqa: E402
 from .panel_page import PanelPage  # noqa: E402
 from .i3_page import I3Page  # noqa: E402
+from .notify_page import NotifyPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
 from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "appearance", "desktop", "panel", "i3", "users", "system")
+PAGES = ("gaming", "displays", "input", "appearance", "desktop", "panel", "notifications", "i3", "users", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -67,6 +68,9 @@ class MainWindow(Gtk.ApplicationWindow):
         stack.add_titled(desktop, "desktop", _("Desktop"))
 
         stack.add_titled(PanelPage(self), "panel", _("Bar & Compositor"))  # scrolls inside its tabs
+        notifications = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        notifications.add(NotifyPage(self))
+        stack.add_titled(notifications, "notifications", _("Notifications"))
         stack.add_titled(I3Page(self), "i3", _("Window Manager (i3)"))  # scrolls inside its tabs
 
         users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
@@ -211,6 +215,32 @@ def main(argv=None):
     if "--lock" in argv:  # lock the screen now (bind it to a key in i3)
         from . import desktop
         return 0 if desktop.lock_now() else 1
+    if "--awake" in argv:  # keep the screen on: on, off, toggle, a number of minutes, or status
+        from . import desktop
+        i = argv.index("--awake")
+        how = argv[i + 1] if i + 1 < len(argv) else "toggle"
+        if how not in ("on", "off", "toggle", "status") and not how.isdigit():
+            print("xcontrol: --awake takes on, off, toggle, status or a number of minutes", file=sys.stderr)
+            return 2
+        until = desktop.set_awake(how)
+        if until is None:
+            print("awake: off")
+        elif until == 0:
+            print("awake: on")
+        else:
+            import time
+            print(f"awake: on until {time.strftime('%H:%M', time.localtime(until))}")
+        return 0
+    if "--dnd" in argv:  # notifications: do not disturb on, off or toggle (critical ones can still show)
+        from . import notify
+        i = argv.index("--dnd")
+        how = argv[i + 1] if i + 1 < len(argv) else "toggle"
+        on = (not notify.paused()) if how == "toggle" else how == "on"
+        if not notify.set_paused(on):
+            print("xcontrol: dunst isn't running", file=sys.stderr)
+            return 1
+        print("do not disturb: " + ("on" if on else "off"))
+        return 0
     if "--apply-display" in argv:
         from .display_page import apply_saved_layout
         return apply_saved_layout()

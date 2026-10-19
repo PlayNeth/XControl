@@ -24,8 +24,33 @@ DEFAULT_COLORS = {   # i3's own
     "placeholder": ["#000000", "#0c0c0c", "#ffffff", "#000000", "#0c0c0c"],
 }
 # things XControl starts itself: not imported as startup lines
-MANAGED = re.compile(r"\b(polybar|launch\.sh|picom|compton|xcompmgr|feh|nitrogen|xwallpaper|hsetroot|xss-lock|"
-                     r"xautolock|xsettingsd|xcontrol|i3-config-wizard)\b|\.fehbg")
+ALWAYS_SKIPPED = re.compile(r"\b(xcontrol|i3-config-wizard)\b")
+# what XControl starts itself when that part is switched on: such startup lines aren't imported
+MANAGED = {
+    "wallpaper": re.compile(r"\b(feh|nitrogen|xwallpaper|hsetroot)\b|\.fehbg"),
+    "lock": re.compile(r"\b(xss-lock|xautolock|xidlehook)\b"),
+    "bar": re.compile(r"\bpolybar\b|launch\.sh"),
+    "picom": re.compile(r"\b(picom|compton|xcompmgr)\b"),
+    "notify": re.compile(r"\b(dunst|xfce4-notifyd|notify-osd|notification-daemon)\b"),
+}
+
+
+def managed_now():
+    """The parts XControl runs now (from the desktop settings)."""
+    try:
+        from . import desktop
+        d = desktop.load()
+    except Exception:  # noqa: BLE001
+        return set()
+    on = {"wallpaper": d["wallpaper"]["enabled"], "lock": d["lock"]["enabled"], "bar": d["bar"]["enabled"],
+          "picom": d["picom"]["enabled"], "notify": d["notify"]["enabled"]}
+    return {k for k, v in on.items() if v}
+
+
+def skipped_by(cmd, managed):
+    return bool(ALWAYS_SKIPPED.search(cmd)) or any(MANAGED[k].search(cmd) for k in managed)
+
+
 SESSION_LINE = "exec --no-startup-id xcontrol --session"
 
 
@@ -434,14 +459,17 @@ def _unquote(s):
     return s[1:-1] if len(s) >= 2 and s[0] == s[-1] == '"' else s
 
 
-def import_config(text, base=None):
+def import_config(text, base=None, managed=None):
     """Settings from an existing i3 config: everything recognized, plus the remaining lines as
-    'extra' (bar blocks and things XControl now starts are left out). Returns (settings, skipped)."""
+    'extra'. Startup lines for what XControl runs now (`managed`, see MANAGED; by default from
+    the desktop settings) are left out, and so is a bar { } block when XControl's bar is on (else
+    it's kept as is). Returns (settings, skipped)."""
+    managed = managed_now() if managed is None else set(managed)
     c = normalize(base or {})
     c["bindings"], c["startup"], c["rules"] = [], [], []
     variables, extra, skipped = {}, [], []
     mod_value = None
-    mode, depth_skip = "default", 0
+    mode, depth_skip, keep_bar = "default", 0, False
     ws_vars = {}
 
     def subst(s):
@@ -453,8 +481,10 @@ def import_config(text, base=None):
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        if depth_skip:   # inside bar { } (XControl or the i3bar option takes care of bars)
+        if depth_skip:   # inside bar { }
             depth_skip += line.count("{") - line.count("}")
+            if keep_bar:
+                extra.append(("    " if depth_skip else "") + subst(line))
             continue
         m = re.match(r"^set\s+(\$\w+)\s+(.*)$", line)
         if m:
@@ -472,7 +502,12 @@ def import_config(text, base=None):
             continue
         if re.match(r"^bar\s*\{", line):
             depth_skip = 1 + line.count("{") - 1 - line.count("}")
-            skipped.append("bar { … }")
+            keep_bar = "bar" not in managed   # your own i3bar setup stays (instead of the plain one)
+            if keep_bar:
+                extra.append(subst(line))
+                c["i3bar"] = False
+            else:
+                skipped.append("bar { … }")
             continue
         mm = re.match(r'^mode\s+(?:--pango_markup\s+)?"?([^"{]+?)"?\s*\{$', line)
         if mm:
@@ -494,7 +529,7 @@ def import_config(text, base=None):
         em = re.match(r"^(exec|exec_always)\s+(--no-startup-id\s+)?(.+)$", full)
         if em:
             cmd = em.group(3).strip()
-            if MANAGED.search(cmd):
+            if skipped_by(cmd, managed):
                 skipped.append(full)
             else:
                 c["startup"].append({"command": cmd, "always": em.group(1) == "exec_always",

@@ -108,7 +108,7 @@ bar {
     position top
 }
 """
-c, skipped = I.import_config(user)
+c, skipped = I.import_config(user, managed={"bar", "picom", "wallpaper"})
 expect("import mod", c["mod"], "Mod4")
 expect("import font", c["font"], "JetBrains Mono 9")
 expect("import border", (c["border"], c["border_width"]), ("pixel", 3))
@@ -131,6 +131,12 @@ expect("import rules", [(r["kind"], r["criteria"], r["action"]) for r in c["rule
        [("for_window", '[class="Pavucontrol"]', "floating enable"), ("assign", '[class="Firefox"]', "$ws2")])
 expect("import extra", c["extra"], 'no_focus [window_role="pop-up"]')
 valid("imported", c)
+# nothing managed by XControl: those startup lines and the bar stay
+c2, skipped2 = I.import_config(user, managed=set())
+expect("unmanaged kept", [x["command"] for x in c2["startup"]],
+       ["nm-applet", "~/.config/polybar/launch.sh", "picom -b", "feh --bg-scale ~/w.png", "autotiling"])
+expect("own bar kept", ("bar {" in c2["extra"], "    position top" in c2["extra"], c2["i3bar"]), (True, True, False))
+valid("imported, nothing managed", c2)
 
 if HAVE_I3:
     stock, _s = I.import_config(open("/etc/i3/config").read())

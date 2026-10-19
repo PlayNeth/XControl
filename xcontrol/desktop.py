@@ -22,12 +22,13 @@ import subprocess
 import sys
 import time
 
-from . import bar, compositor, config, wallpaper
+from . import awake, bar, compositor, config, notify, wallpaper
 
 LOCKERS = ["i3lock", "xsecurelock", "slock"]
 LOCK_DEFAULT = {"enabled": False, "locker": "i3lock", "image": "wallpaper", "color": "#000000",
                 "idle_minutes": 10, "lock_on_sleep": True, "show_failed": True}
 BLANK_DEFAULT = {"managed": False, "screen_off_minutes": 15}
+AWAKE_DEFAULT = {"gamepads": False, "apps": False, "fullscreen": False}
 
 
 def normalize(d):
@@ -45,7 +46,8 @@ def normalize(d):
     blank = dict(BLANK_DEFAULT)
     blank.update({k: v for k, v in (d.get("blanking") or {}).items() if k in BLANK_DEFAULT})
     blank["screen_off_minutes"] = max(0, int(blank["screen_off_minutes"] or 0))
-    return {"wallpaper": wp, "lock": lock, "blanking": blank,
+    awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
+    return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake, "notify": notify.normalize(d.get("notify")),
             "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
 
@@ -113,7 +115,9 @@ def xset_commands(desk):
 def wanted(desk):
     """Whether the background service is needed at all."""
     return (desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
-            or desk["bar"]["enabled"] or desk["picom"]["enabled"])
+            or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
+            or desk["notify"]["enabled"]
+            or awake.manual_until(_runtime) is not None)
 
 
 # ---------------------------------------------------------------- state of the session
@@ -192,6 +196,9 @@ def session_conflicts():
                 out.append(("bar", s))
             elif re.search(r"\b(picom|compton|xcompmgr)\b", s):
                 out.append(("compositor", s))
+            elif re.search(r"\b(dunst|xfce4-notifyd|notify-osd|notification-daemon|deadd-notification-center|"
+                           r"lxqt-notificationd|twmnd)\b", s):
+                out.append(("notifications", s))
         break
     return out
 
@@ -269,6 +276,14 @@ def notify_daemon(desk):
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return "started"
     return "off"
+
+
+def set_awake(how):
+    """xcontrol --awake on|off|toggle|MINUTES: keep the screen on by hand (the service holds it)."""
+    until = awake.manual_until(_runtime) if how == "status" else awake.set_manual(_runtime, how)
+    if how != "status":
+        notify_daemon(load())
+    return until
 
 
 def lock_now(desk=None):
@@ -400,6 +415,8 @@ def wanted_children(desk):
         out["xss-lock"] = (xss_lock_command(lock, lock_image_path()), {})
     if desk["picom"]["enabled"] and shutil.which("picom"):
         out["picom"] = (compositor.command(), {})
+    if desk["notify"]["enabled"] and shutil.which("dunst"):
+        out["dunst"] = (notify.command(), {})
     b = desk["bar"]
     if b["enabled"] and shutil.which("polybar"):
         names = _primary() if b["displays"] == "primary" else [m[0] for m in wallpaper.monitors()]
@@ -431,6 +448,43 @@ def daemon():
     children = {}
     desk = None
     redraw_at = None
+    xidle = awake.XIdle(rr.x11, rr.dpy)
+    pads = None          # awake.Gamepads while gamepads count as activity
+    inhibit = None       # awake.InhibitService while apps may keep the screen on
+    aw = {"reset": 0.0, "full_check": 0.0, "fullscreen": False}
+
+    def keep_awake():
+        """Why the screen should stay on now: [{"kind": ..., "name": ...}]."""
+        reasons = []
+        until = awake.manual_until(_runtime)
+        if until is not None:
+            reasons.append({"kind": "manual", "until": until})
+        if inhibit:
+            reasons += [{"kind": "app", "name": a} for a in inhibit.apps()]
+        if desk["awake"]["fullscreen"]:
+            if time.time() - aw["full_check"] >= 2:
+                aw["full_check"] = time.time()
+                aw["fullscreen"] = xidle.fullscreen()
+            if aw["fullscreen"]:
+                reasons.append({"kind": "fullscreen"})
+        return reasons
+
+    def awake_setup():
+        nonlocal pads, inhibit
+        a = desk["awake"]
+        if a["gamepads"] and pads is None:
+            pads = awake.Gamepads()
+        elif not a["gamepads"] and pads is not None:
+            pads.close()
+            pads = None
+        if a["apps"] and inhibit is None:
+            try:
+                inhibit = awake.InhibitService(on_activity=xidle.activity)
+            except Exception as e:  # noqa: BLE001
+                log(f"screensaver service: {e}")
+        elif not a["apps"] and inhibit is not None:
+            inhibit.close()
+            inhibit = None
 
     def draw():
         wp, lock = desk["wallpaper"], desk["lock"]
@@ -470,6 +524,8 @@ def daemon():
             changed.add("picom")      # picom reads its config once; polybar reloads by itself
         if desk["bar"]["enabled"]:
             bar.write(desk["bar"])
+        if desk["notify"]["enabled"] and notify.write(desk["notify"]):
+            changed.add("dunst")      # dunst reads its config when it starts
         return changed
 
     try:
@@ -483,18 +539,40 @@ def daemon():
                 for cmd in xset_commands(desk):
                     subprocess.run(cmd, capture_output=True)
                 reconcile(restart=write_configs())
+                awake_setup()
             for c in children.values():
                 c.ensure()
+            if inhibit:
+                inhibit.pump()
+            if pads:
+                pads.rescan()
+            reasons = keep_awake()
+            xidle.suspend(bool(reasons))
             st = {"daemon": os.getpid(),
                   "children": {k: c.proc.pid for k, c in children.items() if c.alive()},
-                  "errors": {k: c.error for k, c in children.items() if c.error}}
+                  "errors": {k: c.error for k, c in children.items() if c.error},
+                  "awake": {"reasons": reasons, "gamepads": pads.names() if pads else [],
+                            "denied": sorted(set(pads.denied.values())) if pads else [],
+                            "last_gamepad": pads.last if pads else 0,
+                            "service": ("" if inhibit is None else "ok" if inhibit.owned else
+                                        inhibit.error or "starting")}}
             st["xss_lock"] = st["children"].get("xss-lock")
-            _write_state(st)
+            if st != aw.get("written"):
+                _write_state(st)
+                aw["written"] = st
+            pad_fds = pads.fds() if pads else []
             try:
-                ready, _w, _x = select.select([rr.fd], [], [], 1.0)
+                ready, _w, _x = select.select([rr.fd] + pad_fds, [], [], 1.0)
             except InterruptedError:
                 ready = []
-            if ready or rr.x11.XPending(rr.dpy):
+            moved = False
+            for fd in ready:
+                if fd in pad_fds and pads.read(fd):
+                    moved = True
+            if moved and time.time() - aw["reset"] >= 10:   # a gamepad counts like a key press
+                aw["reset"] = time.time()
+                xidle.activity()
+            if rr.fd in ready or rr.x11.XPending(rr.dpy):
                 if rr.changed():
                     redraw_at = time.time() + 0.8  # wait for the layout change to settle
             if redraw_at and time.time() >= redraw_at:
@@ -506,6 +584,10 @@ def daemon():
     finally:
         for c in children.values():
             c.stop()
+        if pads:
+            pads.close()
+        if inhibit:
+            inhibit.close()
         try:
             os.remove(_runtime("json"))
         except OSError:

@@ -2,6 +2,33 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.20.0 (2026-10-19)
+
+**Add a Notifications page and options to keep the screen on**
+
+- Add a Notifications page that runs dunst with XControl's own config (your
+  ~/.config/dunst/dunstrc is left alone), restarting it when settings change
+- Set where notifications show, their look, colors and timeouts per urgency,
+  click actions, history, progress bars and an optional sound
+- Add per-app rules: hide, keep only in history, keep until clicked, change
+  urgency or silence; plus extra dunst settings and test buttons
+- Add Do not disturb (critical notifications can still get through) and
+  `xcontrol --dnd on|off|toggle`
+- Warn when another notification program holds the session bus or is started
+  by the i3 config, and offer to stop it
+- Add "Keep the screen on" to the Desktop page: "Stay awake now" holds off the
+  screen lock and screen-off until turned off or for 30 minutes to 4 hours
+- Add `xcontrol --awake on|off|toggle|MINUTES|status` for keys and scripts
+- Let gamepads and joysticks count as activity, like a key press: buttons and
+  real stick movement (not stick drift) restart the idle timer and wake the screen
+- Let apps (Steam, browsers, video players, SDL games) keep the screen on by
+  answering org.freedesktop.ScreenSaver requests
+- Keep the screen on while the focused window is full screen, and show on the
+  page what is keeping it on
+- Keep your own i3bar block and the startup lines for parts XControl doesn't
+  run when importing an i3 config (only skip what XControl actually manages)
+- Add libxss as a dependency and dunst as an optional one
+
 ## 0.19.3 (2026-10-19)
 
 **Reword the hint for the generic workspaces bar module**

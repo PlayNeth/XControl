@@ -377,6 +377,25 @@ Remove any `exec xss-lock …` line from your i3 config, or two lockers will sta
 
 **Turn the screen off after** sets DPMS (`xset dpms 0 0 N`). **Leave as it is** doesn't touch it.
 
+### Keep the screen on
+
+- **Stay awake now** holds off the screen lock and screen-off until you turn it off, or for 30
+  minutes to 4 hours. From a key or a script: `xcontrol --awake on|off|toggle|MINUTES|status`.
+- **Gamepads and joysticks count as activity** (like joystickwake): a button press, a d-pad or a
+  real stick/trigger movement (not stick drift) restarts X's idle timer the way a key press does,
+  and wakes a screen that's off. Every device udev marks as a joystick is watched, including ones
+  plugged in later; motion sensors and touchpads of controllers are ignored. It reads
+  `/dev/input/event*`, which the logged-in user can normally read already.
+- **Apps can keep it on**: XControl answers `org.freedesktop.ScreenSaver` on the session bus, so
+  Steam, browsers, video players and SDL games that ask for the screen to stay on get their
+  way while they play (and the request ends when the app quits). A desktop's own power manager
+  answering already takes precedence.
+- **While the focused window is full screen**.
+
+While something keeps the screen on, the service suspends X's screen saver and DPMS timers
+(`XScreenSaverSuspend`); when it ends, the idle time starts over, so the screen doesn't go dark
+the moment a video finishes. The page shows what is keeping it on.
+
 ### At login
 
 `xcontrol --desktop-daemon` sets the wallpaper, applies blanking, runs xss-lock (restarting it
@@ -431,6 +450,32 @@ page shows why (e.g. a backend your driver doesn't support). The page also point
 `exec polybar`/`launch.sh`, `exec picom` lines and an i3 `bar { }` block in your i3 config, which
 would start a second bar or compositor, and can stop ones that are already running.
 
+## Notifications
+
+With **Use XControl's notifications (dunst)** on, XControl writes its own
+`~/.config/xcontrol/dunstrc` and runs dunst for the session (restarting it when the settings
+change); `~/.config/dunst/dunstrc` isn't used or changed. It writes the syntax of the installed
+dunst (the `(x, y)` forms of 1.12 and later, `10x50` before).
+
+- **Where they show**: corner, distance from the edges, which display (with the focus, with the
+  mouse, the first), width, tallest size, how many at once and the space between them.
+- **Look**: font (or the interface font), rounded corners, border, padding, icon position and
+  size (from your icon theme), text alignment, what's shown (title and text, with the app name,
+  with progress, or your own format), see-through (with the compositor) and separators.
+- **Colors and timing** for low, normal and critical notifications, and whether critical ones get
+  through **Do not disturb** (dunst's pause levels, 1.10 and later).
+- **Behavior**: age shown after a while, keeping notifications while you're away, the history,
+  repeated ones stacked, waiting/actions/links indicators, progress bars, what left, middle and
+  right clicks do, and a sound.
+- **Per app**: hide an app's notifications, only keep them in the history, keep them until
+  clicked, change their urgency, or silence them.
+- **Extra dunst settings** for anything else, and test buttons for each urgency.
+
+Shortcuts for i3: `dunstctl close`, `dunstctl close-all`, `dunstctl history-pop`,
+`dunstctl context`, and `xcontrol --dnd on|off|toggle` for Do not disturb. The page warns when
+another notification program holds the session bus (and can stop it) or is started by your i3
+config.
+
 ## Window Manager (i3)
 
 When **Use XControl's i3 config** is on, XControl writes `~/.config/i3/config` itself and reloads
@@ -443,8 +488,8 @@ shows (and copies) what's written.
 The first time it's switched on you can start from i3's defaults or **import** your current config:
 keys (with `$mod` and other variables resolved), modes, startup programs, window rules, workspace
 names and displays, font, borders, gaps and colors come over; lines XControl now takes care of
-(polybar/`launch.sh`, picom, feh, xss-lock, an i3 `bar { }`) are left out, and anything else lands
-in **Extra i3 config**.
+(polybar/`launch.sh`, picom, feh, xss-lock, dunst, an i3 `bar { }`, each only when XControl runs
+that part) are left out, and anything else lands in **Extra i3 config**.
 
 - **Look:** title font, borders for tiled and floating windows, title position, hiding borders
   at the screen edge, gaps between windows and around the edge (and none for a lone window), and
