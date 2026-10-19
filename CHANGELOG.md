@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.7.3 (2026-10-19)
+
+**Fix clearing the primary display**
+
+- Fix unticking "Make this the primary display" having no effect: Apply now clears the
+  primary display when none is chosen
+- Grey out the primary display option when only one display is on, with a tooltip
+  explaining what it does
+
 ## 0.7.2 (2026-10-19)
 
 **Fix saturation and color settings with xrandr 1.5.3**

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.7.0\n"
+"Project-Id-Version: mesa-panel 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 21:59-0300\n"
+"POT-Creation-Date: 2026-10-19 01:44-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,134 +30,134 @@ msgstr ""
 msgid "Monitor Info"
 msgstr ""
 
-#: mesa_panel/display_color.py:13
+#: mesa_panel/display_color.py:15
 msgid "Off: the display does its own scaling"
 msgstr ""
 
-#: mesa_panel/display_color.py:14
+#: mesa_panel/display_color.py:16
 msgid "Stretch to fill the screen"
 msgstr ""
 
-#: mesa_panel/display_color.py:15
+#: mesa_panel/display_color.py:17
 msgid "Centered, no scaling (black borders)"
 msgstr ""
 
-#: mesa_panel/display_color.py:16
+#: mesa_panel/display_color.py:18
 msgid "Scale, keeping the aspect ratio"
 msgstr ""
 
 #. TRANSLATORS: slider position meaning the feature is forced off
-#: mesa_panel/display_color.py:18 mesa_panel/gaming_page.py:17
+#: mesa_panel/display_color.py:20 mesa_panel/gaming_page.py:17
 #: mesa_panel/gaming_page.py:38 mesa_panel/gaming_page.py:43
 #: mesa_panel/gaming_page.py:48
 msgid "Off"
 msgstr ""
 
-#: mesa_panel/display_color.py:18
+#: mesa_panel/display_color.py:20
 msgid "On"
 msgstr ""
 
-#: mesa_panel/display_color.py:18
+#: mesa_panel/display_color.py:20
 msgid "Automatic (HDMI TVs)"
 msgstr ""
 
-#: mesa_panel/display_color.py:20
+#: mesa_panel/display_color.py:22
 msgid "Automatic"
 msgstr ""
 
-#: mesa_panel/display_color.py:21
+#: mesa_panel/display_color.py:23
 msgid "Full (0–255, for PC monitors)"
 msgstr ""
 
-#: mesa_panel/display_color.py:22
+#: mesa_panel/display_color.py:24
 msgid "Limited (16–235, for TVs)"
 msgstr ""
 
-#: mesa_panel/display_color.py:68
+#: mesa_panel/display_color.py:70
 msgid "Scaling and color"
 msgstr ""
 
-#: mesa_panel/display_color.py:92
+#: mesa_panel/display_color.py:94
 msgid "GPU scaling"
 msgstr ""
 
-#: mesa_panel/display_color.py:93
+#: mesa_panel/display_color.py:95
 msgid "Used when the resolution is lower than the display's native one."
 msgstr ""
 
 #. TRANSLATORS: horizontal and vertical border sizes, in pixels
-#: mesa_panel/display_color.py:104
+#: mesa_panel/display_color.py:106
 msgid "Borders"
 msgstr ""
 
-#: mesa_panel/display_color.py:108
+#: mesa_panel/display_color.py:110
 msgid "Underscan"
 msgstr ""
 
-#: mesa_panel/display_color.py:109
+#: mesa_panel/display_color.py:111
 msgid ""
 "Shrinks the picture so a TV that crops the edges (overscan) shows all of it."
 msgstr ""
 
-#: mesa_panel/display_color.py:113
+#: mesa_panel/display_color.py:115
 msgid "Output range"
 msgstr ""
 
-#: mesa_panel/display_color.py:114
+#: mesa_panel/display_color.py:116
 msgid ""
 "If blacks look gray or dark details are crushed, the display and the GPU "
 "disagree on the range."
 msgstr ""
 
-#: mesa_panel/display_color.py:118 mesa_panel/monitor_info.py:136
+#: mesa_panel/display_color.py:120 mesa_panel/monitor_info.py:136
 msgid "Color depth"
 msgstr ""
 
-#: mesa_panel/display_color.py:119
+#: mesa_panel/display_color.py:121
 msgid ""
 "The highest depth the link may use; the driver lowers it when bandwidth runs "
 "out."
 msgstr ""
 
-#: mesa_panel/display_color.py:121
+#: mesa_panel/display_color.py:123
 #, python-brace-format
 msgid "{n} %"
 msgstr ""
 
-#: mesa_panel/display_color.py:129
+#: mesa_panel/display_color.py:131
 msgid "Saturation"
 msgstr ""
 
-#: mesa_panel/display_color.py:130
+#: mesa_panel/display_color.py:132
 msgid ""
 "Done by the display engine, so it applies to everything on screen, games "
 "included. At 100 colors are unchanged."
 msgstr ""
 
-#: mesa_panel/display_color.py:136 mesa_panel/monitor_info.py:138
+#: mesa_panel/display_color.py:138 mesa_panel/monitor_info.py:138
 msgid "Gamma"
 msgstr ""
 
-#: mesa_panel/display_color.py:137
+#: mesa_panel/display_color.py:139
 msgid ""
 "Higher values brighten dark and middle tones. Night-light tools also change "
 "gamma and may override this."
 msgstr ""
 
-#: mesa_panel/display_color.py:140
+#: mesa_panel/display_color.py:142
 msgid "Reset to defaults"
 msgstr ""
 
-#: mesa_panel/display_color.py:145
+#: mesa_panel/display_color.py:147
 msgid "The driver offers no scaling or color settings for this display."
 msgstr ""
 
-#: mesa_panel/display_color.py:190 mesa_panel/display_color.py:192
+#: mesa_panel/display_color.py:202 mesa_panel/display_color.py:204
 #, python-brace-format
 msgid "{bits} bits per color"
 msgstr ""
 
-#: mesa_panel/display_color.py:198
+#: mesa_panel/display_color.py:210
 msgid ""
 "Another program set a custom color matrix; moving the slider replaces it."
 msgstr ""
@@ -256,53 +256,59 @@ msgstr ""
 msgid "Saved settings moved to the new output names: {names}"
 msgstr ""
 
-#: mesa_panel/display_page.py:354
+#: mesa_panel/display_page.py:353
+msgid ""
+"Only matters with more than one display: it gets the panels, notifications "
+"and fullscreen games."
+msgstr ""
+
+#: mesa_panel/display_page.py:360
 msgid "Press Apply to use the new settings"
 msgstr ""
 
-#: mesa_panel/display_page.py:392
+#: mesa_panel/display_page.py:398
 msgid ""
 "None of your custom resolutions are active on this display, so all modes are "
 "shown."
 msgstr ""
 
-#: mesa_panel/display_page.py:525
+#: mesa_panel/display_page.py:531
 msgid "At least one display must stay on"
 msgstr ""
 
-#: mesa_panel/display_page.py:525
+#: mesa_panel/display_page.py:531
 msgid "Turn on a display before applying."
 msgstr ""
 
-#: mesa_panel/display_page.py:533
+#: mesa_panel/display_page.py:538 mesa_panel/display_page.py:543
 msgid "xrandr could not apply this layout"
 msgstr ""
 
-#: mesa_panel/display_page.py:539
+#: mesa_panel/display_page.py:549
 msgid "Display settings applied"
 msgstr ""
 
-#: mesa_panel/display_page.py:545
+#: mesa_panel/display_page.py:555
 msgid "Could not restore the previous layout"
 msgstr ""
 
-#: mesa_panel/display_page.py:547
+#: mesa_panel/display_page.py:557
 msgid "Display settings reverted"
 msgstr ""
 
-#: mesa_panel/display_page.py:552
+#: mesa_panel/display_page.py:562
 msgid "Keep these display settings?"
 msgstr ""
 
-#: mesa_panel/display_page.py:553
+#: mesa_panel/display_page.py:563
 msgid "Revert"
 msgstr ""
 
-#: mesa_panel/display_page.py:553
+#: mesa_panel/display_page.py:563
 msgid "Keep changes"
 msgstr ""
 
-#: mesa_panel/display_page.py:557
+#: mesa_panel/display_page.py:567
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
@@ -1309,22 +1315,22 @@ msgid "Switch the display to another resolution before removing it."
 msgstr ""
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
-#: mesa_panel/xrandr.py:56
+#: mesa_panel/xrandr.py:57
 #, python-brace-format
 msgid "{output} (off)"
 msgstr ""
 
-#: mesa_panel/xrandr.py:68
+#: mesa_panel/xrandr.py:69
 msgid "The xrandr command was not found. Install the xorg-xrandr package."
 msgstr ""
 
-#: mesa_panel/xrandr.py:71
+#: mesa_panel/xrandr.py:72
 msgid ""
 "You are in a Wayland session. xrandr only controls X11 outputs, so use your "
 "desktop's display settings here."
 msgstr ""
 
-#: mesa_panel/xrandr.py:74
+#: mesa_panel/xrandr.py:75
 msgid "No X11 display found (DISPLAY is not set)."
 msgstr ""
 

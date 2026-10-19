@@ -267,6 +267,9 @@ def build_command(monitors, reference=None):
             args += output_props.args_for(m, ref.get(m.name))
         else:
             args += ["--off"]
+    # --primary only ever sets one; clearing it needs --noprimary
+    if not any(m.primary and m.connected and m.enabled for m in monitors):
+        args += ["--noprimary"]
     return args
 
 

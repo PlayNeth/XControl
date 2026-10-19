@@ -346,6 +346,12 @@ class DisplayPage(Gtk.Box):
             self.y_spin.set_value(m.y)
             for w in (self.primary_check, self.mode_combo, self.rate_combo, self.rot_combo, self.controls[-1]):
                 w.set_sensitive(m.enabled)
+            # with one display on there is nothing to choose between
+            others = [o for o in self.monitors if o.connected and o.enabled and o is not m]
+            self.primary_check.set_sensitive(m.enabled and bool(others))
+            self.primary_check.set_tooltip_text(
+                None if others else _("Only matters with more than one display: it gets the panels, "
+                                      "notifications and fullscreen games."))
         self.color.show_monitor(m)
         self.color.set_sensitive(bool(m and m.enabled))
         self.loading = False
