@@ -101,6 +101,10 @@ def load():
     data["input"]["devices"] = {str(k): dict(v) for k, v in devs.items() if isinstance(v, dict)}
     kb = inp.get("keyboard") or {}
     data["input"]["keyboard"] = dict(kb) if isinstance(kb, dict) else {}
+    # desktop: {"wallpaper": {...}, "lock": {...}, "blanking": {...}} (checked by desktop.normalize)
+    desk = raw.get("desktop")
+    if isinstance(desk, dict):
+        data["desktop"] = desk
     return data
 
 

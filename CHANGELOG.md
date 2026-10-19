@@ -2,6 +2,29 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.14.0 (2026-10-19)
+
+**Add Desktop page with wallpaper, screen lock and screen power**
+
+- Add a Desktop page between Appearance and System
+- Set the wallpaper without feh or nitrogen: same picture on every display, one
+  picture across all displays, or a different picture per display
+- Offer fill, fit, center, tile and stretch placement, or just a background color,
+  with a live preview of the displays
+- Make the wallpaper visible to picom and terminals with fake transparency, and
+  redraw it automatically when the resolution or display layout changes
+- Set up a screen lock through xss-lock with i3lock, xsecurelock or slock: lock
+  after an idle time and before suspend and hibernate
+- Let i3lock show the wallpaper, drawn at the exact screen size, or a plain color,
+  and optionally the number of failed attempts
+- Add a "Lock now" button and an "xcontrol --lock" command for key bindings
+- Add "Turn the screen off after" to control DPMS screen blanking
+- Add "xcontrol --desktop-daemon", started at login through ~/.config/autostart,
+  that applies these settings and keeps xss-lock running
+- Point out wallpaper and screen lock lines in the i3 config that would conflict,
+  and warn when i3 would not start the desktop service at login
+- Add tests for wallpaper placement and drawing, lock commands and conflicts
+
 ## 0.13.2 (2026-10-19)
 
 **Let the window be narrower by scrolling pages sideways**

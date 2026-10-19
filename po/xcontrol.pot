@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.13.1\n"
+"Project-Id-Version: xcontrol 0.14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:58-0300\n"
+"POT-Creation-Date: 2026-10-19 14:27-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,31 +18,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: xcontrol/app.py:47
+#: xcontrol/app.py:48
 msgid "Gaming"
 msgstr ""
 
-#: xcontrol/app.py:51
+#: xcontrol/app.py:52
 msgid "Displays"
 msgstr ""
 
-#: xcontrol/app.py:55
+#: xcontrol/app.py:56
 msgid "Input"
 msgstr ""
 
-#: xcontrol/app.py:59
+#: xcontrol/app.py:60
 msgid "Appearance"
 msgstr ""
 
-#: xcontrol/app.py:61 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:64
+msgid "Desktop"
+msgstr ""
+
+#: xcontrol/app.py:66 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr ""
 
-#: xcontrol/app.py:97
+#: xcontrol/app.py:102
 msgid "Display details"
 msgstr ""
 
-#: xcontrol/app.py:98 xcontrol/appearance_page.py:390
+#: xcontrol/app.py:103 xcontrol/appearance_page.py:390
 #: xcontrol/edid_override_dialog.py:27 xcontrol/module_params_dialog.py:119
 #: xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -226,7 +230,7 @@ msgstr ""
 msgid "{px} px"
 msgstr ""
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:200
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:204
 msgid "Size"
 msgstr ""
 
@@ -441,6 +445,227 @@ msgstr ""
 msgid "Done. Restart the app."
 msgstr ""
 
+#: xcontrol/desktop_page.py:12
+msgid "Fill (crop to cover the display)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:12
+msgid "Fit (whole picture, borders in the color)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:13
+msgid "Center (original size)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:13
+msgid "Tile"
+msgstr ""
+
+#: xcontrol/desktop_page.py:13
+msgid "Stretch (distort)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:14
+msgid "Same picture on every display"
+msgstr ""
+
+#: xcontrol/desktop_page.py:14
+msgid "One picture across all displays"
+msgstr ""
+
+#: xcontrol/desktop_page.py:15
+msgid "A different picture per display"
+msgstr ""
+
+#: xcontrol/desktop_page.py:16
+msgid "xsecurelock (most robust)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:45
+msgid "Never"
+msgstr ""
+
+#: xcontrol/desktop_page.py:45
+#, python-brace-format
+msgid "{n} minute"
+msgstr ""
+
+#: xcontrol/desktop_page.py:45
+#, python-brace-format
+msgid "{n} minutes"
+msgstr ""
+
+#: xcontrol/desktop_page.py:60
+msgid ""
+"i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next "
+"login nothing would set the wallpaper or start the screen lock. Add this "
+"line to your i3 config:\n"
+"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+msgstr ""
+
+#: xcontrol/desktop_page.py:98
+msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:100
+msgid "Wallpaper"
+msgstr ""
+
+#: xcontrol/desktop_page.py:111 xcontrol/input_page.py:404
+msgid "Layout"
+msgstr ""
+
+#: xcontrol/desktop_page.py:115 xcontrol/display_page.py:233
+msgid "Display"
+msgstr ""
+
+#: xcontrol/desktop_page.py:118
+msgid "Choose a picture"
+msgstr ""
+
+#: xcontrol/desktop_page.py:121
+msgid "Pictures"
+msgstr ""
+
+#: xcontrol/desktop_page.py:127
+msgid "No picture, only the color"
+msgstr ""
+
+#: xcontrol/desktop_page.py:130
+msgid "Picture"
+msgstr ""
+
+#: xcontrol/desktop_page.py:136
+msgid "Placement"
+msgstr ""
+
+#: xcontrol/desktop_page.py:141
+msgid "Background color"
+msgstr ""
+
+#: xcontrol/desktop_page.py:151
+msgid "Screen lock"
+msgstr ""
+
+#: xcontrol/desktop_page.py:155
+msgid "Locker"
+msgstr ""
+
+#: xcontrol/desktop_page.py:164
+msgid "Lock after being idle for"
+msgstr ""
+
+#: xcontrol/desktop_page.py:166
+msgid "Lock before suspend and hibernate"
+msgstr ""
+
+#: xcontrol/desktop_page.py:172
+msgid "The wallpaper"
+msgstr ""
+
+#: xcontrol/desktop_page.py:173
+msgid "A plain color"
+msgstr ""
+
+#: xcontrol/desktop_page.py:180
+msgid "Lock screen shows"
+msgstr ""
+
+#: xcontrol/desktop_page.py:182
+msgid "Show the number of failed attempts"
+msgstr ""
+
+#: xcontrol/desktop_page.py:187
+msgid "Lock now"
+msgstr ""
+
+#: xcontrol/desktop_page.py:193
+msgid "To lock with a key, add to your i3 config:"
+msgstr ""
+
+#: xcontrol/desktop_page.py:201
+msgid "Screen power"
+msgstr ""
+
+#: xcontrol/desktop_page.py:203
+msgid "Leave as it is"
+msgstr ""
+
+#: xcontrol/desktop_page.py:207
+msgid "Turn the screen off after"
+msgstr ""
+
+#: xcontrol/desktop_page.py:208
+msgid ""
+"Counted from the last time you used the mouse or keyboard. On a CRT this "
+"also saves the tube."
+msgstr ""
+
+#: xcontrol/desktop_page.py:235
+msgid "(not installed)"
+msgstr ""
+
+#: xcontrol/desktop_page.py:288
+msgid ""
+"Install xss-lock: it starts the locker when you're idle and before the "
+"computer sleeps."
+msgstr ""
+
+#: xcontrol/desktop_page.py:291
+msgid "Install a locker: i3lock, xsecurelock or slock."
+msgstr ""
+
+#: xcontrol/desktop_page.py:293
+msgid ""
+"slock is set up when it's compiled (config.h); XControl can only start it."
+msgstr ""
+
+#: xcontrol/desktop_page.py:295
+msgid ""
+"xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
+"show the wallpaper."
+msgstr ""
+
+#: xcontrol/desktop_page.py:306
+msgid "Active: xss-lock is running."
+msgstr ""
+
+#: xcontrol/desktop_page.py:308
+msgid "Not running yet."
+msgstr ""
+
+#: xcontrol/desktop_page.py:316
+msgid ""
+"Your i3 config also sets the wallpaper; remove these lines or they'll "
+"replace XControl's at login:"
+msgstr ""
+
+#: xcontrol/desktop_page.py:319
+msgid ""
+"Another screen lock is set up; remove it from your i3 config, or two lockers "
+"will start:"
+msgstr ""
+
+#: xcontrol/desktop_page.py:412
+msgid "Could not save the desktop settings"
+msgstr ""
+
+#: xcontrol/desktop_page.py:414
+msgid "Desktop settings applied"
+msgstr ""
+
+#: xcontrol/desktop_page.py:415
+msgid "XControl no longer manages the desktop"
+msgstr ""
+
+#: xcontrol/desktop_page.py:421
+msgid "Could not lock the screen"
+msgstr ""
+
+#: xcontrol/desktop_page.py:421
+msgid "Install i3lock, xsecurelock or slock."
+msgstr ""
+
 #: xcontrol/display_color.py:15
 msgid "Off: the display does its own scaling"
 msgstr ""
@@ -622,10 +847,6 @@ msgstr ""
 
 #: xcontrol/display_page.py:226
 msgid "Add custom resolutions, or ignore the modes the display reports"
-msgstr ""
-
-#: xcontrol/display_page.py:233
-msgid "Display"
 msgstr ""
 
 #: xcontrol/display_page.py:233 xcontrol/input_page.py:883
@@ -1351,7 +1572,7 @@ msgid "Device:"
 msgstr ""
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:22 xcontrol/system_page.py:189
+#: xcontrol/monitors_page.py:22 xcontrol/system_page.py:193
 msgid "Refresh"
 msgstr ""
 
@@ -1461,10 +1682,6 @@ msgstr ""
 
 #: xcontrol/input_page.py:388
 msgid "Settings applied"
-msgstr ""
-
-#: xcontrol/input_page.py:404
-msgid "Layout"
 msgstr ""
 
 #: xcontrol/input_page.py:409
@@ -1772,16 +1989,16 @@ msgstr ""
 msgid "Devices"
 msgstr ""
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:329
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:334
 msgid "Parameters"
 msgstr ""
 
 #: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
-#: xcontrol/system_page.py:347
+#: xcontrol/system_page.py:352
 msgid "(only readable by root)"
 msgstr ""
 
-#: xcontrol/kmods.py:256 xcontrol/system_page.py:367
+#: xcontrol/kmods.py:256 xcontrol/system_page.py:372
 msgid "Set in modprobe.d"
 msgstr ""
 
@@ -2191,11 +2408,11 @@ msgstr ""
 msgid "Copy details"
 msgstr ""
 
-#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:65
+#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:69
 msgid "More copy options"
 msgstr ""
 
-#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:67
+#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:71
 msgid "Copy in English (for bug reports)"
 msgstr ""
 
@@ -2679,109 +2896,109 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: xcontrol/system_page.py:24
+#: xcontrol/system_page.py:28
 msgid "Kernel modules"
 msgstr ""
 
-#: xcontrol/system_page.py:60 xcontrol/system_page.py:302
+#: xcontrol/system_page.py:64 xcontrol/system_page.py:307
 msgid "Copy"
 msgstr ""
 
-#: xcontrol/system_page.py:61
+#: xcontrol/system_page.py:65
 msgid "Copy this information (without your computer and user names)"
 msgstr ""
 
-#: xcontrol/system_page.py:155
+#: xcontrol/system_page.py:159
 msgid "System information copied"
 msgstr ""
 
-#: xcontrol/system_page.py:182
+#: xcontrol/system_page.py:186
 msgid "Search modules, devices or parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:185
+#: xcontrol/system_page.py:189
 msgid "Include parts built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:186
+#: xcontrol/system_page.py:190
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:200
+#: xcontrol/system_page.py:204
 msgid "Module"
 msgstr ""
 
-#: xcontrol/system_page.py:201 xcontrol/system_page.py:315
+#: xcontrol/system_page.py:205 xcontrol/system_page.py:320
 msgid "Used by"
 msgstr ""
 
-#: xcontrol/system_page.py:238
+#: xcontrol/system_page.py:243
 msgid "built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:246
+#: xcontrol/system_page.py:251
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr ""
 
-#: xcontrol/system_page.py:247
+#: xcontrol/system_page.py:252
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr ""
 
-#: xcontrol/system_page.py:289
+#: xcontrol/system_page.py:294
 msgid "Select a module to see what it drives and its parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:309
+#: xcontrol/system_page.py:314
 msgid "File"
 msgstr ""
 
-#: xcontrol/system_page.py:311
+#: xcontrol/system_page.py:316
 msgid "Version"
 msgstr ""
 
-#: xcontrol/system_page.py:313
+#: xcontrol/system_page.py:318
 msgid "License"
 msgstr ""
 
-#: xcontrol/system_page.py:317
+#: xcontrol/system_page.py:322
 msgid "Needs"
 msgstr ""
 
-#: xcontrol/system_page.py:319
+#: xcontrol/system_page.py:324
 msgid "Firmware files"
 msgstr ""
 
-#: xcontrol/system_page.py:324
+#: xcontrol/system_page.py:329
 msgid "Devices it drives"
 msgstr ""
 
-#: xcontrol/system_page.py:331
+#: xcontrol/system_page.py:336
 msgid "Change…"
 msgstr ""
 
-#: xcontrol/system_page.py:332
+#: xcontrol/system_page.py:337
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
 
-#: xcontrol/system_page.py:337
+#: xcontrol/system_page.py:342
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
 "on the kernel command line as {example}."
 msgstr ""
 
-#: xcontrol/system_page.py:365
+#: xcontrol/system_page.py:370
 msgid "This module has no parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:376
+#: xcontrol/system_page.py:381
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
 
-#: xcontrol/system_page.py:413
+#: xcontrol/system_page.py:418
 msgid "Module details copied"
 msgstr ""
 

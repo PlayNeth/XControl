@@ -93,6 +93,7 @@ check:
 	$(PYTHON) tests/check_sysinfo.py
 	$(PYTHON) tests/check_kmods.py
 	$(PYTHON) tests/check_module_helper.py
+	$(PYTHON) tests/check_desktop.py
 	sh -n data/xcontrol-edid-helper
 	sh -n data/xcontrol-module-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done

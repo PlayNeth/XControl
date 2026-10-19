@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:58-0300\n"
+"POT-Creation-Date: 2026-10-19 14:27-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,31 +17,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:47
+#: xcontrol/app.py:48
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:51
+#: xcontrol/app.py:52
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:55
+#: xcontrol/app.py:56
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:59
+#: xcontrol/app.py:60
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:61 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:64
+msgid "Desktop"
+msgstr "Área de trabalho"
+
+#: xcontrol/app.py:66 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:97
+#: xcontrol/app.py:102
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:98 xcontrol/appearance_page.py:390
+#: xcontrol/app.py:103 xcontrol/appearance_page.py:390
 #: xcontrol/edid_override_dialog.py:27 xcontrol/module_params_dialog.py:119
 #: xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -259,7 +263,7 @@ msgstr "Cursor"
 msgid "{px} px"
 msgstr "{px} px"
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:200
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:204
 msgid "Size"
 msgstr "Tamanho"
 
@@ -505,6 +509,241 @@ msgstr "Os temas já estão na sua pasta pessoal."
 msgid "Done. Restart the app."
 msgstr "Pronto. Reinicie o aplicativo."
 
+#: xcontrol/desktop_page.py:12
+msgid "Fill (crop to cover the display)"
+msgstr "Preencher (corta para cobrir a tela)"
+
+#: xcontrol/desktop_page.py:12
+msgid "Fit (whole picture, borders in the color)"
+msgstr "Ajustar (imagem inteira, bordas na cor)"
+
+#: xcontrol/desktop_page.py:13
+msgid "Center (original size)"
+msgstr "Centralizar (tamanho original)"
+
+#: xcontrol/desktop_page.py:13
+msgid "Tile"
+msgstr "Lado a lado"
+
+#: xcontrol/desktop_page.py:13
+msgid "Stretch (distort)"
+msgstr "Esticar (distorce)"
+
+#: xcontrol/desktop_page.py:14
+msgid "Same picture on every display"
+msgstr "A mesma imagem em todas as telas"
+
+#: xcontrol/desktop_page.py:14
+msgid "One picture across all displays"
+msgstr "Uma imagem atravessando todas as telas"
+
+#: xcontrol/desktop_page.py:15
+msgid "A different picture per display"
+msgstr "Uma imagem diferente por tela"
+
+#: xcontrol/desktop_page.py:16
+msgid "xsecurelock (most robust)"
+msgstr "xsecurelock (o mais robusto)"
+
+#: xcontrol/desktop_page.py:45
+msgid "Never"
+msgstr "Nunca"
+
+#: xcontrol/desktop_page.py:45
+#, python-brace-format
+msgid "{n} minute"
+msgstr "{n} minuto"
+
+#: xcontrol/desktop_page.py:45
+#, python-brace-format
+msgid "{n} minutes"
+msgstr "{n} minutos"
+
+#: xcontrol/desktop_page.py:60
+msgid ""
+"i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next login nothing would set the wallpaper or start the screen lock. Add this line to your i3 config:\n"
+"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+msgstr ""
+"O i3 não executa <tt>~/.config/autostart</tt> sozinho, então no próximo login nada definiria o papel de parede nem iniciaria o bloqueio de tela. Adicione esta linha à config do i3:\n"
+"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+
+#: xcontrol/desktop_page.py:98
+msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
+msgstr ""
+"Deixar o XControl definir o fundo da área de trabalho (em vez do feh ou "
+"nitrogen)"
+
+#: xcontrol/desktop_page.py:100
+msgid "Wallpaper"
+msgstr "Papel de parede"
+
+#: xcontrol/desktop_page.py:111 xcontrol/input_page.py:404
+msgid "Layout"
+msgstr "Layout"
+
+#: xcontrol/desktop_page.py:115 xcontrol/display_page.py:233
+msgid "Display"
+msgstr "Tela"
+
+#: xcontrol/desktop_page.py:118
+msgid "Choose a picture"
+msgstr "Escolha uma imagem"
+
+#: xcontrol/desktop_page.py:121
+msgid "Pictures"
+msgstr "Imagens"
+
+#: xcontrol/desktop_page.py:127
+msgid "No picture, only the color"
+msgstr "Sem imagem, só a cor"
+
+#: xcontrol/desktop_page.py:130
+msgid "Picture"
+msgstr "Imagem"
+
+#: xcontrol/desktop_page.py:136
+msgid "Placement"
+msgstr "Posicionamento"
+
+#: xcontrol/desktop_page.py:141
+msgid "Background color"
+msgstr "Cor de fundo"
+
+#: xcontrol/desktop_page.py:151
+msgid "Screen lock"
+msgstr "Bloqueio de tela"
+
+#: xcontrol/desktop_page.py:155
+msgid "Locker"
+msgstr "Bloqueador"
+
+#: xcontrol/desktop_page.py:164
+msgid "Lock after being idle for"
+msgstr "Bloquear após ficar ocioso por"
+
+#: xcontrol/desktop_page.py:166
+msgid "Lock before suspend and hibernate"
+msgstr "Bloquear antes de suspender e hibernar"
+
+#: xcontrol/desktop_page.py:172
+msgid "The wallpaper"
+msgstr "O papel de parede"
+
+#: xcontrol/desktop_page.py:173
+msgid "A plain color"
+msgstr "Uma cor sólida"
+
+#: xcontrol/desktop_page.py:180
+msgid "Lock screen shows"
+msgstr "A tela de bloqueio mostra"
+
+#: xcontrol/desktop_page.py:182
+msgid "Show the number of failed attempts"
+msgstr "Mostrar o número de tentativas erradas"
+
+#: xcontrol/desktop_page.py:187
+msgid "Lock now"
+msgstr "Bloquear agora"
+
+#: xcontrol/desktop_page.py:193
+msgid "To lock with a key, add to your i3 config:"
+msgstr "Para bloquear com uma tecla, adicione à config do i3:"
+
+#: xcontrol/desktop_page.py:201
+msgid "Screen power"
+msgstr "Energia da tela"
+
+#: xcontrol/desktop_page.py:203
+msgid "Leave as it is"
+msgstr "Deixar como está"
+
+#: xcontrol/desktop_page.py:207
+msgid "Turn the screen off after"
+msgstr "Desligar a tela após"
+
+#: xcontrol/desktop_page.py:208
+msgid ""
+"Counted from the last time you used the mouse or keyboard. On a CRT this "
+"also saves the tube."
+msgstr ""
+"Contado a partir do último uso do mouse ou teclado. Num CRT isso também "
+"poupa o tubo."
+
+#: xcontrol/desktop_page.py:235
+msgid "(not installed)"
+msgstr "(não instalado)"
+
+#: xcontrol/desktop_page.py:288
+msgid ""
+"Install xss-lock: it starts the locker when you're idle and before the "
+"computer sleeps."
+msgstr ""
+"Instale o xss-lock: ele inicia o bloqueador quando você fica ocioso e antes "
+"de o computador dormir."
+
+#: xcontrol/desktop_page.py:291
+msgid "Install a locker: i3lock, xsecurelock or slock."
+msgstr "Instale um bloqueador: i3lock, xsecurelock ou slock."
+
+#: xcontrol/desktop_page.py:293
+msgid ""
+"slock is set up when it's compiled (config.h); XControl can only start it."
+msgstr ""
+"O slock é configurado na compilação (config.h); o XControl só consegue "
+"iniciá-lo."
+
+#: xcontrol/desktop_page.py:295
+msgid ""
+"xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
+"show the wallpaper."
+msgstr ""
+"O xsecurelock é configurado com variáveis de ambiente XSECURELOCK_*; ele não"
+" mostra o papel de parede."
+
+#: xcontrol/desktop_page.py:306
+msgid "Active: xss-lock is running."
+msgstr "Ativo: o xss-lock está rodando."
+
+#: xcontrol/desktop_page.py:308
+msgid "Not running yet."
+msgstr "Ainda não está rodando."
+
+#: xcontrol/desktop_page.py:316
+msgid ""
+"Your i3 config also sets the wallpaper; remove these lines or they'll "
+"replace XControl's at login:"
+msgstr ""
+"Sua config do i3 também define o papel de parede; remova estas linhas ou "
+"elas vão substituir o do XControl no login:"
+
+#: xcontrol/desktop_page.py:319
+msgid ""
+"Another screen lock is set up; remove it from your i3 config, or two lockers"
+" will start:"
+msgstr ""
+"Há outro bloqueio de tela configurado; remova-o da config do i3, ou dois "
+"bloqueadores vão iniciar:"
+
+#: xcontrol/desktop_page.py:412
+msgid "Could not save the desktop settings"
+msgstr "Não foi possível salvar as configurações da área de trabalho"
+
+#: xcontrol/desktop_page.py:414
+msgid "Desktop settings applied"
+msgstr "Configurações da área de trabalho aplicadas"
+
+#: xcontrol/desktop_page.py:415
+msgid "XControl no longer manages the desktop"
+msgstr "O XControl não gerencia mais a área de trabalho"
+
+#: xcontrol/desktop_page.py:421
+msgid "Could not lock the screen"
+msgstr "Não foi possível bloquear a tela"
+
+#: xcontrol/desktop_page.py:421
+msgid "Install i3lock, xsecurelock or slock."
+msgstr "Instale o i3lock, xsecurelock ou slock."
+
 #: xcontrol/display_color.py:15
 msgid "Off: the display does its own scaling"
 msgstr "Desligado: a tela faz a própria escala"
@@ -701,10 +940,6 @@ msgstr "Resoluções…"
 msgid "Add custom resolutions, or ignore the modes the display reports"
 msgstr ""
 "Adicionar resoluções personalizadas ou ignorar os modos que a tela informa"
-
-#: xcontrol/display_page.py:233
-msgid "Display"
-msgstr "Tela"
 
 #: xcontrol/display_page.py:233 xcontrol/input_page.py:883
 #: xcontrol/monitor_info.py:178
@@ -1510,7 +1745,7 @@ msgid "Device:"
 msgstr "Dispositivo:"
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:22 xcontrol/system_page.py:189
+#: xcontrol/monitors_page.py:22 xcontrol/system_page.py:193
 msgid "Refresh"
 msgstr "Atualizar"
 
@@ -1625,10 +1860,6 @@ msgstr "Não foi possível mudar esta configuração"
 #: xcontrol/input_page.py:388
 msgid "Settings applied"
 msgstr "Configurações aplicadas"
-
-#: xcontrol/input_page.py:404
-msgid "Layout"
-msgstr "Layout"
 
 #: xcontrol/input_page.py:409
 msgid "Not set"
@@ -1955,16 +2186,16 @@ msgstr "Não foi possível carregar esta seção: {error}"
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:329
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:334
 msgid "Parameters"
 msgstr "Parâmetros"
 
 #: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
-#: xcontrol/system_page.py:347
+#: xcontrol/system_page.py:352
 msgid "(only readable by root)"
 msgstr "(só o root pode ler)"
 
-#: xcontrol/kmods.py:256 xcontrol/system_page.py:367
+#: xcontrol/kmods.py:256 xcontrol/system_page.py:372
 msgid "Set in modprobe.d"
 msgstr "Definido no modprobe.d"
 
@@ -2384,11 +2615,11 @@ msgstr "Nenhuma tela conectada com informações legíveis foi encontrada."
 msgid "Copy details"
 msgstr "Copiar detalhes"
 
-#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:65
+#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:69
 msgid "More copy options"
 msgstr "Mais opções de cópia"
 
-#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:67
+#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:71
 msgid "Copy in English (for bug reports)"
 msgstr "Copiar em inglês (para relatórios de bugs)"
 
@@ -2892,94 +3123,94 @@ msgstr "Sensores"
 msgid "Overview"
 msgstr "Visão geral"
 
-#: xcontrol/system_page.py:24
+#: xcontrol/system_page.py:28
 msgid "Kernel modules"
 msgstr "Módulos do kernel"
 
-#: xcontrol/system_page.py:60 xcontrol/system_page.py:302
+#: xcontrol/system_page.py:64 xcontrol/system_page.py:307
 msgid "Copy"
 msgstr "Copiar"
 
-#: xcontrol/system_page.py:61
+#: xcontrol/system_page.py:65
 msgid "Copy this information (without your computer and user names)"
 msgstr "Copiar estas informações (sem o nome do computador e do usuário)"
 
-#: xcontrol/system_page.py:155
+#: xcontrol/system_page.py:159
 msgid "System information copied"
 msgstr "Informações do sistema copiadas"
 
-#: xcontrol/system_page.py:182
+#: xcontrol/system_page.py:186
 msgid "Search modules, devices or parameters"
 msgstr "Buscar módulos, dispositivos ou parâmetros"
 
-#: xcontrol/system_page.py:185
+#: xcontrol/system_page.py:189
 msgid "Include parts built into the kernel"
 msgstr "Incluir partes embutidas no kernel"
 
-#: xcontrol/system_page.py:186
+#: xcontrol/system_page.py:190
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 "Partes do kernel que não podem ser descarregadas, mas ainda têm parâmetros"
 
-#: xcontrol/system_page.py:200
+#: xcontrol/system_page.py:204
 msgid "Module"
 msgstr "Módulo"
 
-#: xcontrol/system_page.py:201 xcontrol/system_page.py:315
+#: xcontrol/system_page.py:205 xcontrol/system_page.py:320
 msgid "Used by"
 msgstr "Usado por"
 
-#: xcontrol/system_page.py:238
+#: xcontrol/system_page.py:243
 msgid "built into the kernel"
 msgstr "embutido no kernel"
 
-#: xcontrol/system_page.py:246
+#: xcontrol/system_page.py:251
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr "{n} módulos carregados"
 
-#: xcontrol/system_page.py:247
+#: xcontrol/system_page.py:252
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr "Nenhum módulo carregável em uso (o kernel foi iniciado sem eles)."
 
-#: xcontrol/system_page.py:289
+#: xcontrol/system_page.py:294
 msgid "Select a module to see what it drives and its parameters."
 msgstr "Selecione um módulo para ver o que ele controla e seus parâmetros."
 
-#: xcontrol/system_page.py:309
+#: xcontrol/system_page.py:314
 msgid "File"
 msgstr "Arquivo"
 
-#: xcontrol/system_page.py:311
+#: xcontrol/system_page.py:316
 msgid "Version"
 msgstr "Versão"
 
-#: xcontrol/system_page.py:313
+#: xcontrol/system_page.py:318
 msgid "License"
 msgstr "Licença"
 
-#: xcontrol/system_page.py:317
+#: xcontrol/system_page.py:322
 msgid "Needs"
 msgstr "Depende de"
 
-#: xcontrol/system_page.py:319
+#: xcontrol/system_page.py:324
 msgid "Firmware files"
 msgstr "Arquivos de firmware"
 
-#: xcontrol/system_page.py:324
+#: xcontrol/system_page.py:329
 msgid "Devices it drives"
 msgstr "Dispositivos que controla"
 
-#: xcontrol/system_page.py:331
+#: xcontrol/system_page.py:336
 msgid "Change…"
 msgstr "Alterar…"
 
-#: xcontrol/system_page.py:332
+#: xcontrol/system_page.py:337
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
 "Definir parâmetros para toda vez que o módulo for carregado (pede sua senha)"
 
-#: xcontrol/system_page.py:337
+#: xcontrol/system_page.py:342
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
@@ -2988,11 +3219,11 @@ msgstr ""
 "Esta parte está embutida no kernel, então o modprobe.d não chega a ela. "
 "Defina na linha de comando do kernel como {example}."
 
-#: xcontrol/system_page.py:365
+#: xcontrol/system_page.py:370
 msgid "This module has no parameters."
 msgstr "Este módulo não tem parâmetros."
 
-#: xcontrol/system_page.py:376
+#: xcontrol/system_page.py:381
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
@@ -3000,7 +3231,7 @@ msgstr ""
 "Nada; o módulo usa os valores padrão e o que estiver na linha de comando do "
 "kernel."
 
-#: xcontrol/system_page.py:413
+#: xcontrol/system_page.py:418
 msgid "Module details copied"
 msgstr "Detalhes do módulo copiados"
 

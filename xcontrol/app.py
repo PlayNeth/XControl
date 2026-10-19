@@ -8,6 +8,7 @@ from gi.repository import Gio, GLib, Gtk  # noqa: E402
 from . import __version__, widgets, wm  # noqa: E402
 from .i18n import _  # noqa: E402
 from .appearance_page import AppearancePage  # noqa: E402
+from .desktop_page import DesktopPage  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
 from .gaming_page import GamingPage  # noqa: E402
 from .input_page import InputPage  # noqa: E402
@@ -15,7 +16,7 @@ from .monitors_page import MonitorsPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "appearance", "system")
+PAGES = ("gaming", "displays", "input", "appearance", "desktop", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -57,6 +58,10 @@ class MainWindow(Gtk.ApplicationWindow):
         appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         appearance.add(AppearancePage(self))
         stack.add_titled(appearance, "appearance", _("Appearance"))
+
+        desktop = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        desktop.add(DesktopPage(self))
+        stack.add_titled(desktop, "desktop", _("Desktop"))
 
         stack.add_titled(SystemPage(self), "system", _("System"))  # scrolls inside its tabs
 
@@ -148,6 +153,12 @@ def main(argv=None):
         from . import sysinfo
         print(sysinfo.as_text(sysinfo.snapshot(), english="--english" in argv), end="")
         return 0
+    if "--desktop-daemon" in argv:  # login helper: wallpaper, blanking, screen lock (xss-lock)
+        from . import desktop
+        return desktop.daemon()
+    if "--lock" in argv:  # lock the screen now (bind it to a key in i3)
+        from . import desktop
+        return 0 if desktop.lock_now() else 1
     if "--apply-display" in argv:
         from .display_page import apply_saved_layout
         return apply_saved_layout()
