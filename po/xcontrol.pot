@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.14.0\n"
+"Project-Id-Version: xcontrol 0.14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 14:27-0300\n"
+"POT-Creation-Date: 2026-10-19 14:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -499,170 +499,171 @@ msgstr ""
 msgid ""
 "i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next "
 "login nothing would set the wallpaper or start the screen lock. Add this "
-"line to your i3 config:\n"
-"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+"line to your i3 config (it also brings back your display layout, mouse and "
+"keyboard settings and live theme updates):\n"
+"<tt>exec --no-startup-id xcontrol --session</tt>"
 msgstr ""
 
-#: xcontrol/desktop_page.py:98
+#: xcontrol/desktop_page.py:99
 msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:100
+#: xcontrol/desktop_page.py:101
 msgid "Wallpaper"
 msgstr ""
 
-#: xcontrol/desktop_page.py:111 xcontrol/input_page.py:404
+#: xcontrol/desktop_page.py:112 xcontrol/input_page.py:404
 msgid "Layout"
 msgstr ""
 
-#: xcontrol/desktop_page.py:115 xcontrol/display_page.py:233
+#: xcontrol/desktop_page.py:116 xcontrol/display_page.py:233
 msgid "Display"
 msgstr ""
 
-#: xcontrol/desktop_page.py:118
+#: xcontrol/desktop_page.py:119
 msgid "Choose a picture"
 msgstr ""
 
-#: xcontrol/desktop_page.py:121
+#: xcontrol/desktop_page.py:122
 msgid "Pictures"
 msgstr ""
 
-#: xcontrol/desktop_page.py:127
+#: xcontrol/desktop_page.py:128
 msgid "No picture, only the color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:130
+#: xcontrol/desktop_page.py:131
 msgid "Picture"
 msgstr ""
 
-#: xcontrol/desktop_page.py:136
+#: xcontrol/desktop_page.py:137
 msgid "Placement"
 msgstr ""
 
-#: xcontrol/desktop_page.py:141
+#: xcontrol/desktop_page.py:142
 msgid "Background color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:151
+#: xcontrol/desktop_page.py:152
 msgid "Screen lock"
 msgstr ""
 
-#: xcontrol/desktop_page.py:155
+#: xcontrol/desktop_page.py:156
 msgid "Locker"
 msgstr ""
 
-#: xcontrol/desktop_page.py:164
+#: xcontrol/desktop_page.py:165
 msgid "Lock after being idle for"
 msgstr ""
 
-#: xcontrol/desktop_page.py:166
+#: xcontrol/desktop_page.py:167
 msgid "Lock before suspend and hibernate"
 msgstr ""
 
-#: xcontrol/desktop_page.py:172
+#: xcontrol/desktop_page.py:173
 msgid "The wallpaper"
 msgstr ""
 
-#: xcontrol/desktop_page.py:173
+#: xcontrol/desktop_page.py:174
 msgid "A plain color"
 msgstr ""
 
-#: xcontrol/desktop_page.py:180
+#: xcontrol/desktop_page.py:181
 msgid "Lock screen shows"
 msgstr ""
 
-#: xcontrol/desktop_page.py:182
+#: xcontrol/desktop_page.py:183
 msgid "Show the number of failed attempts"
 msgstr ""
 
-#: xcontrol/desktop_page.py:187
+#: xcontrol/desktop_page.py:188
 msgid "Lock now"
 msgstr ""
 
-#: xcontrol/desktop_page.py:193
+#: xcontrol/desktop_page.py:194
 msgid "To lock with a key, add to your i3 config:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:201
+#: xcontrol/desktop_page.py:202
 msgid "Screen power"
 msgstr ""
 
-#: xcontrol/desktop_page.py:203
+#: xcontrol/desktop_page.py:204
 msgid "Leave as it is"
 msgstr ""
 
-#: xcontrol/desktop_page.py:207
+#: xcontrol/desktop_page.py:208
 msgid "Turn the screen off after"
 msgstr ""
 
-#: xcontrol/desktop_page.py:208
+#: xcontrol/desktop_page.py:209
 msgid ""
 "Counted from the last time you used the mouse or keyboard. On a CRT this "
 "also saves the tube."
 msgstr ""
 
-#: xcontrol/desktop_page.py:235
+#: xcontrol/desktop_page.py:236
 msgid "(not installed)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:288
+#: xcontrol/desktop_page.py:289
 msgid ""
 "Install xss-lock: it starts the locker when you're idle and before the "
 "computer sleeps."
 msgstr ""
 
-#: xcontrol/desktop_page.py:291
+#: xcontrol/desktop_page.py:292
 msgid "Install a locker: i3lock, xsecurelock or slock."
 msgstr ""
 
-#: xcontrol/desktop_page.py:293
+#: xcontrol/desktop_page.py:294
 msgid ""
 "slock is set up when it's compiled (config.h); XControl can only start it."
 msgstr ""
 
-#: xcontrol/desktop_page.py:295
+#: xcontrol/desktop_page.py:296
 msgid ""
 "xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
 "show the wallpaper."
 msgstr ""
 
-#: xcontrol/desktop_page.py:306
+#: xcontrol/desktop_page.py:307
 msgid "Active: xss-lock is running."
 msgstr ""
 
-#: xcontrol/desktop_page.py:308
+#: xcontrol/desktop_page.py:309
 msgid "Not running yet."
 msgstr ""
 
-#: xcontrol/desktop_page.py:316
+#: xcontrol/desktop_page.py:317
 msgid ""
 "Your i3 config also sets the wallpaper; remove these lines or they'll "
 "replace XControl's at login:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:319
+#: xcontrol/desktop_page.py:320
 msgid ""
 "Another screen lock is set up; remove it from your i3 config, or two lockers "
 "will start:"
 msgstr ""
 
-#: xcontrol/desktop_page.py:412
+#: xcontrol/desktop_page.py:416
 msgid "Could not save the desktop settings"
 msgstr ""
 
-#: xcontrol/desktop_page.py:414
+#: xcontrol/desktop_page.py:418
 msgid "Desktop settings applied"
 msgstr ""
 
-#: xcontrol/desktop_page.py:415
+#: xcontrol/desktop_page.py:419
 msgid "XControl no longer manages the desktop"
 msgstr ""
 
-#: xcontrol/desktop_page.py:421
+#: xcontrol/desktop_page.py:425
 msgid "Could not lock the screen"
 msgstr ""
 
-#: xcontrol/desktop_page.py:421
+#: xcontrol/desktop_page.py:425
 msgid "Install i3lock, xsecurelock or slock."
 msgstr ""
 

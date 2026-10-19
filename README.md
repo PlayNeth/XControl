@@ -355,9 +355,16 @@ Remove any `exec xss-lock …` line from your i3 config, or two lockers will sta
 
 `xcontrol --desktop-daemon` sets the wallpaper, applies blanking, runs xss-lock (restarting it
 if it dies) and redraws the wallpaper when displays change. It's added to
-`~/.config/autostart`. i3 doesn't run that folder by itself, so add
-`exec --no-startup-id xcontrol --desktop-daemon` to your i3 config (or use `dex`); the page warns
-when this is missing.
+`~/.config/autostart`, but i3 doesn't run that folder by itself, so add one line to your i3
+config instead (or use `dex`):
+
+    exec --no-startup-id xcontrol --session
+
+`--session` starts everything XControl uses at login, each part only when its settings are in
+use: it restores the display layout, starts xsettingsd for live theme updates, starts the
+input watcher (mouse, touchpad and keyboard settings, re-applied on hotplug) and runs the desktop
+service. Single flags still work and can be combined, e.g.
+`xcontrol --desktop-daemon --watch-input`. The Desktop page warns when nothing would start them.
 
 ## System
 

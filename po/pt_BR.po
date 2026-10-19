@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 14:27-0300\n"
+"POT-Creation-Date: 2026-10-19 14:37-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -561,107 +561,107 @@ msgstr "{n} minutos"
 
 #: xcontrol/desktop_page.py:60
 msgid ""
-"i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next login nothing would set the wallpaper or start the screen lock. Add this line to your i3 config:\n"
-"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+"i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next login nothing would set the wallpaper or start the screen lock. Add this line to your i3 config (it also brings back your display layout, mouse and keyboard settings and live theme updates):\n"
+"<tt>exec --no-startup-id xcontrol --session</tt>"
 msgstr ""
-"O i3 não executa <tt>~/.config/autostart</tt> sozinho, então no próximo login nada definiria o papel de parede nem iniciaria o bloqueio de tela. Adicione esta linha à config do i3:\n"
-"<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"
+"O i3 não executa <tt>~/.config/autostart</tt> sozinho, então no próximo login nada definiria o papel de parede nem iniciaria o bloqueio de tela. Adicione esta linha à config do i3 (ela também restaura o layout das telas, as configurações de mouse e teclado e as atualizações de tema ao vivo):\n"
+"<tt>exec --no-startup-id xcontrol --session</tt>"
 
-#: xcontrol/desktop_page.py:98
+#: xcontrol/desktop_page.py:99
 msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
 msgstr ""
 "Deixar o XControl definir o fundo da área de trabalho (em vez do feh ou "
 "nitrogen)"
 
-#: xcontrol/desktop_page.py:100
+#: xcontrol/desktop_page.py:101
 msgid "Wallpaper"
 msgstr "Papel de parede"
 
-#: xcontrol/desktop_page.py:111 xcontrol/input_page.py:404
+#: xcontrol/desktop_page.py:112 xcontrol/input_page.py:404
 msgid "Layout"
 msgstr "Layout"
 
-#: xcontrol/desktop_page.py:115 xcontrol/display_page.py:233
+#: xcontrol/desktop_page.py:116 xcontrol/display_page.py:233
 msgid "Display"
 msgstr "Tela"
 
-#: xcontrol/desktop_page.py:118
+#: xcontrol/desktop_page.py:119
 msgid "Choose a picture"
 msgstr "Escolha uma imagem"
 
-#: xcontrol/desktop_page.py:121
+#: xcontrol/desktop_page.py:122
 msgid "Pictures"
 msgstr "Imagens"
 
-#: xcontrol/desktop_page.py:127
+#: xcontrol/desktop_page.py:128
 msgid "No picture, only the color"
 msgstr "Sem imagem, só a cor"
 
-#: xcontrol/desktop_page.py:130
+#: xcontrol/desktop_page.py:131
 msgid "Picture"
 msgstr "Imagem"
 
-#: xcontrol/desktop_page.py:136
+#: xcontrol/desktop_page.py:137
 msgid "Placement"
 msgstr "Posicionamento"
 
-#: xcontrol/desktop_page.py:141
+#: xcontrol/desktop_page.py:142
 msgid "Background color"
 msgstr "Cor de fundo"
 
-#: xcontrol/desktop_page.py:151
+#: xcontrol/desktop_page.py:152
 msgid "Screen lock"
 msgstr "Bloqueio de tela"
 
-#: xcontrol/desktop_page.py:155
+#: xcontrol/desktop_page.py:156
 msgid "Locker"
 msgstr "Bloqueador"
 
-#: xcontrol/desktop_page.py:164
+#: xcontrol/desktop_page.py:165
 msgid "Lock after being idle for"
 msgstr "Bloquear após ficar ocioso por"
 
-#: xcontrol/desktop_page.py:166
+#: xcontrol/desktop_page.py:167
 msgid "Lock before suspend and hibernate"
 msgstr "Bloquear antes de suspender e hibernar"
 
-#: xcontrol/desktop_page.py:172
+#: xcontrol/desktop_page.py:173
 msgid "The wallpaper"
 msgstr "O papel de parede"
 
-#: xcontrol/desktop_page.py:173
+#: xcontrol/desktop_page.py:174
 msgid "A plain color"
 msgstr "Uma cor sólida"
 
-#: xcontrol/desktop_page.py:180
+#: xcontrol/desktop_page.py:181
 msgid "Lock screen shows"
 msgstr "A tela de bloqueio mostra"
 
-#: xcontrol/desktop_page.py:182
+#: xcontrol/desktop_page.py:183
 msgid "Show the number of failed attempts"
 msgstr "Mostrar o número de tentativas erradas"
 
-#: xcontrol/desktop_page.py:187
+#: xcontrol/desktop_page.py:188
 msgid "Lock now"
 msgstr "Bloquear agora"
 
-#: xcontrol/desktop_page.py:193
+#: xcontrol/desktop_page.py:194
 msgid "To lock with a key, add to your i3 config:"
 msgstr "Para bloquear com uma tecla, adicione à config do i3:"
 
-#: xcontrol/desktop_page.py:201
+#: xcontrol/desktop_page.py:202
 msgid "Screen power"
 msgstr "Energia da tela"
 
-#: xcontrol/desktop_page.py:203
+#: xcontrol/desktop_page.py:204
 msgid "Leave as it is"
 msgstr "Deixar como está"
 
-#: xcontrol/desktop_page.py:207
+#: xcontrol/desktop_page.py:208
 msgid "Turn the screen off after"
 msgstr "Desligar a tela após"
 
-#: xcontrol/desktop_page.py:208
+#: xcontrol/desktop_page.py:209
 msgid ""
 "Counted from the last time you used the mouse or keyboard. On a CRT this "
 "also saves the tube."
@@ -669,11 +669,11 @@ msgstr ""
 "Contado a partir do último uso do mouse ou teclado. Num CRT isso também "
 "poupa o tubo."
 
-#: xcontrol/desktop_page.py:235
+#: xcontrol/desktop_page.py:236
 msgid "(not installed)"
 msgstr "(não instalado)"
 
-#: xcontrol/desktop_page.py:288
+#: xcontrol/desktop_page.py:289
 msgid ""
 "Install xss-lock: it starts the locker when you're idle and before the "
 "computer sleeps."
@@ -681,18 +681,18 @@ msgstr ""
 "Instale o xss-lock: ele inicia o bloqueador quando você fica ocioso e antes "
 "de o computador dormir."
 
-#: xcontrol/desktop_page.py:291
+#: xcontrol/desktop_page.py:292
 msgid "Install a locker: i3lock, xsecurelock or slock."
 msgstr "Instale um bloqueador: i3lock, xsecurelock ou slock."
 
-#: xcontrol/desktop_page.py:293
+#: xcontrol/desktop_page.py:294
 msgid ""
 "slock is set up when it's compiled (config.h); XControl can only start it."
 msgstr ""
 "O slock é configurado na compilação (config.h); o XControl só consegue "
 "iniciá-lo."
 
-#: xcontrol/desktop_page.py:295
+#: xcontrol/desktop_page.py:296
 msgid ""
 "xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
 "show the wallpaper."
@@ -700,15 +700,15 @@ msgstr ""
 "O xsecurelock é configurado com variáveis de ambiente XSECURELOCK_*; ele não"
 " mostra o papel de parede."
 
-#: xcontrol/desktop_page.py:306
+#: xcontrol/desktop_page.py:307
 msgid "Active: xss-lock is running."
 msgstr "Ativo: o xss-lock está rodando."
 
-#: xcontrol/desktop_page.py:308
+#: xcontrol/desktop_page.py:309
 msgid "Not running yet."
 msgstr "Ainda não está rodando."
 
-#: xcontrol/desktop_page.py:316
+#: xcontrol/desktop_page.py:317
 msgid ""
 "Your i3 config also sets the wallpaper; remove these lines or they'll "
 "replace XControl's at login:"
@@ -716,7 +716,7 @@ msgstr ""
 "Sua config do i3 também define o papel de parede; remova estas linhas ou "
 "elas vão substituir o do XControl no login:"
 
-#: xcontrol/desktop_page.py:319
+#: xcontrol/desktop_page.py:320
 msgid ""
 "Another screen lock is set up; remove it from your i3 config, or two lockers"
 " will start:"
@@ -724,23 +724,23 @@ msgstr ""
 "Há outro bloqueio de tela configurado; remova-o da config do i3, ou dois "
 "bloqueadores vão iniciar:"
 
-#: xcontrol/desktop_page.py:412
+#: xcontrol/desktop_page.py:416
 msgid "Could not save the desktop settings"
 msgstr "Não foi possível salvar as configurações da área de trabalho"
 
-#: xcontrol/desktop_page.py:414
+#: xcontrol/desktop_page.py:418
 msgid "Desktop settings applied"
 msgstr "Configurações da área de trabalho aplicadas"
 
-#: xcontrol/desktop_page.py:415
+#: xcontrol/desktop_page.py:419
 msgid "XControl no longer manages the desktop"
 msgstr "O XControl não gerencia mais a área de trabalho"
 
-#: xcontrol/desktop_page.py:421
+#: xcontrol/desktop_page.py:425
 msgid "Could not lock the screen"
 msgstr "Não foi possível bloquear a tela"
 
-#: xcontrol/desktop_page.py:421
+#: xcontrol/desktop_page.py:425
 msgid "Install i3lock, xsecurelock or slock."
 msgstr "Instale o i3lock, xsecurelock ou slock."
 

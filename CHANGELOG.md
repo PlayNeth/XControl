@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.14.1 (2026-10-19)
+
+**Add xcontrol --session to start all login helpers with one line**
+
+- Add "xcontrol --session", one i3 config line that restores the display layout,
+  starts xsettingsd for live theme updates, starts the input watcher and runs
+  the desktop service, each only when its settings are in use
+- Allow combining login flags, e.g. "xcontrol --desktop-daemon --watch-input"
+- Suggest "xcontrol --session" in the Desktop page's login warning
+- Fix the Desktop page's login warning showing up as an empty bar without text
+
 ## 0.14.0 (2026-10-19)
 
 **Add Desktop page with wallpaper, screen lock and screen power**

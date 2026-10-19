@@ -58,8 +58,9 @@ class DesktopPage(Gtk.Box):
         self.autostart_bar = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
         self.autostart_bar.get_content_area().add(_hint(
             _("i3 doesn't run <tt>~/.config/autostart</tt> by itself, so after the next login nothing would set "
-              "the wallpaper or start the screen lock. Add this line to your i3 config:\n"
-              "<tt>exec --no-startup-id xcontrol --desktop-daemon</tt>"), markup=True))
+              "the wallpaper or start the screen lock. Add this line to your i3 config (it also brings back your "
+              "display layout, mouse and keyboard settings and live theme updates):\n"
+              "<tt>exec --no-startup-id xcontrol --session</tt>"), markup=True))
         self.autostart_bar.set_no_show_all(True)
         self.pack_start(self.autostart_bar, False, False, 0)
 
@@ -318,7 +319,10 @@ class DesktopPage(Gtk.Box):
         self._conflict(self.lock_conflict, lock["enabled"] and (lock_lines or foreign),
                        _("Another screen lock is set up; remove it from your i3 config, or two lockers will "
                          "start:"), lock_lines or foreign)
-        self.autostart_bar.set_visible(D.wanted(self.desk) and D.autostart_runs() is False)
+        if D.wanted(self.desk) and D.autostart_runs() is False:
+            self.autostart_bar.show_all()  # no_show_all keeps it hidden until needed, so show its text too
+        else:
+            self.autostart_bar.hide()
 
     def _conflict(self, label, show, text, lines):
         if show:
