@@ -18,6 +18,8 @@ MSAA_VALUES = [1, 2, 4, 8]
 TRAA_VALUES = ["off", "multisample", "supersample"]
 VSYNC_VALUES = ["app", "off", "on", "fast", "adaptive"]
 D3D_RENDERERS = ["dxvk", "wined3d"]  # for Direct3D 8/9 games under Wine/Proton
+FREESYNC_VALUES = ["app", "off", "on"]
+POST_AA_VALUES = ["off", "fxaa", "smaa"]  # vkBasalt
 
 DEFAULT_SETTINGS = {
     "af": 0,            # 0 = application decides, 1 = off, 2..16 = forced
@@ -26,6 +28,9 @@ DEFAULT_SETTINGS = {
     "vsync": "app",
     "fps_limit": 0,     # 0 = no limit
     "d3d_renderer": "dxvk",
+    "freesync": "app",  # app = Mesa's default (on for fullscreen games)
+    "post_aa": "off",   # vkBasalt post-process AA (Vulkan, DXVK, VKD3D-Proton)
+    "sharpen": 0,       # vkBasalt CAS sharpening, 0 (off) to 100
 }
 
 
@@ -43,10 +48,18 @@ def normalize_settings(s):
         out["vsync"] = "app"
     if out["d3d_renderer"] not in D3D_RENDERERS:
         out["d3d_renderer"] = "dxvk"
+    if out["freesync"] not in FREESYNC_VALUES:
+        out["freesync"] = "app"
+    if out["post_aa"] not in POST_AA_VALUES:
+        out["post_aa"] = "off"
     try:
         out["fps_limit"] = max(0, int(out["fps_limit"]))
     except (TypeError, ValueError):
         out["fps_limit"] = 0
+    try:
+        out["sharpen"] = min(100, max(0, int(out["sharpen"])))
+    except (TypeError, ValueError):
+        out["sharpen"] = 0
     return out
 
 

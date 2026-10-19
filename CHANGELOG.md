@@ -2,6 +2,21 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.6.0 (2026-10-18)
+
+**Add FreeSync control and vkBasalt post-processing**
+
+- Add a per-game FreeSync setting (application decides, always off, on for fullscreen
+  games) through Mesa's adaptive_sync option
+- Warn on the Gaming page when X has variable refresh disabled, with the xorg.conf line
+  to add
+- Show on the Monitor Info page whether variable refresh is enabled in X, read from the
+  X server log
+- Add a Post-Processing section with FXAA or SMAA edge smoothing and CAS sharpening
+  through vkBasalt, for Vulkan games and Windows games through DXVK or VKD3D-Proton
+- Grey out the post-processing options and explain why when vkBasalt isn't installed
+- Add vkbasalt as an optional dependency and tests for the new launcher settings
+
 ## 0.5.1 (2026-10-18)
 
 **Show EDID override status and keep settings across X driver switches**

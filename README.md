@@ -12,6 +12,8 @@ graphics overrides, plus X11 display settings through xrandr.
 | VSync off / on | `vblank_mode` | `MESA_VK_WSI_PRESENT_MODE` | DXVK sync interval |
 | Fast sync / adaptive | no | yes | yes |
 | Frame limiter | yes (shim) | yes (layer) | yes (layer) |
+| FreeSync off / on | `adaptive_sync` | `adaptive_sync` | `adaptive_sync` (Vulkan) |
+| Post-process AA (FXAA/SMAA), sharpening | no | vkBasalt | vkBasalt |
 
 Profiles match a game by Steam AppID (`steam:220`) or by the file name of the
 program or one of its arguments (`ioquake3.x86_64`, `game.exe`). Anything
@@ -64,6 +66,31 @@ too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
   - FPS: limits in `vkQueuePresentKHR`.
 - Driver and DXVK knobs (`RADV_TEX_ANISO`, `DXVK_CONFIG`, …) are set alongside
   the hooks to cover paths they can't see.
+
+## FreeSync
+
+**FreeSync** sets Mesa's `adaptive_sync` option for the game (Mesa reads its driconf options
+from the environment, like `vblank_mode`; the game's output then shows "default value of option
+adaptive_sync overridden by environment"). Mesa already asks for variable refresh in fullscreen
+games by default, so **Always off** is the useful setting for games that stutter or flicker with it.
+
+X also has to allow it, which it doesn't by default. Add this to the `Device` section of your
+xorg.conf (xf86-video-amdgpu and modesetting both support it) and restart X:
+
+    Option "VariableRefresh" "true"
+
+The Monitor Info page shows whether the display supports it and whether X has it enabled (read
+from the X server log). It also needs a fullscreen game with the compositor off or unredirecting
+it, a frame rate inside the display's FreeSync range, and usually a single active display.
+
+## Post-processing (vkBasalt)
+
+**Edge smoothing** (FXAA or SMAA) and **Sharpening** (AMD's CAS) run through
+[vkBasalt](https://github.com/DadSchoorse/vkBasalt) after the game draws each frame, so they work
+where forced MSAA can't: native Vulkan games and Windows games through DXVK or VKD3D-Proton. They
+don't apply to OpenGL games. The launcher writes a small vkBasalt configuration to
+`~/.cache/mesa-panel/` and sets `ENABLE_VKBASALT=1`. Press **Home** in a game to toggle the
+effects and compare.
 
 ## Direct3D 8/9 games and MSAA
 

@@ -4,6 +4,7 @@ Steam:   set the game's launch options to   mesa-panel-run %command%
 Other:   mesa-panel-run [--profile NAME] [--print-env] [--] program args...
          --print-env shows the settings that would be applied without starting anything.
 """
+import hashlib
 import os
 import re
 import sys
@@ -14,6 +15,52 @@ from .paths import GL_SHIM
 USAGE = "usage: mesa-panel-run [--profile NAME] [--print-env] [--] command [args...]"
 
 VK_PRESENT = {"off": "immediate", "on": "fifo", "fast": "mailbox", "adaptive": "relaxed"}
+
+
+def vkbasalt_config(settings):
+    """vkBasalt configuration text for these settings, or None when it isn't needed."""
+    s = config.normalize_settings(settings)
+    effects, lines = [], []
+    if s["post_aa"] == "smaa":
+        effects.append("smaa")
+        lines += ["smaaEdgeDetection = luma", "smaaThreshold = 0.05", "smaaMaxSearchSteps = 32"]
+    elif s["post_aa"] == "fxaa":
+        effects.append("fxaa")
+        lines += ["fxaaQualitySubpix = 0.75", "fxaaQualityEdgeThreshold = 0.125"]
+    if s["sharpen"]:
+        effects.append("cas")  # after AA, so the AA edges aren't sharpened back
+        lines.append(f"casSharpness = {s['sharpen'] / 100:.2f}")
+    if not effects:
+        return None
+    return "\n".join(["# written by mesa-panel", "effects = " + ":".join(effects), *lines,
+                      "toggleKey = Home", "enableOnLaunch = True", ""])
+
+
+def vkbasalt_config_path(text, base=None):
+    """Where the config goes: one file per distinct configuration, so games
+    running at the same time with different settings don't overwrite each other."""
+    base = os.environ if base is None else base
+    cache = base.get("XDG_CACHE_HOME") or os.path.join(base.get("HOME", "/tmp"), ".cache")
+    digest = hashlib.sha1(text.encode()).hexdigest()[:12]
+    return os.path.join(cache, "mesa-panel", f"vkbasalt-{digest}.conf")
+
+
+def write_support_files(settings, base=None):
+    """Create files the environment from compose_env() points to. Call before starting the game."""
+    text = vkbasalt_config(settings)
+    if text:
+        path = vkbasalt_config_path(text, base)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        try:
+            with open(path) as f:
+                if f.read() == text:
+                    return
+        except OSError:
+            pass
+        tmp = f"{path}.{os.getpid()}"
+        with open(tmp, "w") as f:
+            f.write(text)
+        os.replace(tmp, path)
 
 
 def compose_env(settings, base=None):
@@ -77,6 +124,18 @@ def compose_env(settings, base=None):
         elif v == "adaptive":
             dxvk += ["dxgi.syncInterval = 1", "d3d9.presentInterval = 1", "dxvk.tearFree = False"]
 
+    # FreeSync / variable refresh: Mesa's driconf option, which environment variables
+    # override (like vblank_mode). Mesa asks for VRR on fullscreen windows by default;
+    # X still has to allow it (Option "VariableRefresh").
+    if s["freesync"] != "app":
+        env["adaptive_sync"] = "1" if s["freesync"] == "on" else "0"
+
+    # Post-process AA and sharpening through vkBasalt (Vulkan only: native Vulkan, DXVK, VKD3D-Proton)
+    text = vkbasalt_config(s)
+    if text:
+        env["ENABLE_VKBASALT"] = "1"
+        env["VKBASALT_CONFIG_FILE"] = vkbasalt_config_path(text, base)
+
     # Frame limiter: done in our own hooks for both APIs.
     if s["fps_limit"]:
         env["MESAPANEL_FPS"] = str(s["fps_limit"])
@@ -111,11 +170,15 @@ def steam_appid(argv, base=None):
 
 
 def resolve(argv, base=None, profile_name=None):
+    game, settings = find_settings(argv, base, profile_name)
+    return game, compose_env(settings, base)
+
+
+def find_settings(argv, base=None, profile_name=None):
     data = config.load()
     appid = steam_appid(argv, base)
     game = config.find_game(data, appid=appid, argv=argv, name=profile_name)
-    settings = game["settings"] if game else data["global"]
-    return game, compose_env(settings, base)
+    return game, (game["settings"] if game else data["global"])
 
 
 def main(argv=None):
@@ -141,7 +204,8 @@ def main(argv=None):
         print(USAGE, file=sys.stderr)
         return 2
 
-    game, env = resolve(argv, profile_name=profile)
+    game, settings = find_settings(argv, profile_name=profile)
+    env = compose_env(settings)
     if profile and not game:
         print(f"mesa-panel-run: no profile named {profile!r}, using global settings", file=sys.stderr)
     if print_env or os.environ.get("MESAPANEL_DEBUG"):
@@ -151,6 +215,10 @@ def main(argv=None):
     if print_env:  # dry run: show what would be applied, start nothing
         return 0
 
+    try:
+        write_support_files(settings)
+    except OSError as e:
+        print(f"mesa-panel-run: cannot write the vkBasalt configuration: {e}", file=sys.stderr)
     new_env = dict(os.environ)
     new_env.update(env)
     try:

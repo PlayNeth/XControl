@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=mesa-panel
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Catalyst-style control panel for Mesa: per-game AA, anisotropic filtering, VSync and FPS limit, plus xrandr display settings"
 arch=('x86_64')
@@ -15,6 +15,7 @@ makedepends=('vulkan-headers' 'gettext')
 optdepends=(
   'vulkan-icd-loader: Vulkan and Proton game overrides'
   'wine: Direct3D 8/9 games with forced MSAA (WineD3D renderer)'
+  'vkbasalt: post-process anti-aliasing and sharpening for Vulkan and DXVK games'
   'hwdata: full monitor manufacturer names'
   'polkit: test and install EDID overrides (system-wide mode list)'
   'mesa-utils: "Test with glxgears" button'

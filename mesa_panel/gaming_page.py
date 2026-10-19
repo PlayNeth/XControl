@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import config, launcher, steam  # noqa: E402
+from . import config, launcher, steam, vrr  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 LAUNCH_OPTION = "mesa-panel-run %command%"
@@ -29,6 +29,18 @@ VSYNC_LABELS = [
     N_("Fast sync (no tearing, uncapped; Vulkan)"),
     N_("Adaptive (tears below refresh rate; Vulkan)"),
 ]
+FREESYNC_LABELS = [
+    N_("Application decides"),
+    N_("Always off"),
+    N_("On for fullscreen games"),
+]
+POST_AA_LABELS = [
+    N_("Off"),
+    N_("FXAA (fastest, slightly softer)"),
+    N_("SMAA (cleaner edges)"),
+]
+SHARPEN_VALUES = [0, 25, 50, 75]
+SHARPEN_LABELS = [N_("Off"), N_("Low"), N_("Medium"), N_("High")]
 
 
 def _factor_label(value):
@@ -258,6 +270,43 @@ class GamingPage(Gtk.Box):
         g.attach(fps_box, 1, 1, 1, 1)
         self.fps_check.connect("toggled", self._settings_changed)
         self.fps_spin.connect("value-changed", self._settings_changed)
+        # TRANSLATORS: AMD's name for variable refresh rate; keep it if your language uses it
+        g.attach(Gtk.Label(label=_("FreeSync"), xalign=0), 0, 2, 1, 1)
+        self.freesync = Gtk.ComboBoxText()
+        for t in FREESYNC_LABELS:
+            self.freesync.append_text(_(t))
+        self.freesync.connect("changed", self._settings_changed)
+        g.attach(self.freesync, 1, 2, 1, 1)
+        self.freesync_hint = _hint("")
+        g.attach(self.freesync_hint, 1, 3, 1, 1)
+        self.x_vrr = vrr.x_vrr_enabled()
+        self.pack_start(frame, False, False, 0)
+
+        # ---- post-processing (vkBasalt)
+        frame, g = _section(_("Post-Processing"))
+        self.has_vkbasalt = vrr.vkbasalt_installed()
+        g.attach(Gtk.Label(label=_("Edge smoothing"), xalign=0), 0, 0, 1, 1)
+        self.post_aa = Gtk.ComboBoxText()
+        for t in POST_AA_LABELS:
+            self.post_aa.append_text(_(t))
+        self.post_aa.connect("changed", self._settings_changed)
+        g.attach(self.post_aa, 1, 0, 1, 1)
+        g.attach(Gtk.Label(label=_("Sharpening"), xalign=0), 0, 1, 1, 1)
+        self.sharpen = Gtk.ComboBoxText()
+        for t in SHARPEN_LABELS:
+            self.sharpen.append_text(_(t))
+        self.sharpen.connect("changed", self._settings_changed)
+        g.attach(self.sharpen, 1, 1, 1, 1)
+        if self.has_vkbasalt:
+            post_hint = _("Applied by vkBasalt after the game draws each frame, so it works where forced "
+                          "multisampling can't: Vulkan games and Windows games through DXVK or VKD3D-Proton. "
+                          "Not OpenGL. Press Home in the game to compare with it off.")
+        else:
+            post_hint = _("Needs vkBasalt, which isn't installed. It smooths edges and sharpens the image "
+                          "in Vulkan games and Windows games through DXVK or VKD3D-Proton.")
+            self.post_aa.set_sensitive(False)
+            self.sharpen.set_sensitive(False)
+        g.attach(_hint(post_hint), 1, 2, 1, 1)
         self.pack_start(frame, False, False, 0)
 
         # line up the label column across all sections
@@ -329,6 +378,10 @@ class GamingPage(Gtk.Box):
         if s["fps_limit"]:
             self.fps_spin.set_value(s["fps_limit"])
         self.fps_spin.set_sensitive(s["fps_limit"] > 0)
+        self.freesync.set_active(config.FREESYNC_VALUES.index(s["freesync"]))
+        self.post_aa.set_active(config.POST_AA_VALUES.index(s["post_aa"]))
+        self.sharpen.set_active(min(range(len(SHARPEN_VALUES)), key=lambda i: abs(SHARPEN_VALUES[i] - s["sharpen"])))
+        self._update_freesync_hint(s)
         self.loading = False
 
     def _settings_changed(self, *_args):
@@ -342,7 +395,23 @@ class GamingPage(Gtk.Box):
         s["vsync"] = config.VSYNC_VALUES[max(0, self.vsync.get_active())]
         self.fps_spin.set_sensitive(self.fps_check.get_active())
         s["fps_limit"] = int(self.fps_spin.get_value()) if self.fps_check.get_active() else 0
+        s["freesync"] = config.FREESYNC_VALUES[max(0, self.freesync.get_active())]
+        s["post_aa"] = config.POST_AA_VALUES[max(0, self.post_aa.get_active())]
+        s["sharpen"] = SHARPEN_VALUES[max(0, self.sharpen.get_active())]
+        self._update_freesync_hint(s)
         self._save()
+
+    def _update_freesync_hint(self, s):
+        if s["freesync"] == "off":
+            text = _("Variable refresh is turned off for these games.")
+        else:
+            text = _("Works in fullscreen OpenGL, Vulkan and Proton games on a FreeSync display, while the "
+                     "frame rate is inside the display's FreeSync range. With a frame limit, set it a few "
+                     "FPS below the display's maximum refresh rate.")
+            if self.x_vrr is False:
+                text += " " + _("X has it disabled: add Option \"VariableRefresh\" \"true\" to the "
+                                "Device section of your xorg.conf and restart X.")
+        self.freesync_hint.set_text(text)
 
     def _details_changed(self, *_args):
         if self.loading:
@@ -421,6 +490,11 @@ class GamingPage(Gtk.Box):
     def _spawn(self, argv, settings, cwd=None):
         env = dict(os.environ)
         env.update(launcher.compose_env(settings))
+        try:
+            launcher.write_support_files(settings)
+        except OSError as e:
+            self.window.message(_("Could not write the vkBasalt configuration"), str(e))
+            return
         try:
             subprocess.Popen(argv, env=env, cwd=cwd, start_new_session=True)
         except OSError as e:

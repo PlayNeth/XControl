@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mesa-panel 0.5.1\n"
+"Project-Id-Version: mesa-panel 0.6.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 17:27-0300\n"
+"POT-Creation-Date: 2026-10-18 21:48-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -82,7 +82,7 @@ msgstr "Adicionar resoluções personalizadas ou ignorar os modos que a tela inf
 msgid "Display"
 msgstr "Tela"
 
-#: mesa_panel/display_page.py:231
+#: mesa_panel/display_page.py:231 mesa_panel/monitor_info.py:178
 msgid "Enabled"
 msgstr "Ativada"
 
@@ -279,7 +279,7 @@ msgstr "A autorização foi cancelada."
 msgid "Save EDID"
 msgstr "Salvar EDID"
 
-#: mesa_panel/edid_override_dialog.py:251 mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397 mesa_panel/monitors_page.py:133
+#: mesa_panel/edid_override_dialog.py:251 mesa_panel/gaming_page.py:135 mesa_panel/gaming_page.py:466 mesa_panel/monitors_page.py:133
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -344,7 +344,7 @@ msgid "Kernel parameter copied"
 msgstr "Parâmetro do kernel copiado"
 
 #. TRANSLATORS: slider position meaning the feature is forced off
-#: mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:36
+#: mesa_panel/gaming_page.py:17 mesa_panel/gaming_page.py:38 mesa_panel/gaming_page.py:43 mesa_panel/gaming_page.py:48
 msgid "Off"
 msgstr "Desligado"
 
@@ -364,11 +364,11 @@ msgstr "DXVK (padrão)"
 msgid "WineD3D (needed for forced MSAA)"
 msgstr "WineD3D (necessário para forçar MSAA)"
 
-#: mesa_panel/gaming_page.py:26
+#: mesa_panel/gaming_page.py:26 mesa_panel/gaming_page.py:33
 msgid "Application decides"
 msgstr "Definida pelo aplicativo"
 
-#: mesa_panel/gaming_page.py:27
+#: mesa_panel/gaming_page.py:27 mesa_panel/gaming_page.py:34
 msgid "Always off"
 msgstr "Sempre desligada"
 
@@ -384,182 +384,247 @@ msgstr "Sincronização rápida (sem tearing, sem limite; Vulkan)"
 msgid "Adaptive (tears below refresh rate; Vulkan)"
 msgstr "Adaptativa (tearing abaixo da taxa de atualização; Vulkan)"
 
-#: mesa_panel/gaming_page.py:36
+#: mesa_panel/gaming_page.py:35
+msgid "On for fullscreen games"
+msgstr "Ativado em jogos em tela cheia"
+
+#: mesa_panel/gaming_page.py:39
+msgid "FXAA (fastest, slightly softer)"
+msgstr "FXAA (mais rápido, um pouco mais suave)"
+
+#: mesa_panel/gaming_page.py:40
+msgid "SMAA (cleaner edges)"
+msgstr "SMAA (bordas mais limpas)"
+
+#: mesa_panel/gaming_page.py:43
+msgid "Low"
+msgstr "Baixa"
+
+#: mesa_panel/gaming_page.py:43
+msgid "Medium"
+msgstr "Média"
+
+#: mesa_panel/gaming_page.py:43
+msgid "High"
+msgstr "Alta"
+
+#: mesa_panel/gaming_page.py:48
 #, python-brace-format
 msgid "{n}×"
 msgstr "{n}×"
 
-#: mesa_panel/gaming_page.py:66
+#: mesa_panel/gaming_page.py:78
 msgid "Use application settings"
 msgstr "Usar configurações do aplicativo"
 
-#: mesa_panel/gaming_page.py:122
+#: mesa_panel/gaming_page.py:134
 msgid "Add Steam game"
 msgstr "Adicionar jogo da Steam"
 
-#: mesa_panel/gaming_page.py:123 mesa_panel/gaming_page.py:397 mesa_panel/resolutions_dialog.py:152
+#: mesa_panel/gaming_page.py:135 mesa_panel/gaming_page.py:466 mesa_panel/resolutions_dialog.py:152
 msgid "Add"
 msgstr "Adicionar"
 
-#: mesa_panel/gaming_page.py:129
+#: mesa_panel/gaming_page.py:141
 msgid "Search installed games"
 msgstr "Pesquisar jogos instalados"
 
-#: mesa_panel/gaming_page.py:165
+#: mesa_panel/gaming_page.py:177
 msgid "Profile:"
 msgstr "Perfil:"
 
-#: mesa_panel/gaming_page.py:170
+#: mesa_panel/gaming_page.py:182
 msgid "Add game"
 msgstr "Adicionar jogo"
 
-#: mesa_panel/gaming_page.py:172
+#: mesa_panel/gaming_page.py:184
 msgid "Steam game…"
 msgstr "Jogo da Steam…"
 
-#: mesa_panel/gaming_page.py:172
+#: mesa_panel/gaming_page.py:184
 msgid "Program or script…"
 msgstr "Programa ou script…"
 
-#: mesa_panel/gaming_page.py:179
+#: mesa_panel/gaming_page.py:191
 msgid "Delete"
 msgstr "Excluir"
 
-#: mesa_panel/gaming_page.py:186
+#: mesa_panel/gaming_page.py:198
 msgid "Game"
 msgstr "Jogo"
 
-#: mesa_panel/gaming_page.py:190
+#: mesa_panel/gaming_page.py:202
 msgid "Comma-separated. steam:APPID matches a Steam game; any other entry matches the file name of the program or of one of its arguments (e.g. game.exe under Proton)."
 msgstr "Separado por vírgulas. steam:APPID corresponde a um jogo da Steam; qualquer outra entrada corresponde ao nome do arquivo do programa ou de um dos seus argumentos (por exemplo, game.exe no Proton)."
 
-#: mesa_panel/gaming_page.py:193
+#: mesa_panel/gaming_page.py:205
 msgid "Optional: command to start the game from here"
 msgstr "Opcional: comando para iniciar o jogo por aqui"
 
-#: mesa_panel/gaming_page.py:194
+#: mesa_panel/gaming_page.py:206
 msgid "Launch"
 msgstr "Iniciar"
 
-#: mesa_panel/gaming_page.py:197
+#: mesa_panel/gaming_page.py:209
 msgid "Name"
 msgstr "Nome"
 
-#: mesa_panel/gaming_page.py:199
+#: mesa_panel/gaming_page.py:211
 msgid "Applies to"
 msgstr "Aplica-se a"
 
-#: mesa_panel/gaming_page.py:201
+#: mesa_panel/gaming_page.py:213
 msgid "Command"
 msgstr "Comando"
 
-#: mesa_panel/gaming_page.py:211
+#: mesa_panel/gaming_page.py:223
 msgid "Anti-Aliasing"
 msgstr "Suavização de serrilhado"
 
-#: mesa_panel/gaming_page.py:212
+#: mesa_panel/gaming_page.py:224
 msgid "Multisampling"
 msgstr "Multiamostragem"
 
-#: mesa_panel/gaming_page.py:213
+#: mesa_panel/gaming_page.py:225
 msgid "Transparency"
 msgstr "Transparência"
 
 #. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
-#: mesa_panel/gaming_page.py:220
+#: mesa_panel/gaming_page.py:232
 msgid "Direct3D 8/9 games"
 msgstr "Jogos Direct3D 8/9"
 
-#: mesa_panel/gaming_page.py:226
+#: mesa_panel/gaming_page.py:238
 msgid "Forced multisampling works in OpenGL games and, with WineD3D selected, in Direct3D 8/9 games that draw straight to the screen (mostly older titles). DXVK cannot force it. Games with post-processing or deferred rendering ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 games running through DXVK. Transparency AA smooths alpha-tested foliage and fences while multisampling is active; in shader-based games, including WineD3D, both modes supersample just those surfaces."
 msgstr "A multiamostragem forçada funciona em jogos OpenGL e, com o WineD3D selecionado, em jogos Direct3D 8/9 que desenham direto na tela (principalmente títulos mais antigos). O DXVK não consegue forçá-la. Jogos com pós-processamento ou renderização diferida a ignoram; use as opções de AA do próprio jogo. Desligado também desativa o MSAA em jogos Direct3D 11 executados pelo DXVK. A suavização de transparência suaviza folhagens e cercas com teste alfa enquanto a multiamostragem estiver ativa; em jogos baseados em shaders, incluindo o WineD3D, os dois modos aplicam superamostragem só nessas superfícies."
 
-#: mesa_panel/gaming_page.py:236
+#: mesa_panel/gaming_page.py:248
 msgid "Texture Filtering"
 msgstr "Filtragem de texturas"
 
-#: mesa_panel/gaming_page.py:237
+#: mesa_panel/gaming_page.py:249
 msgid "Anisotropic filtering"
 msgstr "Filtragem anisotrópica"
 
-#: mesa_panel/gaming_page.py:238
+#: mesa_panel/gaming_page.py:250
 msgid "Works in OpenGL, Vulkan and Proton (DXVK / VKD3D-Proton) games."
 msgstr "Funciona em jogos OpenGL, Vulkan e Proton (DXVK / VKD3D-Proton)."
 
-#: mesa_panel/gaming_page.py:242
+#: mesa_panel/gaming_page.py:254
 msgid "Frame Rate"
 msgstr "Taxa de quadros"
 
-#: mesa_panel/gaming_page.py:243
+#: mesa_panel/gaming_page.py:255
 msgid "Vertical sync"
 msgstr "Sincronização vertical"
 
-#: mesa_panel/gaming_page.py:249
+#: mesa_panel/gaming_page.py:261
 msgid "Limit frame rate to"
 msgstr "Limitar a taxa de quadros a"
 
 #. TRANSLATORS: frames per second, shown after the frame limit number
-#: mesa_panel/gaming_page.py:256
+#: mesa_panel/gaming_page.py:268
 msgid "FPS"
 msgstr "FPS"
 
-#: mesa_panel/gaming_page.py:257
+#: mesa_panel/gaming_page.py:269
 msgid "Frame limiter"
 msgstr "Limitador de quadros"
 
-#: mesa_panel/gaming_page.py:273
+#. TRANSLATORS: AMD's name for variable refresh rate; keep it if your language uses it
+#: mesa_panel/gaming_page.py:274
+msgid "FreeSync"
+msgstr "FreeSync"
+
+#: mesa_panel/gaming_page.py:286
+msgid "Post-Processing"
+msgstr "Pós-processamento"
+
+#: mesa_panel/gaming_page.py:288
+msgid "Edge smoothing"
+msgstr "Suavização de bordas"
+
+#: mesa_panel/gaming_page.py:294
+msgid "Sharpening"
+msgstr "Nitidez"
+
+#: mesa_panel/gaming_page.py:301
+msgid "Applied by vkBasalt after the game draws each frame, so it works where forced multisampling can't: Vulkan games and Windows games through DXVK or VKD3D-Proton. Not OpenGL. Press Home in the game to compare with it off."
+msgstr "Aplicado pelo vkBasalt depois que o jogo desenha cada quadro, então funciona onde o multisampling forçado não funciona: jogos Vulkan e jogos de Windows via DXVK ou VKD3D-Proton. Não funciona em OpenGL. Aperte Home no jogo para comparar com o efeito desligado."
+
+#: mesa_panel/gaming_page.py:305
+msgid "Needs vkBasalt, which isn't installed. It smooths edges and sharpens the image in Vulkan games and Windows games through DXVK or VKD3D-Proton."
+msgstr "Requer o vkBasalt, que não está instalado. Ele suaviza bordas e aumenta a nitidez em jogos Vulkan e jogos de Windows via DXVK ou VKD3D-Proton."
+
+#: mesa_panel/gaming_page.py:322
 msgid "Settings apply to games started through the panel's launcher. For Steam games, use these launch options:"
 msgstr "As configurações valem para jogos iniciados pelo lançador do painel. Para jogos da Steam, use estas opções de inicialização:"
 
-#: mesa_panel/gaming_page.py:278
+#: mesa_panel/gaming_page.py:327
 msgid "Copy launch options"
 msgstr "Copiar opções de inicialização"
 
 #. TRANSLATORS: {program} is glxgears or vkcube
-#: mesa_panel/gaming_page.py:287
+#: mesa_panel/gaming_page.py:336
 #, python-brace-format
 msgid "Test with {program}"
 msgstr "Testar com {program}"
 
-#: mesa_panel/gaming_page.py:305
+#: mesa_panel/gaming_page.py:354
 msgid "Global settings (all games)"
 msgstr "Configurações globais (todos os jogos)"
 
-#: mesa_panel/gaming_page.py:373
+#: mesa_panel/gaming_page.py:406
+msgid "Variable refresh is turned off for these games."
+msgstr "A taxa de atualização variável está desligada para esses jogos."
+
+#: mesa_panel/gaming_page.py:408
+msgid "Works in fullscreen OpenGL, Vulkan and Proton games on a FreeSync display, while the frame rate is inside the display's FreeSync range. With a frame limit, set it a few FPS below the display's maximum refresh rate."
+msgstr "Funciona em jogos OpenGL, Vulkan e Proton em tela cheia num monitor FreeSync, enquanto a taxa de quadros estiver dentro da faixa FreeSync do monitor. Ao limitar os quadros, use alguns FPS abaixo da taxa de atualização máxima do monitor."
+
+#: mesa_panel/gaming_page.py:412
+msgid "X has it disabled: add Option \"VariableRefresh\" \"true\" to the Device section of your xorg.conf and restart X."
+msgstr "O X está com ela desativada: adicione Option \"VariableRefresh\" \"true\" à seção Device do seu xorg.conf e reinicie o X."
+
+#: mesa_panel/gaming_page.py:442
 msgid "Saved"
 msgstr "Salvo"
 
-#: mesa_panel/gaming_page.py:375
+#: mesa_panel/gaming_page.py:444
 #, python-brace-format
 msgid "Could not save profiles: {error}"
 msgstr "Não foi possível salvar os perfis: {error}"
 
-#: mesa_panel/gaming_page.py:381
+#: mesa_panel/gaming_page.py:450
 msgid "No Steam games found"
 msgstr "Nenhum jogo da Steam encontrado"
 
-#: mesa_panel/gaming_page.py:382
+#: mesa_panel/gaming_page.py:451
 msgid "No installed Steam games were found in the usual Steam folders. You can still add a game with “Program or script…” and type steam:APPID into “Applies to”."
 msgstr "Nenhum jogo da Steam instalado foi encontrado nas pastas habituais da Steam. Você ainda pode adicionar um jogo com “Programa ou script…” e digitar steam:APPID em “Aplica-se a”."
 
-#: mesa_panel/gaming_page.py:395
+#: mesa_panel/gaming_page.py:464
 msgid "Choose the game's executable"
 msgstr "Escolha o executável do jogo"
 
-#: mesa_panel/gaming_page.py:413
+#: mesa_panel/gaming_page.py:482
 #, python-brace-format
 msgid "Delete the profile “{name}”?"
 msgstr "Excluir o perfil “{name}”?"
 
-#: mesa_panel/gaming_page.py:427
+#: mesa_panel/gaming_page.py:496
+msgid "Could not write the vkBasalt configuration"
+msgstr "Não foi possível gravar a configuração do vkBasalt"
+
+#: mesa_panel/gaming_page.py:501
 msgid "Could not start the program"
 msgstr "Não foi possível iniciar o programa"
 
-#: mesa_panel/gaming_page.py:436
+#: mesa_panel/gaming_page.py:510
 msgid "The command is not valid"
 msgstr "O comando não é válido"
 
-#: mesa_panel/gaming_page.py:447
+#: mesa_panel/gaming_page.py:521
 msgid "Launch options copied"
 msgstr "Opções de inicialização copiadas"
 
@@ -569,11 +634,11 @@ msgstr "Opções de inicialização copiadas"
 msgid "{output} (kernel)"
 msgstr "{output} (kernel)"
 
-#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:234
+#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:240
 msgid "Connection"
 msgstr "Conexão"
 
-#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:206
+#: mesa_panel/monitor_info.py:85 mesa_panel/monitor_info.py:212
 msgid "Output"
 msgstr "Saída"
 
@@ -728,129 +793,137 @@ msgstr "(FreeSync até {high} Hz)"
 msgid "Variable refresh rate"
 msgstr "Taxa de atualização variável"
 
-#: mesa_panel/monitor_info.py:175
+#: mesa_panel/monitor_info.py:177
+msgid "Variable refresh in X"
+msgstr "Taxa de atualização variável no X"
+
+#: mesa_panel/monitor_info.py:179
+msgid "Disabled (add Option \"VariableRefresh\" \"true\" to the Device section)"
+msgstr "Desativada (adicione Option \"VariableRefresh\" \"true\" à seção Device)"
+
+#: mesa_panel/monitor_info.py:181
 msgid "Max pixel clock"
 msgstr "Clock de pixel máximo"
 
-#: mesa_panel/monitor_info.py:176
+#: mesa_panel/monitor_info.py:182
 msgid "Refresh & Sync"
 msgstr "Atualização e sincronização"
 
-#: mesa_panel/monitor_info.py:185
+#: mesa_panel/monitor_info.py:191
 msgid "Not supported"
 msgstr "Não suportado"
 
-#: mesa_panel/monitor_info.py:187
+#: mesa_panel/monitor_info.py:193
 #, python-brace-format
 msgid "{nits} cd/m² peak"
 msgstr "{nits} cd/m² de pico"
 
-#: mesa_panel/monitor_info.py:189
+#: mesa_panel/monitor_info.py:195
 #, python-brace-format
 msgid "{nits} full-frame"
 msgstr "{nits} em tela cheia"
 
-#: mesa_panel/monitor_info.py:191
+#: mesa_panel/monitor_info.py:197
 #, python-brace-format
 msgid "{nits} minimum"
 msgstr "{nits} mínimo"
 
-#: mesa_panel/monitor_info.py:192
+#: mesa_panel/monitor_info.py:198
 msgid "Brightness (HDR metadata)"
 msgstr "Brilho (metadados HDR)"
 
-#: mesa_panel/monitor_info.py:195
+#: mesa_panel/monitor_info.py:201
 msgid "Gamut (EDID primaries)"
 msgstr "Gamut (primárias do EDID)"
 
-#: mesa_panel/monitor_info.py:198
+#: mesa_panel/monitor_info.py:204
 msgid "White point"
 msgstr "Ponto branco"
 
-#: mesa_panel/monitor_info.py:200
+#: mesa_panel/monitor_info.py:206
 msgid "Wide color signaling"
 msgstr "Sinalização de cores amplas"
 
-#: mesa_panel/monitor_info.py:202
+#: mesa_panel/monitor_info.py:208
 msgid "Driver colorspace"
 msgstr "Espaço de cor do driver"
 
-#: mesa_panel/monitor_info.py:203
+#: mesa_panel/monitor_info.py:209
 msgid "Color & HDR"
 msgstr "Cor e HDR"
 
-#: mesa_panel/monitor_info.py:208
+#: mesa_panel/monitor_info.py:214
 msgid "Current mode"
 msgstr "Modo atual"
 
-#: mesa_panel/monitor_info.py:210
+#: mesa_panel/monitor_info.py:216
 msgid "Input type"
 msgstr "Tipo de entrada"
 
-#: mesa_panel/monitor_info.py:211
+#: mesa_panel/monitor_info.py:217
 msgid "Digital"
 msgstr "Digital"
 
-#: mesa_panel/monitor_info.py:211
+#: mesa_panel/monitor_info.py:217
 msgid "Analog (VGA)"
 msgstr "Analógica (VGA)"
 
-#: mesa_panel/monitor_info.py:214
+#: mesa_panel/monitor_info.py:220
 msgid "HDMI 2.1 capable"
 msgstr "Compatível com HDMI 2.1"
 
-#: mesa_panel/monitor_info.py:216
+#: mesa_panel/monitor_info.py:222
 msgid "HDMI 2.0 capable"
 msgstr "Compatível com HDMI 2.0"
 
-#: mesa_panel/monitor_info.py:219
+#: mesa_panel/monitor_info.py:225
 msgid "HDMI support"
 msgstr "Suporte a HDMI"
 
-#: mesa_panel/monitor_info.py:221
+#: mesa_panel/monitor_info.py:227
 msgid "Max TMDS clock"
 msgstr "Clock TMDS máximo"
 
-#: mesa_panel/monitor_info.py:224
+#: mesa_panel/monitor_info.py:230
 msgid "HDMI FRL bandwidth"
 msgstr "Largura de banda HDMI FRL"
 
-#: mesa_panel/monitor_info.py:225
+#: mesa_panel/monitor_info.py:231
 #, python-brace-format
 msgid "{rate} Gbps × {lanes} lane ({total} Gbps)"
 msgid_plural "{rate} Gbps × {lanes} lanes ({total} Gbps)"
 msgstr[0] "{rate} Gbps × {lanes} faixa ({total} Gbps)"
 msgstr[1] "{rate} Gbps × {lanes} faixas ({total} Gbps)"
 
-#: mesa_panel/monitor_info.py:228
+#: mesa_panel/monitor_info.py:234
 msgid "Audio"
 msgstr "Áudio"
 
-#: mesa_panel/monitor_info.py:228
+#: mesa_panel/monitor_info.py:234
 msgid "Yes"
 msgstr "Sim"
 
-#: mesa_panel/monitor_info.py:228
+#: mesa_panel/monitor_info.py:234
 msgid "No"
 msgstr "Não"
 
-#: mesa_panel/monitor_info.py:230
+#: mesa_panel/monitor_info.py:236
 msgid "RGB only"
 msgstr "Somente RGB"
 
-#: mesa_panel/monitor_info.py:232
+#: mesa_panel/monitor_info.py:238
 msgid "standby"
 msgstr "espera"
 
-#: mesa_panel/monitor_info.py:232
+#: mesa_panel/monitor_info.py:238
 msgid "suspend"
 msgstr "suspensão"
 
-#: mesa_panel/monitor_info.py:232
+#: mesa_panel/monitor_info.py:238
 msgid "off"
 msgstr "desligado"
 
-#: mesa_panel/monitor_info.py:233
+#: mesa_panel/monitor_info.py:239
 msgid "Power saving"
 msgstr "Economia de energia"
 

@@ -7,7 +7,7 @@ Sources, merged by identical EDID:
 import os
 from dataclasses import dataclass, field
 
-from . import edid, i18n, xrandr
+from . import edid, i18n, vrr, xrandr
 
 TIMES = " × "  # 2560 × 1440
 
@@ -159,10 +159,10 @@ def describe(rec, tr=None):
         sync.append((_("Supported refresh range"), f"{i.vrange[0]}–{i.vrange[1]} Hz"))
     if i.hrange:
         sync.append((_("Horizontal scan range"), f"{i.hrange[0]}–{i.hrange[1]} kHz"))
-    vrr = p.get("vrr_capable")
-    if vrr == "1" or (vrr is None and i.freesync):
+    vrr_cap = p.get("vrr_capable")
+    if vrr_cap == "1" or (vrr_cap is None and i.freesync):
         vrr_text = _("Supported")
-    elif vrr == "0":
+    elif vrr_cap == "0":
         vrr_text = _("Not available on this connection")
     else:
         vrr_text = not_reported
@@ -171,6 +171,12 @@ def describe(rec, tr=None):
         vrr_text += " " + (_("(FreeSync {low}–{high} Hz)").format(low=lo, high=hi) if lo else
                            _("(FreeSync up to {high} Hz)").format(high=hi))
     sync.append((_("Variable refresh rate"), vrr_text))
+    if vrr_cap == "1":
+        x_on = vrr.x_vrr_enabled()
+        if x_on is not None:
+            sync.append((_("Variable refresh in X"),
+                         _("Enabled") if x_on else
+                         _("Disabled (add Option \"VariableRefresh\" \"true\" to the Device section)")))
     if i.max_pixel_clock_mhz:
         sync.append((_("Max pixel clock"), f"{i.max_pixel_clock_mhz} MHz"))
     sections.append((_("Refresh & Sync"), sync))
