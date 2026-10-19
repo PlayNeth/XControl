@@ -148,8 +148,15 @@ class AppearancePage(Gtk.Box):
         # ---- Qt
         self.qt_tools, qt_env = T.qt_tools()
         self.qt_check = Gtk.CheckButton(label=_("Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"))
-        self.qt_check.set_active(bool(self.qt_tools))
-        if self.qt_tools:
+        follows_gtk = qt_env.startswith(("gtk", "xdgdesktopportal"))
+        self.qt_check.set_active(bool(self.qt_tools) and not follows_gtk)
+        if follows_gtk:
+            frame, g = _section(_("Qt applications"))
+            self._rows(g, [("", _hint(_("Qt apps take their colors, icons and font from the GTK settings above, "
+                                        "because QT_QPA_PLATFORMTHEME={value}. Nothing else is needed.")
+                                      .format(value=qt_env)))])
+            self.pack_start(frame, False, False, 0)
+        elif self.qt_tools:
             frame, g = _section(_("Qt applications"))
             note = (_("Qt apps follow this because QT_QPA_PLATFORMTHEME={value}.").format(value=qt_env)
                     if qt_env.startswith(("qt5ct", "qt6ct")) else

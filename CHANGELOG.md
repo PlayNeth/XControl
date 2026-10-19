@@ -2,6 +2,13 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.10.1 (2026-10-19)
+
+**Recognise Qt apps that already follow the GTK theme**
+
+- Show that Qt apps already take colors, icons and font from the GTK settings when
+  QT_QPA_PLATFORMTHEME is gtk or xdgdesktopportal, and stop offering to set qt5ct/qt6ct then
+
 ## 0.10.0 (2026-10-19)
 
 **Add an Appearance page for themes, icons, cursor and fonts**
