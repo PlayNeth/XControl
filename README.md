@@ -328,6 +328,15 @@ hwdata.
 has **Copy in English** for bug reports). `xcontrol --sysinfo` prints the same text in a
 terminal (`--sysinfo --english` for English).
 
+### Kernel modules
+
+The **Kernel modules** tab shows the kernel command line and every module that's loaded.
+Search by module, device or parameter name; select one to see what it is (from `modinfo`), the
+devices it drives, the modules that need it, each parameter with its current value and
+description, and the `options`/`blacklist` lines about it in `/etc/modprobe.d` and
+`/usr/lib/modprobe.d`. **Include parts built into the kernel** adds the built-in parts that
+have parameters. Everything is read-only; a few parameters can only be read by root.
+
 ## Display details
 
 **Details** on the Displays page opens what the selected display reports in its EDID,

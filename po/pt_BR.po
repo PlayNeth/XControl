@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 13:38-0300\n"
+"POT-Creation-Date: 2026-10-19 13:46-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -33,15 +33,15 @@ msgstr "Entrada"
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:63 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:61 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:99
+#: xcontrol/app.py:97
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:100 xcontrol/appearance_page.py:352
+#: xcontrol/app.py:98 xcontrol/appearance_page.py:352
 #: xcontrol/edid_override_dialog.py:27 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr "Fechar"
@@ -254,7 +254,7 @@ msgstr "Cursor"
 msgid "{px} px"
 msgstr "{px} px"
 
-#: xcontrol/appearance_page.py:126
+#: xcontrol/appearance_page.py:126 xcontrol/system_page.py:200
 msgid "Size"
 msgstr "Tamanho"
 
@@ -1494,7 +1494,7 @@ msgid "Device:"
 msgstr "Dispositivo:"
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:22
+#: xcontrol/monitors_page.py:22 xcontrol/system_page.py:189
 msgid "Refresh"
 msgstr "Atualizar"
 
@@ -1935,6 +1935,22 @@ msgstr "Mouse gamer"
 msgid "This section could not be loaded: {error}"
 msgstr "Não foi possível carregar esta seção: {error}"
 
+#: xcontrol/kmods.py:242
+msgid "Devices"
+msgstr "Dispositivos"
+
+#: xcontrol/kmods.py:244 xcontrol/system_page.py:328
+msgid "Parameters"
+msgstr "Parâmetros"
+
+#: xcontrol/kmods.py:247 xcontrol/system_page.py:336
+msgid "(only readable by root)"
+msgstr "(só o root pode ler)"
+
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:356
+msgid "Set in modprobe.d"
+msgstr "Definido no modprobe.d"
+
 #. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1
 #. (kernel)"
 #: xcontrol/monitor_info.py:82
@@ -2245,11 +2261,11 @@ msgstr "Nenhuma tela conectada com informações legíveis foi encontrada."
 msgid "Copy details"
 msgstr "Copiar detalhes"
 
-#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:51
+#: xcontrol/monitors_page.py:72 xcontrol/system_page.py:65
 msgid "More copy options"
 msgstr "Mais opções de cópia"
 
-#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:53
+#: xcontrol/monitors_page.py:74 xcontrol/system_page.py:67
 msgid "Copy in English (for bug reports)"
 msgstr "Copiar em inglês (para relatórios de bugs)"
 
@@ -2749,17 +2765,103 @@ msgstr "Servidor de som"
 msgid "Sensors"
 msgstr "Sensores"
 
-#: xcontrol/system_page.py:46
+#: xcontrol/system_page.py:23
+msgid "Overview"
+msgstr "Visão geral"
+
+#: xcontrol/system_page.py:24
+msgid "Kernel modules"
+msgstr "Módulos do kernel"
+
+#: xcontrol/system_page.py:60 xcontrol/system_page.py:302
 msgid "Copy"
 msgstr "Copiar"
 
-#: xcontrol/system_page.py:47
+#: xcontrol/system_page.py:61
 msgid "Copy this information (without your computer and user names)"
 msgstr "Copiar estas informações (sem o nome do computador e do usuário)"
 
-#: xcontrol/system_page.py:141
+#: xcontrol/system_page.py:155
 msgid "System information copied"
 msgstr "Informações do sistema copiadas"
+
+#: xcontrol/system_page.py:182
+msgid "Search modules, devices or parameters"
+msgstr "Buscar módulos, dispositivos ou parâmetros"
+
+#: xcontrol/system_page.py:185
+msgid "Include parts built into the kernel"
+msgstr "Incluir partes embutidas no kernel"
+
+#: xcontrol/system_page.py:186
+msgid "Parts of the kernel that can't be unloaded but still have parameters"
+msgstr ""
+"Partes do kernel que não podem ser descarregadas, mas ainda têm parâmetros"
+
+#: xcontrol/system_page.py:200
+msgid "Module"
+msgstr "Módulo"
+
+#: xcontrol/system_page.py:201 xcontrol/system_page.py:315
+msgid "Used by"
+msgstr "Usado por"
+
+#: xcontrol/system_page.py:238
+msgid "built into the kernel"
+msgstr "embutido no kernel"
+
+#: xcontrol/system_page.py:246
+#, python-brace-format
+msgid "{n} modules loaded"
+msgstr "{n} módulos carregados"
+
+#: xcontrol/system_page.py:247
+msgid "No loadable modules are in use (the kernel was started without them)."
+msgstr "Nenhum módulo carregável em uso (o kernel foi iniciado sem eles)."
+
+#: xcontrol/system_page.py:289
+msgid "Select a module to see what it drives and its parameters."
+msgstr "Selecione um módulo para ver o que ele controla e seus parâmetros."
+
+#: xcontrol/system_page.py:309
+msgid "File"
+msgstr "Arquivo"
+
+#: xcontrol/system_page.py:311
+msgid "Version"
+msgstr "Versão"
+
+#: xcontrol/system_page.py:313
+msgid "License"
+msgstr "Licença"
+
+#: xcontrol/system_page.py:317
+msgid "Needs"
+msgstr "Depende de"
+
+#: xcontrol/system_page.py:319
+msgid "Firmware files"
+msgstr "Arquivos de firmware"
+
+#: xcontrol/system_page.py:324
+msgid "Devices it drives"
+msgstr "Dispositivos que controla"
+
+#: xcontrol/system_page.py:354
+msgid "This module has no parameters."
+msgstr "Este módulo não tem parâmetros."
+
+#: xcontrol/system_page.py:365
+msgid ""
+"Nothing; the module runs with its defaults and anything on the kernel "
+"command line."
+msgstr ""
+"Nada; o módulo usa os valores padrão e o que estiver na linha de comando do "
+"kernel."
+
+#: xcontrol/system_page.py:393
+msgid "Module details copied"
+msgstr "Detalhes do módulo copiados"
 
 #. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0
 #. (off)"

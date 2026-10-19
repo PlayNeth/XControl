@@ -90,6 +90,7 @@ check:
 	$(PYTHON) tests/check_ratbag.py
 	$(PYTHON) tests/check_theming.py
 	$(PYTHON) tests/check_sysinfo.py
+	$(PYTHON) tests/check_kmods.py
 	sh -n data/xcontrol-edid-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 

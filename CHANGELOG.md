@@ -2,6 +2,24 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.12.0 (2026-10-19)
+
+**Add a Kernel modules tab to the System page**
+
+- Split the System page into Overview and Kernel modules tabs
+- Show the kernel command line and every loaded module with its size and the modules
+  that use it, sortable by column
+- Search modules by name, the devices they drive or their parameter names
+- Select a module to see its description, file, version, license, dependencies,
+  firmware count and the devices it drives (from modinfo)
+- List each module parameter with its current value, type and description, marking
+  those only root can read
+- Show the options and blacklist lines for the module in /etc/modprobe.d and
+  /usr/lib/modprobe.d
+- Add "Include parts built into the kernel" to list built-in parts that have parameters
+- Add a Copy button for a module's details
+- Add tests for the kernel module code
+
 ## 0.11.2 (2026-10-19)
 
 **Fix the dark preference being ignored by GTK 4.20 and later**

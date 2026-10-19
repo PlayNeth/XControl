@@ -58,9 +58,7 @@ class MainWindow(Gtk.ApplicationWindow):
         appearance.add(AppearancePage(self))
         stack.add_titled(appearance, "appearance", _("Appearance"))
 
-        system = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
-        system.add(SystemPage(self))
-        stack.add_titled(system, "system", _("System"))
+        stack.add_titled(SystemPage(self), "system", _("System"))  # scrolls inside its tabs
 
         self.stack = stack
         widgets.protect(stack)  # the wheel scrolls pages instead of changing settings under the pointer
