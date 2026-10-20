@@ -26,6 +26,7 @@ XLibre X Server 25.0.0.14
 X Protocol Version 11, Revision 0
 [    22.541] Current Operating System: Linux arch 6.17.2-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64
 [    22.555] (==) Using config directory: "/etc/X11/xorg.conf.d"
+[    22.555] (**) Option "Debug" "dmabuf_capable"
 [    22.556] (II) LoadModule: "glx"
 [    22.557] (II) Loading /usr/lib/xorg/modules/extensions/libglx.so
 [    22.560] (II) Module glx: vendor="X.Org Foundation"
@@ -45,7 +46,6 @@ X Protocol Version 11, Revision 0
 [    22.563] (II) modeset(0): using drv /dev/dri/card1
 [    22.563] (II) UnloadModule: "fbdev"
 [    22.563] (II) Unloading fbdev
-[    22.564] (**) Option "Debug" "dmabuf_capable"
 [    22.570] (**) modeset(0): Option "TearFree" "true"
 [    22.570] (**) modeset(0): Option "Atomic" "true"
 [    22.570] (==) modeset(0): RGB weight 888
@@ -78,6 +78,26 @@ expect("options and where from", (info.used[("modesetting", "tearfree")], info.u
 expect("ignored", info.unused, [("modesetting", "Atomc")])
 expect("an input device's option isn't a server option", ("server", "accelprofile") in info.used, False)
 expect("X.Org's banner", X.parse_log("X.Org X Server 1.21.1.18\n").server, "X.Org")
+
+# XLibre stamps its lines with the date and time; a mouse's options aren't the server's
+XLIBRE = """[2026-10-20 20:48:19] \nXLibre X Server 1.25.1.9
+[2026-10-20 20:48:19] (**) Option "Debug" "dmabuf_capable"
+[2026-10-20 20:48:19] (II) LoadModule: "modesetting"
+[2026-10-20 20:48:19] (II) Loading /usr/lib/xorg/modules/xlibre-25/drivers/modesetting_drv.so
+[2026-10-20 20:48:19] (II) Module modesetting: vendor="X.Org Foundation"
+[2026-10-20 20:48:19] \tcompiled for 1.25.1.9, module version = 1.25.1
+[2026-10-20 20:48:19] \tABI class: X.Org Video Driver, version 28.1
+[2026-10-20 20:48:19] (II) modeset(0): using drv /dev/dri/card1
+[2026-10-20 20:48:19] (**) modeset(0): Option "Atomic" "true"
+[2026-10-20 20:48:20] (**) Option "AccelProfile" "flat"
+[2026-10-20 20:48:20] (**) Option "xkb_layout" "br"
+"""
+xi = X.parse_log(XLIBRE.replace("\\t", "\t").replace("\\n", "\n"))
+expect("XLibre's log", (xi.server, xi.version, [(m.name, m.version, m.screens) for m in xi.modules]),
+       ("XLibre", "1.25.1.9", [("modesetting", "1.25.1", ["0"])]))
+expect("its options", (xi.used.get(("modesetting", "atomic")), xi.used.get(("server", "debug")),
+                       ("server", "accelprofile") in xi.used, ("server", "xkb_layout") in xi.used),
+       (("true", "config"), ("dmabuf_capable", "config"), False, False))
 
 # the manuals (XLibre's, gzipped as installed)
 man = tempfile.mkdtemp()

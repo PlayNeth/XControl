@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.27.1 (2026-10-20)
+
+**Fix reading XLibre's log on the X server tab**
+
+- Fix the X server tab not understanding XLibre's log, whose lines are stamped with the date
+  and time instead of seconds since start
+- Stop listing input devices' options (mouse acceleration, keyboard layout) as server options
+- Fix the server's own entry at the top of the tab's module list
+- Add a test with an XLibre log
+
 ## 0.27.0 (2026-10-20)
 
 **Add an X server tab with the loaded modules and their options**

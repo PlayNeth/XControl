@@ -65,7 +65,8 @@ class LogInfo:
     path: str = ""
 
 
-_STAMP = re.compile(r"^\[\s*[\d.]+\]\s?")
+# "[    22.541] " (X.Org: seconds since it started) or "[2026-10-20 20:48:19] " (XLibre: the time)
+_STAMP = re.compile(r"^\[[\d .:-]+\]\s?")
 _SCOPED = re.compile(r"^\((\*\*|==|--|II|WW|EE|NI|\?\?)\) (\w+)\((G?\d+)\): (.*)$")
 _OPTION = re.compile(r'^Option "([^"]+)"(?: "([^"]*)")?')
 
@@ -85,6 +86,7 @@ def parse_log(text):
     info = LogInfo()
     mods = {}
     current = loading = None
+    modules_started = False      # (unnamed Options after this are input devices', not the server's)
     for raw in text.splitlines():
         line = _STAMP.sub("", raw).rstrip()
         m = re.search(r"\b(X\.Org|XLibre) X Server ([\d.]+)", line)
@@ -93,6 +95,7 @@ def parse_log(text):
             continue
         m = re.match(r'^\(II\) LoadModule: "([^"]+)"', line)
         if m:
+            modules_started = True
             loading = m.group(1)
             mods.setdefault(loading, Module(loading))
             mods[loading].unloaded = False
@@ -139,7 +142,7 @@ def parse_log(text):
                 info.cards.setdefault(drv, set()).add(c.group(1))
             continue
         o = re.match(r'^\((\*\*|==)\) Option "([^"]+)"(?: "([^"]*)")?$', line)
-        if o:      # (server-wide: ServerFlags, or the command line)
+        if o and not modules_started:      # (server-wide: ServerFlags, or the command line)
             src = "config" if o.group(1) == "**" else "default"
             info.used[("server", o.group(2).lower())] = (o.group(3) or "", src)
     for mod in mods.values():

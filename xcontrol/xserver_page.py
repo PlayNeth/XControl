@@ -8,7 +8,7 @@ from gi.repository import GLib, Gtk, Pango  # noqa: E402
 from . import xserver as X  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
-SERVER = "\x00server"       # the list's first row: the server itself
+SERVER = "#server"       # the list's first row: the server itself (no module has a # in its name)
 KINDS = {"video": N_("Video driver"), "input": N_("Input driver"), "extension": N_("Extension"),
          "other": N_("Module")}
 
