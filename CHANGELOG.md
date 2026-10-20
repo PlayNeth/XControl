@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.22.1 (2026-10-20)
+
+**Fix the Power and Date & Language pages without a system bus**
+
+- Fix the Power page failing when there's no system D-Bus (the power profile
+  is just left out)
+- Show an error instead of failing when changing the time zone, time or
+  language without a system D-Bus
+- Let translators translate the Power page's name separately from other uses
+  of the word "Power"
+
 ## 0.22.0 (2026-10-20)
 
 **Add a Power page, a session check and settings backups**

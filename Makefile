@@ -38,7 +38,7 @@ $(BUILDDIR)/xcontrol.desktop: data/xcontrol.desktop.in po/LINGUAS $(wildcard po/
 
 # Regenerate the template after changing user-visible strings.
 pot:
-	xgettext --from-code=UTF-8 -L Python -k_ -kN_ -kngettext:1,2 --add-comments=TRANSLATORS \
+	xgettext --from-code=UTF-8 -L Python -k_ -kN_ -kC_:1c,2 -kngettext:1,2 --add-comments=TRANSLATORS \
 		--package-name=xcontrol --msgid-bugs-address=https://github.com/yourname/xcontrol/issues \
 		-o po/xcontrol.pot $(sort $(PYFILES))
 	xgettext -L Desktop -j -o po/xcontrol.pot data/xcontrol.desktop.in

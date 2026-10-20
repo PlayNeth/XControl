@@ -38,8 +38,13 @@ def call(name, path, iface, method, signature, args, done):
             done(None)
         except GLib.Error as e:
             done(_error_text(e))
-    _bus().call(name, path, iface, method, GLib.Variant(signature, args), None,
-                Gio.DBusCallFlags.ALLOW_INTERACTIVE_AUTHORIZATION, 120000, None, finish)
+    try:
+        bus = _bus()
+    except GLib.Error as e:   # no system bus
+        done(_error_text(e))
+        return
+    bus.call(name, path, iface, method, GLib.Variant(signature, args), None,
+             Gio.DBusCallFlags.ALLOW_INTERACTIVE_AUTHORIZATION, 120000, None, finish)
 
 
 def _error_text(e):

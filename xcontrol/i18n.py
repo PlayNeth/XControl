@@ -27,6 +27,9 @@ class Translator:
     def gettext(self, msg):
         return self.t.gettext(msg)
 
+    def pgettext(self, context, msg):
+        return self.t.pgettext(context, msg)
+
     def ngettext(self, singular, plural, n):
         return self.t.ngettext(singular, plural, n)
 
@@ -49,6 +52,7 @@ ENGLISH = Translator(gettext.NullTranslations(), False)
 
 _ = CURRENT.gettext
 ngettext = CURRENT.ngettext
+C_ = CURRENT.pgettext   # C_("page", "Power"): the same English word, translated differently by context
 num = CURRENT.num
 hz = CURRENT.hz
 

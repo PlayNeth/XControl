@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gio, GLib, Gtk  # noqa: E402
 
 from . import __version__, widgets, wm  # noqa: E402
-from .i18n import _  # noqa: E402
+from .i18n import C_, _  # noqa: E402
 from .appearance_page import AppearancePage  # noqa: E402
 from .desktop_page import DesktopPage  # noqa: E402
 from .display_page import DisplayPage  # noqa: E402
@@ -89,7 +89,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         power = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         power.add(PowerPage(self))
-        stack.add_titled(power, "power", _("Power"))
+        stack.add_titled(power, "power", C_("page", "Power"))
 
         users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         users.add(UsersPage(self))

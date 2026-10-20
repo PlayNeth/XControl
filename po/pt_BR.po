@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 01:58-0300\n"
+"POT-Creation-Date: 2026-10-20 02:10-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -61,9 +61,10 @@ msgstr "Gerenciador de janelas (i3)"
 msgid "Date & Language"
 msgstr "Data e idioma"
 
-#: xcontrol/app.py:92 xcontrol/sysinfo.py:846
+#: xcontrol/app.py:92
+msgctxt "page"
 msgid "Power"
-msgstr "Consumo"
+msgstr "Opções de energia"
 
 #: xcontrol/app.py:96
 msgid "Users"
@@ -6100,6 +6101,10 @@ msgstr "Memória de vídeo"
 #, python-brace-format
 msgid "memory {clock}"
 msgstr "memória {clock}"
+
+#: xcontrol/sysinfo.py:846
+msgid "Power"
+msgstr "Consumo"
 
 #: xcontrol/sysinfo.py:848
 msgid "Fan"

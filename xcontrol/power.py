@@ -110,7 +110,10 @@ PPD = [("org.freedesktop.UPower.PowerProfiles", "/org/freedesktop/UPower/PowerPr
 
 
 def _ppd():
-    bus = _sys()
+    try:
+        bus = _sys()
+    except GLib.Error:   # no system bus
+        return None, {}
     for name, path, iface in PPD:
         try:
             props = bus.call_sync(name, path, "org.freedesktop.DBus.Properties", "GetAll",
