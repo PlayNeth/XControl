@@ -327,6 +327,18 @@ as they connect.
   any Xbox button, a trigger, a d-pad direction or nothing. L2/R2 stay analog
   while they're mapped to LT/RT.
 - The touchpad can keep moving the mouse pointer, or be hidden too.
+- **Gyro aiming**: turn the controller to aim, either as a separate virtual
+  mouse ("XControl gyro mouse", the most precise) or added to the virtual Xbox
+  pad's right stick (works in every game; set the game's stick deadzone on the
+  page so small turns get past it). It can be always on, on while a button is
+  held (L2 by default), toggled by a button, or off while a button is held;
+  touching the touchpad counts as a button too. "Around the way you face"
+  (player space) uses the accelerometer to turn around the real vertical
+  however you hold the controller; plain yaw and roll are there too. Slow
+  movement is smoothed and tiny movement (hand tremor) is tightened away, while
+  quick turns stay raw. The gyro's drift is learned whenever the controller lies
+  still for a moment, or on request with "Calibrate now". Speed is in mouse
+  dots per degree turned, so it pairs with the game's mouse sensitivity.
 
 Permissions come from `/usr/lib/udev/rules.d/70-xcontrol-controllers.rules`:
 `/dev/uinput`, the DualShock 4's hidraw node and its light bar LEDs for the

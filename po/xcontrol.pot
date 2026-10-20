@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.23.2\n"
+"Project-Id-Version: xcontrol 0.23.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 13:46-0300\n"
+"POT-Creation-Date: 2026-10-20 13:54-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -356,7 +356,7 @@ msgid "Revert"
 msgstr ""
 
 #: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
-#: xcontrol/bar_module_dialog.py:114 xcontrol/controllers_page.py:132
+#: xcontrol/bar_module_dialog.py:114 xcontrol/controllers_page.py:141
 #: xcontrol/display_page.py:266 xcontrol/input_page.py:212
 #: xcontrol/power_page.py:114 xcontrol/region_page.py:168
 msgid "Apply"
@@ -613,7 +613,7 @@ msgid ""
 "WirePlumber. Saved in ~/.config/pipewire and ~/.config/wireplumber."
 msgstr ""
 
-#: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:232
+#: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:357
 #: xcontrol/night_page.py:202 xcontrol/notify_page.py:464
 #: xcontrol/panel_page.py:483 xcontrol/power_page.py:97
 msgid "Could not save the settings"
@@ -630,7 +630,7 @@ msgid ""
 "wireplumber"
 msgstr ""
 
-#: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:234
+#: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:359
 #: xcontrol/notify_page.py:466 xcontrol/panel_page.py:485
 #: xcontrol/power_page.py:99
 msgid "Applied"
@@ -1030,34 +1030,84 @@ msgid "Nothing"
 msgstr ""
 
 #: xcontrol/controllers_page.py:24
-msgid "Leave it to the driver (250 Hz)"
+msgid "Touching the touchpad"
 msgstr ""
 
-#: xcontrol/controllers_page.py:24 xcontrol/controllers_page.py:26
-msgid "1 ms (1000 Hz)"
+#. TRANSLATORS: slider position meaning the feature is forced off
+#: xcontrol/controllers_page.py:25 xcontrol/controllers_page.py:119
+#: xcontrol/display_color.py:21 xcontrol/gaming_page.py:18
+#: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
+#: xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21 xcontrol/input_page.py:26
+#: xcontrol/input_page.py:31 xcontrol/input_page.py:42
+#: xcontrol/notify_page.py:36 xcontrol/panel_page.py:33
+msgid "Off"
 msgstr ""
 
-#: xcontrol/controllers_page.py:24 xcontrol/controllers_page.py:26
-msgid "2 ms (500 Hz)"
-msgstr ""
-
-#: xcontrol/controllers_page.py:25 xcontrol/controllers_page.py:27
-msgid "4 ms (250 Hz)"
-msgstr ""
-
-#: xcontrol/controllers_page.py:25 xcontrol/controllers_page.py:27
-msgid "8 ms (125 Hz)"
+#: xcontrol/controllers_page.py:25
+msgid "As a mouse (most precise)"
 msgstr ""
 
 #: xcontrol/controllers_page.py:26
+msgid "As the right stick (works in every game)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:27
+msgid "Always"
+msgstr ""
+
+#: xcontrol/controllers_page.py:27
+msgid "While holding"
+msgstr ""
+
+#: xcontrol/controllers_page.py:27
+msgid "Press to switch on and off"
+msgstr ""
+
+#: xcontrol/controllers_page.py:28
+msgid "Off while holding"
+msgstr ""
+
+#: xcontrol/controllers_page.py:29
+msgid "Around the way you face, however you hold it"
+msgstr ""
+
+#: xcontrol/controllers_page.py:29
+msgid "Turning it flat (yaw)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:30
+msgid "Tilting it sideways (roll)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:31
+msgid "Leave it to the driver (250 Hz)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:31 xcontrol/controllers_page.py:33
+msgid "1 ms (1000 Hz)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:31 xcontrol/controllers_page.py:33
+msgid "2 ms (500 Hz)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:32 xcontrol/controllers_page.py:34
+msgid "4 ms (250 Hz)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:32 xcontrol/controllers_page.py:34
+msgid "8 ms (125 Hz)"
+msgstr ""
+
+#: xcontrol/controllers_page.py:33
 msgid "The controller's own (usually 250 Hz)"
 msgstr ""
 
-#: xcontrol/controllers_page.py:58
+#: xcontrol/controllers_page.py:65
 msgid "Use XControl for controllers"
 msgstr ""
 
-#: xcontrol/controllers_page.py:64
+#: xcontrol/controllers_page.py:71
 msgid ""
 "For DualShock 4 controllers (PS4), over USB or Bluetooth: light bar, report "
 "rate, and an Xbox 360 controller for games, with your own button layout. "
@@ -1065,41 +1115,31 @@ msgid ""
 "DS4Windows-like tools first, or both will drive the controller."
 msgstr ""
 
-#: xcontrol/controllers_page.py:103
+#: xcontrol/controllers_page.py:111
 msgid "Light bar"
 msgstr ""
 
-#: xcontrol/controllers_page.py:107
+#: xcontrol/controllers_page.py:115
 msgid "Color"
 msgstr ""
 
-#. TRANSLATORS: slider position meaning the feature is forced off
-#: xcontrol/controllers_page.py:111 xcontrol/display_color.py:21
-#: xcontrol/gaming_page.py:18 xcontrol/gaming_page.py:39
-#: xcontrol/gaming_page.py:44 xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21
-#: xcontrol/input_page.py:26 xcontrol/input_page.py:31
-#: xcontrol/input_page.py:42 xcontrol/notify_page.py:36
-#: xcontrol/panel_page.py:33
-msgid "Off"
-msgstr ""
-
-#: xcontrol/controllers_page.py:113 xcontrol/input_page.py:1014
+#: xcontrol/controllers_page.py:121 xcontrol/input_page.py:1014
 msgid "Brightness"
 msgstr ""
 
-#: xcontrol/controllers_page.py:114
+#: xcontrol/controllers_page.py:122
 msgid "A dimmer light bar makes a Bluetooth controller's battery last longer."
 msgstr ""
 
-#: xcontrol/controllers_page.py:117
+#: xcontrol/controllers_page.py:125
 msgid "Report rate"
 msgstr ""
 
-#: xcontrol/controllers_page.py:122
+#: xcontrol/controllers_page.py:130
 msgid "Over Bluetooth"
 msgstr ""
 
-#: xcontrol/controllers_page.py:123
+#: xcontrol/controllers_page.py:131
 msgid ""
 "How often the controller sends its state; it applies right away, and the "
 "rate it really reaches shows above. Bluetooth itself usually tops out around "
@@ -1108,149 +1148,259 @@ msgid ""
 "250 Hz whatever the rate."
 msgstr ""
 
-#: xcontrol/controllers_page.py:135
+#: xcontrol/controllers_page.py:144
 msgid "Over USB"
 msgstr ""
 
-#: xcontrol/controllers_page.py:136
+#: xcontrol/controllers_page.py:145
 msgid ""
 "Over USB the rate is set by Linux for every USB gamepad (usbhid's jspoll). "
 "Asks for your password, kept for the next boots; a connected DualShock 4 "
 "reconnects to use it."
 msgstr ""
 
-#: xcontrol/controllers_page.py:141
+#: xcontrol/controllers_page.py:150
 msgid "For games"
 msgstr ""
 
-#: xcontrol/controllers_page.py:143
+#: xcontrol/controllers_page.py:152
 msgid "Show it as an Xbox 360 controller (works in almost every game)"
 msgstr ""
 
-#: xcontrol/controllers_page.py:144
+#: xcontrol/controllers_page.py:153
 msgid "Leave it as a DualShock 4"
 msgstr ""
 
-#: xcontrol/controllers_page.py:146
+#: xcontrol/controllers_page.py:155
 msgid "Games see"
 msgstr ""
 
-#: xcontrol/controllers_page.py:147
+#: xcontrol/controllers_page.py:156
 msgid "Hide the DualShock 4 itself, so games don't see two controllers"
 msgstr ""
 
-#: xcontrol/controllers_page.py:150
+#: xcontrol/controllers_page.py:159
 msgid "The touchpad moves the mouse pointer"
 msgstr ""
 
-#: xcontrol/controllers_page.py:153
+#: xcontrol/controllers_page.py:162
 msgid ""
 "Rumble from games reaches the DualShock 4. Steam reads controllers its own "
 "way: in Steam, turn off PlayStation Configuration Support, or Steam sees the "
 "DualShock 4 as well."
 msgstr ""
 
-#: xcontrol/controllers_page.py:158 xcontrol/input_page.py:930
+#: xcontrol/controllers_page.py:167
+msgid "Gyro aiming"
+msgstr ""
+
+#: xcontrol/controllers_page.py:172
+msgid "Aim with it"
+msgstr ""
+
+#: xcontrol/controllers_page.py:173
+msgid ""
+"Turn the controller to aim. As a mouse is the most precise, and most games "
+"take the mouse and the controller together; as the right stick works in "
+"every game, but the game's own stick deadzone and acceleration make it less "
+"exact."
+msgstr ""
+
+#: xcontrol/controllers_page.py:198 xcontrol/night_page.py:54
+msgid "When"
+msgstr ""
+
+#: xcontrol/controllers_page.py:203
+msgid "Turning"
+msgstr ""
+
+#: xcontrol/controllers_page.py:204
+#, python-brace-format
+msgid "{n} dots per degree"
+msgstr ""
+
+#: xcontrol/controllers_page.py:205
+msgid "Speed"
+msgstr ""
+
+#: xcontrol/controllers_page.py:206
+msgid ""
+"Mouse movement per degree you turn the controller; set it together with the "
+"game's mouse sensitivity."
+msgstr ""
+
+#: xcontrol/controllers_page.py:208
+#, python-brace-format
+msgid "full stick at {n} °/s"
+msgstr ""
+
+#: xcontrol/controllers_page.py:209
+msgid "Stick speed"
+msgstr ""
+
+#: xcontrol/controllers_page.py:211
+msgid "Game's deadzone"
+msgstr ""
+
+#: xcontrol/controllers_page.py:212
+msgid ""
+"Set it to the game's own right-stick deadzone, so small turns aren't lost in "
+"it."
+msgstr ""
+
+#: xcontrol/controllers_page.py:215
+msgid "Invert left/right"
+msgstr ""
+
+#: xcontrol/controllers_page.py:216
+msgid "Invert up/down"
+msgstr ""
+
+#: xcontrol/controllers_page.py:223
+msgid "Correct its drift whenever it lies still"
+msgstr ""
+
+#: xcontrol/controllers_page.py:226
+msgid "Calibrate now"
+msgstr ""
+
+#: xcontrol/controllers_page.py:231
+msgid ""
+"Every gyro reads a little turning when there's none, which makes the aim "
+"creep. Put the controller down on a flat surface and press Calibrate now (2 "
+"seconds), or let it learn that whenever it lies still."
+msgstr ""
+
+#: xcontrol/controllers_page.py:236
+msgid "The right stick needs games to see the Xbox 360 controller (above)."
+msgstr ""
+
+#: xcontrol/controllers_page.py:250
+msgid "Calibrating the gyro: leave the controller still for 2 seconds"
+msgstr ""
+
+#: xcontrol/controllers_page.py:253
+msgid "The controller service isn't running"
+msgstr ""
+
+#: xcontrol/controllers_page.py:256 xcontrol/input_page.py:930
 #: xcontrol/power_page.py:103
 msgid "Buttons"
 msgstr ""
 
-#: xcontrol/controllers_page.py:172
+#: xcontrol/controllers_page.py:270
 msgid "Default layout"
 msgstr ""
 
-#: xcontrol/controllers_page.py:175
+#: xcontrol/controllers_page.py:273
 msgid ""
 "Each DualShock 4 button can be any Xbox button, or nothing. L2 and R2 stay "
 "analog while they're the triggers."
 msgstr ""
 
-#: xcontrol/controllers_page.py:259
+#: xcontrol/controllers_page.py:384
 msgid "USB polling changed"
 msgstr ""
 
-#: xcontrol/controllers_page.py:261
+#: xcontrol/controllers_page.py:386
 msgid "Could not change the USB polling"
 msgstr ""
 
-#: xcontrol/controllers_page.py:278
+#: xcontrol/controllers_page.py:403
 msgid ""
 "No DualShock 4 connected. Plug it in, or pair it over Bluetooth (hold Share "
 "and PS until the light bar flashes)."
 msgstr ""
 
-#: xcontrol/controllers_page.py:284
+#: xcontrol/controllers_page.py:409
 msgid "USB"
 msgstr ""
 
-#: xcontrol/controllers_page.py:284
+#: xcontrol/controllers_page.py:409
 msgid "Bluetooth"
 msgstr ""
 
-#: xcontrol/controllers_page.py:286
+#: xcontrol/controllers_page.py:411
 #, python-brace-format
 msgid "battery {pct} %"
 msgstr ""
 
-#: xcontrol/controllers_page.py:288
+#: xcontrol/controllers_page.py:413
 #, python-brace-format
 msgid "reporting at {hz} Hz"
 msgstr ""
 
-#: xcontrol/controllers_page.py:290
+#: xcontrol/controllers_page.py:415
 msgid "games see an Xbox 360 controller"
 msgstr ""
 
-#: xcontrol/controllers_page.py:292
+#: xcontrol/controllers_page.py:417
 msgid "hidden from games"
 msgstr ""
 
-#: xcontrol/controllers_page.py:298
+#: xcontrol/controllers_page.py:419
+msgid "calibrating the gyro…"
+msgstr ""
+
+#: xcontrol/controllers_page.py:419
+msgid "gyro calibrated"
+msgstr ""
+
+#: xcontrol/controllers_page.py:420
+msgid "gyro not calibrated yet"
+msgstr ""
+
+#: xcontrol/controllers_page.py:422
+#, python-brace-format
+msgid "The gyro mouse couldn't be made: {error}"
+msgstr ""
+
+#: xcontrol/controllers_page.py:428
 #, python-brace-format
 msgid "The controller service: {error}"
 msgstr ""
 
-#: xcontrol/controllers_page.py:300
+#: xcontrol/controllers_page.py:430
 #, python-brace-format
 msgid "Couldn't hide the DualShock 4 from games: {error}"
 msgstr ""
 
-#: xcontrol/controllers_page.py:302
+#: xcontrol/controllers_page.py:432
 msgid ""
 "You're in the \"input\" group, which lets every program read every input "
 "device, so games can still find the DualShock 4. Leave the group (gpasswd -d "
 "$USER input, then log in again) to hide it."
 msgstr ""
 
-#: xcontrol/controllers_page.py:306
+#: xcontrol/controllers_page.py:436
 msgid ""
 "The light bar can't be changed yet: XControl's device permissions apply "
 "after the controller is reconnected (or after a reboot, right after "
 "installing)."
 msgstr ""
 
-#: xcontrol/controllers_page.py:311
+#: xcontrol/controllers_page.py:441
 msgid ""
 "The touchpad and motion sensors can't be read yet: reconnect the controller "
 "so XControl's device permissions apply."
 msgstr ""
 
-#: xcontrol/controllers_page.py:314
+#: xcontrol/controllers_page.py:444
 msgid ""
 "The Bluetooth report rate can't be set yet: reconnect the controller so "
 "XControl's device permissions apply."
 msgstr ""
 
-#: xcontrol/controllers_page.py:322
+#: xcontrol/controllers_page.py:452
 msgid "The controller service is running."
 msgstr ""
 
-#: xcontrol/controllers_page.py:325
+#: xcontrol/controllers_page.py:455
 #, python-brace-format
 msgid "The controller service isn't running: {why}"
 msgstr ""
 
-#: xcontrol/controllers_page.py:326
+#: xcontrol/controllers_page.py:456
 msgid "The controller service is starting…"
 msgstr ""
 
@@ -4290,10 +4440,6 @@ msgstr ""
 msgid ""
 "Warmer colors in the evening, easier on the eyes. It changes right away (no "
 "Apply needed) and builds on each display's gamma above."
-msgstr ""
-
-#: xcontrol/night_page.py:54
-msgid "When"
 msgstr ""
 
 #: xcontrol/night_page.py:57

@@ -12,7 +12,7 @@ import zlib
 
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(here, ".."))
-from xcontrol import pad_service as S, padmap as M, pads as P  # noqa: E402
+from xcontrol import gyro as G, pad_service as S, padmap as M, pads as P  # noqa: E402
 
 bad = 0
 
@@ -198,6 +198,7 @@ class StubVpad:
 c = S.Controller.__new__(S.Controller)
 c.pad, c.log, c.error = pad, print, ""
 c.vpad, c.mapper, c.rumble = StubVpad(), M.Mapper(), None
+c.gyro, c.mouse, c.phys = G.Gyro(), None, {M.ABS_RX: 0, M.ABS_RY: 0}
 c.rate_count, c.rate_since, c.rate = 0, time.monotonic() - 1.0, 0
 gp_r, gp_w = os.pipe()
 se_r, se_w = os.pipe()

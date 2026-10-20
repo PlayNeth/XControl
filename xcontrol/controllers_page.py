@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
-from . import desktop as D, pad_service as S, padmap as M, pads as P, widgets  # noqa: E402
+from . import desktop as D, gyro as GY, pad_service as S, padmap as M, pads as P, widgets  # noqa: E402
 from .desktop_page import _hint  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
@@ -21,6 +21,13 @@ TARGET_LABELS = {"a": "A", "b": "B", "x": "X", "y": "Y", "lb": N_("LB (left bump
                  "rs": N_("Right stick click"), "back": N_("Back"), "start": N_("Start"), "guide": N_("Guide (Xbox)"),
                  "dpad_up": N_("D-pad up"), "dpad_down": N_("D-pad down"), "dpad_left": N_("D-pad left"),
                  "dpad_right": N_("D-pad right"), "none": N_("Nothing")}
+SOURCE_LABELS["touch"] = N_("Touching the touchpad")
+GYRO_OUTPUTS = [("off", N_("Off")), ("mouse", N_("As a mouse (most precise)")),
+                ("stick", N_("As the right stick (works in every game)"))]
+GYRO_MODES = [("always", N_("Always")), ("hold", N_("While holding")), ("toggle", N_("Press to switch on and off")),
+              ("hold_off", N_("Off while holding"))]
+GYRO_SPACES = [("player", N_("Around the way you face, however you hold it")), ("yaw", N_("Turning it flat (yaw)")),
+               ("roll", N_("Tilting it sideways (roll)"))]
 BT_RATES = [(0, N_("Leave it to the driver (250 Hz)")), (1, N_("1 ms (1000 Hz)")), (2, N_("2 ms (500 Hz)")),
             (4, N_("4 ms (250 Hz)")), (8, N_("8 ms (125 Hz)"))]
 USB_RATES = [(0, N_("The controller's own (usually 250 Hz)")), (1, N_("1 ms (1000 Hz)")), (2, N_("2 ms (500 Hz)")),
@@ -74,11 +81,12 @@ class ControllersPage(Gtk.Box):
         self._build_lightbar()
         self._build_rate()
         self._build_emulation()
+        self._build_gyro()
         self._build_buttons()
         self._fill()
         widgets.protect(self)
         self.loading = False
-        self.connect("map", lambda *_a: self._poll())
+        self.connect("map", lambda *_a: (self._sensitivity(), self._poll()))
         GLib.timeout_add_seconds(2, lambda: (self._poll() if self.get_mapped() else None) or True)
 
     def _section(self, title):
@@ -123,7 +131,8 @@ class ControllersPage(Gtk.Box):
         g.attach(_hint(_("How often the controller sends its state; it applies right away, and the rate it "
                          "really reaches shows above. Bluetooth itself usually tops out around 500–800 Hz, "
                          "depending on the adapter (Wi-Fi + Bluetooth cards share the radio). It's still "
-                         "faster than the cable: over USB most DualShock 4s stay at 250 Hz whatever the rate.")), 1, 1, 1, 1)
+                         "faster than the cable: over USB most DualShock 4s stay at 250 Hz whatever the "
+                         "rate.")), 1, 1, 1, 1)
         usb = Gtk.Box(spacing=6)
         self.usb_rate = Gtk.ComboBoxText(hexpand=True)
         for ms, label in USB_RATES:
@@ -153,6 +162,95 @@ class ControllersPage(Gtk.Box):
         g.attach(_hint(_("Rumble from games reaches the DualShock 4. Steam reads controllers its own way: in Steam, "
                          "turn off PlayStation Configuration Support, or Steam sees the DualShock 4 as well.")),
                  1, 3, 1, 1)
+
+    def _build_gyro(self):
+        g = self._section(_("Gyro aiming"))
+        self.gyro_out = Gtk.ComboBoxText(hexpand=True)
+        for k, label in GYRO_OUTPUTS:
+            self.gyro_out.append(k, _(label))
+        self.gyro_out.connect("changed", self._changed)
+        self._row(g, 0, _("Aim with it"), self.gyro_out)
+        self.gyro_hint = _hint(_("Turn the controller to aim. As a mouse is the most precise, and most games take "
+                                 "the mouse and the controller together; as the right stick works in every "
+                                 "game, but the game's own stick deadzone and acceleration make it less exact."))
+        g.attach(self.gyro_hint, 1, 1, 1, 1)
+        self.gyro_rows = []
+
+        def row(r, label, widget):
+            lbl = Gtk.Label(label=label, xalign=0)
+            self.labels.add_widget(lbl)
+            g.attach(lbl, 0, r, 1, 1)
+            g.attach(widget, 1, r, 1, 1)
+            self.gyro_rows.append((lbl, widget))
+            return lbl, widget
+
+        when = Gtk.Box(spacing=6)
+        self.gyro_mode = Gtk.ComboBoxText(hexpand=True)
+        for k, label in GYRO_MODES:
+            self.gyro_mode.append(k, _(label))
+        self.gyro_mode.connect("changed", self._changed)
+        when.pack_start(self.gyro_mode, True, True, 0)
+        self.gyro_button = Gtk.ComboBoxText(hexpand=True)
+        for src in S.ACTIVATORS:
+            self.gyro_button.append(src, _(SOURCE_LABELS[src]))
+        self.gyro_button.connect("changed", self._changed)
+        when.pack_start(self.gyro_button, True, True, 0)
+        row(2, _("When"), when)
+        self.gyro_space = Gtk.ComboBoxText(hexpand=True)
+        for k, label in GYRO_SPACES:
+            self.gyro_space.append(k, _(label))
+        self.gyro_space.connect("changed", self._changed)
+        row(3, _("Turning"), self.gyro_space)
+        self.gyro_sens = self._scale(0.5, 60, 0.5, 1, lambda v: _("{n} dots per degree").format(n=f"{v:g}"))
+        self.sens_row = row(4, _("Speed"), self.gyro_sens)
+        self.gyro_sens.set_tooltip_text(_("Mouse movement per degree you turn the controller; set it together "
+                                          "with the game's mouse sensitivity."))
+        self.gyro_stick_speed = self._scale(30, 720, 10, 0, lambda v: _("full stick at {n} °/s").format(n=int(v)))
+        self.stick_speed_row = row(5, _("Stick speed"), self.gyro_stick_speed)
+        self.gyro_dz = self._scale(0, 50, 1, 0, lambda v: f"{int(v)} %")
+        self.dz_row = row(6, _("Game's deadzone"), self.gyro_dz)
+        self.gyro_dz.set_tooltip_text(_("Set it to the game's own right-stick deadzone, so small turns aren't "
+                                        "lost in it."))
+        inv = Gtk.Box(spacing=12)
+        self.gyro_inv_x = Gtk.CheckButton(label=_("Invert left/right"))
+        self.gyro_inv_y = Gtk.CheckButton(label=_("Invert up/down"))
+        for w in (self.gyro_inv_x, self.gyro_inv_y):
+            w.connect("toggled", self._changed)
+            inv.pack_start(w, False, False, 0)
+        g.attach(inv, 1, 7, 1, 1)
+        self.gyro_rows.append((inv,))
+        cal = Gtk.Box(spacing=12)
+        self.gyro_auto = Gtk.CheckButton(label=_("Correct its drift whenever it lies still"))
+        self.gyro_auto.connect("toggled", self._changed)
+        cal.pack_start(self.gyro_auto, False, False, 0)
+        btn = Gtk.Button(label=_("Calibrate now"))
+        btn.connect("clicked", self._calibrate)
+        cal.pack_end(btn, False, False, 0)
+        g.attach(cal, 1, 8, 1, 1)
+        self.gyro_rows.append((cal,))
+        cal_hint = _hint(_("Every gyro reads a little turning when there's none, which makes the aim creep. "
+                           "Put the controller down on a flat surface and press Calibrate now (2 seconds), or "
+                           "let it learn that whenever it lies still."))
+        g.attach(cal_hint, 1, 9, 1, 1)
+        self.gyro_rows.append((cal_hint,))
+        self.stick_note = _hint(_("The right stick needs games to see the Xbox 360 controller (above)."))
+        g.attach(self.stick_note, 1, 10, 1, 1)
+
+    def _scale(self, lo, hi, step, digits, fmt):
+        sc = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
+        sc.set_hexpand(True)
+        sc.set_digits(digits)
+        sc.set_value_pos(Gtk.PositionType.RIGHT)
+        sc.connect("format-value", lambda _w, v: fmt(v))
+        sc.connect("value-changed", self._changed)
+        return sc
+
+    def _calibrate(self, *_a):
+        if S.calibrate_running():
+            self.window.set_status(_("Calibrating the gyro: leave the controller still for 2 seconds"))
+            GLib.timeout_add(2500, lambda: self._poll() and False)
+        else:
+            self.window.set_status(_("The controller service isn't running"))
 
     def _build_buttons(self):
         g = self._section(_("Buttons"))
@@ -193,6 +291,17 @@ class ControllersPage(Gtk.Box):
         self.touch_mouse.set_active(c["touchpad_mouse"])
         for src, combo in self.maps.items():
             combo.set_active_id(c["map"][src])
+        gy = c["gyro"]
+        self.gyro_out.set_active_id(gy["output"])
+        self.gyro_mode.set_active_id(gy["mode"])
+        self.gyro_button.set_active_id(gy["button"])
+        self.gyro_space.set_active_id(gy["space"])
+        self.gyro_sens.set_value(gy["sens"])
+        self.gyro_stick_speed.set_value(gy["stick_speed"])
+        self.gyro_dz.set_value(gy["stick_dz"])
+        self.gyro_inv_x.set_active(gy["invert_x"])
+        self.gyro_inv_y.set_active(gy["invert_y"])
+        self.gyro_auto.set_active(gy["auto_cal"])
         self._sensitivity()
         self.loading = False
 
@@ -204,6 +313,16 @@ class ControllersPage(Gtk.Box):
         self.hide_real.set_sensitive(emu)
         self.touch_mouse.set_sensitive(emu)
         self.button_grid.set_sensitive(emu)
+        out = self.gyro_out.get_active_id() or "off"
+        for widgets_ in self.gyro_rows:
+            for w in widgets_:
+                w.set_visible(out != "off")
+        self.gyro_button.set_sensitive(self.gyro_mode.get_active_id() != "always")
+        for w in self.sens_row:
+            w.set_visible(out == "mouse")
+        for w in self.stick_speed_row + self.dz_row:
+            w.set_visible(out == "stick")
+        self.stick_note.set_visible(out == "stick" and not emu)
 
     def _changed(self, *_a):
         if self.loading:
@@ -214,6 +333,12 @@ class ControllersPage(Gtk.Box):
         c["hide_real"] = self.hide_real.get_active()
         c["touchpad_mouse"] = self.touch_mouse.get_active()
         c["map"] = {src: combo.get_active_id() or "none" for src, combo in self.maps.items()}
+        c["gyro"] = GY.normalize({
+            "output": self.gyro_out.get_active_id(), "mode": self.gyro_mode.get_active_id(),
+            "button": self.gyro_button.get_active_id(), "space": self.gyro_space.get_active_id(),
+            "sens": self.gyro_sens.get_value(), "stick_speed": self.gyro_stick_speed.get_value(),
+            "stick_dz": self.gyro_dz.get_value(), "invert_x": self.gyro_inv_x.get_active(),
+            "invert_y": self.gyro_inv_y.get_active(), "auto_cal": self.gyro_auto.get_active()}, S.ACTIVATORS)
         self._sensitivity()
         self._commit_later()
 
@@ -290,6 +415,11 @@ class ControllersPage(Gtk.Box):
                 parts.append(_("games see an Xbox 360 controller"))
             if info.get("hidden"):
                 parts.append(_("hidden from games"))
+            if info.get("gyro"):
+                parts.append({"calibrating": _("calibrating the gyro…"), "calibrated": _("gyro calibrated"),
+                              "uncalibrated": _("gyro not calibrated yet")}.get(info["gyro"], ""))
+            if info.get("gyro_error"):
+                notes.add(_("The gyro mouse couldn't be made: {error}").format(error=info["gyro_error"]))
             row = Gtk.Label(xalign=0, wrap=True)
             row.set_markup("<b>{}</b>  <span alpha='70%'>{}</span>".format(
                 GLib.markup_escape_text(pad.name), GLib.markup_escape_text(" · ".join(parts))))

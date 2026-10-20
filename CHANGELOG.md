@@ -2,6 +2,27 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.24.0 (2026-10-20)
+
+**Add gyro aiming for DualShock 4 controllers**
+
+- Add gyro aiming on the Controllers page: turn the controller to aim, either as a
+  separate virtual mouse (most precise) or added to the virtual Xbox pad's right stick
+- Choose when it is active: always, while holding a button (L2 by default), toggled
+  by a button, or off while holding; any button or touching the touchpad can be used
+- Choose how turning is read: around the real vertical however the controller is held
+  (player space), plain yaw, or roll
+- Set the speed in mouse dots per degree, or for the stick the turning speed for full
+  deflection and the game's own deadzone so small turns aren't lost
+- Add options to invert left/right and up/down
+- Smooth slow movement and suppress hand tremor while keeping quick turns raw
+- Correct gyro drift automatically whenever the controller lies still, or on request
+  with a "Calibrate now" button; the calibration state shows for each controller
+- Work without the Xbox 360 emulation when aiming as a mouse, and show an error if the
+  gyro mouse can't be created
+- Apply gyro setting changes to a running service without reconnecting controllers
+- Add tests for calibration, direction, sensitivity, activation and stick output
+
 ## 0.23.3 (2026-10-20)
 
 **Correct the report rate advice for USB and Bluetooth**

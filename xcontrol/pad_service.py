@@ -14,7 +14,7 @@ import struct
 import sys
 import time
 
-from . import config, padmap, pads
+from . import config, gyro, padmap, pads
 
 # ---------------------------------------------------------------- kernel interfaces
 EVENT = struct.Struct("llHHi")              # struct input_event (64-bit)
@@ -22,6 +22,9 @@ EV_SYN, EV_KEY, EV_ABS, EV_FF, EV_UINPUT = 0x00, 0x01, 0x03, 0x15, 0x0101
 FF_RUMBLE, FF_PERIODIC, FF_GAIN = 0x50, 0x51, 0x60
 UI_FF_UPLOAD, UI_FF_ERASE = 1, 2
 UI_SET_EVBIT, UI_SET_KEYBIT, UI_SET_ABSBIT, UI_SET_FFBIT = 0x40045564, 0x40045565, 0x40045567, 0x4004556B
+UI_SET_RELBIT = 0x40045566
+EV_REL, EV_MSC, REL_X, REL_Y = 0x02, 0x04, 0x00, 0x01
+BTN_LEFT, BTN_RIGHT, BTN_TOUCH = 0x110, 0x111, 0x14A
 UI_DEV_SETUP, UI_ABS_SETUP, UI_DEV_CREATE, UI_DEV_DESTROY = 0x405C5503, 0x401C5504, 0x5501, 0x5502
 UI_BEGIN_FF_UPLOAD, UI_END_FF_UPLOAD = 0xC06855C8, 0x406855C9
 UI_BEGIN_FF_ERASE, UI_END_FF_ERASE = 0xC00C55CA, 0x400C55CB
@@ -30,7 +33,9 @@ FF_EFFECT = struct.Struct("HhHHHHH2x32s")   # type, id, direction, trigger(2), r
 XBOX_ID = (0x0003, 0x045E, 0x028E, 0x0110)  # USB, Microsoft, Xbox 360 controller
 
 DEFAULT = {"enabled": False, "emulate": "xbox360", "hide_real": True, "touchpad_mouse": False,
-           "map": {}, "lightbar": "#0044ff", "brightness": 60, "bt_poll_ms": 1}
+           "map": {}, "lightbar": "#0044ff", "brightness": 60, "bt_poll_ms": 1, "gyro": dict(gyro.DEFAULT)}
+# what can switch the gyro on or off: any button, or touching the touchpad
+ACTIVATORS = padmap.SOURCE_ORDER + ["touch"]
 EMULATE = ["xbox360", "off"]
 
 
@@ -44,6 +49,7 @@ def normalize(c):
     if out["emulate"] not in EMULATE:
         out["emulate"] = "xbox360"
     out["map"] = padmap.normalize_map(out["map"])
+    out["gyro"] = gyro.normalize(out["gyro"], ACTIVATORS)
     c = str(out["lightbar"] or "")
     out["lightbar"] = c if len(c) == 7 and c.startswith("#") else DEFAULT["lightbar"]
     for k, lo, hi in (("brightness", 0, 100), ("bt_poll_ms", 0, 16)):
@@ -112,6 +118,42 @@ class VirtualPad:
             os.write(self.fd, data)
         except OSError:
             pass
+
+    def close(self):
+        try:
+            fcntl.ioctl(self.fd, UI_DEV_DESTROY)
+        except OSError:
+            pass
+        os.close(self.fd)
+
+
+class VirtualMouse:
+    """A plain mouse made through /dev/uinput, moved by the gyro."""
+
+    def __init__(self, name="XControl gyro mouse"):
+        self.fd = os.open("/dev/uinput", os.O_RDWR | os.O_NONBLOCK)
+        try:
+            for ev in (EV_SYN, EV_KEY, EV_REL):
+                fcntl.ioctl(self.fd, UI_SET_EVBIT, ev)
+            for key in (BTN_LEFT, BTN_RIGHT):     # (without buttons it isn't taken for a mouse)
+                fcntl.ioctl(self.fd, UI_SET_KEYBIT, key)
+            for rel in (REL_X, REL_Y):
+                fcntl.ioctl(self.fd, UI_SET_RELBIT, rel)
+            fcntl.ioctl(self.fd, UI_DEV_SETUP, struct.pack("HHHH80sI", 0x06, 0, 0, 1, name.encode()[:79], 0))
+            fcntl.ioctl(self.fd, UI_DEV_CREATE)
+        except OSError:
+            os.close(self.fd)
+            raise
+
+    def move(self, dx, dy):
+        events = [(EV_REL, REL_X, dx)] if dx else []
+        events += [(EV_REL, REL_Y, dy)] if dy else []
+        if events:
+            data = b"".join(EVENT.pack(0, 0, t, c, v) for t, c, v in events) + EVENT.pack(0, 0, EV_SYN, 0, 0)
+            try:
+                os.write(self.fd, data)
+            except OSError:
+                pass
 
     def close(self):
         try:
@@ -206,7 +248,8 @@ class Controller:
             except OSError:
                 pass
         self.lightbar_ok = self.poll_ok = None
-        self.apply(settings)
+        self.gyro, self.mouse, self.mouse_error = gyro.Gyro(settings["gyro"]), None, ""
+        self.phys = {padmap.ABS_RX: 0, padmap.ABS_RY: 0}     # the real right stick, as sent
         if pad.sensors:
             self._open(pad.sensors, "sensors", grab=False)
         if settings["emulate"] == "xbox360":
@@ -223,12 +266,49 @@ class Controller:
                 self.fds[self.vpad.fd] = "virtual"
                 if settings["hide_real"]:
                     self._hide()
+        self.apply(settings)
 
     def apply(self, settings):
-        """The light bar and the Bluetooth report rate (no need to reopen anything)."""
+        """The light bar, the Bluetooth report rate and the gyro (no need to reopen anything)."""
         self.lightbar_ok = pads.set_lightbar(self.pad, settings["lightbar"], settings["brightness"])
         if self.pad.bus == "bluetooth":
             self.poll_ok = pads.set_bt_poll(self.pad, settings["bt_poll_ms"], self.raw)
+        g = settings["gyro"]
+        self.gyro.set(g)
+        if g["output"] == "mouse" and not self.mouse:
+            try:
+                self.mouse = VirtualMouse()
+                self.mouse_error = ""
+            except OSError as e:
+                self.mouse_error = f"uinput: {e.strerror}"
+        elif g["output"] != "mouse" and self.mouse:
+            self.mouse.close()
+            self.mouse = None
+        if g["output"] != "off":
+            # the activation button is read from the controller, even without the Xbox pad
+            roles = set(self.fds.values())
+            if "gamepad" not in roles and self.pad.gamepad:
+                self._open(self.pad.gamepad, "gamepad")
+            if g["button"] == "touch" and "touchpad" not in roles and self.pad.touchpad:
+                self._open(self.pad.touchpad, "touchpad")
+        if g["output"] != "stick" and self.vpad and self.gyro.stick != (0.0, 0.0):
+            self.gyro.stick = (0.0, 0.0)
+            self.vpad.send([(EV_ABS, c, v) for c, v in self.phys.items()])
+
+    def _activation(self, role, etype, code, value):
+        b = self.gyro.s["button"]
+        if b == "touch":
+            if role == "touchpad" and etype == EV_KEY and code == BTN_TOUCH:
+                self.gyro.press(value != 0)
+            return
+        src = padmap.SOURCES.get(b)
+        if isinstance(src, int):
+            if etype == EV_KEY and code == src and role == ("touchpad" if b == "touchpad" else "gamepad"):
+                self.gyro.press(value != 0)
+        elif src and role == "gamepad" and etype == EV_ABS:
+            axis = padmap.ABS_HAT0Y if src in ("hat_up", "hat_down") else padmap.ABS_HAT0X
+            if code == axis:
+                self.gyro.press(value < 0 if src in ("hat_up", "hat_left") else value > 0)
 
     def _hide(self):
         """Games find controllers through their device files (SDL, Wine and Steam read the raw
@@ -262,7 +342,7 @@ class Controller:
     def read(self, fd):
         role = self.fds.get(fd)
         try:
-            data = os.read(fd, EVENT.size * 64)
+            data = os.read(fd, EVENT.size * 512)
         except BlockingIOError:
             return True
         except OSError:
@@ -275,14 +355,24 @@ class Controller:
             if role == "sensors":
                 if etype == EV_SYN and code == 0:
                     self.rate_count += 1
+                moved = self.gyro.feed(etype, code, value)
+                if moved is True and self.vpad:
+                    out += [(EV_ABS, c, self.gyro.stick_value(c, v)) for c, v in self.phys.items()]
+                elif moved and moved is not True and self.mouse:
+                    self.mouse.move(*moved)
             elif role == "virtual":
                 self.rumble.handle(etype, code, value)
-            elif role in ("gamepad", "touchpad") and self.mapper:
-                if role == "touchpad" and not (etype == EV_KEY and code == padmap.BTN_LEFT):
-                    continue
+            elif role in ("gamepad", "touchpad"):
                 if etype == EV_SYN:
                     continue
-                out += self.mapper.feed(etype, code, value)
+                self._activation(role, etype, code, value)
+                if not self.mapper or (role == "touchpad" and not (etype == EV_KEY and code == padmap.BTN_LEFT)):
+                    continue
+                for t, c, v in self.mapper.feed(etype, code, value):
+                    if t == EV_ABS and c in self.phys:      # the right stick, plus the gyro
+                        self.phys[c] = v
+                        v = self.gyro.stick_value(c, v)
+                    out.append((t, c, v))
         if out and self.vpad:
             self.vpad.send(out)
         now = time.monotonic()
@@ -297,7 +387,9 @@ class Controller:
                 "charging": charging, "rate": self.rate, "virtual": bool(self.vpad),
                 "lightbar_ok": self.lightbar_ok, "poll_ok": self.poll_ok, "error": self.error,
                 "hidraw_ok": self.raw is not None or pads.hidraw_writable(self.pad),
-                "hidden": bool(self.hidden), "hide_error": self.hide_error}
+                "hidden": bool(self.hidden), "hide_error": self.hide_error,
+                "gyro": self.gyro.status() if self.gyro.s["output"] != "off" else "",
+                "gyro_error": self.mouse_error}
 
     def close(self):
         for fd in list(self.fds):
@@ -309,6 +401,9 @@ class Controller:
                 pass
         if self.vpad:
             self.vpad.close()
+        if self.mouse:
+            self.mouse.close()
+            self.mouse = None
         self.fds.clear()
         if self.raw is not None:
             try:
@@ -322,11 +417,21 @@ class Controller:
 
 
 # ---------------------------------------------------------------- the service
-LIVE = ("lightbar", "brightness", "bt_poll_ms")    # applied without reopening the controllers
+LIVE = ("lightbar", "brightness", "bt_poll_ms", "gyro")    # applied without reopening the controllers
 
 
 def _restart_keys(settings):
     return {k: v for k, v in settings.items() if k not in LIVE}
+
+
+def calibrate_running():
+    """Ask a running service to calibrate the gyros now (the controllers should lie still)."""
+    pid = state().get("pid")
+    try:
+        os.kill(pid, signal.SIGUSR1)
+        return True
+    except (OSError, TypeError):
+        return False
 
 
 def reload_running():
@@ -346,10 +451,11 @@ def service():
         if os.environ.get("XCONTROL_DEBUG"):
             print(f"xcontrol-pads: {msg}", file=sys.stderr, flush=True)
 
-    flags = {"quit": False, "reload": True}
+    flags = {"quit": False, "reload": True, "calibrate": False}
     signal.signal(signal.SIGTERM, lambda *_a: flags.update(quit=True))
     signal.signal(signal.SIGINT, lambda *_a: flags.update(quit=True))
     signal.signal(signal.SIGHUP, lambda *_a: flags.update(reload=True))
+    signal.signal(signal.SIGUSR1, lambda *_a: flags.update(calibrate=True))
     controllers = {}         # pad key -> Controller
     settings = load()
     scanned = 0.0
@@ -369,6 +475,10 @@ def service():
                         c.close()
                     controllers.clear()
                     scanned = 0.0
+            if flags["calibrate"]:
+                flags["calibrate"] = False
+                for c in controllers.values():
+                    c.gyro.calibrate()
             if time.monotonic() - scanned >= 2:
                 scanned = time.monotonic()
                 found = {p.key: p for p in pads.discover()}

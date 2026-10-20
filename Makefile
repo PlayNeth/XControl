@@ -115,6 +115,7 @@ check:
 	$(PYTHON) tests/check_audio.py
 	$(PYTHON) tests/check_power.py
 	$(PYTHON) tests/check_pads.py
+	$(PYTHON) tests/check_gyro.py
 	$(PYTHON) tests/check_health.py
 	$(PYTHON) tests/check_backup.py
 	sh -n data/xcontrol-edid-helper
