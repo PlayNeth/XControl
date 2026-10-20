@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.21.1 (2026-10-20)
+
+**Fix a second bar or compositor running after the service restarts**
+
+- Fix polybar, picom, dunst or xss-lock running twice when the desktop
+  service was killed: its programs now stop with it
+- Stop programs an earlier desktop service left running before starting new
+  ones
+- Fix `xcontrol --night` being able to stop a desktop service from an older
+  XControl version; the night light change now goes through a normal reload
+
 ## 0.21.0 (2026-10-20)
 
 **Add Sound, Default Apps and Date & Language pages and a night light**

@@ -294,13 +294,7 @@ def set_night(how):
     if how == "status":
         return night.forced(_runtime, desk["night"])
     result = night.set_forced(_runtime, how, desk["night"])
-    notify_daemon(desk)
-    st = state()
-    if st.get("daemon"):
-        try:
-            os.kill(st["daemon"], signal.SIGUSR1)   # look at it right away
-        except OSError:
-            pass
+    notify_daemon(desk)   # a reload looks at the night light right away
     return result
 
 
@@ -388,7 +382,7 @@ class _Child:
         env = dict(os.environ, **self.env)
         try:
             self.proc = subprocess.Popen(self.cmd, env=env, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
-                                         start_new_session=True)
+                                         start_new_session=True, preexec_fn=_die_with_parent)
         except OSError as e:
             self.proc, self.error = None, str(e)
         self.started = time.time()
@@ -444,6 +438,51 @@ def wanted_children(desk):
     return out
 
 
+_PR_SET_PDEATHSIG = 1
+
+
+try:
+    _prctl = ctypes.CDLL(None).prctl   # looked up now: after fork, the child only calls it
+except (OSError, AttributeError):
+    _prctl = None
+
+
+def _die_with_parent():
+    """In a child: get SIGTERM when the service goes away, however it ends (so a bar or a
+    compositor never outlives it and then runs twice)."""
+    if _prctl is not None:
+        _prctl(_PR_SET_PDEATHSIG, int(signal.SIGTERM), 0, 0, 0)
+
+
+CHILD_PROGRAMS = {"polybar", "picom", "dunst", "xss-lock"}
+
+
+def _stop_leftovers():
+    """Children a previous service left running (it was killed, or was an older XControl
+    that didn't tie them to itself): stop them before starting our own."""
+    try:
+        with open(_runtime("json")) as f:
+            old = json.load(f)
+    except (OSError, ValueError):
+        return []
+    stopped = []
+    for key, pid in (old.get("children") or {}).items():
+        try:
+            if os.stat(f"/proc/{pid}").st_uid != os.getuid():
+                continue
+            with open(f"/proc/{pid}/comm") as f:
+                comm = f.read().strip()
+        except (OSError, TypeError):
+            continue
+        if comm in CHILD_PROGRAMS:
+            try:
+                os.kill(pid, signal.SIGTERM)
+                stopped.append(key)
+            except OSError:
+                pass
+    return stopped
+
+
 def daemon():
     """xcontrol --desktop-daemon"""
     def log(msg):
@@ -456,8 +495,13 @@ def daemon():
     except OSError:
         log("already running")
         return 0
+    left = _stop_leftovers()
+    if left:
+        log(f"stopped what an earlier service left running: {', '.join(left)}")
+        time.sleep(0.5)
 
     flags = {"reload": True, "quit": False}
+    signal.signal(signal.SIGUSR1, signal.SIG_IGN)   # (older XControl versions sent it; never die of it)
     signal.signal(signal.SIGHUP, lambda *_a: flags.update(reload=True))
     signal.signal(signal.SIGTERM, lambda *_a: flags.update(quit=True))
     signal.signal(signal.SIGINT, lambda *_a: flags.update(quit=True))
@@ -476,7 +520,6 @@ def daemon():
         gamma = None
         log(f"night light: {e}")
     nl = {"shown": 6500, "applied_at": 0.0, "gammas": {}, "touched": False, "now": False}
-    signal.signal(signal.SIGUSR1, lambda *_a: nl.update(now=True))
 
     def night_step(force_apply=False):
         """Move the displays' color toward what the night light wants (gradually: 300 K a second)."""
