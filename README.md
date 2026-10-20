@@ -353,16 +353,13 @@ environment variables are still read. An EDID override installed as
 
 ## Sound
 
-The Sound page covers what pavucontrol and a volume key don't:
+Volumes, the default output and input, ports and card profiles are pavucontrol's job (**Open
+the mixer** starts it). The Sound page covers what it can't do:
 
-- **Output and Input**: the default device, its port (e.g. headphones or line out), and a
-  **Test** sound per output.
-- **Devices**: each sound card's profile (stereo, surround, with or without the microphone,
-  which HDMI output carries sound, "Pro Audio", off).
-- The gear of an output, input or card: **rename** it (the name every program shows), **hide**
-  it from every program (e.g. the graphics card's HDMI audio you never use), **never let it
-  sleep** (no pop and no lost first second, common with HDMI and USB DACs), and **prefer it
-  whenever it's connected**.
+- **Devices**: each output, input and sound card's gear can **rename** it (the name every program
+  shows), **hide** it from every program (e.g. the graphics card's HDMI audio you never use),
+  **never let it sleep** (no pop and no lost first second, common with HDMI and USB DACs), and
+  **prefer it whenever it's connected**. Hidden devices stay listed so they can come back.
 - **Sound system (PipeWire)**: the sample rate, **follow what's playing** (music at 44.1 kHz
   plays unconverted; allowed rates), the **buffer size** (larger against crackling, smaller for
   less delay in games and music), and keeping every output awake.

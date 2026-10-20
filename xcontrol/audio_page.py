@@ -58,11 +58,15 @@ class AudioPage(Gtk.Box):
         self.a = A.load()
         self.loading = True
         self._sig = None
+        top = Gtk.Box(spacing=10)
         self.status = _hint("")
-        self.pack_start(self.status, False, False, 0)
-        self.out_box = self._section(_("Output"))
-        self.in_box = self._section(_("Input"))
-        self.card_box = self._section(_("Devices"))
+        top.pack_start(self.status, True, True, 0)
+        self.mixer = Gtk.Button(label=_("Open the mixer"), valign=Gtk.Align.START)
+        self.mixer.set_tooltip_text(_("Volumes, the default output and input, ports and card profiles"))
+        self.mixer.connect("clicked", self._open_mixer)
+        top.pack_start(self.mixer, False, False, 0)
+        self.pack_start(top, False, False, 0)
+        self.dev_box = self._section(_("Devices"))
         self._build_system()
         self.connect("map", lambda *_a: self._refresh(force=True))
         GLib.timeout_add_seconds(3, lambda: (self._refresh() if self.get_mapped() else None) or True)
@@ -148,18 +152,15 @@ class AudioPage(Gtk.Box):
     def _refresh(self, force=False):
         srv = A.server()
         outs, ins, cards = (A.outputs(), A.inputs(), A.cards()) if srv else ([], [], [])
-        sig = repr((srv, [(o["name"], o.get("description"), o.get("active_port")) for o in outs],
-                    [(i["name"], i.get("description"), i.get("active_port")) for i in ins],
-                    [(c["name"], c.get("active_profile")) for c in cards], A.default("sink"), A.default("source"),
-                    sorted(self.a["devices"])))
+        sig = repr((srv, [(o["name"], o.get("description")) for o in outs], [(i["name"], i.get("description"))
+                                                                             for i in ins],
+                    [c["name"] for c in cards], self.a))
         self._status(srv)
         if sig == self._sig and not force:
             return
         self._sig = sig
         self.loading = True
-        self._fill_list(self.out_box, outs, "sink", True)
-        self._fill_list(self.in_box, ins, "source", False)
-        self._fill_cards(cards)
+        self._fill_devices(outs, ins, cards)
         self._fill_system()
         self.loading = False
 
@@ -182,78 +183,64 @@ class AudioPage(Gtk.Box):
         self.status.set_text(" · ".join(parts))
         self.sys_grid.set_sensitive(bool(pw))
 
-    def _fill_list(self, box, devs, kind, is_output):
+    def _fill_devices(self, outs, ins, cards):
+        box = self.dev_box
         self._clear(box)
-        current = A.default(kind)
-        group = None
-        hidden = [n for n, d in self.a["devices"].items() if d["hidden"] and not n.startswith("alsa_card.")
-                  and n.startswith("alsa_output." if is_output else "alsa_input.")]
-        if not devs and not hidden:
+        box.pack_start(_hint(_("What the mixer can't do: give a device your own name, hide it from every program, "
+                               "keep it from sleeping, or prefer it whenever it's connected.")), False, False, 0)
+        groups = [
+            (_("Outputs"), [(o["name"], o.get("description") or o["name"]) for o in outs], "alsa_output.", False, True),
+            (_("Inputs"), [(i["name"], i.get("description") or i["name"]) for i in ins], "alsa_input.", False, False),
+            (_("Sound cards"), [(c["name"], (c.get("properties") or {}).get("device.description") or c["name"])
+                                for c in cards], "alsa_card.", True, False),
+        ]
+        for title, devs, prefix, is_card, is_output in groups:
+            present = {n for n, _d in devs}
+            hidden = [n for n, d in self.a["devices"].items() if d["hidden"] and n.startswith(prefix)
+                      and n not in present]
+            if not devs and not hidden:
+                continue
+            head = Gtk.Label(xalign=0, margin_top=4)
+            head.set_markup("<small><b>{}</b></small>".format(GLib.markup_escape_text(title)))
+            head.get_style_context().add_class("dim-label")
+            box.pack_start(head, False, False, 0)
+            for name, desc in devs:
+                box.pack_start(self._device_row(name, desc, is_card, is_output, hidden=False), False, False, 0)
+            for name in hidden:
+                desc = self.a["devices"][name]["name"] or name
+                box.pack_start(self._device_row(name, desc, is_card, is_output, hidden=True), False, False, 0)
+        if len(box.get_children()) == 1:
             box.pack_start(_hint(_("None found.")), False, False, 0)
-        for d in devs:
-            row = Gtk.Box(spacing=8)
-            rb = Gtk.RadioButton.new_with_label_from_widget(group, d.get("description") or d["name"])
-            group = group or rb
-            rb.set_active(d["name"] == current)
-            rb.connect("toggled", self._default_chosen, kind, d["name"])
-            rb.set_tooltip_text(d["name"])
-            row.pack_start(rb, True, True, 0)
-            ports = [p for p in d.get("ports") or [] if p.get("availability") != "not available"]
-            if len(ports) > 1:
-                pc = Gtk.ComboBoxText()
-                for p in ports:
-                    pc.append(p["name"], p.get("description") or p["name"])
-                pc.set_active_id(d.get("active_port") or "")
-                pc.connect("changed", self._port, kind, d["name"])
-                row.pack_start(pc, False, False, 0)
-            if is_output:
-                test = Gtk.Button(label=_("Test"))
-                test.connect("clicked", self._test, d["name"])
-                row.pack_start(test, False, False, 0)
-            row.pack_start(self._gear(d["name"], d.get("description") or d["name"], False, is_output), False, False, 0)
-            box.pack_start(row, False, False, 0)
-        for n in hidden:
-            row = Gtk.Box(spacing=8)
-            lbl = Gtk.Label(label=_("{name} (not used)").format(name=self.a["devices"][n]["name"] or n), xalign=0)
-            lbl.get_style_context().add_class("dim-label")
-            row.pack_start(lbl, True, True, 0)
-            row.pack_start(self._gear(n, n, False, is_output), False, False, 0)
-            box.pack_start(row, False, False, 0)
         box.show_all()
 
-    def _fill_cards(self, cards):
-        box = self.card_box
-        self._clear(box)
-        names = {c["name"] for c in cards}
-        for c in cards:
-            row = Gtk.Box(spacing=8)
-            desc = (c.get("properties") or {}).get("device.description") or c["name"]
-            lbl = Gtk.Label(label=desc, xalign=0)
-            lbl.set_tooltip_text(c["name"])
-            row.pack_start(lbl, True, True, 0)
-            profiles = c.get("profiles") or {}
-            combo = Gtk.ComboBoxText()
-            for pname, p in sorted(profiles.items(), key=lambda kv: -(kv[1].get("priority") or 0)):
-                if p.get("available", True) or pname == c.get("active_profile"):
-                    combo.append(pname, p.get("description") or pname)
-            combo.set_active_id(c.get("active_profile") or "")
-            combo.connect("changed", self._profile, c["name"])
-            row.pack_start(combo, False, False, 0)
-            row.pack_start(self._gear(c["name"], desc, True, False), False, False, 0)
-            box.pack_start(row, False, False, 0)
-        for n, d in self.a["devices"].items():
-            if n.startswith("alsa_card.") and d["hidden"] and n not in names:
-                row = Gtk.Box(spacing=8)
-                lbl = Gtk.Label(label=_("{name} (not used)").format(name=d["name"] or n), xalign=0)
-                lbl.get_style_context().add_class("dim-label")
-                row.pack_start(lbl, True, True, 0)
-                row.pack_start(self._gear(n, n, True, False), False, False, 0)
-                box.pack_start(row, False, False, 0)
-        if not box.get_children():
-            box.pack_start(_hint(_("None found.")), False, False, 0)
-        box.pack_start(_hint(_("A profile picks how a device is used, e.g. stereo or surround, with or without its "
-                               "microphone, or which HDMI output carries sound.")), False, False, 0)
-        box.show_all()
+    def _device_row(self, name, desc, is_card, is_output, hidden):
+        row = Gtk.Box(spacing=8)
+        entry = self.a["devices"].get(name, {})
+        notes = []
+        if hidden:
+            notes.append(_("not used"))
+        if entry.get("no_suspend") or (self.a["no_suspend"] and not is_card):
+            notes.append(_("never sleeps"))
+        if entry.get("priority") is not None:
+            notes.append(_("preferred"))
+        lbl = Gtk.Label(xalign=0)
+        lbl.set_markup(GLib.markup_escape_text(desc) + ("  <span alpha='60%'>{}</span>".format(
+            GLib.markup_escape_text(" · ".join(notes))) if notes else ""))
+        lbl.set_tooltip_text(name)
+        if hidden:
+            lbl.get_style_context().add_class("dim-label")
+        row.pack_start(lbl, True, True, 0)
+        row.pack_start(self._gear(name, desc, is_card, is_output), False, False, 0)
+        return row
+
+    def _open_mixer(self, *_a):
+        import shutil
+        import subprocess
+        mixer = next((m for m in ("pavucontrol", "pwvucontrol", "pavucontrol-qt") if shutil.which(m)), None)
+        if mixer is None:
+            self.window.message(_("No mixer installed"), _("Install pavucontrol (or pwvucontrol)."))
+            return
+        subprocess.Popen([mixer], start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _gear(self, name, title, is_card, is_output):
         b = Gtk.Button.new_from_icon_name("emblem-system-symbolic", Gtk.IconSize.BUTTON)
@@ -270,21 +257,3 @@ class AudioPage(Gtk.Box):
             self.a = A.normalize(self.a)
             self._commit()
         dlg.destroy()
-
-    def _test(self, _b, name):
-        if not A.test_sound(name):
-            self.window.message(_("No test sound"), _("Install sound-theme-freedesktop and libpulse (paplay)."))
-
-    def _port(self, combo, kind, name):
-        if not self.loading and combo.get_active_id():
-            A.set_port(kind, name, combo.get_active_id())
-
-    def _profile(self, combo, card):
-        if not self.loading and combo.get_active_id():
-            A.set_profile(card, combo.get_active_id())
-
-    def _default_chosen(self, rb, kind, name):
-        if self.loading or not rb.get_active():
-            return
-        A.set_default(kind, name)
-        self.window.set_status(_("Default changed"))

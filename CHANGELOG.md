@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.22.3 (2026-10-20)
+
+**Leave volumes and profiles to the mixer on the Sound page**
+
+- Add an "Open the mixer" button to the Sound page (pavucontrol, pwvucontrol or
+  pavucontrol-qt) for volumes, default devices, ports and card profiles
+- Remove the default output and input choice, ports, card profiles and Test
+  buttons from the Sound page, which now only covers what the mixer can't do
+- Show outputs, inputs and sound cards in one Devices list, each marked when
+  it's hidden, never sleeps or is preferred; hidden devices stay listed
+
 ## 0.22.2 (2026-10-20)
 
 **Start xsettingsd at login whenever it's installed**

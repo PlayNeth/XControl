@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 12:37-0300\n"
+"POT-Creation-Date: 2026-10-20 12:42-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -25,7 +25,7 @@ msgstr "Jogos"
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:63 xcontrol/audio_page.py:64
+#: xcontrol/app.py:63
 msgid "Input"
 msgstr "Entrada"
 
@@ -640,41 +640,44 @@ msgstr ""
 "Dispositivos ocultos somem de todos os programas. As mudanças reiniciam o "
 "WirePlumber, o que leva um segundo."
 
-#: xcontrol/audio_page.py:63 xcontrol/monitor_info.py:85
-#: xcontrol/monitor_info.py:212
-msgid "Output"
-msgstr "Saída"
+#: xcontrol/audio_page.py:64
+msgid "Open the mixer"
+msgstr "Abrir o mixer"
 
-#: xcontrol/audio_page.py:65 xcontrol/kmods.py:248
+#: xcontrol/audio_page.py:65
+msgid "Volumes, the default output and input, ports and card profiles"
+msgstr "Volumes, a saída e a entrada padrão, portas e perfis das placas"
+
+#: xcontrol/audio_page.py:69 xcontrol/kmods.py:248
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: xcontrol/audio_page.py:86
+#: xcontrol/audio_page.py:90
 msgid "Sound system (PipeWire)"
 msgstr "Sistema de som (PipeWire)"
 
-#: xcontrol/audio_page.py:92
+#: xcontrol/audio_page.py:96
 msgid "Sample rate"
 msgstr "Taxa de amostragem"
 
-#: xcontrol/audio_page.py:94
+#: xcontrol/audio_page.py:98
 msgid "Follow what's playing (44.1 kHz music plays at 44.1 kHz, unconverted)"
 msgstr ""
 "Seguir o que está tocando (música em 44,1 kHz toca em 44,1 kHz, sem "
 "conversão)"
 
-#: xcontrol/audio_page.py:101
+#: xcontrol/audio_page.py:105
 msgid "Buffer size"
 msgstr "Tamanho do buffer"
 
-#: xcontrol/audio_page.py:103
+#: xcontrol/audio_page.py:107
 msgid ""
 "Keep all outputs awake (no pops, no cut-off first second; HDMI and USB DACs)"
 msgstr ""
 "Manter todas as saídas acordadas (sem estalos, sem cortar o primeiro "
 "segundo; HDMI e DACs USB)"
 
-#: xcontrol/audio_page.py:107
+#: xcontrol/audio_page.py:111
 msgid ""
 "Sample rate and buffer size change right away; the rest restarts "
 "WirePlumber. Saved in ~/.config/pipewire and ~/.config/wireplumber."
@@ -682,18 +685,18 @@ msgstr ""
 "Taxa de amostragem e buffer mudam na hora; o resto reinicia o WirePlumber. "
 "Salvo em ~/.config/pipewire e ~/.config/wireplumber."
 
-#: xcontrol/audio_page.py:133 xcontrol/night_page.py:202
+#: xcontrol/audio_page.py:137 xcontrol/night_page.py:202
 #: xcontrol/notify_page.py:464 xcontrol/panel_page.py:483
 #: xcontrol/power_page.py:97
 msgid "Could not save the settings"
 msgstr "Não foi possível salvar as configurações"
 
-#: xcontrol/audio_page.py:138 xcontrol/gaming_page.py:470
+#: xcontrol/audio_page.py:142 xcontrol/gaming_page.py:470
 #: xcontrol/power_page.py:127
 msgid "Saved"
 msgstr "Salvo"
 
-#: xcontrol/audio_page.py:138
+#: xcontrol/audio_page.py:142
 msgid ""
 "Restart WirePlumber (or log in again) to use it: systemctl --user restart "
 "wireplumber"
@@ -701,62 +704,74 @@ msgstr ""
 "Reinicie o WirePlumber (ou entre de novo) para usar: systemctl --user "
 "restart wireplumber"
 
-#: xcontrol/audio_page.py:140 xcontrol/notify_page.py:466
+#: xcontrol/audio_page.py:144 xcontrol/notify_page.py:466
 #: xcontrol/panel_page.py:485 xcontrol/power_page.py:99
 msgid "Applied"
 msgstr "Aplicado"
 
-#: xcontrol/audio_page.py:168
+#: xcontrol/audio_page.py:169
 msgid "No sound server answers (PipeWire with pipewire-pulse, or PulseAudio)."
 msgstr ""
 "Nenhum servidor de som responde (PipeWire com pipewire-pulse, ou "
 "PulseAudio)."
 
-#: xcontrol/audio_page.py:179
+#: xcontrol/audio_page.py:180
 #, python-brace-format
 msgid "running at {rate} Hz, {q} samples ({ms:.1f} ms)"
 msgstr "rodando a {rate} Hz, {q} amostras ({ms:.1f} ms)"
 
-#: xcontrol/audio_page.py:181
+#: xcontrol/audio_page.py:182
 msgid "(PipeWire's own settings below need PipeWire)"
 msgstr "(as configurações do PipeWire abaixo precisam do PipeWire)"
 
-#: xcontrol/audio_page.py:192 xcontrol/audio_page.py:253
+#: xcontrol/audio_page.py:189
+msgid ""
+"What the mixer can't do: give a device your own name, hide it from every "
+"program, keep it from sleeping, or prefer it whenever it's connected."
+msgstr ""
+"O que o mixer não faz: dar ao dispositivo um nome seu, ocultá-lo de todos os"
+" programas, impedir que ele durma ou preferi-lo sempre que estiver "
+"conectado."
+
+#: xcontrol/audio_page.py:192
+msgid "Outputs"
+msgstr "Saídas"
+
+#: xcontrol/audio_page.py:193
+msgid "Inputs"
+msgstr "Entradas"
+
+#: xcontrol/audio_page.py:194
+msgid "Sound cards"
+msgstr "Placas de som"
+
+#: xcontrol/audio_page.py:213
 msgid "None found."
 msgstr "Nenhum encontrado."
 
-#: xcontrol/audio_page.py:210
-msgid "Test"
-msgstr "Testar"
+#: xcontrol/audio_page.py:221
+msgid "not used"
+msgstr "não usado"
 
-#: xcontrol/audio_page.py:217 xcontrol/audio_page.py:247
-#, python-brace-format
-msgid "{name} (not used)"
-msgstr "{name} (não usado)"
+#: xcontrol/audio_page.py:223
+msgid "never sleeps"
+msgstr "nunca dorme"
 
-#: xcontrol/audio_page.py:254
-msgid ""
-"A profile picks how a device is used, e.g. stereo or surround, with or "
-"without its microphone, or which HDMI output carries sound."
-msgstr ""
-"Um perfil escolhe como o dispositivo é usado, ex.: estéreo ou surround, com "
-"ou sem microfone, ou qual saída HDMI leva o som."
+#: xcontrol/audio_page.py:225
+msgid "preferred"
+msgstr "preferido"
 
-#: xcontrol/audio_page.py:261
+#: xcontrol/audio_page.py:241
+msgid "No mixer installed"
+msgstr "Nenhum mixer instalado"
+
+#: xcontrol/audio_page.py:241
+msgid "Install pavucontrol (or pwvucontrol)."
+msgstr "Instale o pavucontrol (ou pwvucontrol)."
+
+#: xcontrol/audio_page.py:248
 msgid "Name, hide, keep awake"
 msgstr "Nome, ocultar, manter acordado"
-
-#: xcontrol/audio_page.py:276
-msgid "No test sound"
-msgstr "Sem som de teste"
-
-#: xcontrol/audio_page.py:276
-msgid "Install sound-theme-freedesktop and libpulse (paplay)."
-msgstr "Instale sound-theme-freedesktop e libpulse (paplay)."
-
-#: xcontrol/audio_page.py:290
-msgid "Default changed"
-msgstr "Padrão alterado"
 
 #: xcontrol/bar_module_dialog.py:12 xcontrol/bar_module_dialog.py:31
 msgid "Workspace label"
@@ -3925,6 +3940,10 @@ msgstr "{output} (kernel)"
 #: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:240
 msgid "Connection"
 msgstr "Conexão"
+
+#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:212
+msgid "Output"
+msgstr "Saída"
 
 #: xcontrol/monitor_info.py:86
 msgid "This display did not report any information."
