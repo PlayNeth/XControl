@@ -1,7 +1,7 @@
 """The page list on the left, in groups (a Gtk.StackSidebar can't show headings)."""
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import GLib, Gtk, Pango  # noqa: E402
+from gi.repository import GLib, Gtk  # noqa: E402
 
 from .i18n import N_, _  # noqa: E402
 
@@ -19,7 +19,8 @@ def order():
 
 class Sidebar(Gtk.ScrolledWindow):
     def __init__(self, stack):
-        super().__init__(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        # (as wide as its longest page name, in every language)
+        super().__init__(hscrollbar_policy=Gtk.PolicyType.NEVER, propagate_natural_width=True)
         self.stack = stack
         self.list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
         self.list.get_style_context().add_class("sidebar")
@@ -36,7 +37,6 @@ class Sidebar(Gtk.ScrolledWindow):
             title = stack.child_get_property(child, "title")
             row = Gtk.ListBoxRow()
             lbl = Gtk.Label(label=title, xalign=0, margin_start=14, margin_end=10, margin_top=7, margin_bottom=7)
-            lbl.set_ellipsize(Pango.EllipsizeMode.END)
             row.add(lbl)
             row.page, row.group = n, group_of.get(n, "")
             self.list.add(row)

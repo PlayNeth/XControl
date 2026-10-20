@@ -1,8 +1,9 @@
 """xcontrol --pads: the controller service.
 
-For every DualShock 4 it sets the light bar and the Bluetooth report rate, measures the rate
-it really reports at, and (when asked) hides it from games and shows a virtual Xbox 360
-controller instead, with the buttons remapped and rumble passed back to the DualShock 4.
+For every DualShock 4 and DualSense it sets the light bar, the player lights, the Bluetooth report
+rate (DualShock 4) and adaptive triggers (DualSense), measures the rate it really reports at,
+and (when asked) hides it from games and shows a virtual Xbox 360 controller instead, with the
+buttons remapped, gyro aiming, and rumble passed back to the controller.
 It runs under the desktop service, which restarts it when the settings change.
 """
 import fcntl
@@ -14,7 +15,7 @@ import struct
 import sys
 import time
 
-from . import config, gyro, padmap, pads
+from . import config, focus, gyro, padmap, pads, touchgestures
 
 # ---------------------------------------------------------------- kernel interfaces
 EVENT = struct.Struct("llHHi")              # struct input_event (64-bit)
@@ -29,13 +30,18 @@ UI_DEV_SETUP, UI_ABS_SETUP, UI_DEV_CREATE, UI_DEV_DESTROY = 0x405C5503, 0x401C55
 UI_BEGIN_FF_UPLOAD, UI_END_FF_UPLOAD = 0xC06855C8, 0x406855C9
 UI_BEGIN_FF_ERASE, UI_END_FF_ERASE = 0xC00C55CA, 0x400C55CB
 EVIOCGRAB, EVIOCSFF, EVIOCRMFF = 0x40044590, 0x40304580, 0x40044581
+EVIOCGABS = 0x80184540          # + the axis: struct input_absinfo (6 ints)
 FF_EFFECT = struct.Struct("HhHHHHH2x32s")   # type, id, direction, trigger(2), replay(2), union
 XBOX_ID = (0x0003, 0x045E, 0x028E, 0x0110)  # USB, Microsoft, Xbox 360 controller
 
 DEFAULT = {"enabled": False, "emulate": "xbox360", "hide_real": True, "touchpad_mouse": False,
-           "map": {}, "lightbar": "#0044ff", "brightness": 60, "bt_poll_ms": 1, "gyro": dict(gyro.DEFAULT)}
+           "map": {}, "lightbar": "#0044ff", "brightness": 60, "bt_poll_ms": 1, "gyro": dict(gyro.DEFAULT),
+           "player_lights": "auto", "triggers": {"l2": dict(pads.TRIGGER_DEFAULT), "r2": dict(pads.TRIGGER_DEFAULT)},
+           "touchpad": dict(touchgestures.DEFAULT), "profiles": []}
+# what a per-game layout can change; the rest is the same for every game
+PROFILE_KEYS = ("map", "gyro", "lightbar", "brightness", "triggers", "touchpad")
 # what can switch the gyro on or off: any button, or touching the touchpad
-ACTIVATORS = padmap.SOURCE_ORDER + ["touch"]
+ACTIVATORS = padmap.SOURCE_ORDER + padmap.EDGE_SOURCES + ["touch"]
 EMULATE = ["xbox360", "off"]
 
 
@@ -50,6 +56,22 @@ def normalize(c):
         out["emulate"] = "xbox360"
     out["map"] = padmap.normalize_map(out["map"])
     out["gyro"] = gyro.normalize(out["gyro"], ACTIVATORS)
+    out["touchpad"] = touchgestures.normalize(out["touchpad"])
+    if out["player_lights"] not in ("auto", "off"):
+        out["player_lights"] = "auto"
+    trig = out["triggers"] if isinstance(out["triggers"], dict) else {}
+    out["triggers"] = {k: pads.normalize_trigger(trig.get(k)) for k in ("l2", "r2")}
+    profiles = []
+    for p in out["profiles"] if isinstance(out["profiles"], list) else []:
+        if not isinstance(p, dict):
+            continue
+        sub = p.get("settings") if isinstance(p.get("settings"), dict) else {}
+        sub = {k: v for k, v in sub.items() if k in PROFILE_KEYS}
+        norm = normalize(sub) if sub else {}
+        profiles.append({"name": str(p.get("name") or "").strip()[:60] or "?",
+                         "match": [str(m).strip()[:200] for m in (p.get("match") or []) if str(m).strip()][:12],
+                         "settings": {k: norm[k] for k in sub}})
+    out["profiles"] = profiles[:50]
     c = str(out["lightbar"] or "")
     out["lightbar"] = c if len(c) == 7 and c.startswith("#") else DEFAULT["lightbar"]
     for k, lo, hi in (("brightness", 0, 100), ("bt_poll_ms", 0, 16)):
@@ -58,6 +80,23 @@ def normalize(c):
         except (TypeError, ValueError):
             out[k] = DEFAULT[k]
     return out
+
+
+def effective(settings, profile):
+    """The settings with a per-game layout (an index into settings["profiles"], or None) applied."""
+    if profile is None or not 0 <= profile < len(settings["profiles"]):
+        return settings
+    merged = dict(settings)
+    merged.update(settings["profiles"][profile]["settings"])
+    return merged
+
+
+def choose(settings, names):
+    """The per-game layout for the program in front (its names, from focus.Focus), or None."""
+    for i, p in enumerate(settings["profiles"]):
+        if p["match"] and focus.matches(p["match"], names):
+            return i
+    return None
 
 
 def load():
@@ -233,8 +272,10 @@ class Rumble:
 
 # ---------------------------------------------------------------- one controller
 class Controller:
-    def __init__(self, pad, settings, log):
-        self.pad, self.log = pad, log
+    def __init__(self, pad, settings, log, player=1):
+        self.pad, self.log, self.player = pad, log, player
+        self.seq = 0             # DualSense Bluetooth output report sequence
+        self.triggers_ok = None
         self.fds = {}            # fd -> role
         self.vpad = self.rumble = None
         self.mapper = None
@@ -249,7 +290,8 @@ class Controller:
                 pass
         self.lightbar_ok = self.poll_ok = None
         self.gyro, self.mouse, self.mouse_error = gyro.Gyro(settings["gyro"]), None, ""
-        self.phys = {padmap.ABS_RX: 0, padmap.ABS_RY: 0}     # the real right stick, as sent
+        self.phys = {padmap.ABS_X: 0, padmap.ABS_Y: 0, padmap.ABS_RX: 0, padmap.ABS_RY: 0}   # the real sticks
+        self.gestures = touchgestures.Gestures(settings["touchpad"], *self._touch_size())
         if pad.sensors:
             self._open(pad.sensors, "sensors", grab=False)
         if settings["emulate"] == "xbox360":
@@ -268,11 +310,67 @@ class Controller:
                     self._hide()
         self.apply(settings)
 
+    def _touch_size(self):
+        """The touchpad's size (from its device; the known sizes otherwise)."""
+        default = (1920, 1080) if self.pad.model == "dualsense" else (1920, 942)
+        if not self.pad.touchpad:
+            return default
+        try:
+            fd = os.open(self.pad.touchpad, os.O_RDONLY | os.O_NONBLOCK)
+        except OSError:
+            return default
+        try:
+            size = []
+            for axis in (0, 1):
+                buf = bytearray(24)
+                fcntl.ioctl(fd, EVIOCGABS + axis, buf)
+                size.append(struct.unpack("6i", buf)[2] + 1)
+            return tuple(size) if all(v > 1 for v in size) else default
+        except OSError:
+            return default
+        finally:
+            os.close(fd)
+
+    def _axis(self, code):
+        """A stick axis as games get it: the real stick, plus the gyro and the touchpad."""
+        v = self.phys.get(code, 0)
+        if code in (padmap.ABS_RX, padmap.ABS_RY):
+            v = self.gyro.stick_value(code, v)
+        side = self.gestures.s["stick"]
+        if (side == "right" and code in (padmap.ABS_RX, padmap.ABS_RY)) or \
+                (side == "left" and code in (padmap.ABS_X, padmap.ABS_Y)):
+            v += self.gestures.stick[0 if code in (padmap.ABS_X, padmap.ABS_RX) else 1] * 32767
+        return max(-32768, min(32767, int(round(v))))
+
+    def _sticks(self, codes):
+        return [(EV_ABS, c, self._axis(c)) for c in codes]
+
+    def tick(self):
+        """Swipe releases that are due; returns seconds until the next one (or None)."""
+        if self.mapper and self.vpad:
+            out = []
+            for _kind, src, down in self.gestures.tick():
+                out += self.mapper.press(src, down)
+            if out:
+                self.vpad.send(out)
+        return self.gestures.next_due()
+
     def apply(self, settings):
         """The light bar, the Bluetooth report rate and the gyro (no need to reopen anything)."""
         self.lightbar_ok = pads.set_lightbar(self.pad, settings["lightbar"], settings["brightness"])
-        if self.pad.bus == "bluetooth":
+        if self.pad.bus == "bluetooth" and self.pad.model == "ds4":
             self.poll_ok = pads.set_bt_poll(self.pad, settings["bt_poll_ms"], self.raw)
+        if self.pad.players:
+            pads.set_player_lights(self.pad, self.player if settings["player_lights"] == "auto" else 0)
+        if self.pad.model == "dualsense":
+            self._set_triggers(settings["triggers"])
+        if self.mapper and padmap.normalize_map(settings["map"]) != self.mapper.map:
+            self.mapper = padmap.Mapper(settings["map"])     # (a per-game layout, or edited)
+        old_side = self.gestures.s["stick"]
+        self.gestures.set(settings["touchpad"])
+        if old_side != self.gestures.s["stick"] and self.vpad:
+            self.gestures.stick = (0.0, 0.0)
+            self.vpad.send(self._sticks(list(self.phys)))
         g = settings["gyro"]
         self.gyro.set(g)
         if g["output"] == "mouse" and not self.mouse:
@@ -293,7 +391,11 @@ class Controller:
                 self._open(self.pad.touchpad, "touchpad")
         if g["output"] != "stick" and self.vpad and self.gyro.stick != (0.0, 0.0):
             self.gyro.stick = (0.0, 0.0)
-            self.vpad.send([(EV_ABS, c, v) for c, v in self.phys.items()])
+            self.vpad.send(self._sticks(list(self.phys)))
+
+    def _set_triggers(self, triggers):
+        self.triggers_ok = pads.set_triggers(self.pad, triggers["l2"], triggers["r2"], self.raw, self.seq)
+        self.seq = (self.seq + 1) & 0x0F
 
     def _activation(self, role, etype, code, value):
         b = self.gyro.s["button"]
@@ -350,6 +452,7 @@ class Controller:
         if not data:
             return False
         out = []
+        pending = []     # touchpad events, for the gestures (with their SYN_REPORTs)
         for off in range(0, len(data) - EVENT.size + 1, EVENT.size):
             _s, _u, etype, code, value = EVENT.unpack_from(data, off)
             if role == "sensors":
@@ -357,22 +460,35 @@ class Controller:
                     self.rate_count += 1
                 moved = self.gyro.feed(etype, code, value)
                 if moved is True and self.vpad:
-                    out += [(EV_ABS, c, self.gyro.stick_value(c, v)) for c, v in self.phys.items()]
+                    out += self._sticks((padmap.ABS_RX, padmap.ABS_RY))
                 elif moved and moved is not True and self.mouse:
                     self.mouse.move(*moved)
             elif role == "virtual":
                 self.rumble.handle(etype, code, value)
             elif role in ("gamepad", "touchpad"):
                 if etype == EV_SYN:
+                    if role == "touchpad" and self.mapper and code == 0:
+                        pending.append((etype, code, value))    # (the end of a touchpad report)
                     continue
                 self._activation(role, etype, code, value)
-                if not self.mapper or (role == "touchpad" and not (etype == EV_KEY and code == padmap.BTN_LEFT)):
+                if not self.mapper:
+                    continue
+                if role == "touchpad":
+                    pending.append((etype, code, value))
                     continue
                 for t, c, v in self.mapper.feed(etype, code, value):
-                    if t == EV_ABS and c in self.phys:      # the right stick, plus the gyro
+                    if t == EV_ABS and c in self.phys:      # the sticks, plus the gyro and the touchpad
                         self.phys[c] = v
-                        v = self.gyro.stick_value(c, v)
+                        v = self._axis(c)
                     out.append((t, c, v))
+        for etype, code, value in pending:
+            for action in self.gestures.feed(etype, code, value):
+                if action[0] == "press":
+                    out += self.mapper.press(action[1], action[2])
+                else:
+                    side = self.gestures.s["stick"]
+                    out += self._sticks((padmap.ABS_RX, padmap.ABS_RY) if side == "right"
+                                        else (padmap.ABS_X, padmap.ABS_Y))
         if out and self.vpad:
             self.vpad.send(out)
         now = time.monotonic()
@@ -389,7 +505,7 @@ class Controller:
                 "hidraw_ok": self.raw is not None or pads.hidraw_writable(self.pad),
                 "hidden": bool(self.hidden), "hide_error": self.hide_error,
                 "gyro": self.gyro.status() if self.gyro.s["output"] != "off" else "",
-                "gyro_error": self.mouse_error}
+                "gyro_error": self.mouse_error, "model": self.pad.model, "triggers_ok": self.triggers_ok}
 
     def close(self):
         for fd in list(self.fds):
@@ -405,6 +521,9 @@ class Controller:
             self.mouse.close()
             self.mouse = None
         self.fds.clear()
+        if self.pad.model == "dualsense" and self.raw is not None:    # triggers back to normal
+            off = pads.normalize_trigger({})
+            self._set_triggers({"l2": off, "r2": off})
         if self.raw is not None:
             try:
                 os.close(self.raw)
@@ -417,7 +536,8 @@ class Controller:
 
 
 # ---------------------------------------------------------------- the service
-LIVE = ("lightbar", "brightness", "bt_poll_ms", "gyro")    # applied without reopening the controllers
+# applied without reopening the controllers
+LIVE = ("lightbar", "brightness", "bt_poll_ms", "gyro", "player_lights", "triggers", "map", "profiles", "touchpad")
 
 
 def _restart_keys(settings):
@@ -432,6 +552,11 @@ def calibrate_running():
         return True
     except (OSError, TypeError):
         return False
+
+
+def _ours(names):
+    """XControl's own window: editing a game's layout there shouldn't switch it back."""
+    return any("xcontrol" in n.lower() for n in names[:2])     # (its WM_CLASS)
 
 
 def reload_running():
@@ -460,15 +585,19 @@ def service():
     settings = load()
     scanned = 0.0
     written = None
+    front = focus.Focus()    # which program is in front, for the per-game layouts
+    looked, names, active = 0.0, [], None
+    recent = []              # the last few programs in front (not XControl), for the page
     try:
         while not flags["quit"]:
             if flags["reload"]:
                 flags["reload"] = False
                 new = load()
                 if _restart_keys(new) == _restart_keys(settings) and controllers:
-                    for c in controllers.values():      # only the light bar or the report rate
-                        c.apply(new)
                     settings = new
+                    active = choose(settings, names)
+                    for c in controllers.values():      # (light bar, rate, gyro, layouts...: in place)
+                        c.apply(effective(settings, active))
                 else:
                     settings = new
                     for c in controllers.values():
@@ -479,6 +608,19 @@ def service():
                 flags["calibrate"] = False
                 for c in controllers.values():
                     c.gyro.calibrate()
+            if front.dpy and time.monotonic() - looked >= 0.5:
+                looked = time.monotonic()
+                now = front.names()
+                if now != names:
+                    names = now
+                    if names and not _ours(names):
+                        recent = ([names] + [r for r in recent if r != names])[:8]
+                    pick = choose(settings, names)
+                    if pick != active and not (pick is None and _ours(names)):
+                        active = pick
+                        log(f"layout: {settings['profiles'][active]['name'] if active is not None else 'default'}")
+                        for c in controllers.values():
+                            c.apply(effective(settings, active))
             if time.monotonic() - scanned >= 2:
                 scanned = time.monotonic()
                 found = {p.key: p for p in pads.discover()}
@@ -488,9 +630,12 @@ def service():
                         log(f"gone: {key}")
                 for key, pad in found.items():
                     if key not in controllers:
-                        controllers[key] = Controller(pad, settings, log)
+                        taken = {c.player for c in controllers.values()}
+                        player = next(n for n in range(1, len(controllers) + 2) if n not in taken)
+                        controllers[key] = Controller(pad, effective(settings, active), log, player)
                         log(f"connected: {pad.name} ({pad.bus})")
-            st = {"pid": os.getpid(), "pads": [c.status() for c in controllers.values()]}
+            st = {"pid": os.getpid(), "pads": [c.status() for c in controllers.values()],
+                  "profile": settings["profiles"][active]["name"] if active is not None else "", "recent": recent}
             if st != written:
                 tmp = _runtime("pads.json.tmp")
                 with open(tmp, "w") as f:
@@ -498,8 +643,13 @@ def service():
                 os.replace(tmp, _runtime("pads.json"))
                 written = st
             fds = [fd for c in controllers.values() for fd in c.fds]
+            wait = 0.5
+            for c in controllers.values():        # (swipe presses to let go of)
+                due = c.tick()
+                if due is not None:
+                    wait = min(wait, due)
             try:
-                ready, _w, _x = select.select(fds, [], [], 1.0)
+                ready, _w, _x = select.select(fds, [], [], wait)
             except InterruptedError:
                 continue
             for fd in ready:
@@ -510,6 +660,7 @@ def service():
     finally:
         for c in controllers.values():
             c.close()
+        front.close()
         try:
             os.remove(_runtime("pads.json"))
         except OSError:

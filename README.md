@@ -285,23 +285,34 @@ see presses of the mouse's own DPI button, so pick the stage you want there befo
 
 ## Controllers
 
-A replacement for sc-controller / DS4Windows-style tools, starting with the
-**DualShock 4** (PS4 controller, both models and the USB adapter), over USB or
-Bluetooth. Turn on "Use XControl for controllers"; a small service
-(`xcontrol --pads`) then runs with the desktop service and picks up controllers
-as they connect.
+A replacement for sc-controller / DS4Windows-style tools for PlayStation
+controllers: the **DualShock 4** (both models and the USB adapter) and the
+**DualSense** (and DualSense Edge), over USB or Bluetooth. Turn on "Use XControl
+for controllers"; a small service (`xcontrol --pads`) then runs with the desktop
+service and picks up controllers as they connect.
 
 - **Light bar**: color and brightness (0 turns it off), set through the kernel
-  driver's LEDs (`/sys/class/leds/inputN:red|green|blue|global`), so rumble
-  doesn't reset it. Changes apply right away.
-- **Report rate over Bluetooth**: Linux's driver asks the controller for a
-  report every 4 ms (250 Hz). XControl sends it the interval you pick (1, 2, 4
-  or 8 ms) through its hidraw node, right away and whenever it reconnects; the
-  page shows the rate actually measured. Bluetooth itself is the ceiling: a
-  full DualShock 4 report needs at least two radio slots, so 1 ms usually lands
-  around 500–800 Hz depending on the adapter (Wi-Fi + Bluetooth combo cards
-  share their radio and sit at the low end). That's still faster than the
-  cable: over USB the controller itself usually won't go past 250 Hz.
+  driver's LEDs (DualShock 4: `/sys/class/leds/inputN:red|green|blue|global`;
+  DualSense: the multicolor `inputN:rgb:indicator`), so rumble doesn't reset
+  it. Changes apply right away.
+- **DualSense player lights**: the player number (1–4, in the order controllers
+  connect, with the PS5's patterns) or off.
+- **DualSense adaptive triggers**: for L2 and R2, normal, resistance from a
+  point of the pull on, a click like a gun's trigger between two points, or
+  shaking, with the strength (and the shaking's frequency). XControl sends them
+  in the controller's output report through its hidraw node, in the fields the
+  kernel driver leaves alone, so they stay while the driver changes the light
+  bar or rumbles. The effect formats are the ones documented by Nielk1 (as
+  Steam and DSX use). The triggers go back to normal when the service stops.
+- **Report rate over Bluetooth (DualShock 4)**: Linux's driver asks the
+  controller for a report every 4 ms (250 Hz). XControl sends it the interval
+  you pick (1, 2, 4 or 8 ms) through its hidraw node, right away and whenever
+  it reconnects; the page shows the rate actually measured. Bluetooth itself is
+  the ceiling: a full DualShock 4 report needs at least two radio slots, so 1 ms
+  usually lands around 500–800 Hz depending on the adapter (Wi-Fi + Bluetooth
+  combo cards share their radio and sit at the low end). That's still faster
+  than the cable: over USB the controller itself usually won't go past 250 Hz.
+  The DualSense picks its own Bluetooth rate.
 - **Report rate over USB**: Linux picks the USB polling interval, so this is
   usbhid's `jspoll` setting, which covers every USB gamepad. It asks for your
   password (`xcontrol-controller-helper`), is kept for the next boots
@@ -311,22 +322,28 @@ as they connect.
   4s produce 250 reports per second over USB no matter how often they're asked
   (the measured rate on the page tells). Other USB gamepads can benefit.
 - **Xbox 360 controller for games**: games see a virtual Xbox 360 pad (uinput,
-  045e:028e, the same as xpad) instead of the DualShock 4. Rumble from the game
-  is passed on to the DualShock 4.
-- **Hiding the DualShock 4**: SDL, Wine/Proton and Steam find controllers
+  045e:028e, the same as xpad) instead of the real controller. Rumble from the
+  game is passed on to the controller.
+- **Hiding the real controller**: SDL, Wine/Proton and Steam find controllers
   through their device files (the raw HID one too), so grabbing the input isn't
   enough. Once the service has the controller's files open, a small root helper
   (`xcontrol-controller-hide`, allowed without a password for the active
-  session) takes your user's access to them away; it gives it back when you
-  untick it or the service stops, and a reconnected controller gets it from udev
-  as usual. Games already running keep what they had open. Being in the `input`
-  group defeats this (every program can read every input device then). Steam
-  has its own controller support: turn off "PlayStation Configuration Support"
-  in Steam, or it uses the DualShock 4 as well.
-- **Button remapping**: every DualShock 4 button (and the touchpad click) can be
-  any Xbox button, a trigger, a d-pad direction or nothing. L2/R2 stay analog
-  while they're mapped to LT/RT.
-- The touchpad can keep moving the mouse pointer, or be hidden too.
+  session, and only for PlayStation controllers' device files) takes your
+  user's access to them away; it gives it back when you untick it or the
+  service stops, and a reconnected controller gets it from udev as usual. Games
+  already running keep what they had open. Being in the `input` group defeats
+  this (every program can read every input device then). Steam has its own
+  controller support: turn off "PlayStation Configuration Support" in Steam, or
+  it uses the real controller as well.
+- **Button remapping**: every button (the touchpad click, and the DualSense
+  Edge's back paddles and Fn buttons too) can be any Xbox button, a trigger, a
+  d-pad direction or nothing. L2/R2 stay analog while they're mapped to LT/RT.
+- **Touchpad**: it can keep moving the mouse pointer, or be hidden and used
+  for gestures: its click as one button, two halves or four corners (each its
+  own button); quick swipes up, down, left and right as buttons (a short
+  press); or sliding a finger as the left or right stick, from where the finger
+  lands (a fifth of the touchpad's width is a full push), added to the real
+  stick.
 - **Gyro aiming**: turn the controller to aim, either as a separate virtual
   mouse ("XControl gyro mouse", the most precise) or added to the virtual Xbox
   pad's right stick (works in every game; set the game's stick deadzone on the
@@ -339,12 +356,21 @@ as they connect.
   quick turns stay raw. The gyro's drift is learned whenever the controller lies
   still for a moment, or on request with "Calibrate now". Speed is in mouse
   dots per degree turned, so it pairs with the game's mouse sensitivity.
+- **Layouts per game**: a game can have its own buttons, gyro, light bar,
+  triggers and touchpad gestures. The service watches which window is in front
+  (`_NET_ACTIVE_WINDOW`: its class, like `steam_app_1245620`, and the program
+  behind it, like `eldenring.exe` for a Proton game) and switches layouts in
+  place, without the virtual pad going away. Patterns can use `*`
+  (`steam_app_*`). "New for a game…" offers the programs recently in front, or
+  a click on the game's window. The report rate, what games see and the player
+  lights are the same for every game.
 
 Permissions come from `/usr/lib/udev/rules.d/70-xcontrol-controllers.rules`:
-`/dev/uinput`, the DualShock 4's hidraw node and its light bar LEDs for the
-logged-in user. They apply to controllers connected after installing, so
-reconnect the controller once (or reboot). Stop sc-controller (`scc-daemon`)
-first, or both will drive the controller and games see an extra pad.
+`/dev/uinput`, the controllers' hidraw nodes, motion sensors and touchpads, and
+their light bar and player LEDs for the logged-in user. They apply to
+controllers connected after installing, so reconnect the controller once (or
+reboot). Stop sc-controller (`scc-daemon`) first, or both will drive the
+controller and games see an extra pad.
 
 ## Appearance
 
@@ -776,8 +802,9 @@ EDIDs are often rounded or copied between models, so treat them as approximate.
 
 ## Translations
 
-The interface uses gettext; translations live in `po/`. A Brazilian Portuguese
-translation is included, and the app follows your desktop language.
+The interface uses gettext; translations live in `po/`. Brazilian Portuguese,
+Spanish, French, German and Russian are included, and the app follows your desktop
+language (or the one set on the Date & Language page).
 
 - Add a language: `make new-po LANG_CODE=es`, then translate `po/es.po`
   (Poedit works well).
@@ -785,6 +812,9 @@ translation is included, and the app follows your desktop language.
   translation.
 - `make` checks each translation with `msgfmt --check`, which also catches
   broken `{placeholders}`, and translates the app-menu entry.
+- `python3 tests/check_po_quality.py po/xx.po` (needs python-polib) also checks
+  that nothing is left untranslated or fuzzy and that markup and placeholders
+  match the English.
 
 **Copy** on the System page and **Copy details** in the display details copy in your language. The arrow next to
 it has **Copy in English**, which is more useful in bug reports.

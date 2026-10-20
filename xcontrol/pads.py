@@ -1,8 +1,10 @@
-"""DualShock 4 controllers: finding them, their light bar, battery and Bluetooth report rate.
+"""PlayStation controllers (DualShock 4, DualSense): finding them, their light bar, player
+lights, battery, Bluetooth report rate (DualShock 4) and adaptive triggers (DualSense).
 
-The kernel's driver (hid-playstation, or hid-sony on old kernels) gives each controller three
-input devices (the gamepad, its motion sensors and its touchpad), four LEDs for the light bar
-(inputN:red/green/blue/global), a battery, and a hidraw node for raw reports.
+The kernel's driver (hid-playstation, or hid-sony for the DualShock 4 on old kernels) gives each
+controller three input devices (the gamepad, its motion sensors and its touchpad), LEDs for the
+light bar (DualShock 4: inputN:red/green/blue/global; DualSense: one inputN:rgb:indicator, plus
+inputN:white:player-1..5), a battery, and a hidraw node for raw reports.
 """
 import glob
 import os
@@ -20,6 +22,8 @@ HIDE_HELPER = os.path.join(LIBDIR, "xcontrol-controller-hide")
 
 SONY = 0x054C
 DS4_PRODUCTS = {0x05C4: "DualShock 4", 0x09CC: "DualShock 4 (v2)", 0x0BA0: "DualShock 4 USB adapter"}
+DUALSENSE_PRODUCTS = {0x0CE6: "DualSense", 0x0DF2: "DualSense Edge"}
+PRODUCTS = {**DS4_PRODUCTS, **DUALSENSE_PRODUCTS}
 DRIVERS = ("playstation", "sony")
 BUS_USB, BUS_BT = 0x0003, 0x0005
 
@@ -45,6 +49,9 @@ class Pad:
     hidraw: str = ""         # /dev/hidrawN
     leds: dict = field(default_factory=dict)   # red/green/blue/global -> sysfs dir
     battery: str = ""        # sysfs power_supply dir
+    model: str = "ds4"       # "ds4" or "dualsense"
+    edge: bool = False       # a DualSense Edge (Fn buttons and back paddles)
+    players: list = field(default_factory=list)   # DualSense player light LED dirs, left to right
 
 
 def _read(path, default=""):
@@ -63,12 +70,13 @@ def discover(sysroot="/sys", devroot="/dev"):
         if not m:
             continue
         bus, vendor, product = (int(x, 16) for x in m.groups())
-        if vendor != SONY or product not in DS4_PRODUCTS:
+        if vendor != SONY or product not in PRODUCTS:
             continue
         driver = os.path.basename(os.path.realpath(os.path.join(hid, "driver")))
         if driver not in DRIVERS:
             continue
-        pad = Pad(key="", name=DS4_PRODUCTS[product], bus="bluetooth" if bus == BUS_BT else "usb", hid=hid)
+        pad = Pad(key="", name=PRODUCTS[product], bus="bluetooth" if bus == BUS_BT else "usb", hid=hid,
+                  model="dualsense" if product in DUALSENSE_PRODUCTS else "ds4", edge=product == 0x0DF2)
         for inp in sorted(glob.glob(os.path.join(hid, "input", "input*"))):
             name = _read(os.path.join(inp, "name"))
             pad.key = pad.key or _read(os.path.join(inp, "uniq")).lower()
@@ -85,14 +93,8 @@ def discover(sysroot="/sys", devroot="/dev"):
                 js = sorted(glob.glob(os.path.join(inp, "js*")))
                 if js:
                     pad.joystick = os.path.join(devroot, "input", os.path.basename(js[0]))
-                for led in glob.glob(os.path.join(sysroot, "class", "leds", os.path.basename(inp) + ":*")):
-                    color = led.rsplit(":", 1)[-1]
-                    if color in ("red", "green", "blue", "global"):
-                        pad.leds[color] = led
-        for led in glob.glob(os.path.join(hid, "leds", "*")):    # (also reachable from the HID device)
-            color = led.rsplit(":", 1)[-1]
-            if color in ("red", "green", "blue", "global") and color not in pad.leds:
-                pad.leds[color] = led
+                _leds(pad, glob.glob(os.path.join(sysroot, "class", "leds", os.path.basename(inp) + ":*")))
+        _leds(pad, glob.glob(os.path.join(hid, "leds", "*")))    # (also reachable from the HID device)
         raw = sorted(glob.glob(os.path.join(hid, "hidraw", "hidraw*")))
         if raw:
             pad.hidraw = os.path.join(devroot, os.path.basename(raw[0]))
@@ -105,6 +107,20 @@ def discover(sysroot="/sys", devroot="/dev"):
     return pads
 
 
+def _leds(pad, dirs):
+    players = {}
+    for led in dirs:
+        parts = os.path.basename(led).split(":")
+        if len(parts) == 2 and parts[1] in ("red", "green", "blue", "global"):
+            pad.leds.setdefault(parts[1], led)
+        elif len(parts) == 3 and parts[1:] == ["rgb", "indicator"]:
+            pad.leds.setdefault("rgb", led)
+        elif len(parts) == 3 and re.fullmatch(r"player-[1-5]", parts[2]):
+            players[int(parts[2][-1])] = led
+    if players and not pad.players:
+        pad.players = [players[i] for i in sorted(players)]
+
+
 def battery(pad):
     """(percent, status) or (None, "")."""
     if not pad.battery:
@@ -114,8 +130,15 @@ def battery(pad):
 
 
 # ---------------------------------------------------------------- light bar
+def _led_files(pad):
+    if "rgb" in pad.leds:
+        return [os.path.join(pad.leds["rgb"], f) for f in ("multi_intensity", "brightness")]
+    return [os.path.join(d, "brightness") for k, d in pad.leds.items() if k in ("red", "green", "blue", "global")]
+
+
 def lightbar_writable(pad):
-    return bool(pad.leds) and all(os.access(os.path.join(d, "brightness"), os.W_OK) for d in pad.leds.values())
+    files = _led_files(pad)
+    return bool(files) and all(os.access(f, os.W_OK) for f in files)
 
 
 def set_lightbar(pad, color, brightness=100):
@@ -126,6 +149,15 @@ def set_lightbar(pad, color, brightness=100):
     c = color.lstrip("#")
     r, g, b = (int(c[i:i + 2], 16) for i in (0, 2, 4))
     scale = max(0, min(100, brightness)) / 100
+    if "rgb" in pad.leds:     # DualSense: one multicolor LED (color, then overall brightness)
+        try:
+            with open(os.path.join(pad.leds["rgb"], "multi_intensity"), "w") as f:
+                f.write(f"{r} {g} {b}")
+            with open(os.path.join(pad.leds["rgb"], "brightness"), "w") as f:
+                f.write(str(round(255 * scale) if (r or g or b) else 0))
+        except OSError:
+            return False
+        return True
     try:
         for name, value in (("red", r), ("green", g), ("blue", b)):
             with open(os.path.join(pad.leds[name], "brightness"), "w") as f:
@@ -136,6 +168,116 @@ def set_lightbar(pad, color, brightness=100):
     except OSError:
         return False
     return True
+
+
+# ---------------------------------------------------------------- player lights (DualSense)
+# the patterns the PlayStation uses for players 1..4 (5 LEDs, left to right)
+PLAYER_PATTERNS = {1: (0, 0, 1, 0, 0), 2: (0, 1, 0, 1, 0), 3: (1, 0, 1, 0, 1), 4: (1, 1, 0, 1, 1)}
+
+
+def set_player_lights(pad, player):
+    """Player number 1..4, or 0 for off. False when they can't be written (or there are none)."""
+    if len(pad.players) != 5:
+        return False
+    pattern = PLAYER_PATTERNS.get(player, (0, 0, 0, 0, 0))
+    try:
+        for led, on in zip(pad.players, pattern):
+            with open(os.path.join(led, "brightness"), "w") as f:
+                f.write("1" if on else "0")
+    except OSError:
+        return False
+    return True
+
+
+# ---------------------------------------------------------------- adaptive triggers (DualSense)
+# Trigger effects as the PS5 sets them; 10 zones along the trigger's travel (0 = at rest),
+# strength and amplitude 1..8. Formats as documented by Nielk1 (used by Steam and DSX).
+TRIGGER_MODES = ["off", "resistance", "weapon", "vibration"]
+TRIGGER_DEFAULT = {"mode": "off", "start": 3, "end": 6, "strength": 5, "frequency": 30}
+DS_USB_REPORT_ID, DS_USB_REPORT_SIZE = 0x02, 63
+DS_BT_REPORT_ID, DS_BT_REPORT_SIZE, DS_BT_TAG = 0x31, 78, 0x10
+FLAG0_RIGHT_TRIGGER, FLAG0_LEFT_TRIGGER = 0x04, 0x08
+RIGHT_TRIGGER_AT, LEFT_TRIGGER_AT = 10, 21        # in the report's common part
+
+
+def normalize_trigger(t):
+    out = dict(TRIGGER_DEFAULT)
+    if isinstance(t, dict):
+        out.update({k: v for k, v in t.items() if k in TRIGGER_DEFAULT})
+    if out["mode"] not in TRIGGER_MODES:
+        out["mode"] = "off"
+    for k, lo, hi in (("start", 0, 9), ("end", 1, 9), ("strength", 1, 8), ("frequency", 1, 255)):
+        try:
+            out[k] = max(lo, min(hi, int(out[k])))
+        except (TypeError, ValueError):
+            out[k] = TRIGGER_DEFAULT[k]
+    return out
+
+
+def trigger_effect(t):
+    """The 11 bytes of one trigger's effect."""
+    t = normalize_trigger(t)
+    e = bytearray(11)
+    mode, strength = t["mode"], t["strength"] - 1
+    if mode in ("resistance", "vibration"):
+        zones, force = 0, 0
+        for i in range(t["start"], 10):
+            zones |= 1 << i
+            force |= strength << (3 * i)
+        e[0] = 0x21 if mode == "resistance" else 0x26
+        e[1:3] = zones.to_bytes(2, "little")
+        e[3:7] = force.to_bytes(4, "little")
+        if mode == "vibration":
+            e[9] = t["frequency"]
+    elif mode == "weapon":
+        start = max(2, min(7, t["start"]))
+        end = max(start + 1, min(8, t["end"]))
+        e[0] = 0x25
+        e[1:3] = ((1 << start) | (1 << end)).to_bytes(2, "little")
+        e[3] = strength
+    else:
+        e[0] = 0x05
+    return bytes(e)
+
+
+def ds_trigger_report(bus, left, right, seq=0):
+    """A DualSense output report setting both triggers' effects and nothing else (the driver's
+    own reports leave them alone, so they stay)."""
+    common = bytearray(47)
+    common[0] = FLAG0_RIGHT_TRIGGER | FLAG0_LEFT_TRIGGER
+    common[RIGHT_TRIGGER_AT:RIGHT_TRIGGER_AT + 11] = trigger_effect(right)
+    common[LEFT_TRIGGER_AT:LEFT_TRIGGER_AT + 11] = trigger_effect(left)
+    if bus != "bluetooth":
+        data = bytearray(DS_USB_REPORT_SIZE)
+        data[0] = DS_USB_REPORT_ID
+        data[1:48] = common
+        return bytes(data)
+    data = bytearray(DS_BT_REPORT_SIZE)
+    data[0], data[1], data[2] = DS_BT_REPORT_ID, (seq & 0x0F) << 4, DS_BT_TAG
+    data[3:50] = common
+    crc = zlib.crc32(bytes([CRC_SEED]) + bytes(data[:DS_BT_REPORT_SIZE - 4])) & 0xFFFFFFFF
+    data[DS_BT_REPORT_SIZE - 4:] = struct.pack("<I", crc)
+    return bytes(data)
+
+
+def set_triggers(pad, left, right, fd=None, seq=0):
+    """Adaptive trigger effects on a DualSense, through its hidraw node (or an open `fd`)."""
+    if pad.model != "dualsense" or not (pad.hidraw or fd is not None):
+        return False
+    own = fd is None
+    if own:
+        try:
+            fd = os.open(pad.hidraw, os.O_WRONLY | os.O_NONBLOCK)
+        except OSError:
+            return False
+    try:
+        os.write(fd, ds_trigger_report(pad.bus, left, right, seq))
+        return True
+    except OSError:
+        return False
+    finally:
+        if own:
+            os.close(fd)
 
 
 # ---------------------------------------------------------------- report rate (Bluetooth)
@@ -157,7 +299,7 @@ def set_bt_poll(pad, ms, fd=None):
     """Ask a Bluetooth DualShock 4 to report every `ms` milliseconds (1 = 1000 Hz). The hidraw
     node needs to be writable (steam-devices or XControl's udev rules give it to you), or pass
     an already open `fd` of it."""
-    if pad.bus != "bluetooth" or not (pad.hidraw or fd is not None):
+    if pad.model != "ds4" or pad.bus != "bluetooth" or not (pad.hidraw or fd is not None):
         return False
     ms = int(ms) or BT_DRIVER_POLL_MS     # 0: back to the driver's own rate
     own = fd is None

@@ -60,6 +60,7 @@ LABELS = {
     ("battery", "full_at"): N_("Counts as full at (%)"),
     ("tray", "spacing"): N_("Space between icons (pt)"),
     ("tray", "margin"): N_("Space around the tray (pt)"),
+    # xgettext: no-python-format
     ("tray", "size"): N_("Icon size (% of the bar height)"),
 }
 CHOICES = {

@@ -172,6 +172,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
 class App(Gtk.Application):
     def __init__(self, page="gaming"):
+        GLib.set_prgname("xcontrol")    # (its windows' WM_CLASS; the controller service knows it by that)
         super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.page = page
 

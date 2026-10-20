@@ -3,14 +3,17 @@
 # virtual controllers (Xbox 360 emulation)
 KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
 
-# DualShock 4 raw reports (the Bluetooth report rate), over USB and over Bluetooth
-KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4|09cc|0ba0", TAG+="uaccess"
-KERNEL=="hidraw*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*", TAG+="uaccess"
+# DualShock 4 and DualSense raw reports (DualShock 4 Bluetooth report rate, DualSense adaptive triggers), over USB and over Bluetooth
+KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4|09cc|0ba0|0ce6|0df2", TAG+="uaccess"
+KERNEL=="hidraw*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*|*054C:0CE6*|*054C:0DF2*", TAG+="uaccess"
 
-# DualShock 4 motion sensors and touchpad (the gamepad itself already is the user's, as a joystick):
+# DualShock 4 / DualSense motion sensors and touchpad (the gamepad itself already is the user's, as a joystick):
 # to measure the report rate, and to hide the touchpad or keep it as a mouse
-SUBSYSTEM=="input", KERNEL=="event*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*", TAG+="uaccess"
+SUBSYSTEM=="input", KERNEL=="event*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*|*054C:0CE6*|*054C:0DF2*", TAG+="uaccess"
 
-# DualShock 4 light bar (the kernel's LEDs: inputN:red/green/blue/global)
-ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:red|input*:green|input*:blue|input*:global", \
+# light bar and player lights (the kernel's LEDs: DualShock 4 inputN:red/green/blue/global,
+# DualSense inputN:rgb:indicator and inputN:white:player-1..5)
+ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:red|input*:green|input*:blue|input*:global|input*:white:player-*", \
   DRIVERS=="playstation|sony", RUN+="/bin/chmod 0666 /sys%p/brightness"
+ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:rgb:indicator", DRIVERS=="playstation", \
+  RUN+="/bin/chmod 0666 /sys%p/brightness /sys%p/multi_intensity"

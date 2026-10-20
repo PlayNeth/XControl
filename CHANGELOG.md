@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.26.0 (2026-10-20)
+
+**Add DualSense support, per-game controller layouts and new translations**
+
+- Support the DualSense and DualSense Edge (USB and Bluetooth) on the Controllers page: light bar,
+  remapping and Xbox 360 emulation, as for the DualShock 4
+- Add DualSense player lights: the player number in connection order (PS5 patterns) or off
+- Add DualSense adaptive triggers for L2 and R2: resistance, a gun-like click or shaking, with
+  strength and frequency; they go back to normal when the service stops
+- Allow remapping the DualSense Edge's back paddles and Fn buttons
+- Add touchpad gestures: click as halves or corners, quick swipes as buttons, or a finger slide
+  used as the left or right stick
+- Add per-game layouts: buttons, gyro, light bar, triggers and touchpad switch automatically
+  with the window in front, picked from recent programs or by clicking a game's window
+- Apply button map and layout changes without restarting the controller service
+- Add Spanish, French, German and Russian translations
+- Make the sidebar as wide as the longest page name instead of cutting names off
+- Add a translation quality check and tests for the DualSense, layouts and touchpad gestures
+
 ## 0.25.3 (2026-10-20)
 
 **Fix Bluetooth headset settings on the Sound page having no effect**

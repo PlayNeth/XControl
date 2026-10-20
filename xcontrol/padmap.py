@@ -1,7 +1,7 @@
-"""Turning DualShock 4 input into an Xbox 360 controller's, with the buttons remapped.
+"""Turning PlayStation controller input into an Xbox 360 controller's, with the buttons remapped.
 
 Pure logic (no devices), so it can be tested: feed it (type, code, value) events from the
-DS4's gamepad and touchpad devices, get the Xbox pad's events back.
+controller's gamepad and touchpad devices, get the Xbox pad's events back.
 """
 EV_SYN, EV_KEY, EV_ABS = 0x00, 0x01, 0x03
 SYN_REPORT = 0
@@ -10,17 +10,25 @@ BTN_SOUTH, BTN_EAST, BTN_NORTH, BTN_WEST = 0x130, 0x131, 0x133, 0x134
 BTN_TL, BTN_TR, BTN_TL2, BTN_TR2 = 0x136, 0x137, 0x138, 0x139
 BTN_SELECT, BTN_START, BTN_MODE, BTN_THUMBL, BTN_THUMBR = 0x13A, 0x13B, 0x13C, 0x13D, 0x13E
 BTN_LEFT = 0x110   # the touchpad's click (on the touchpad device)
+BTN_TRIGGER_HAPPY1 = 0x2C0     # DualSense Edge: Fn left, Fn right, left paddle, right paddle
 
-# the DualShock 4's buttons as hid-playstation reports them
+# the controller's buttons as hid-playstation reports them (DualShock 4 and DualSense alike)
 SOURCES = {
     "cross": BTN_SOUTH, "circle": BTN_EAST, "triangle": BTN_NORTH, "square": BTN_WEST,
     "l1": BTN_TL, "r1": BTN_TR, "l2": BTN_TL2, "r2": BTN_TR2,
     "share": BTN_SELECT, "options": BTN_START, "ps": BTN_MODE, "l3": BTN_THUMBL, "r3": BTN_THUMBR,
     "touchpad": BTN_LEFT,
+    "fn_left": BTN_TRIGGER_HAPPY1, "fn_right": BTN_TRIGGER_HAPPY1 + 1,
+    "paddle_left": BTN_TRIGGER_HAPPY1 + 2, "paddle_right": BTN_TRIGGER_HAPPY1 + 3,
+    # touchpad gestures (touchgestures.py): pressed through Mapper.press()
+    "touch_left": "g:touch_left", "touch_right": "g:touch_right", "touch_tl": "g:touch_tl", "touch_tr": "g:touch_tr",
+    "touch_bl": "g:touch_bl", "touch_br": "g:touch_br", "swipe_up": "g:swipe_up", "swipe_down": "g:swipe_down",
+    "swipe_left": "g:swipe_left", "swipe_right": "g:swipe_right",
     "dpad_up": "hat_up", "dpad_down": "hat_down", "dpad_left": "hat_left", "dpad_right": "hat_right",
 }
 SOURCE_ORDER = ["cross", "circle", "square", "triangle", "l1", "r1", "l2", "r2", "l3", "r3", "share", "options",
                 "ps", "touchpad", "dpad_up", "dpad_down", "dpad_left", "dpad_right"]
+EDGE_SOURCES = ["paddle_left", "paddle_right", "fn_left", "fn_right"]     # only on the DualSense Edge
 # what an Xbox 360 pad has (xpad's codes: its X is BTN_X = BTN_NORTH, its Y is BTN_Y = BTN_WEST)
 TARGETS = {
     "a": BTN_SOUTH, "b": BTN_EAST, "x": BTN_NORTH, "y": BTN_WEST, "lb": BTN_TL, "rb": BTN_TR,
@@ -33,7 +41,10 @@ TARGET_ORDER = ["a", "b", "x", "y", "lb", "rb", "lt", "rt", "ls", "rs", "back", 
 DEFAULT_MAP = {"cross": "a", "circle": "b", "square": "x", "triangle": "y", "l1": "lb", "r1": "rb",
                "l2": "lt", "r2": "rt", "l3": "ls", "r3": "rs", "share": "back", "options": "start", "ps": "guide",
                "touchpad": "none", "dpad_up": "dpad_up", "dpad_down": "dpad_down", "dpad_left": "dpad_left",
-               "dpad_right": "dpad_right"}
+               "dpad_right": "dpad_right", "paddle_left": "none", "paddle_right": "none", "fn_left": "none",
+               "fn_right": "none", "touch_left": "back", "touch_right": "start", "touch_tl": "none",
+               "touch_tr": "none", "touch_bl": "none", "touch_br": "none", "swipe_up": "none", "swipe_down": "none",
+               "swipe_left": "none", "swipe_right": "none"}
 XBOX_BUTTONS = [BTN_SOUTH, BTN_EAST, BTN_NORTH, BTN_WEST, BTN_TL, BTN_TR, BTN_SELECT, BTN_START, BTN_MODE,
                 BTN_THUMBL, BTN_THUMBR]
 # axes of the virtual pad: (code, min, max, fuzz, flat)
@@ -109,6 +120,13 @@ class Mapper:
                 self._hat("hat_down", value > 0)
                 return self._changes()
         return []
+
+    def press(self, source, down):
+        """A button that isn't one of the controller's own (a touchpad gesture, or the touchpad
+        click); returns the output events."""
+        if source in SOURCES:
+            self._press(source, down)
+        return self._changes()
 
     def _hat(self, hat_source, down):
         if self.hat_src[hat_source] == int(down):

@@ -6,7 +6,7 @@
 #   show NODE...    give it back
 #
 # NODE is /dev/input/eventN, /dev/input/jsN or /dev/hidrawN, and must belong to a Sony
-# DualShock 4 (054c: 05c4, 09cc, 0ba0); anything else is refused. XControl's controller service
+# DualShock 4 (054c: 05c4, 09cc, 0ba0) or DualSense (0ce6, 0df2 Edge); anything else is refused. XControl's controller service
 # opens them before hiding them, so it keeps reading them while games can't find the
 # controller. A reconnected controller gets the usual access again from udev.
 set -eu
@@ -45,8 +45,9 @@ for node in "$@"; do
     [ -c "$node" ] || [ "$(id -u)" != 0 ] || die "not a device: $node"
     path=$(readlink -f "$SYS/class/$cls/$name") || die "no such device: $node"
     case $path in
-        *054C:05C4.*|*054C:09CC.*|*054C:0BA0.*|*054c:05c4.*|*054c:09cc.*|*054c:0ba0.*) ;;
-        *) die "not a DualShock 4: $node";;
+        *054C:05C4.*|*054C:09CC.*|*054C:0BA0.*|*054C:0CE6.*|*054C:0DF2.*) ;;
+        *054c:05c4.*|*054c:09cc.*|*054c:0ba0.*|*054c:0ce6.*|*054c:0df2.*) ;;
+        *) die "not a PlayStation controller: $node";;
     esac
 done
 

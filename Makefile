@@ -116,6 +116,9 @@ check:
 	$(PYTHON) tests/check_power.py
 	$(PYTHON) tests/check_pads.py
 	$(PYTHON) tests/check_gyro.py
+	$(PYTHON) tests/check_dualsense.py
+	$(PYTHON) tests/check_layouts.py
+	$(PYTHON) tests/check_touch.py
 	$(PYTHON) tests/check_poweralerts.py
 	$(PYTHON) tests/check_health.py
 	$(PYTHON) tests/check_backup.py

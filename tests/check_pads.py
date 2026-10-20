@@ -198,7 +198,8 @@ class StubVpad:
 c = S.Controller.__new__(S.Controller)
 c.pad, c.log, c.error = pad, print, ""
 c.vpad, c.mapper, c.rumble = StubVpad(), M.Mapper(), None
-c.gyro, c.mouse, c.phys = G.Gyro(), None, {M.ABS_RX: 0, M.ABS_RY: 0}
+c.gyro, c.mouse, c.phys = G.Gyro(), None, {M.ABS_X: 0, M.ABS_Y: 0, M.ABS_RX: 0, M.ABS_RY: 0}
+c.gestures = __import__("xcontrol.touchgestures", fromlist=["x"]).Gestures()
 c.rate_count, c.rate_since, c.rate = 0, time.monotonic() - 1.0, 0
 gp_r, gp_w = os.pipe()
 se_r, se_w = os.pipe()
