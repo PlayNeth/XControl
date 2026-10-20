@@ -158,6 +158,18 @@ closing the panel) puts the old colors back. Changes go through **Apply** with t
 15-second revert. A saved layout only stores values
 that differ from the driver's defaults, so they come back after X restarts.
 
+### Night light
+
+Warmer colors in the evening, set at the bottom of the Displays page and applied right away by
+the desktop service (no Apply). **When**: from sunset to sunrise (the sun's position at your
+location, which comes from the time zone unless you enter latitude and longitude), at set hours
+with a gradual change, or all the time. **Night color** goes from 6000 K down to 1500 K, and
+**Leave alone** skips displays you do color work on. It writes each display's gamma ramps
+(RandR) on top of the gamma set above, so the two don't fight, re-applies them if another
+program resets them, and puts normal colors back when it's turned off. From a key:
+`xcontrol --night toggle` (on or off until the schedule next changes; also `on`, `off`, `auto`).
+The page warns when redshift, gammastep or sct is running too.
+
 ## Custom resolutions and ignoring the EDID
 
 **Resolutions…** on the Displays page opens a per-display editor:
@@ -337,6 +349,28 @@ environment variables are still read. An EDID override installed as
 `/usr/lib/firmware/edid/mesa-panel-*.bin` keeps working; installing a new one uses the
 `xcontrol-*.bin` name, and the dialog tells you to update the kernel parameter.
 
+## Sound
+
+The Sound page covers what pavucontrol and a volume key don't:
+
+- **Output and Input**: the default device, its port (e.g. headphones or line out), and a
+  **Test** sound per output.
+- **Devices**: each sound card's profile (stereo, surround, with or without the microphone,
+  which HDMI output carries sound, "Pro Audio", off).
+- The gear of an output, input or card: **rename** it (the name every program shows), **hide**
+  it from every program (e.g. the graphics card's HDMI audio you never use), **never let it
+  sleep** (no pop and no lost first second, common with HDMI and USB DACs), and **prefer it
+  whenever it's connected**.
+- **Sound system (PipeWire)**: the sample rate, **follow what's playing** (music at 44.1 kHz
+  plays unconverted; allowed rates), the **buffer size** (larger against crackling, smaller for
+  less delay in games and music), and keeping every output awake.
+
+Sample rate and buffer size change right away (PipeWire's settings metadata) and are saved in
+`~/.config/pipewire/pipewire.conf.d/50-xcontrol.conf` (and the PulseAudio-side
+`pipewire-pulse.conf.d`); device settings go to
+`~/.config/wireplumber/wireplumber.conf.d/50-xcontrol.conf` (WirePlumber 0.5, or a
+`main.lua.d` script for 0.4) and restart WirePlumber.
+
 ## Desktop
 
 ### Wallpaper
@@ -509,6 +543,33 @@ that part) are left out, and anything else lands in **Extra i3 config**.
 
 `exec --no-startup-id xcontrol --session` is always in the generated file, so the wallpaper,
 bar, compositor, screen lock and input settings start with i3.
+
+## Default Apps
+
+Which program opens links, email links, folders, text files, pictures, videos, music, PDFs,
+archives and office documents, saved in `~/.config/mimeapps.list` (what xdg-open, browsers and
+file managers read). Picking a program for a group sets it for every type in the group it can
+open. **Every file type** lists all types with a program, searchable, to change any one. The
+page also cleans up entries pointing to programs that are no longer installed, warns when
+`$BROWSER` overrides the browser, and makes your own launchers in `~/.local/share/applications`
+(AppImages, Wine, Steam games) count by refreshing their `mimeinfo.cache`, which nothing else does.
+
+**Terminal**: there's no standard for it, so the choice goes to `~/.config/xdg-terminals.list`
+(xdg-terminal-exec, which GLib uses for programs that run in a terminal), and XControl's i3
+config uses it for the terminal key instead of i3-sensible-terminal.
+
+## Date & Language
+
+- **Time zone** (searchable), **automatic time** from the internet (needs systemd-timesyncd,
+  chrony or ntpd), **setting the time by hand**, and **keeping the hardware clock in local
+  time** for dual boot with Windows. These go through systemd's timedated, so polkit asks for
+  your password.
+- **Language** (menus and messages) and **Formats** (dates, times, numbers, currency, units,
+  paper), with a preview, **just for you** (`~/.config/locale.conf`, read at login on Arch) or
+  **for everyone** (through systemd's localed). They take effect at the next login.
+- **More languages…** turns languages on for the whole computer: it enables them in
+  `/etc/locale.gen` and runs `locale-gen`, through a small root helper (pkexec) that only accepts
+  names listed in `/usr/share/i18n/SUPPORTED`.
 
 ## Users
 

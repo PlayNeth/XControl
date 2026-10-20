@@ -254,6 +254,9 @@ class DisplayPage(Gtk.Box):
                 labels.add_widget(child)
         for w in self.color.label_widgets():
             labels.add_widget(w)
+        from .night_page import NightPanel
+        self.night = NightPanel(self.window)
+        self.pack_start(self.night, False, False, 6)
 
         buttons = Gtk.Box(spacing=6)
         self.autostart_check = Gtk.CheckButton(label=_("Restore this layout when I log in"))

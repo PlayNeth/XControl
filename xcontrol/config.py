@@ -109,6 +109,10 @@ def load():
     i3 = raw.get("i3")
     if isinstance(i3, dict):
         data["i3"] = i3
+    # audio: XControl's PipeWire/WirePlumber settings (checked by audio.normalize)
+    au = raw.get("audio")
+    if isinstance(au, dict):
+        data["audio"] = au
     # small interface preferences, e.g. {"preview": false}
     ui = raw.get("ui")
     if isinstance(ui, dict):

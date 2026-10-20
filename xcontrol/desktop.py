@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-from . import awake, bar, compositor, config, notify, wallpaper
+from . import awake, bar, compositor, config, night, notify, wallpaper
 
 LOCKERS = ["i3lock", "xsecurelock", "slock"]
 LOCK_DEFAULT = {"enabled": False, "locker": "i3lock", "image": "wallpaper", "color": "#000000",
@@ -48,6 +48,7 @@ def normalize(d):
     blank["screen_off_minutes"] = max(0, int(blank["screen_off_minutes"] or 0))
     awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
     return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake, "notify": notify.normalize(d.get("notify")),
+            "night": night.normalize(d.get("night")),
             "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
 
@@ -116,7 +117,8 @@ def wanted(desk):
     """Whether the background service is needed at all."""
     return (desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
             or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
-            or desk["notify"]["enabled"]
+            or desk["notify"]["enabled"] or desk["night"]["enabled"]
+            or night.forced(_runtime) is not None
             or awake.manual_until(_runtime) is not None)
 
 
@@ -286,6 +288,22 @@ def set_awake(how):
     return until
 
 
+def set_night(how):
+    """xcontrol --night on|off|toggle|auto (on/off last until the schedule next changes)."""
+    desk = load()
+    if how == "status":
+        return night.forced(_runtime, desk["night"])
+    result = night.set_forced(_runtime, how, desk["night"])
+    notify_daemon(desk)
+    st = state()
+    if st.get("daemon"):
+        try:
+            os.kill(st["daemon"], signal.SIGUSR1)   # look at it right away
+        except OSError:
+            pass
+    return result
+
+
 def lock_now(desk=None):
     """Lock right away: through logind when XControl's xss-lock is running (same locker,
     same settings), otherwise by starting the locker directly."""
@@ -452,6 +470,35 @@ def daemon():
     pads = None          # awake.Gamepads while gamepads count as activity
     inhibit = None       # awake.InhibitService while apps may keep the screen on
     aw = {"reset": 0.0, "full_check": 0.0, "fullscreen": False}
+    try:
+        gamma = night.Gamma(rr.x11, rr.dpy)
+    except (OSError, AttributeError) as e:
+        gamma = None
+        log(f"night light: {e}")
+    nl = {"shown": 6500, "applied_at": 0.0, "gammas": {}, "touched": False, "now": False}
+    signal.signal(signal.SIGUSR1, lambda *_a: nl.update(now=True))
+
+    def night_step(force_apply=False):
+        """Move the displays' color toward what the night light wants (gradually: 300 K a second)."""
+        if gamma is None:
+            return
+        n = desk["night"]
+        want = night.target(n, _runtime)
+        active = n["enabled"] or night.forced(_runtime, n) is not None
+        if not active and not nl["touched"]:
+            return
+        cur = nl["shown"]
+        step = want if abs(want - cur) <= 300 else cur + (300 if want > cur else -300)
+        stale = time.time() - nl["applied_at"] >= 30    # something else (xrandr) may have reset the ramps
+        if step != cur or force_apply or stale or nl["now"]:
+            nl["now"] = False
+            try:
+                gamma.apply(step, nl["gammas"], skip=set(n["outputs"]))
+            except Exception as e:  # noqa: BLE001
+                log(f"night light: {e}")
+            nl["shown"], nl["applied_at"], nl["touched"] = step, time.time(), True
+            if not active and step == 6500:
+                nl["touched"] = False   # back to normal: stop touching the ramps
 
     def keep_awake():
         """Why the screen should stay on now: [{"kind": ..., "name": ...}]."""
@@ -540,12 +587,15 @@ def daemon():
                     subprocess.run(cmd, capture_output=True)
                 reconcile(restart=write_configs())
                 awake_setup()
+                nl["gammas"] = night.saved_gamma(config.load()["display"]["command"])
+                night_step(force_apply=True)
             for c in children.values():
                 c.ensure()
             if inhibit:
                 inhibit.pump()
             if pads:
                 pads.rescan()
+            night_step()
             reasons = keep_awake()
             xidle.suspend(bool(reasons))
             st = {"daemon": os.getpid(),
@@ -555,7 +605,8 @@ def daemon():
                             "denied": sorted(set(pads.denied.values())) if pads else [],
                             "last_gamepad": pads.last if pads else 0,
                             "service": ("" if inhibit is None else "ok" if inhibit.owned else
-                                        inhibit.error or "starting")}}
+                                        inhibit.error or "starting")},
+                  "night": {"shown": nl["shown"], "forced": night.forced(_runtime, desk["night"])}}
             st["xss_lock"] = st["children"].get("xss-lock")
             if st != aw.get("written"):
                 _write_state(st)
@@ -579,6 +630,7 @@ def daemon():
                 redraw_at = None
                 log("screen changed")
                 draw()
+                night_step(force_apply=True)   # new displays get the current color too
                 # bars follow the displays: restart them on any layout change
                 reconcile(restart={k for k in children if k.startswith("bar:")})
     finally:
@@ -588,6 +640,11 @@ def daemon():
             pads.close()
         if inhibit:
             inhibit.close()
+        if gamma is not None and nl["touched"]:
+            try:
+                gamma.apply(6500, nl["gammas"], skip=set(desk["night"]["outputs"]) if desk else ())
+            except Exception:  # noqa: BLE001
+                pass
         try:
             os.remove(_runtime("json"))
         except OSError:

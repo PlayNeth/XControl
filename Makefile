@@ -60,6 +60,7 @@ install: all
 	install -Dm755 data/xcontrol-edid-helper $(DESTDIR)$(LIBDIR)/xcontrol-edid-helper
 	install -Dm755 data/xcontrol-module-helper $(DESTDIR)$(LIBDIR)/xcontrol-module-helper
 	install -Dm755 data/xcontrol-user-helper $(DESTDIR)$(LIBDIR)/xcontrol-user-helper
+	install -Dm755 data/xcontrol-locale-helper $(DESTDIR)$(LIBDIR)/xcontrol-locale-helper
 	install -dm755 $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 	sed 's|@LIBDIR@|$(LIBDIR)|g' data/io.github.xcontrol.policy.in > $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
 	chmod 644 $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
@@ -104,9 +105,14 @@ check:
 	$(PYTHON) tests/check_i3.py
 	$(PYTHON) tests/check_awake.py
 	$(PYTHON) tests/check_notify.py
+	$(PYTHON) tests/check_night.py
+	$(PYTHON) tests/check_defaults.py
+	$(PYTHON) tests/check_region.py
+	$(PYTHON) tests/check_audio.py
 	sh -n data/xcontrol-edid-helper
 	sh -n data/xcontrol-module-helper
 	sh -n data/xcontrol-user-helper
+	sh -n data/xcontrol-locale-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

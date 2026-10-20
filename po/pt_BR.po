@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 19:07-0300\n"
+"POT-Creation-Date: 2026-10-20 02:12-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,51 +17,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:52
+#: xcontrol/app.py:55
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:56
+#: xcontrol/app.py:59
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:60
+#: xcontrol/app.py:63 xcontrol/audio_page.py:64
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:64
+#: xcontrol/app.py:67
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:68
+#: xcontrol/app.py:71 xcontrol/notify_page.py:287
+msgid "Sound"
+msgstr "Som"
+
+#: xcontrol/app.py:75
 msgid "Desktop"
 msgstr "Área de trabalho"
 
-#: xcontrol/app.py:70
+#: xcontrol/app.py:77
 msgid "Bar & Compositor"
 msgstr "Barra e Compositor"
 
-#: xcontrol/app.py:73
+#: xcontrol/app.py:80
 msgid "Notifications"
 msgstr "Notificações"
 
-#: xcontrol/app.py:74
+#: xcontrol/app.py:83
+msgid "Default Apps"
+msgstr "Aplicativos padrão"
+
+#: xcontrol/app.py:84
 msgid "Window Manager (i3)"
 msgstr "Gerenciador de janelas (i3)"
 
-#: xcontrol/app.py:78
+#: xcontrol/app.py:88
+msgid "Date & Language"
+msgstr "Data e idioma"
+
+#: xcontrol/app.py:92
 msgid "Users"
 msgstr "Usuários"
 
-#: xcontrol/app.py:80 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:94 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:116
+#: xcontrol/app.py:130
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:117 xcontrol/appearance_page.py:412
+#: xcontrol/app.py:131 xcontrol/appearance_page.py:412
 #: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:866
 #: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -375,12 +387,13 @@ msgstr ""
 " (ou qt6ct) está definido na sessão, por exemplo em ~/.xprofile. No momento "
 "não está."
 
-#: xcontrol/appearance_page.py:200 xcontrol/display_page.py:615
+#: xcontrol/appearance_page.py:200 xcontrol/display_page.py:618
 msgid "Revert"
 msgstr "Reverter"
 
-#: xcontrol/appearance_page.py:203 xcontrol/bar_module_dialog.py:114
-#: xcontrol/display_page.py:263 xcontrol/input_page.py:212
+#: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
+#: xcontrol/bar_module_dialog.py:114 xcontrol/display_page.py:266
+#: xcontrol/input_page.py:212 xcontrol/region_page.py:168
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -553,6 +566,189 @@ msgstr "Os temas já estão na sua pasta pessoal."
 msgid "Done. Restart the app."
 msgstr "Pronto. Reinicie o aplicativo."
 
+#: xcontrol/audio_page.py:11
+msgid "Automatic (48 kHz)"
+msgstr "Automático (48 kHz)"
+
+#: xcontrol/audio_page.py:13
+msgid "Normal (PipeWire's default)"
+msgstr "Normal (padrão do PipeWire)"
+
+#: xcontrol/audio_page.py:14
+msgid "Larger: fixes crackling and dropouts"
+msgstr "Maior: corrige estalos e falhas"
+
+#: xcontrol/audio_page.py:15
+msgid "Small: less delay for games and music"
+msgstr "Pequeno: menos atraso para jogos e música"
+
+#: xcontrol/audio_page.py:16
+msgid "Smallest: for recording and live music (may crackle)"
+msgstr "Mínimo: para gravação e música ao vivo (pode estalar)"
+
+#: xcontrol/audio_page.py:22 xcontrol/bar_module_dialog.py:113
+#: xcontrol/edid_override_dialog.py:253 xcontrol/gaming_page.py:138
+#: xcontrol/gaming_page.py:494 xcontrol/i3_page.py:80 xcontrol/i3_page.py:799
+#: xcontrol/monitors_page.py:138 xcontrol/region_page.py:248
+#: xcontrol/users_page.py:358 xcontrol/users_page.py:380
+#: xcontrol/users_page.py:444 xcontrol/users_page.py:456
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: xcontrol/audio_page.py:30 xcontrol/bar_module_dialog.py:66
+#: xcontrol/gaming_page.py:226 xcontrol/i3_page.py:480
+msgid "Name"
+msgstr "Nome"
+
+#: xcontrol/audio_page.py:32
+msgid "The name the driver gives"
+msgstr "O nome dado pelo driver"
+
+#: xcontrol/audio_page.py:34
+msgid "Don't use this device"
+msgstr "Não usar este dispositivo"
+
+#: xcontrol/audio_page.py:35
+msgid "Don't use this output"
+msgstr "Não usar esta saída"
+
+#: xcontrol/audio_page.py:35
+msgid "Don't use this input"
+msgstr "Não usar esta entrada"
+
+#: xcontrol/audio_page.py:38
+msgid "Never let it sleep (no pop, and no lost first second of sound)"
+msgstr ""
+"Nunca deixar dormir (sem estalo e sem perder o primeiro segundo de som)"
+
+#: xcontrol/audio_page.py:40
+msgid "Prefer it whenever it's connected"
+msgstr "Preferir sempre que estiver conectado"
+
+#: xcontrol/audio_page.py:45
+msgid ""
+"Hidden devices disappear from every program. Changes restart WirePlumber, "
+"which takes a second."
+msgstr ""
+"Dispositivos ocultos somem de todos os programas. As mudanças reiniciam o "
+"WirePlumber, o que leva um segundo."
+
+#: xcontrol/audio_page.py:63 xcontrol/monitor_info.py:85
+#: xcontrol/monitor_info.py:212
+msgid "Output"
+msgstr "Saída"
+
+#: xcontrol/audio_page.py:65 xcontrol/kmods.py:248
+msgid "Devices"
+msgstr "Dispositivos"
+
+#: xcontrol/audio_page.py:86
+msgid "Sound system (PipeWire)"
+msgstr "Sistema de som (PipeWire)"
+
+#: xcontrol/audio_page.py:92
+msgid "Sample rate"
+msgstr "Taxa de amostragem"
+
+#: xcontrol/audio_page.py:94
+msgid "Follow what's playing (44.1 kHz music plays at 44.1 kHz, unconverted)"
+msgstr ""
+"Seguir o que está tocando (música em 44,1 kHz toca em 44,1 kHz, sem "
+"conversão)"
+
+#: xcontrol/audio_page.py:101
+msgid "Buffer size"
+msgstr "Tamanho do buffer"
+
+#: xcontrol/audio_page.py:103
+msgid ""
+"Keep all outputs awake (no pops, no cut-off first second; HDMI and USB DACs)"
+msgstr ""
+"Manter todas as saídas acordadas (sem estalos, sem cortar o primeiro "
+"segundo; HDMI e DACs USB)"
+
+#: xcontrol/audio_page.py:107
+msgid ""
+"Sample rate and buffer size change right away; the rest restarts "
+"WirePlumber. Saved in ~/.config/pipewire and ~/.config/wireplumber."
+msgstr ""
+"Taxa de amostragem e buffer mudam na hora; o resto reinicia o WirePlumber. "
+"Salvo em ~/.config/pipewire e ~/.config/wireplumber."
+
+#: xcontrol/audio_page.py:133 xcontrol/night_page.py:202
+#: xcontrol/notify_page.py:463 xcontrol/panel_page.py:483
+msgid "Could not save the settings"
+msgstr "Não foi possível salvar as configurações"
+
+#: xcontrol/audio_page.py:138 xcontrol/gaming_page.py:470
+msgid "Saved"
+msgstr "Salvo"
+
+#: xcontrol/audio_page.py:138
+msgid ""
+"Restart WirePlumber (or log in again) to use it: systemctl --user restart "
+"wireplumber"
+msgstr ""
+"Reinicie o WirePlumber (ou entre de novo) para usar: systemctl --user "
+"restart wireplumber"
+
+#: xcontrol/audio_page.py:140 xcontrol/notify_page.py:465
+#: xcontrol/panel_page.py:485
+msgid "Applied"
+msgstr "Aplicado"
+
+#: xcontrol/audio_page.py:168
+msgid "No sound server answers (PipeWire with pipewire-pulse, or PulseAudio)."
+msgstr ""
+"Nenhum servidor de som responde (PipeWire com pipewire-pulse, ou "
+"PulseAudio)."
+
+#: xcontrol/audio_page.py:179
+#, python-brace-format
+msgid "running at {rate} Hz, {q} samples ({ms:.1f} ms)"
+msgstr "rodando a {rate} Hz, {q} amostras ({ms:.1f} ms)"
+
+#: xcontrol/audio_page.py:181
+msgid "(PipeWire's own settings below need PipeWire)"
+msgstr "(as configurações do PipeWire abaixo precisam do PipeWire)"
+
+#: xcontrol/audio_page.py:192 xcontrol/audio_page.py:253
+msgid "None found."
+msgstr "Nenhum encontrado."
+
+#: xcontrol/audio_page.py:210
+msgid "Test"
+msgstr "Testar"
+
+#: xcontrol/audio_page.py:217 xcontrol/audio_page.py:247
+#, python-brace-format
+msgid "{name} (not used)"
+msgstr "{name} (não usado)"
+
+#: xcontrol/audio_page.py:254
+msgid ""
+"A profile picks how a device is used, e.g. stereo or surround, with or "
+"without its microphone, or which HDMI output carries sound."
+msgstr ""
+"Um perfil escolhe como o dispositivo é usado, ex.: estéreo ou surround, com "
+"ou sem microfone, ou qual saída HDMI leva o som."
+
+#: xcontrol/audio_page.py:261
+msgid "Name, hide, keep awake"
+msgstr "Nome, ocultar, manter acordado"
+
+#: xcontrol/audio_page.py:276
+msgid "No test sound"
+msgstr "Sem som de teste"
+
+#: xcontrol/audio_page.py:276
+msgid "Install sound-theme-freedesktop and libpulse (paplay)."
+msgstr "Instale sound-theme-freedesktop e libpulse (paplay)."
+
+#: xcontrol/audio_page.py:290
+msgid "Default changed"
+msgstr "Padrão alterado"
+
 #: xcontrol/bar_module_dialog.py:12 xcontrol/bar_module_dialog.py:31
 msgid "Workspace label"
 msgstr "Rótulo da área de trabalho"
@@ -722,11 +918,6 @@ msgstr "Nome (como o i3 chama)"
 msgid "Number only"
 msgstr "Só o número"
 
-#: xcontrol/bar_module_dialog.py:66 xcontrol/gaming_page.py:226
-#: xcontrol/i3_page.py:480
-msgid "Name"
-msgstr "Nome"
-
 #: xcontrol/bar_module_dialog.py:67
 msgid "Percent used"
 msgstr "Porcentagem usada"
@@ -787,15 +978,6 @@ msgstr "Personalizada"
 msgid "Automatic"
 msgstr "Automático"
 
-#: xcontrol/bar_module_dialog.py:113 xcontrol/edid_override_dialog.py:253
-#: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:80 xcontrol/i3_page.py:799
-#: xcontrol/monitors_page.py:138 xcontrol/users_page.py:358
-#: xcontrol/users_page.py:380 xcontrol/users_page.py:444
-#: xcontrol/users_page.py:456
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: xcontrol/bar_module_dialog.py:171
 msgid "Extra polybar settings"
 msgstr "Configurações extras do polybar"
@@ -810,6 +992,188 @@ msgstr ""
 "Qualquer outra configuração da documentação do polybar, uma por linha como "
 "numa config do polybar (chave = valor). Elas vão para a seção [{section}] e "
 "substituem a linha do próprio XControl com a mesma chave."
+
+#: xcontrol/defaults_page.py:11
+msgid "Web browser"
+msgstr "Navegador"
+
+#: xcontrol/defaults_page.py:11
+msgid "Email"
+msgstr "E-mail"
+
+#: xcontrol/defaults_page.py:11
+msgid "Files and folders"
+msgstr "Arquivos e pastas"
+
+#: xcontrol/defaults_page.py:12
+msgid "Text files"
+msgstr "Arquivos de texto"
+
+#: xcontrol/defaults_page.py:12 xcontrol/desktop_page.py:164
+#: xcontrol/users_page.py:458
+msgid "Pictures"
+msgstr "Imagens"
+
+#: xcontrol/defaults_page.py:12
+msgid "Videos"
+msgstr "Vídeos"
+
+#: xcontrol/defaults_page.py:12
+msgid "Music"
+msgstr "Música"
+
+#: xcontrol/defaults_page.py:13
+msgid "PDF documents"
+msgstr "Documentos PDF"
+
+#: xcontrol/defaults_page.py:13
+msgid "Archives"
+msgstr "Arquivos compactados"
+
+#: xcontrol/defaults_page.py:13
+msgid "Office documents"
+msgstr "Documentos de escritório"
+
+#: xcontrol/defaults_page.py:14
+msgid "Links in other programs, and web pages"
+msgstr "Links em outros programas, e páginas da web"
+
+#: xcontrol/defaults_page.py:14
+msgid "Email links (mailto:)"
+msgstr "Links de e-mail (mailto:)"
+
+#: xcontrol/defaults_page.py:15
+msgid "Opening a folder"
+msgstr "Abrir uma pasta"
+
+#: xcontrol/defaults_page.py:15
+msgid "Plain text, code, logs, settings files"
+msgstr "Texto simples, código, logs, arquivos de configuração"
+
+#: xcontrol/defaults_page.py:16
+msgid "PNG, JPEG, WebP, GIF, SVG…"
+msgstr "PNG, JPEG, WebP, GIF, SVG…"
+
+#: xcontrol/defaults_page.py:16
+msgid "MP4, MKV, WebM…"
+msgstr "MP4, MKV, WebM…"
+
+#: xcontrol/defaults_page.py:17
+msgid "MP3, FLAC, Ogg, playlists…"
+msgstr "MP3, FLAC, Ogg, playlists…"
+
+#: xcontrol/defaults_page.py:17
+msgid "PDF, EPUB, DjVu, PostScript"
+msgstr "PDF, EPUB, DjVu, PostScript"
+
+#: xcontrol/defaults_page.py:18
+msgid "ZIP, tar, 7z, RAR…"
+msgstr "ZIP, tar, 7z, RAR…"
+
+#: xcontrol/defaults_page.py:18
+msgid "Writer, Word, spreadsheets, presentations"
+msgstr "Writer, Word, planilhas, apresentações"
+
+#: xcontrol/defaults_page.py:32
+msgid ""
+"Which program opens links and files: in file managers, browsers, xdg-open "
+"and everything else that asks. Saved in ~/.config/mimeapps.list."
+msgstr ""
+"Qual programa abre links e arquivos: em gerenciadores de arquivos, "
+"navegadores, xdg-open e tudo mais que pergunta. Salvo em "
+"~/.config/mimeapps.list."
+
+#: xcontrol/defaults_page.py:45
+msgid "Clean up"
+msgstr "Limpar"
+
+#: xcontrol/defaults_page.py:50 xcontrol/defaults_page.py:76
+msgid "Opens with"
+msgstr "Abre com"
+
+#: xcontrol/defaults_page.py:57 xcontrol/defaults_page.py:195
+#, python-brace-format
+msgid "Open {what} with"
+msgstr "Abrir {what} com"
+
+#: xcontrol/defaults_page.py:62
+msgid "Terminal"
+msgstr "Terminal"
+
+#: xcontrol/defaults_page.py:62
+msgid "Apps that run in a terminal, and the i3 terminal key"
+msgstr "Apps que rodam num terminal, e a tecla de terminal do i3"
+
+#: xcontrol/defaults_page.py:68
+msgid "Every file type"
+msgstr "Todos os tipos de arquivo"
+
+#: xcontrol/defaults_page.py:69
+msgid "Search, e.g. epub, flac, torrent"
+msgstr "Buscar, ex.: epub, flac, torrent"
+
+#: xcontrol/defaults_page.py:76
+msgid "Kind"
+msgstr "Tipo"
+
+#: xcontrol/defaults_page.py:76
+msgid "Type"
+msgstr "Tipo MIME"
+
+#: xcontrol/defaults_page.py:86
+msgid "Double-click a type to choose its program."
+msgstr "Clique duas vezes num tipo para escolher o programa."
+
+#: xcontrol/defaults_page.py:117
+msgid "Automatic (i3-sensible-terminal)"
+msgstr "Automático (i3-sensible-terminal)"
+
+#: xcontrol/defaults_page.py:121 xcontrol/desktop_page.py:369
+#: xcontrol/region_page.py:193
+msgid "(not installed)"
+msgstr "(não instalado)"
+
+#: xcontrol/defaults_page.py:125
+#, python-brace-format
+msgid ""
+"$BROWSER is set to \"{value}\" in your session; xdg-open and many programs "
+"use it instead of the web browser chosen here. Remove it from ~/.xprofile, "
+"~/.bashrc or wherever it's set."
+msgstr ""
+"$BROWSER está definido como \"{value}\" na sua sessão; o xdg-open e muitos "
+"programas o usam em vez do navegador escolhido aqui. Remova-o do "
+"~/.xprofile, ~/.bashrc ou onde estiver definido."
+
+#: xcontrol/defaults_page.py:130
+#, python-brace-format
+msgid ""
+"{n} file types are set to open with programs that are no longer installed "
+"(e.g. {example})."
+msgstr ""
+"{n} tipos de arquivo estão configurados para abrir com programas que não "
+"estão mais instalados (ex.: {example})."
+
+#: xcontrol/defaults_page.py:168
+msgid "Could not set it"
+msgstr "Não foi possível definir"
+
+#: xcontrol/defaults_page.py:170 xcontrol/defaults_page.py:201
+#, python-brace-format
+msgid "{app} opens {what} now"
+msgstr "{app} abre {what} agora"
+
+#: xcontrol/defaults_page.py:189 xcontrol/panel_page.py:481
+msgid "The i3 config wasn't updated"
+msgstr "A configuração do i3 não foi atualizada"
+
+#: xcontrol/defaults_page.py:190
+msgid "Terminal set"
+msgstr "Terminal definido"
+
+#: xcontrol/defaults_page.py:207
+#, python-brace-format
+msgid "Removed {n} broken entries"
+msgstr "{n} entradas quebradas removidas"
 
 #: xcontrol/desktop_page.py:13
 msgid "Fill (crop to cover the display)"
@@ -937,10 +1301,6 @@ msgstr "Tela"
 #: xcontrol/desktop_page.py:161 xcontrol/users_page.py:454
 msgid "Choose a picture"
 msgstr "Escolha uma imagem"
-
-#: xcontrol/desktop_page.py:164 xcontrol/users_page.py:458
-msgid "Pictures"
-msgstr "Imagens"
 
 #: xcontrol/desktop_page.py:170
 msgid "No picture, only the color"
@@ -1105,10 +1465,6 @@ msgstr "uma janela em tela cheia"
 #, python-brace-format
 msgid "Kept on now: {why}."
 msgstr "Mantida ligada agora: {why}."
-
-#: xcontrol/desktop_page.py:369
-msgid "(not installed)"
-msgstr "(não instalado)"
 
 #: xcontrol/desktop_page.py:426
 msgid ""
@@ -1397,24 +1753,24 @@ msgstr "Orientação"
 msgid "Position"
 msgstr "Posição"
 
-#: xcontrol/display_page.py:259
+#: xcontrol/display_page.py:262
 msgid "Restore this layout when I log in"
 msgstr "Restaurar este layout ao iniciar a sessão"
 
-#: xcontrol/display_page.py:266
+#: xcontrol/display_page.py:269
 msgid "Detect displays"
 msgstr "Detectar telas"
 
-#: xcontrol/display_page.py:268
+#: xcontrol/display_page.py:271
 msgid "Identify"
 msgstr "Identificar"
 
-#: xcontrol/display_page.py:295
+#: xcontrol/display_page.py:298
 #, python-brace-format
 msgid "Saved settings moved to the new output names: {names}"
 msgstr "Configurações salvas movidas para os novos nomes de saída: {names}"
 
-#: xcontrol/display_page.py:361
+#: xcontrol/display_page.py:364
 msgid ""
 "Only matters with more than one display: it gets the panels, notifications "
 "and fullscreen games."
@@ -1422,20 +1778,20 @@ msgstr ""
 "Só faz diferença com mais de uma tela: ela recebe os painéis, as "
 "notificações e os jogos em tela cheia."
 
-#: xcontrol/display_page.py:368 xcontrol/input_page.py:340
+#: xcontrol/display_page.py:371 xcontrol/input_page.py:340
 msgid "Press Apply to use the new settings"
 msgstr "Clique em Aplicar para usar as novas configurações"
 
-#: xcontrol/display_page.py:386
+#: xcontrol/display_page.py:389
 msgid "Previewing: press Apply to keep these colors"
 msgstr "Pré-visualizando: clique em Aplicar para manter estas cores"
 
-#: xcontrol/display_page.py:388
+#: xcontrol/display_page.py:391
 #, python-brace-format
 msgid "Preview failed: {error}"
 msgstr "A pré-visualização falhou: {error}"
 
-#: xcontrol/display_page.py:447
+#: xcontrol/display_page.py:450
 msgid ""
 "None of your custom resolutions are active on this display, so all modes are"
 " shown."
@@ -1443,39 +1799,39 @@ msgstr ""
 "Nenhuma das suas resoluções personalizadas está ativa nesta tela, por isso "
 "todos os modos são mostrados."
 
-#: xcontrol/display_page.py:580
+#: xcontrol/display_page.py:583
 msgid "At least one display must stay on"
 msgstr "Pelo menos uma tela precisa ficar ligada"
 
-#: xcontrol/display_page.py:580
+#: xcontrol/display_page.py:583
 msgid "Turn on a display before applying."
 msgstr "Ligue uma tela antes de aplicar."
 
-#: xcontrol/display_page.py:588 xcontrol/display_page.py:593
+#: xcontrol/display_page.py:591 xcontrol/display_page.py:596
 msgid "xrandr could not apply this layout"
 msgstr "O xrandr não conseguiu aplicar este layout"
 
-#: xcontrol/display_page.py:600
+#: xcontrol/display_page.py:603
 msgid "Display settings applied"
 msgstr "Configurações de tela aplicadas"
 
-#: xcontrol/display_page.py:607
+#: xcontrol/display_page.py:610
 msgid "Could not restore the previous layout"
 msgstr "Não foi possível restaurar o layout anterior"
 
-#: xcontrol/display_page.py:609
+#: xcontrol/display_page.py:612
 msgid "Display settings reverted"
 msgstr "Configurações de tela revertidas"
 
-#: xcontrol/display_page.py:614
+#: xcontrol/display_page.py:617
 msgid "Keep these display settings?"
 msgstr "Manter estas configurações de tela?"
 
-#: xcontrol/display_page.py:615
+#: xcontrol/display_page.py:618
 msgid "Keep changes"
 msgstr "Manter alterações"
 
-#: xcontrol/display_page.py:619
+#: xcontrol/display_page.py:622
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
@@ -1776,7 +2132,8 @@ msgstr "Adicionar jogo da Steam"
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
 #: xcontrol/i3_page.py:582 xcontrol/notify_page.py:314
-#: xcontrol/resolutions_dialog.py:153 xcontrol/users_page.py:381
+#: xcontrol/region_page.py:249 xcontrol/resolutions_dialog.py:153
+#: xcontrol/users_page.py:381
 msgid "Add"
 msgstr "Adicionar"
 
@@ -2001,10 +2358,6 @@ msgid ""
 msgstr ""
 "O X está com ela desativada: adicione Option \"VariableRefresh\" \"true\" à "
 "seção Device do seu xorg.conf e reinicie o X."
-
-#: xcontrol/gaming_page.py:470
-msgid "Saved"
-msgstr "Salvo"
 
 #: xcontrol/gaming_page.py:472
 #, python-brace-format
@@ -3244,10 +3597,6 @@ msgstr "Mouse gamer"
 msgid "This section could not be loaded: {error}"
 msgstr "Não foi possível carregar esta seção: {error}"
 
-#: xcontrol/kmods.py:248
-msgid "Devices"
-msgstr "Dispositivos"
-
 #: xcontrol/kmods.py:250 xcontrol/system_page.py:335
 msgid "Parameters"
 msgstr "Parâmetros"
@@ -3377,10 +3726,6 @@ msgstr "{output} (kernel)"
 #: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:240
 msgid "Connection"
 msgstr "Conexão"
-
-#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:212
-msgid "Output"
-msgstr "Saída"
 
 #: xcontrol/monitor_info.py:86
 msgid "This display did not report any information."
@@ -3705,6 +4050,140 @@ msgstr "EDID salvo"
 #: xcontrol/monitors_page.py:150
 msgid "Could not save the EDID"
 msgstr "Não foi possível salvar o EDID"
+
+#: xcontrol/night_page.py:13
+msgid "From sunset to sunrise"
+msgstr "Do pôr ao nascer do sol"
+
+#: xcontrol/night_page.py:13
+msgid "At set hours"
+msgstr "Em horários definidos"
+
+#: xcontrol/night_page.py:13
+msgid "All the time"
+msgstr "O tempo todo"
+
+#: xcontrol/night_page.py:30
+msgid "Night light"
+msgstr "Luz noturna"
+
+#: xcontrol/night_page.py:48
+msgid ""
+"Warmer colors in the evening, easier on the eyes. It changes right away (no "
+"Apply needed) and builds on each display's gamma above."
+msgstr ""
+"Cores mais quentes à noite, mais confortáveis para os olhos. Muda na hora "
+"(sem precisar de Aplicar) e respeita o gama de cada tela acima."
+
+#: xcontrol/night_page.py:54
+msgid "When"
+msgstr "Quando"
+
+#: xcontrol/night_page.py:57
+msgid "From the time zone"
+msgstr "Pelo fuso horário"
+
+#: xcontrol/night_page.py:65
+msgid "Latitude"
+msgstr "Latitude"
+
+#: xcontrol/night_page.py:67
+msgid "Longitude"
+msgstr "Longitude"
+
+#: xcontrol/night_page.py:69
+msgid "Location"
+msgstr "Localização"
+
+#: xcontrol/night_page.py:79
+msgid "from"
+msgstr "das"
+
+#: xcontrol/night_page.py:81
+msgid "to"
+msgstr "às"
+
+#: xcontrol/night_page.py:83
+msgid "changing over"
+msgstr "mudando ao longo de"
+
+#: xcontrol/night_page.py:85
+msgid "minutes"
+msgstr "minutos"
+
+#: xcontrol/night_page.py:86
+msgid "Hours"
+msgstr "Horários"
+
+#: xcontrol/night_page.py:95
+msgid "a little"
+msgstr "um pouco"
+
+#: xcontrol/night_page.py:95
+msgid "warm"
+msgstr "quente"
+
+#: xcontrol/night_page.py:95
+msgid "very warm"
+msgstr "bem quente"
+
+#: xcontrol/night_page.py:98
+msgid "Night color"
+msgstr "Cor noturna"
+
+#: xcontrol/night_page.py:99
+msgid "Show it now"
+msgstr "Mostrar agora"
+
+#: xcontrol/night_page.py:100
+msgid ""
+"Turn the night color on until the schedule next changes (or click again)"
+msgstr ""
+"Ligar a cor noturna até a próxima mudança do horário (ou clique de novo)"
+
+#: xcontrol/night_page.py:107
+msgid "Leave alone"
+msgstr "Não mexer em"
+
+#: xcontrol/night_page.py:112
+msgid "Switch it from a key (until the schedule next changes):"
+msgstr "Alternar por uma tecla (até a próxima mudança do horário):"
+
+#: xcontrol/night_page.py:223
+#, python-brace-format
+msgid "Now {k} K."
+msgstr "Agora {k} K."
+
+#: xcontrol/night_page.py:225
+msgid "On by hand until the schedule next changes."
+msgstr "Ligada manualmente até a próxima mudança do horário."
+
+#: xcontrol/night_page.py:227
+msgid "Off by hand until the schedule next changes."
+msgstr "Desligada manualmente até a próxima mudança do horário."
+
+#: xcontrol/night_page.py:233
+#, python-brace-format
+msgid "Night light until {time}."
+msgstr "Luz noturna até {time}."
+
+#: xcontrol/night_page.py:233
+#, python-brace-format
+msgid "Next on at {time}."
+msgstr "Liga de novo às {time}."
+
+#: xcontrol/night_page.py:235
+msgid "The time zone doesn't give a location; set it by hand."
+msgstr "O fuso horário não dá uma localização; defina-a manualmente."
+
+#: xcontrol/night_page.py:239
+#, python-brace-format
+msgid ""
+"{programs} is also changing the colors; stop it (and remove it from your i3 "
+"config), or the two will fight."
+msgstr ""
+"{programs} também está mudando as cores; encerre-o (e remova da configuração"
+" do i3), senão os dois vão brigar."
 
 #: xcontrol/notify_page.py:16
 msgid "Top left"
@@ -4072,10 +4551,6 @@ msgid "Sounds"
 msgstr "Sons"
 
 #: xcontrol/notify_page.py:287
-msgid "Sound"
-msgstr "Som"
-
-#: xcontrol/notify_page.py:287
 msgid "Played for normal and critical notifications (pw-play or paplay)."
 msgstr "Tocado nas notificações normais e críticas (pw-play ou paplay)."
 
@@ -4150,14 +4625,6 @@ msgstr ""
 msgid "After {n} seconds"
 msgstr "Depois de {n} segundos"
 
-#: xcontrol/notify_page.py:463 xcontrol/panel_page.py:483
-msgid "Could not save the settings"
-msgstr "Não foi possível salvar as configurações"
-
-#: xcontrol/notify_page.py:465 xcontrol/panel_page.py:485
-msgid "Applied"
-msgstr "Aplicado"
-
 #: xcontrol/notify_page.py:525
 msgid "Add a recent app…"
 msgstr "Adicionar um app recente…"
@@ -4190,7 +4657,7 @@ msgstr "Como bateria fraca. Fica até clicar."
 msgid "Nothing shows notifications right now"
 msgstr "Nada mostra notificações agora"
 
-#: xcontrol/notify_page.py:545
+#: xcontrol/notify_page.py:545 xcontrol/region_page.py:106
 msgid "Could not change it"
 msgstr "Não foi possível alterar"
 
@@ -4622,10 +5089,6 @@ msgstr ""
 "Opacidade em porcentagem. Janelas em tela cheia e a tela de bloqueio nunca "
 "ficam transparentes."
 
-#: xcontrol/panel_page.py:481
-msgid "The i3 config wasn't updated"
-msgstr "A configuração do i3 não foi atualizada"
-
 #: xcontrol/panel_page.py:506
 msgid "the screen"
 msgstr "a tela"
@@ -4731,6 +5194,204 @@ msgstr "limite de {n} FPS"
 #, python-brace-format
 msgid "3D preview unavailable: {error}"
 msgstr "Prévia 3D indisponível: {error}"
+
+#: xcontrol/region_page.py:45
+msgid "Date and time"
+msgstr "Data e hora"
+
+#: xcontrol/region_page.py:47
+msgid "Now"
+msgstr "Agora"
+
+#: xcontrol/region_page.py:59
+msgid "Type a city, e.g. Sao_Paulo"
+msgstr "Digite uma cidade, ex.: Sao_Paulo"
+
+#: xcontrol/region_page.py:61 xcontrol/region_page.py:90
+msgid "Set"
+msgstr "Definir"
+
+#: xcontrol/region_page.py:64
+msgid "Time zone"
+msgstr "Fuso horário"
+
+#: xcontrol/region_page.py:66
+msgid "Set the time automatically from the internet"
+msgstr "Acertar a hora automaticamente pela internet"
+
+#: xcontrol/region_page.py:94
+msgid "Set by hand"
+msgstr "Definir manualmente"
+
+#: xcontrol/region_page.py:95
+msgid "The computer's clock keeps local time (for dual boot with Windows)"
+msgstr ""
+"O relógio do computador guarda a hora local (para dual boot com Windows)"
+
+#: xcontrol/region_page.py:98
+msgid ""
+"Linux keeps the hardware clock in UTC; Windows uses local time, so with both"
+" installed one of them shows the wrong time. Either tick this, or set "
+"Windows to UTC."
+msgstr ""
+"O Linux guarda o relógio do hardware em UTC; o Windows usa a hora local, "
+"então com os dois instalados um deles mostra a hora errada. Marque isto, ou "
+"configure o Windows para UTC."
+
+#: xcontrol/region_page.py:115
+msgid "Unknown time zone"
+msgstr "Fuso horário desconhecido"
+
+#: xcontrol/region_page.py:115
+msgid "Pick one from the list, e.g. America/Sao_Paulo."
+msgstr "Escolha um da lista, ex.: America/Sao_Paulo."
+
+#: xcontrol/region_page.py:117
+#, python-brace-format
+msgid "Time zone set to {tz}"
+msgstr "Fuso horário definido como {tz}"
+
+#: xcontrol/region_page.py:122
+msgid "Network time on"
+msgstr "Hora pela rede ligada"
+
+#: xcontrol/region_page.py:123
+msgid "Network time off"
+msgstr "Hora pela rede desligada"
+
+#: xcontrol/region_page.py:128
+msgid "Hardware clock setting changed"
+msgstr "Configuração do relógio do hardware alterada"
+
+#: xcontrol/region_page.py:137
+msgid "Time set"
+msgstr "Hora definida"
+
+#: xcontrol/region_page.py:147
+msgid "Language and formats"
+msgstr "Idioma e formatos"
+
+#: xcontrol/region_page.py:149
+msgid "Just for me"
+msgstr "Só para mim"
+
+#: xcontrol/region_page.py:150
+msgid "Everyone on this computer"
+msgstr "Todos neste computador"
+
+#: xcontrol/region_page.py:153
+msgid "Change it for"
+msgstr "Alterar para"
+
+#: xcontrol/region_page.py:156 xcontrol/region_page.py:275
+msgid "Language"
+msgstr "Idioma"
+
+#: xcontrol/region_page.py:157
+msgid "Menus and messages of programs that are translated."
+msgstr "Menus e mensagens dos programas traduzidos."
+
+#: xcontrol/region_page.py:160
+msgid "Formats"
+msgstr "Formatos"
+
+#: xcontrol/region_page.py:165
+msgid "More languages…"
+msgstr "Mais idiomas…"
+
+#: xcontrol/region_page.py:185
+msgid "Same as the language"
+msgstr "Igual ao idioma"
+
+#: xcontrol/region_page.py:199
+msgid "Takes effect when you log in again."
+msgstr "Vale a partir do próximo login."
+
+#: xcontrol/region_page.py:201
+#, python-brace-format
+msgid "This session runs in {loc}."
+msgstr "Esta sessão está em {loc}."
+
+#: xcontrol/region_page.py:203
+msgid "Your own settings (~/.config/locale.conf) win over these for you."
+msgstr ""
+"Suas próprias configurações (~/.config/locale.conf) têm prioridade sobre "
+"estas para você."
+
+#: xcontrol/region_page.py:218
+#, python-brace-format
+msgid "Looks like: {examples}"
+msgstr "Fica assim: {examples}"
+
+#: xcontrol/region_page.py:233
+msgid "Could not save it"
+msgstr "Não foi possível salvar"
+
+#: xcontrol/region_page.py:235 xcontrol/region_page.py:238
+msgid "Saved; log in again to use it"
+msgstr "Salvo; entre de novo para usar"
+
+#: xcontrol/region_page.py:242
+msgid "Can't add languages here"
+msgstr "Não é possível adicionar idiomas aqui"
+
+#: xcontrol/region_page.py:243
+msgid "This needs pkexec (polkit) and /usr/share/i18n/SUPPORTED (glibc)."
+msgstr ""
+"Isto precisa do pkexec (polkit) e de /usr/share/i18n/SUPPORTED (glibc)."
+
+#: xcontrol/region_page.py:247
+msgid "More languages"
+msgstr "Mais idiomas"
+
+#: xcontrol/region_page.py:255
+msgid ""
+"Tick the languages to make available. They're generated for the whole "
+"computer (locale-gen), which takes a moment."
+msgstr ""
+"Marque os idiomas a disponibilizar. Eles são gerados para o computador todo "
+"(locale-gen), o que leva um momento."
+
+#: xcontrol/region_page.py:257
+msgid "Search"
+msgstr "Buscar"
+
+#: xcontrol/region_page.py:278
+msgid "Code"
+msgstr "Código"
+
+#: xcontrol/region_page.py:289
+msgid "Adding languages…"
+msgstr "Adicionando idiomas…"
+
+#: xcontrol/region_page.py:294
+msgid "Languages added"
+msgstr "Idiomas adicionados"
+
+#: xcontrol/region_page.py:296
+msgid "Could not add the languages"
+msgstr "Não foi possível adicionar os idiomas"
+
+#: xcontrol/region_page.py:311
+msgid "No time sync service is installed (systemd-timesyncd, chrony or ntpd)."
+msgstr ""
+"Nenhum serviço de sincronização de hora está instalado (systemd-timesyncd, "
+"chrony ou ntpd)."
+
+#: xcontrol/region_page.py:313
+msgid "Synchronized."
+msgstr "Sincronizado."
+
+#: xcontrol/region_page.py:313
+msgid "Not synchronized yet."
+msgstr "Ainda não sincronizado."
+
+#: xcontrol/region_page.py:321
+msgid ""
+"systemd's timedated isn't available, so the time can't be changed here."
+msgstr ""
+"O timedated do systemd não está disponível, então a hora não pode ser "
+"alterada aqui."
 
 #: xcontrol/resolutions_dialog.py:14
 msgid "CVT – standard blanking (CRT style)"

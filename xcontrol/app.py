@@ -16,11 +16,14 @@ from .monitors_page import MonitorsPage  # noqa: E402
 from .panel_page import PanelPage  # noqa: E402
 from .i3_page import I3Page  # noqa: E402
 from .notify_page import NotifyPage  # noqa: E402
+from .defaults_page import DefaultsPage  # noqa: E402
+from .region_page import RegionPage  # noqa: E402
+from .audio_page import AudioPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
 from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "appearance", "desktop", "panel", "notifications", "i3", "users", "system")
+PAGES = ("gaming", "displays", "input", "appearance", "sound", "desktop", "panel", "notifications", "defaults", "i3", "region", "users", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -63,6 +66,10 @@ class MainWindow(Gtk.ApplicationWindow):
         appearance.add(AppearancePage(self))
         stack.add_titled(appearance, "appearance", _("Appearance"))
 
+        sound = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        sound.add(AudioPage(self))
+        stack.add_titled(sound, "sound", _("Sound"))
+
         desktop = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         desktop.add(DesktopPage(self))
         stack.add_titled(desktop, "desktop", _("Desktop"))
@@ -71,7 +78,14 @@ class MainWindow(Gtk.ApplicationWindow):
         notifications = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         notifications.add(NotifyPage(self))
         stack.add_titled(notifications, "notifications", _("Notifications"))
+        defaults = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        defaults.add(DefaultsPage(self))
+        stack.add_titled(defaults, "defaults", _("Default Apps"))
         stack.add_titled(I3Page(self), "i3", _("Window Manager (i3)"))  # scrolls inside its tabs
+
+        region = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        region.add(RegionPage(self))
+        stack.add_titled(region, "region", _("Date & Language"))
 
         users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         users.add(UsersPage(self))
@@ -230,6 +244,16 @@ def main(argv=None):
         else:
             import time
             print(f"awake: on until {time.strftime('%H:%M', time.localtime(until))}")
+        return 0
+    if "--night" in argv:  # night light by hand: on, off, toggle (until the schedule next changes), auto
+        from . import desktop
+        i = argv.index("--night")
+        how = argv[i + 1] if i + 1 < len(argv) else "toggle"
+        if how not in ("on", "off", "toggle", "auto", "status"):
+            print("xcontrol: --night takes on, off, toggle, auto or status", file=sys.stderr)
+            return 2
+        result = desktop.set_night(how)
+        print("night light: " + (result or "following the schedule"))
         return 0
     if "--dnd" in argv:  # notifications: do not disturb on, off or toggle (critical ones can still show)
         from . import notify

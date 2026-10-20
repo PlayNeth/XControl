@@ -318,6 +318,7 @@ class NotifyPage(Gtk.Box):
         bb.pack_start(add, False, False, 0)
         bb.pack_start(rm, False, False, 0)
         self.recent = Gtk.ComboBoxText()
+        self.recent.set_no_show_all(True)
         self.recent.connect("changed", self._rule_recent)
         bb.pack_start(self.recent, False, False, 0)
         g.attach(bb, 0, 1, 2, 1)
@@ -587,7 +588,8 @@ class NotifyPage(Gtk.Box):
         self.dnd.set_active(bool(ours) and N.paused())
         self.dnd.set_sensitive(bool(ours) or (owner is not None and owner[1] == "dunst"))
         self.loading = was
-        self._fill_recent()
+        if owner and owner[1] == "dunst":   # dunstctl would start a dunst through D-Bus otherwise
+            self._fill_recent()
         return False
 
 

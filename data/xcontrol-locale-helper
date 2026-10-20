@@ -1,0 +1,50 @@
+#!/bin/sh
+# xcontrol-locale-helper: makes languages available on this system (runs as root via pkexec).
+#
+#   enable LOCALE [LOCALE ...]     e.g. enable pt_BR.UTF-8 de_DE.UTF-8
+#
+#     Turns each locale on in /etc/locale.gen (uncommenting its line, or adding it) and runs
+#     locale-gen. Only names listed in /usr/share/i18n/SUPPORTED are accepted.
+set -eu
+
+die() { echo "xcontrol-locale-helper: $*" >&2; exit 1; }
+
+LOCALEGEN=/etc/locale.gen
+SUPPORTED=/usr/share/i18n/SUPPORTED
+GENCMD=locale-gen
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    LOCALEGEN=${XCONTROL_LOCALE_GEN:-$LOCALEGEN}
+    SUPPORTED=${XCONTROL_SUPPORTED:-$SUPPORTED}
+    GENCMD=${XCONTROL_LOCALEGEN_CMD:-$GENCMD}
+fi
+
+[ $# -ge 2 ] || die "usage: enable LOCALE [LOCALE ...]"
+cmd=$1; shift
+[ "$cmd" = enable ] || die "unknown command: $cmd"
+[ -r "$SUPPORTED" ] || die "$SUPPORTED not found"
+[ -e "$LOCALEGEN" ] || : > "$LOCALEGEN"
+
+for loc in "$@"; do
+    case $loc in ''|*[!A-Za-z0-9_.@-]*) die "invalid locale name: $loc";; esac
+    [ ${#loc} -le 64 ] || die "invalid locale name: $loc"
+    # the SUPPORTED line, e.g. "pt_BR.UTF-8 UTF-8"
+    line=$(awk -v l="$loc" '$1 == l { print $1 " " $2; exit }' "$SUPPORTED")
+    [ -n "$line" ] || die "not a supported locale: $loc"
+    if grep -Eq "^[[:space:]]*$loc[[:space:]]" "$LOCALEGEN"; then
+        continue                                   # already on
+    fi
+    tmp=$(mktemp "$LOCALEGEN.XXXXXX")
+    if grep -Eq "^#[[:space:]]*$loc[[:space:]]" "$LOCALEGEN"; then
+        # uncomment the first matching line (as written by the distribution)
+        awk -v l="$loc" 'done == 0 && $0 ~ "^#[[:space:]]*" l "[[:space:]]" { sub(/^#[[:space:]]*/, ""); done = 1 } { print }' \
+            "$LOCALEGEN" > "$tmp"
+    else
+        cat "$LOCALEGEN" > "$tmp"
+        echo "$line" >> "$tmp"
+    fi
+    chmod 644 "$tmp"
+    mv "$tmp" "$LOCALEGEN"
+done
+
+"$GENCMD"

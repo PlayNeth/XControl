@@ -23,4 +23,10 @@
     <defaults><allow_any>auth_admin</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
     <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-user-helper</annotate>
   </action>
+  <action id="io.github.xcontrol.locales">
+    <description>Make languages available</description>
+    <message>Authentication is required to add languages to this computer</message>
+    <defaults><allow_any>auth_admin</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-locale-helper</annotate>
+  </action>
 </policyconfig>

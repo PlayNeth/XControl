@@ -2,6 +2,36 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.21.0 (2026-10-20)
+
+**Add Sound, Default Apps and Date & Language pages and a night light**
+
+- Add a Sound page: default output and input, their port, a Test sound per
+  output, and each sound card's profile (stereo, surround, HDMI, Pro Audio, off)
+- Rename or hide sound devices for every program, keep them from sleeping (no
+  pop or lost first second), or prefer one whenever it's connected
+- Set PipeWire's sample rate, following what's playing, and buffer size (less
+  crackling or less delay); they apply right away and are saved
+- Add a Default Apps page: choose what opens links, email, folders, text,
+  pictures, videos, music, PDFs, archives and office files, or any single type
+- Clean up default-app entries for uninstalled programs, warn when $BROWSER
+  overrides the browser, and make your own launchers count
+- Choose the terminal (xdg-terminals.list); XControl's i3 config uses it for the
+  terminal key instead of i3-sensible-terminal
+- Add a Date & Language page: time zone, automatic time, setting the time by
+  hand, and keeping the hardware clock in local time for dual boot
+- Set the language and formats (dates, numbers, currency, paper) just for you
+  or for everyone, with a preview
+- Add "More languages…" to turn on languages for the whole computer through a
+  new root helper that runs locale-gen
+- Add a night light to the Displays page: warmer colors from sunset to sunrise,
+  at set hours with a gradual change, or always, down to 1500 K
+- Let the night light skip chosen displays, work with the gamma set on the
+  page, and warn when redshift, gammastep or sct also runs
+- Add `xcontrol --night on|off|toggle|auto|status`
+- Fix the Notifications page starting dunst on its own when it wasn't the
+  running notification program, and hide an empty "Add a recent app" list
+
 ## 0.20.1 (2026-10-19)
 
 **Show which watched gamepads are virtual and what made them**
