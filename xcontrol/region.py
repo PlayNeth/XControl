@@ -142,23 +142,91 @@ def user_locale():
     return _read_conf(user_conf_path())
 
 
+XPROFILE_BEGIN = "# >>> XControl: your language (Date & Language page) >>>"
+XPROFILE_END = "# <<< XControl: your language <<<"
+_VALUE = re.compile(r"^[A-Za-z0-9_.@-]+$")
+
+
+def xprofile_path():
+    return os.path.join(os.path.expanduser("~"), ".xprofile")
+
+
+def environment_d_path():
+    base = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+    return os.path.join(base, "environment.d", "90-xcontrol-locale.conf")
+
+
+def _xprofile_block():
+    # Arch's /etc/profile.d/locale.sh only reads ~/.config/locale.conf when LANG isn't set yet,
+    # and login screens have set it (from /etc/locale.conf) by then; ~/.xprofile runs after that
+    conf = '"${XDG_CONFIG_HOME:-$HOME/.config}/locale.conf"'
+    return "\n".join([
+        XPROFILE_BEGIN,
+        f"if [ -r {conf} ]; then",
+        "    unset " + " ".join(ALL_VARS),
+        f"    set -a; . {conf}; set +a",
+        "fi",
+        XPROFILE_END, ""])
+
+
+def _set_xprofile(on):
+    path = xprofile_path()
+    try:
+        with open(path, errors="replace") as f:
+            text = f.read()
+    except FileNotFoundError:
+        text = None
+    lines = (text or "").split("\n")
+    if XPROFILE_BEGIN in lines:
+        a = lines.index(XPROFILE_BEGIN)
+        b = lines.index(XPROFILE_END, a) if XPROFILE_END in lines[a:] else a
+        lines = lines[:a] + lines[b + 1:]
+    rest = "\n".join(lines).strip("\n")
+    if on:
+        new = (rest + "\n\n" if rest else "#!/bin/sh\n") + _xprofile_block()
+    elif text is None:
+        return
+    else:
+        new = rest + "\n" if rest else ""
+    if new == text:
+        return
+    if not new.strip() or new.strip() == "#!/bin/sh":
+        if text is not None:
+            os.remove(path)
+        return
+    with open(path + ".tmp", "w") as f:
+        f.write(new)
+    os.replace(path + ".tmp", path)
+
+
 def write_user_locale(values):
-    """~/.config/locale.conf (read at login on Arch, by /etc/profile.d/locale.sh); {} removes it."""
+    """Your own language and formats, for your next logins. {} removes them.
+
+    Written to ~/.config/locale.conf (what Arch's login shells read), loaded from ~/.xprofile
+    too (what login screens run for X sessions, after they've set the system language), and
+    to ~/.config/environment.d (programs systemd starts for you)."""
     path = user_conf_path()
     values = {k: v for k, v in values.items() if v and k in ALL_VARS}
+    for k, v in values.items():
+        if not _VALUE.match(v):
+            raise ValueError(f"not a locale name: {v!r}")
+    envd = environment_d_path()
     if not values:
-        try:
-            os.remove(path)
-        except OSError:
-            pass
+        for p in (path, envd):
+            try:
+                os.remove(p)
+            except OSError:
+                pass
+        _set_xprofile(False)
         return
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path + ".tmp", "w") as f:
-        f.write("# Your language and formats (set by XControl). Read when you log in.\n")
-        for k in ALL_VARS:
-            if k in values:
-                f.write(f"{k}={values[k]}\n")
-    os.replace(path + ".tmp", path)
+    body = "".join(f"{k}={values[k]}\n" for k in ALL_VARS if k in values)
+    for p, head in ((path, "# Your language and formats (set by XControl). Read when you log in.\n"),
+                    (envd, "# Your language and formats for programs systemd starts (set by XControl).\n")):
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p + ".tmp", "w") as f:
+            f.write(head + body)
+        os.replace(p + ".tmp", p)
+    _set_xprofile(True)
 
 
 def session_locale():

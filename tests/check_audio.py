@@ -49,5 +49,27 @@ expect("0.5 file", os.path.exists(os.path.join(tmp, "config", "wireplumber", "wi
 expect("back to defaults removes them", A.write(A.normalize({}), (0, 5)), {"pipewire", "pulse", "wireplumber"})
 expect("removed", os.path.exists(A.pipewire_path()), False)
 
+# pactl prints numbers the local way unless told otherwise (pt_BR: "0,000000" breaks its JSON)
+import tempfile as _tf  # noqa: E402
+_bin = _tf.mkdtemp()
+with open(os.path.join(_bin, "pactl"), "w") as f:
+    f.write("""#!/bin/sh
+dec=,; srv='Nome do servidor'
+[ "$LC_ALL" = C ] && dec=. && srv='Server Name'
+case "$*" in
+  "info") echo "$srv: PulseAudio (on PipeWire 1.4.9)";;
+  "-f json list sinks") echo "[{\\"name\\":\\"alsa_output.pci-0000_0b_00.4.analog-stereo\\",\\"description\\":\\"Speakers\\",\\"balance\\":0${dec}000000}]";;
+  *) echo "[]";;
+esac
+""")
+os.chmod(os.path.join(_bin, "pactl"), 0o755)
+_path = os.environ["PATH"]
+os.environ.update(PATH=_bin + os.pathsep + _path, LC_ALL="pt_BR.UTF-8", LANG="pt_BR.UTF-8")
+try:
+    expect("outputs listed in pt_BR too", [o["name"] for o in A.outputs()], ["alsa_output.pci-0000_0b_00.4.analog-stereo"])
+    expect("server found in pt_BR too", A.server() is not None and "PipeWire" in str(A.server()), True)
+finally:
+    os.environ["PATH"] = _path
+
 print("check_audio:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

@@ -10,7 +10,7 @@ here = os.path.dirname(os.path.abspath(__file__))
 helper = os.path.join(here, "..", "data", "xcontrol-locale-helper")
 tmp = tempfile.mkdtemp()
 os.chmod(tmp, 0o777)
-os.environ.update(XDG_CONFIG_HOME=os.path.join(tmp, "config"))
+os.environ.update(XDG_CONFIG_HOME=os.path.join(tmp, "config"), HOME=tmp)
 sys.path.insert(0, os.path.join(here, ".."))
 from xcontrol import region as R  # noqa: E402
 
@@ -36,7 +36,33 @@ expect("describe", R.describe("pt_BR.UTF-8", base=locs), "Portuguese (Brazil)")
 # per user
 R.write_user_locale({"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8", "BOGUS": "x"})
 expect("user locale", R.user_locale(), {"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8"})
+# a login screen has already set the system language by the time ~/.xprofile runs: it loads ours
+with open(R.xprofile_path(), "w") as f:
+    f.write("xrdb -merge ~/.Xresources\n")
+R.write_user_locale({"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8"})
+R.write_user_locale({"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8"})     # (once, not twice)
+with open(R.xprofile_path()) as f:
+    xp = f.read()
+expect("xprofile keeps the user's lines, block once", (xp.startswith("xrdb -merge"), xp.count(R.XPROFILE_BEGIN)),
+       (True, 1))
+out = subprocess.run(["sh", "-c", f". {R.xprofile_path()}; echo $LANG $LC_TIME $LC_NUMERIC"], capture_output=True,
+                     text=True, env=dict(os.environ, LANG="en_US.UTF-8", LC_NUMERIC="en_US.UTF-8")).stdout.split()
+expect("xprofile wins over what the login screen set", out, ["pt_BR.UTF-8", "en_GB.UTF-8"])
+with open(R.environment_d_path()) as f:
+    expect("environment.d", f.read().splitlines()[1:], ["LANG=pt_BR.UTF-8", "LC_TIME=en_GB.UTF-8"])
+try:
+    R.write_user_locale({"LANG": "pt_BR.UTF-8; rm -rf ~"})
+    expect("bad value refused", False, True)
+except ValueError:
+    pass
 R.write_user_locale({})
+with open(R.xprofile_path()) as f:
+    expect("block removed, the rest kept", f.read(), "xrdb -merge ~/.Xresources\n")
+expect("environment.d removed", os.path.exists(R.environment_d_path()), False)
+os.remove(R.xprofile_path())
+R.write_user_locale({"LANG": "pt_BR.UTF-8"})
+R.write_user_locale({})
+expect("an xprofile only we wrote goes away", os.path.exists(R.xprofile_path()), False)
 expect("removed", os.path.exists(R.user_conf_path()), False)
 
 # the helper

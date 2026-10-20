@@ -67,8 +67,11 @@ def save(a):
 
 # ---------------------------------------------------------------- what's running
 def _run(args, timeout=10):
+    # in the C locale: pactl prints numbers the local way (0,5 in pt_BR, which breaks its JSON)
+    # and translates the field names of `pactl info`
+    env = dict(os.environ, LC_ALL="C", LANGUAGE="")
     try:
-        r = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+        r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, env=env)
     except (OSError, subprocess.SubprocessError):
         return None
     return r.stdout if r.returncode == 0 else None

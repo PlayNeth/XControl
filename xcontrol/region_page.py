@@ -229,7 +229,7 @@ class RegionPage(Gtk.Box):
         if self.scope.get_active_id() == "user":
             try:
                 R.write_user_locale(values)
-            except OSError as e:
+            except (OSError, ValueError) as e:
                 self.window.message(_("Could not save it"), str(e))
                 return
             self.window.set_status(_("Saved; log in again to use it"))

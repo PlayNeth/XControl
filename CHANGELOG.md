@@ -2,6 +2,20 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.25.1 (2026-10-20)
+
+**Fix per-user language not applying and Sound page in other locales**
+
+- Fix a language and formats set "just for you" being ignored after logging in through
+  a login screen (LightDM, SDDM, ly...): XControl now also loads them from a marked
+  block in ~/.xprofile, leaving the rest of the file alone
+- Also apply the per-user language to programs systemd starts for you, through
+  ~/.config/environment.d
+- Remove both again when going back to the system language
+- Fix the Sound page finding no outputs or sound server when the system language uses
+  a decimal comma (such as Portuguese), by running pactl in the C locale
+- Refuse invalid language values instead of writing them to the config files
+
 ## 0.25.0 (2026-10-20)
 
 **Add battery and power alerts through poweralertd**
