@@ -56,19 +56,30 @@ bt = A.normalize({"devices": {"bluez_output.AC_80_0A_12_34_56.1": {"name": "My h
 names = ("bluez_output.AC_80_0A_12_34_56.1", "bluez_card.X", "v4l2_input.cam")
 expect("bluetooth can be configured", [A.configurable(n) for n in names], [True, True, False])
 w = A.wireplumber_conf(bt, (0, 5))
-for line in ("monitor.bluez.rules = [",
-             'matches = [ { api.bluez5.address = "AC:80:0A:12:34:56" media.class = "Audio/Sink" } ]',
-             'matches = [ { api.bluez5.address = "AC:80:0A:12:34:56" media.class = "Audio/Source" } ]',
-             'node.description = "My headset"', "node.disabled = true",
+for line in ("monitor.bluez.rules = [", 'node.description = "My headset"', "node.disabled = true",
              'matches = [ { device.name = "bluez_card.AC_80_0A_12_34_56" } ]', 'device.description = "Headset"'):
     expect(f"0.5 bluetooth: {line}", line in w, True)
+# the patterns, against the names WirePlumber gives a headset's nodes in its different profiles
+import fnmatch  # noqa: E402
+import re  # noqa: E402
+rx = re.findall(r'node\.name = "~([^"]+)"', w)
+expect("0.5: no media.class (nodes don't have it yet when rules apply)", "media.class" in w, False)
+# (rules come sorted by name: the input's first, then the output's)
+names = {"bluez_output.AC_80_0A_12_34_56.1": (False, True), "bluez_output.AC_80_0A_12_34_56.0": (False, True),
+         "bluez_input.AC_80_0A_12_34_56.0": (True, False), "bluez_input.AC:80:0A:12:34:56": (True, False),
+         "bluez_output.AC_80_0A_12_34_57.1": (False, False), "bluez_output.AC_80_0A_12_34_561": (False, False)}
+for n, want in names.items():
+    expect(f"0.5 regex on {n}", tuple(bool(re.search(r, n)) for r in rx), want)
+glob4 = re.findall(r'"node.name", "matches", "([^"]+)"', A.wireplumber_conf(bt, (0, 4), "bluez"))
+for n, want in names.items():
+    if n.endswith("561"):
+        continue      # (globs can't tell that one apart; no real address looks like it)
+    expect(f"0.4 glob on {n}", tuple(fnmatch.fnmatchcase(n, g) for g in glob4), want)
 expect("0.5: no alsa section when there's nothing for it", "monitor.alsa.rules" in w, False)
 expect("0.5 braces balance", w.count("{") == w.count("}") and w.count("[") == w.count("]"), True)
 expect("0.4: alsa file empty", A.wireplumber_conf(bt, (0, 4), "alsa"), None)
 w4 = A.wireplumber_conf(bt, (0, 4), "bluez")
-for line in ("table.insert(bluez_monitor.rules, {",
-             '{ "api.bluez5.address", "equals", "AC:80:0A:12:34:56" }, { "media.class", "equals", "Audio/Sink" }, },'):
-    expect(f"0.4 bluetooth: {line}", line in w4, True)
+expect("0.4 bluetooth", "table.insert(bluez_monitor.rules, {" in w4, True)
 expect("0.4 bluetooth file", A.wireplumber_path((0, 4), "bluez").endswith("bluetooth.lua.d/51-xcontrol.lua"), True)
 expect("0.4 written to both", (A.write(bt, (0, 4)), os.path.exists(A.wireplumber_path((0, 4), "bluez")),
                                os.path.exists(A.wireplumber_path((0, 4), "alsa"))),

@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.25.3 (2026-10-20)
+
+**Fix Bluetooth headset settings on the Sound page having no effect**
+
+- Fix names, hiding, keep-awake and priority set for a Bluetooth headset or speaker
+  output or input not being applied: the rules matched on a property WirePlumber
+  hasn't set yet when it applies them, and now match on the device's name instead
+- Keep the settings working in every profile (music or headset with mic), whichever
+  way the headset's address is spelled in the name
+- Add tests checking the new patterns against real Bluetooth node names
+
 ## 0.25.2 (2026-10-20)
 
 **Allow device settings for Bluetooth headsets and speakers**

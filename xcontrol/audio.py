@@ -217,18 +217,38 @@ def configurable(name):
 
 
 def _match(name):
-    """(monitor, [(key, value)]) a rule for this device matches on. A Bluetooth headset's output
-    and input change names with its profile (music, or headset with mic): those match on the
-    headset's address and direction instead, so the setting holds in every profile."""
+    """(monitor, [(key, kind, value)]) a rule for this device matches on; kind is "eq", "prefix"
+    or "bt". A Bluetooth headset's output and input change names with its profile (music, or
+    headset with mic: bluez_output.AC_80_0A_12_34_56.1, .0, or bluez_input.AC:80:...): those
+    match on the direction and the headset's address in any of its spellings, so the setting
+    holds in every profile. (media.class can't be used: WirePlumber applies the rules before
+    a Bluetooth node has one.)"""
     if name.startswith("bluez_card."):
-        return "bluez", [("device.name", name)]
+        return "bluez", [("device.name", "eq", name)]
     m = _BT_NODE.match(name)
     if m:
-        return "bluez", [("api.bluez5.address", m.group(2).replace("_", ":").upper()),
-                         ("media.class", "Audio/Sink" if m.group(1) == "output" else "Audio/Source")]
+        return "bluez", [("node.name", "bt", (f"bluez_{m.group(1)}", m.group(2).upper().split("_")))]
     if name.startswith("alsa_card."):
-        return "alsa", [("device.name", name)]
-    return "alsa", [("node.name", name)]
+        return "alsa", [("device.name", "eq", name)]
+    return "alsa", [("node.name", "eq", name)]
+
+
+def _cond_05(key, kind, value):
+    if kind == "prefix":
+        return f'{key} = "~{value}*"'
+    if kind == "bt":
+        prefix, octets = value     # (a POSIX regex; "." stands for "_" or ":" between the octets)
+        return f'{key} = "~^{prefix}[.]{".".join(octets)}([.]|$)"'
+    return f"{key} = {_spa(value)}"
+
+
+def _cond_04(key, kind, value):
+    if kind == "prefix":
+        return f'{{ "{key}", "matches", "{value}*" }}'
+    if kind == "bt":
+        prefix, octets = value     # (a glob pattern)
+        return f'{{ "{key}", "matches", "{prefix}.{"?".join(octets)}*" }}'
+    return f'{{ "{key}", "equals", {_spa(value)} }}'
 
 
 def _rules(a):
@@ -236,7 +256,7 @@ def _rules(a):
     rules = []
     if a["no_suspend"]:
         for prefix in ("alsa_output.", "alsa_input."):
-            rules.append(("alsa", [("node.name", prefix + "*")], {"session.suspend-timeout-seconds": 0}))
+            rules.append(("alsa", [("node.name", "prefix", prefix)], {"session.suspend-timeout-seconds": 0}))
     for name, d in sorted(a["devices"].items()):
         if not configurable(name):
             continue
@@ -279,7 +299,7 @@ def wireplumber_conf(a, ver=None, monitor="alsa"):
                 continue
             L.append(f"monitor.{mon}.rules = [")
             for _m, match, props in mine:
-                cond = " ".join(f"{k} = " + (f'"~{v}"' if v.endswith("*") else _spa(v)) for k, v in match)
+                cond = " ".join(_cond_05(*m) for m in match)
                 L += ["  {", f"    matches = [ {{ {cond} }} ]", "    actions = {", "      update-props = {"]
                 L += [f"        {k} = {_spa(v)}" for k, v in props.items()]
                 L += ["      }", "    }", "  }"]
@@ -291,9 +311,7 @@ def wireplumber_conf(a, ver=None, monitor="alsa"):
     table = "alsa_monitor" if monitor == "alsa" else "bluez_monitor"
     L = [HEADER.replace("#", "--", 1).rstrip("\n")]
     for _m, match, props in mine:
-        conds = []
-        for k, v in match:
-            conds.append(f'{{ "{k}", "matches", "{v}" }}' if v.endswith("*") else f'{{ "{k}", "equals", {_spa(v)} }}')
+        conds = [_cond_04(*m) for m in match]
         L += [f"table.insert({table}.rules, {{", f"  matches = {{ {{ {', '.join(conds)}, }}, }},",
               "  apply_properties = {"]
         L += [f'    ["{k}"] = {_spa(v)},' for k, v in props.items()]
