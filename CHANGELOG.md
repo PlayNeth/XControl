@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.23.3 (2026-10-20)
+
+**Correct the report rate advice for USB and Bluetooth**
+
+- Correct the Bluetooth report rate hint: it no longer tells you to use the cable for
+  a true 1000 Hz, since over USB most DualShock 4s stay at 250 Hz whatever the polling
+  rate, so Bluetooth is usually the faster connection
+- Explain in the README that faster USB polling only helps controllers that actually
+  produce new data that often
+
 ## 0.23.2 (2026-10-20)
 
 **Hide the DualShock 4 from games so they don't see two controllers**

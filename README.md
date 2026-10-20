@@ -300,12 +300,16 @@ as they connect.
   page shows the rate actually measured. Bluetooth itself is the ceiling: a
   full DualShock 4 report needs at least two radio slots, so 1 ms usually lands
   around 500–800 Hz depending on the adapter (Wi-Fi + Bluetooth combo cards
-  share their radio and sit at the low end). A real 1000 Hz takes the cable.
+  share their radio and sit at the low end). That's still faster than the
+  cable: over USB the controller itself usually won't go past 250 Hz.
 - **Report rate over USB**: Linux picks the USB polling interval, so this is
   usbhid's `jspoll` setting, which covers every USB gamepad. It asks for your
   password (`xcontrol-controller-helper`), is kept for the next boots
   (`/etc/tmpfiles.d/xcontrol-usbhid.conf`, plus `/etc/modprobe.d` when usbhid is
-  a module), and reconnects a plugged-in DualShock 4 so it applies now.
+  a module), and reconnects a plugged-in DualShock 4 so it applies now. Faster
+  polling only helps if the controller has new data that often: most DualShock
+  4s produce 250 reports per second over USB no matter how often they're asked
+  (the measured rate on the page tells). Other USB gamepads can benefit.
 - **Xbox 360 controller for games**: games see a virtual Xbox 360 pad (uinput,
   045e:028e, the same as xpad) instead of the DualShock 4. Rumble from the game
   is passed on to the DualShock 4.

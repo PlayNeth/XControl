@@ -122,8 +122,8 @@ class ControllersPage(Gtk.Box):
         self._row(g, 0, _("Over Bluetooth"), self.bt_rate)
         g.attach(_hint(_("How often the controller sends its state; it applies right away, and the rate it "
                          "really reaches shows above. Bluetooth itself usually tops out around 500–800 Hz, "
-                         "depending on the adapter (Wi-Fi + Bluetooth cards share the radio); for a true "
-                         "1000 Hz use the cable with the USB rate at 1 ms.")), 1, 1, 1, 1)
+                         "depending on the adapter (Wi-Fi + Bluetooth cards share the radio). It's still "
+                         "faster than the cable: over USB most DualShock 4s stay at 250 Hz whatever the rate.")), 1, 1, 1, 1)
         usb = Gtk.Box(spacing=6)
         self.usb_rate = Gtk.ComboBoxText(hexpand=True)
         for ms, label in USB_RATES:

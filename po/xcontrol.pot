@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.23.1\n"
+"Project-Id-Version: xcontrol 0.23.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 13:32-0300\n"
+"POT-Creation-Date: 2026-10-20 13:46-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1104,7 +1104,8 @@ msgid ""
 "How often the controller sends its state; it applies right away, and the "
 "rate it really reaches shows above. Bluetooth itself usually tops out around "
 "500–800 Hz, depending on the adapter (Wi-Fi + Bluetooth cards share the "
-"radio); for a true 1000 Hz use the cable with the USB rate at 1 ms."
+"radio). It's still faster than the cable: over USB most DualShock 4s stay at "
+"250 Hz whatever the rate."
 msgstr ""
 
 #: xcontrol/controllers_page.py:135
