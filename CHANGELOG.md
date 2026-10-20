@@ -2,6 +2,14 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.21.3 (2026-10-20)
+
+**Change your own picture without asking for a password**
+
+- Stop asking for a password when you change your own account picture: it's
+  set through AccountsService, which allows it, so login screens show it too
+- Add accountsservice as an optional dependency
+
 ## 0.21.2 (2026-10-20)
 
 **Support i3 4.24 and picom 12 config changes**

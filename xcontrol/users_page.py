@@ -473,7 +473,11 @@ class UsersPage(Gtk.Box):
         except Exception as e:  # noqa: BLE001
             self.window.message(_("Could not use that picture"), str(e))
             return
-        if u.me and not U.can_change():
+        if u.me:
+            # your own picture needs no password: ~/.face is yours, and AccountsService lets
+            # you change your own account's picture (login screens read either)
+            U.set_own_picture(face)
+            self.window.set_status(_("Picture changed"))
             self.reload(keep=u.name)
             return
 

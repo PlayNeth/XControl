@@ -1,6 +1,7 @@
 """User accounts: read from /etc/passwd and /etc/group, changed through
 xcontrol-user-helper (pkexec). Your own picture (~/.face) is written directly."""
 import os
+import pwd
 import re
 import shutil
 import subprocess
@@ -166,6 +167,26 @@ def make_face(src, dest, size=192):
     pb.savev(tmp, "png", [], [])
     os.replace(tmp, dest)
     return dest
+
+
+def set_own_picture(path):
+    """Your own picture for login screens, through AccountsService: it's allowed to change your
+    own account's picture without a password. Returns (ok, message); not ok when AccountsService
+    isn't running (then ~/.face, already written, is what greeters fall back to)."""
+    try:
+        import gi
+        gi.require_version("Gio", "2.0")
+        from gi.repository import Gio, GLib
+        bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+        name = pwd.getpwuid(os.getuid()).pw_name
+        obj = bus.call_sync("org.freedesktop.Accounts", "/org/freedesktop/Accounts", "org.freedesktop.Accounts",
+                            "FindUserByName", GLib.Variant("(s)", (name,)), None, 0, 5000, None).unpack()[0]
+        bus.call_sync("org.freedesktop.Accounts", obj, "org.freedesktop.Accounts.User", "SetIconFile",
+                      GLib.Variant("(s)", (path,)), None, Gio.DBusCallFlags.ALLOW_INTERACTIVE_AUTHORIZATION,
+                      30000, None)
+    except Exception as e:  # noqa: BLE001 - no AccountsService, or it refused
+        return False, str(e)
+    return True, ""
 
 
 # ---- the helper
