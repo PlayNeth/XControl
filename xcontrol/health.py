@@ -58,6 +58,19 @@ def start_agent(path):
     return True
 
 
+def _start_xsettingsd():
+    from . import theming
+    look = None
+    try:
+        import gi
+        gi.require_version("Gtk", "3.0")
+        from gi.repository import Gtk
+        look = theming.current(Gtk.Settings.get_default())
+    except (ImportError, ValueError):
+        pass
+    theming.start_xsettingsd(look)
+
+
 def checks():
     """All checks, worst first."""
     from . import audio, i3cfg, night, notify, theming
@@ -138,9 +151,14 @@ def checks():
     # ---- live theme changes
     kind, _pid = theming.xsettings_manager()
     if kind is None:
-        out.append(("info", _("Open apps don't follow theme changes"),
-                    _("Nothing provides XSETTINGS. Applying on the Appearance page starts xsettingsd (if it's "
-                    "installed) and adds it to your login."), None))
+        if shutil.which("xsettingsd"):
+            out.append(("warn", _("Open apps don't follow theme changes"),
+                        _("xsettingsd is installed but not running, so open apps keep their old theme, font and "
+                          "cursor until they restart. Start it now; xcontrol --session starts it at every login."),
+                        (_("Start xsettingsd"), _start_xsettingsd)))
+        else:
+            out.append(("info", _("Open apps don't follow theme changes"),
+                        _("Nothing provides XSETTINGS. Install xsettingsd; XControl starts it at login."), None))
     else:
         out.append(("ok", _("Open apps follow theme changes"), _("XSETTINGS from {kind}.").format(kind=kind), None))
 

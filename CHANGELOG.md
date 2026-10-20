@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.22.2 (2026-10-20)
+
+**Start xsettingsd at login whenever it's installed**
+
+- Start xsettingsd at login whenever it's installed and nothing else provides
+  XSETTINGS, using XControl's config or an existing ~/.xsettingsd, so open apps
+  follow theme changes without first pressing Apply on the Appearance page
+- Warn in the session check when xsettingsd is installed but not running, with
+  a "Start xsettingsd" button that writes a config from the current theme if
+  there is none
+
 ## 0.22.1 (2026-10-20)
 
 **Fix the Power and Date & Language pages without a system bus**

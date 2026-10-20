@@ -398,6 +398,31 @@ def running_xsettingsd_conf(pid):
     return path
 
 
+def xsettingsd_config_to_use():
+    """The xsettingsd config to start with: XControl's, else the classic ~/.xsettingsd; None
+    when neither exists."""
+    for path in (xsettingsd_conf(), os.path.join(home(), ".xsettingsd")):
+        if os.path.isfile(path):
+            return path
+    return None
+
+
+def start_xsettingsd(look=None):
+    """Start xsettingsd when nothing provides XSETTINGS. Without a config yet, one is written
+    from `look` (the current GTK settings). Returns True when it was started."""
+    if not shutil.which("xsettingsd") or xsettings_manager()[0] is not None:
+        return False
+    conf = xsettingsd_config_to_use()
+    if conf is None:
+        if look is None:
+            return False
+        conf = xsettingsd_conf()
+        _write(conf, xsettingsd_text("", look))
+    subprocess.Popen(["xsettingsd", "-c", conf], start_new_session=True,
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return True
+
+
 def xsettingsd_autostart():
     return os.path.join(config_home(), "autostart", "xcontrol-xsettingsd.desktop")
 

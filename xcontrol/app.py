@@ -199,17 +199,12 @@ def session(everything=False, wanted=()):
     """xcontrol --session (or several login flags together): restore the display layout,
     start xsettingsd and the input watcher, then run the desktop service in the foreground.
     Each part only does something when its settings are in use."""
-    import os
-    import shutil
-    import subprocess
     from . import desktop, input_devices, theming
     if everything or "--apply-display" in wanted:
         from .display_page import apply_saved_layout
         apply_saved_layout()  # first, so the wallpaper is drawn for the final layout
-    if everything and os.path.exists(theming.xsettingsd_autostart()) and shutil.which("xsettingsd") \
-            and theming.xsettings_manager()[0] is None:
-        subprocess.Popen(["xsettingsd", "-c", theming.xsettingsd_conf()], start_new_session=True,
-                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if everything:   # live theme changes: xsettingsd with its config, when nothing else provides XSETTINGS
+        theming.start_xsettingsd()
     if everything or "--watch-input" in wanted:
         if not input_devices.watcher_running():
             spawn("--watch-input")

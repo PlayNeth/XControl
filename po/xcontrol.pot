@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.22.0\n"
+"Project-Id-Version: xcontrol 0.22.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 02:10-0300\n"
+"POT-Creation-Date: 2026-10-20 12:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2188,164 +2188,174 @@ msgstr ""
 msgid "Launch options copied"
 msgstr ""
 
-#: xcontrol/health.py:73
+#: xcontrol/health.py:86
 msgid "XControl doesn't start when you log in"
 msgstr ""
 
-#: xcontrol/health.py:74
+#: xcontrol/health.py:87
 msgid ""
 "Your i3 config doesn't run xcontrol --session, so after the next login the "
 "wallpaper, bar, compositor, screen lock and other desktop settings won't "
 "start. Add this line:"
 msgstr ""
 
-#: xcontrol/health.py:78
+#: xcontrol/health.py:91
 msgid "XControl starts when you log in"
 msgstr ""
 
-#: xcontrol/health.py:80
+#: xcontrol/health.py:93
 msgid "XControl's desktop service isn't running"
 msgstr ""
 
-#: xcontrol/health.py:81
+#: xcontrol/health.py:94
 msgid ""
 "The wallpaper, bar, compositor, lock and the rest of the Desktop pages' "
 "settings are handled by it."
 msgstr ""
 
-#: xcontrol/health.py:82 xcontrol/health.py:100
+#: xcontrol/health.py:95 xcontrol/health.py:113
 msgid "Start it"
 msgstr ""
 
-#: xcontrol/health.py:84
+#: xcontrol/health.py:97
 msgid "The desktop service is running"
 msgstr ""
 
-#: xcontrol/health.py:86
+#: xcontrol/health.py:99
 #, python-brace-format
 msgid "{program} keeps stopping"
 msgstr ""
 
-#: xcontrol/health.py:92
+#: xcontrol/health.py:105
 msgid "Password prompts work"
 msgstr ""
 
-#: xcontrol/health.py:92
+#: xcontrol/health.py:105
 #, python-brace-format
 msgid "The polkit agent is {agent}."
 msgstr ""
 
-#: xcontrol/health.py:95
+#: xcontrol/health.py:108
 msgid ""
 "No polkit agent is running, so everything that asks for a password (users, "
 "kernel modules, EDID, power buttons, languages, time) fails without a word. "
 "i3 doesn't start one."
 msgstr ""
 
-#: xcontrol/health.py:98 xcontrol/health.py:104
+#: xcontrol/health.py:111 xcontrol/health.py:117
 msgid "Password prompts can't appear"
 msgstr ""
 
-#: xcontrol/health.py:99
+#: xcontrol/health.py:112
 msgid "Start it now, and add this to your i3 config:"
 msgstr ""
 
-#: xcontrol/health.py:101
+#: xcontrol/health.py:114
 msgid "Start the polkit agent at login"
 msgstr ""
 
-#: xcontrol/health.py:105
+#: xcontrol/health.py:118
 msgid "Install one, e.g. polkit-gnome, and start it from your i3 config."
 msgstr ""
 
-#: xcontrol/health.py:109
+#: xcontrol/health.py:122
 msgid "Another bar is running besides XControl's"
 msgstr ""
 
-#: xcontrol/health.py:110
+#: xcontrol/health.py:123
 msgid "Another compositor is running besides XControl's"
 msgstr ""
 
-#: xcontrol/health.py:112
+#: xcontrol/health.py:125
 msgid "Another notification program is running besides XControl's"
 msgstr ""
 
-#: xcontrol/health.py:114
+#: xcontrol/health.py:127
 msgid "Another screen lock is running besides XControl's"
 msgstr ""
 
-#: xcontrol/health.py:121
+#: xcontrol/health.py:134
 msgid "Stop the extra ones"
 msgstr ""
 
-#: xcontrol/health.py:129
+#: xcontrol/health.py:142
 msgid "Your i3 config starts things XControl also starts"
 msgstr ""
 
-#: xcontrol/health.py:130
+#: xcontrol/health.py:143
 msgid "Remove these lines, or there'll be two of each after the next login:"
 msgstr ""
 
-#: xcontrol/health.py:134
+#: xcontrol/health.py:147
 msgid "Another night-light program is running"
 msgstr ""
 
-#: xcontrol/health.py:135
+#: xcontrol/health.py:148
 #, python-brace-format
 msgid "{programs} also changes the colors; the two will fight."
 msgstr ""
 
-#: xcontrol/health.py:141
+#: xcontrol/health.py:155 xcontrol/health.py:160
 msgid "Open apps don't follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:142
+#: xcontrol/health.py:156
 msgid ""
-"Nothing provides XSETTINGS. Applying on the Appearance page starts "
-"xsettingsd (if it's installed) and adds it to your login."
+"xsettingsd is installed but not running, so open apps keep their old theme, "
+"font and cursor until they restart. Start it now; xcontrol --session starts "
+"it at every login."
 msgstr ""
 
-#: xcontrol/health.py:145
+#: xcontrol/health.py:158
+msgid "Start xsettingsd"
+msgstr ""
+
+#: xcontrol/health.py:161
+msgid ""
+"Nothing provides XSETTINGS. Install xsettingsd; XControl starts it at login."
+msgstr ""
+
+#: xcontrol/health.py:163
 msgid "Open apps follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:145
+#: xcontrol/health.py:163
 #, python-brace-format
 msgid "XSETTINGS from {kind}."
 msgstr ""
 
-#: xcontrol/health.py:150
+#: xcontrol/health.py:168
 msgid "Nothing shows notifications"
 msgstr ""
 
-#: xcontrol/health.py:151
+#: xcontrol/health.py:169
 msgid ""
 "Programs' notifications are lost. Turn on XControl's on the Notifications "
 "page."
 msgstr ""
 
-#: xcontrol/health.py:152
+#: xcontrol/health.py:170
 msgid "Install dunst first."
 msgstr ""
 
-#: xcontrol/health.py:154
+#: xcontrol/health.py:172
 msgid "Notifications are shown"
 msgstr ""
 
-#: xcontrol/health.py:154
+#: xcontrol/health.py:172
 #, python-brace-format
 msgid "By {program}."
 msgstr ""
 
-#: xcontrol/health.py:157
+#: xcontrol/health.py:175
 msgid "No sound server answers"
 msgstr ""
 
-#: xcontrol/health.py:157
+#: xcontrol/health.py:175
 msgid "Install and start PipeWire (pipewire-pulse) or PulseAudio."
 msgstr ""
 
-#: xcontrol/health.py:160
+#: xcontrol/health.py:178
 msgid "Sound works"
 msgstr ""
 
