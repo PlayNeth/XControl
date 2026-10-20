@@ -27,6 +27,10 @@ class SystemPage(Gtk.Box):
                                      vscrollbar_policy=Gtk.PolicyType.NEVER)
         modules.add(ModulesTab(window))
         stack.add_titled(modules, "modules", _("Kernel modules"))
+        from .xserver_page import XServerTab
+        xs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.NEVER)
+        xs.add(XServerTab(window))
+        stack.add_titled(xs, "xserver", _("X server"))
         check = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         check.add(CheckTab(window))
         stack.add_titled(check, "check", _("Check & Backup"))

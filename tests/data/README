@@ -1,0 +1,5 @@
+Test fixtures.
+
+modesetting.4.gz and xorg.conf.5.gz are the manual sources of the modesetting driver and of
+xorg.conf from the XLibre X server (https://github.com/X11Libre/xserver, hw/xfree86), under the
+X server's MIT/X11 license. tests/check_xserver.py reads them to check XControl's manual parser.

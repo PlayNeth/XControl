@@ -2,6 +2,23 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.27.0 (2026-10-20)
+
+**Add an X server tab with the loaded modules and their options**
+
+- Add an X server tab to the System page that reads the running server's log: X.Org or XLibre
+  and its version, and the GPU each video driver drives
+- List every module X loaded (video and input drivers, extensions, others) with file, version
+  and ABI class, including video drivers X tried and dropped
+- Show every option with its value and where it came from: a config file or the default
+- Offer the options documented in the installed manuals (the video driver's and xorg.conf's
+  ServerFlags), and allow setting undocumented ones by name
+- Save changes to a single file, /etc/X11/xorg.conf.d/30-xcontrol.conf, through a new root
+  helper that accepts only plain option names and values; changes apply at the next X start
+- Report after each start which of XControl's options X ignored, and warn when they were chosen
+  for a different X driver than the one now running; also flag ignored options in the session check
+- Add tests for reading the X log and the helper
+
 ## 0.26.0 (2026-10-20)
 
 **Add DualSense support, per-game controller layouts and new translations**

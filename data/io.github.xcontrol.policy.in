@@ -47,4 +47,10 @@
     <defaults><allow_any>no</allow_any><allow_inactive>no</allow_inactive><allow_active>yes</allow_active></defaults>
     <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-controller-hide</annotate>
   </action>
+  <action id="io.github.xcontrol.xorg">
+    <description>Change the X server's options</description>
+    <message>Authentication is required to change the X server's options</message>
+    <defaults><allow_any>auth_admin</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-xorg-helper</annotate>
+  </action>
 </policyconfig>

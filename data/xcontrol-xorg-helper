@@ -1,0 +1,95 @@
+#!/bin/sh
+# xcontrol-xorg-helper: XControl's X server options (runs as root via pkexec).
+#
+#   write XDRIVER [drv:KERNELDRIVER:OPTION=VALUE ...] [srv:OPTION=VALUE ...]
+#
+#     Writes /etc/X11/xorg.conf.d/30-xcontrol.conf: one OutputClass section per kernel driver
+#     (MatchDriver; X applies its options to the X driver on that GPU) and a ServerFlags
+#     section, or removes the file when there are no options. Only that file is ever touched.
+#     XDRIVER is the X driver the options were chosen for (a comment, so XControl can tell).
+#
+# Names and values are validated strictly: letters, digits and _ for names; values may also
+# have . , : + - and nothing else (no spaces, quotes or shell characters).
+set -eu
+
+die() { echo "xcontrol-xorg-helper: $*" >&2; exit 1; }
+
+DIR=/etc/X11/xorg.conf.d
+if [ "$(id -u)" != 0 ]; then   # test hook, ignored when running as root
+    DIR=${XCONTROL_XORG_DIR:-$DIR}
+fi
+FILE=$DIR/30-xcontrol.conf
+
+[ $# -ge 2 ] || die "usage: write XDRIVER [drv:KERNELDRIVER:OPTION=VALUE ...] [srv:OPTION=VALUE ...]"
+[ "$1" = write ] || die "unknown command: $1"
+xdriver=$2
+shift 2
+case $xdriver in -) ;; ''|*[!a-z0-9_-]*) die "invalid X driver: $xdriver";; esac
+[ ${#xdriver} -le 32 ] || die "invalid X driver: $xdriver"
+[ $# -le 64 ] || die "too many options"
+
+check_opt() {   # NAME=VALUE
+    name=${1%%=*}
+    value=${1#*=}
+    [ "$name" != "$1" ] || die "expected OPTION=VALUE: $1"
+    case $name in [A-Za-z]*) ;; *) die "invalid option name: $name";; esac
+    case $name in *[!A-Za-z0-9_]*) die "invalid option name: $name";; esac
+    [ ${#name} -le 48 ] || die "invalid option name: $name"
+    case $value in *[!A-Za-z0-9_.,:+-]*) die "invalid value for $name: $value";; esac
+    [ ${#value} -le 128 ] || die "value too long for $name"
+}
+
+drivers=""
+for a in "$@"; do
+    case $a in
+        drv:*:*=*)
+            rest=${a#drv:}
+            kd=${rest%%:*}
+            case $kd in ''|*[!a-z0-9_-]*) die "invalid kernel driver: $kd";; esac
+            [ ${#kd} -le 32 ] || die "invalid kernel driver: $kd"
+            check_opt "${rest#*:}"
+            case " $drivers " in *" $kd "*) ;; *) drivers="$drivers $kd";; esac
+            ;;
+        srv:*=*) check_opt "${a#srv:}";;
+        *) die "invalid argument: $a";;
+    esac
+done
+
+if [ $# -eq 0 ]; then
+    rm -f "$FILE"
+    echo "removed"
+    exit 0
+fi
+
+mkdir -p "$DIR"
+tmp=$FILE.tmp
+{
+    echo "# Written by XControl (System > X server). Delete this file to undo everything here."
+    echo "# for the X driver: $xdriver"
+    for kd in $drivers; do
+        echo
+        echo 'Section "OutputClass"'
+        echo "    Identifier \"XControl: $kd\""
+        echo "    MatchDriver \"$kd\""
+        for a in "$@"; do
+            case $a in
+                drv:"$kd":*) o=${a#drv:"$kd":}; echo "    Option \"${o%%=*}\" \"${o#*=}\"";;
+            esac
+        done
+        echo "EndSection"
+    done
+    first=1
+    for a in "$@"; do
+        case $a in
+            srv:*)
+                if [ $first = 1 ]; then echo; echo 'Section "ServerFlags"'; first=0; fi
+                o=${a#srv:}
+                echo "    Option \"${o%%=*}\" \"${o#*=}\""
+                ;;
+        esac
+    done
+    [ $first = 1 ] || echo "EndSection"
+} > "$tmp"
+chmod 0644 "$tmp"
+mv -f "$tmp" "$FILE"
+echo "saved"

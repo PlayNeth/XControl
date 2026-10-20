@@ -149,6 +149,7 @@ def checks():
         out.append(("warn", _("poweralertd's own service is enabled too"),
                     _("It starts a second poweralertd at login, so every power alert shows twice."),
                     (_("Turn it off"), poweralerts.disable_service)))
+    out += _xserver_checks()
     others = night.conflicting()
     if desk["night"]["enabled"] and others:
         out.append(("warn", _("Another night-light program is running"),
@@ -186,3 +187,21 @@ def checks():
 
     rank = {"error": 0, "warn": 1, "info": 2, "ok": 3}
     return sorted(out, key=lambda c: rank[c[0]])
+
+
+def _xserver_checks():
+    """XControl's X options that the X server ignored at its last start."""
+    from . import xserver
+    drivers, server, _xdriver = xserver.read_ours()
+    if not drivers and not server:
+        return []
+    info = xserver.read_log()
+    if not info:
+        return []
+    ours = {k.lower() for opts in drivers.values() for k in opts} | {k.lower() for k in server}
+    ignored = sorted({name for _scope, name in info.unused if name.lower() in ours})
+    if not ignored:
+        return []
+    return [("warn", _("X ignored some of XControl's X options"),
+             _("At its last start X didn't use: {names}. The driver in use may not have them (System > X "
+               "server).").format(names=", ".join(ignored)), None)]

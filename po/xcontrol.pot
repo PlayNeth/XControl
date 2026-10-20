@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.26.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:23-0300\n"
+"POT-Creation-Date: 2026-10-20 20:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -269,7 +269,7 @@ msgstr ""
 msgid "{px} px"
 msgstr ""
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:208
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:212
 msgid "Size"
 msgstr ""
 
@@ -437,7 +437,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:454
-#: xcontrol/system_page.py:508 xcontrol/users_page.py:335
+#: xcontrol/system_page.py:512 xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr ""
 
@@ -533,10 +533,10 @@ msgstr ""
 #: xcontrol/controllers_page.py:68 xcontrol/edid_override_dialog.py:253
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
 #: xcontrol/i3_page.py:81 xcontrol/i3_page.py:805 xcontrol/monitors_page.py:138
-#: xcontrol/region_page.py:248 xcontrol/system_page.py:516
-#: xcontrol/system_page.py:536 xcontrol/users_page.py:358
+#: xcontrol/region_page.py:248 xcontrol/system_page.py:520
+#: xcontrol/system_page.py:540 xcontrol/users_page.py:358
 #: xcontrol/users_page.py:380 xcontrol/users_page.py:444
-#: xcontrol/users_page.py:456
+#: xcontrol/users_page.py:456 xcontrol/xserver_page.py:37
 msgid "Cancel"
 msgstr ""
 
@@ -962,7 +962,7 @@ msgstr ""
 msgid "Share / Create"
 msgstr ""
 
-#: xcontrol/controllers_page.py:17
+#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:382
 msgid "Options"
 msgstr ""
 
@@ -1115,7 +1115,7 @@ msgstr ""
 #: xcontrol/gaming_page.py:44 xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21
 #: xcontrol/input_page.py:26 xcontrol/input_page.py:31
 #: xcontrol/input_page.py:42 xcontrol/notify_page.py:36
-#: xcontrol/panel_page.py:33
+#: xcontrol/panel_page.py:33 xcontrol/xserver_page.py:59
 msgid "Off"
 msgstr ""
 
@@ -1795,7 +1795,7 @@ msgstr ""
 msgid "Search, e.g. epub, flac, torrent"
 msgstr ""
 
-#: xcontrol/defaults_page.py:76
+#: xcontrol/defaults_page.py:76 xcontrol/xserver_page.py:148
 msgid "Kind"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgid "For 4 hours"
 msgstr ""
 
 #: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:871
-#: xcontrol/system_page.py:68 xcontrol/system_page.py:311
+#: xcontrol/system_page.py:72 xcontrol/system_page.py:315
 msgid "Copy"
 msgstr ""
 
@@ -2198,7 +2198,7 @@ msgid "Scale, keeping the aspect ratio"
 msgstr ""
 
 #: xcontrol/display_color.py:21 xcontrol/i3_page.py:21
-#: xcontrol/input_page.py:42
+#: xcontrol/input_page.py:42 xcontrol/xserver_page.py:58
 msgid "On"
 msgstr ""
 
@@ -2580,8 +2580,8 @@ msgid "Save EDID"
 msgstr ""
 
 #: xcontrol/edid_override_dialog.py:253 xcontrol/module_params_dialog.py:120
-#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:516
-#: xcontrol/users_page.py:234
+#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:520
+#: xcontrol/users_page.py:234 xcontrol/xserver_page.py:38
 msgid "Save"
 msgstr ""
 
@@ -3043,77 +3043,88 @@ msgid ""
 "It starts a second poweralertd at login, so every power alert shows twice."
 msgstr ""
 
-#: xcontrol/health.py:154
+#: xcontrol/health.py:155
 msgid "Another night-light program is running"
 msgstr ""
 
-#: xcontrol/health.py:155
+#: xcontrol/health.py:156
 #, python-brace-format
 msgid "{programs} also changes the colors; the two will fight."
 msgstr ""
 
-#: xcontrol/health.py:162 xcontrol/health.py:167
+#: xcontrol/health.py:163 xcontrol/health.py:168
 msgid "Open apps don't follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:163
+#: xcontrol/health.py:164
 msgid ""
 "xsettingsd is installed but not running, so open apps keep their old theme, "
 "font and cursor until they restart. Start it now; xcontrol --session starts "
 "it at every login."
 msgstr ""
 
-#: xcontrol/health.py:165
+#: xcontrol/health.py:166
 msgid "Start xsettingsd"
 msgstr ""
 
-#: xcontrol/health.py:168
+#: xcontrol/health.py:169
 msgid ""
 "Nothing provides XSETTINGS. Install xsettingsd; XControl starts it at login."
 msgstr ""
 
-#: xcontrol/health.py:170
+#: xcontrol/health.py:171
 msgid "Open apps follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:170
+#: xcontrol/health.py:171
 #, python-brace-format
 msgid "XSETTINGS from {kind}."
 msgstr ""
 
-#: xcontrol/health.py:175
+#: xcontrol/health.py:176
 msgid "Nothing shows notifications"
 msgstr ""
 
-#: xcontrol/health.py:176
+#: xcontrol/health.py:177
 msgid ""
 "Programs' notifications are lost. Turn on XControl's on the Notifications "
 "page."
 msgstr ""
 
-#: xcontrol/health.py:177
+#: xcontrol/health.py:178
 msgid "Install dunst first."
 msgstr ""
 
-#: xcontrol/health.py:179
+#: xcontrol/health.py:180
 msgid "Notifications are shown"
 msgstr ""
 
-#: xcontrol/health.py:179
+#: xcontrol/health.py:180
 #, python-brace-format
 msgid "By {program}."
 msgstr ""
 
-#: xcontrol/health.py:182
+#: xcontrol/health.py:183
 msgid "No sound server answers"
 msgstr ""
 
-#: xcontrol/health.py:182
+#: xcontrol/health.py:183
 msgid "Install and start PipeWire (pipewire-pulse) or PulseAudio."
 msgstr ""
 
-#: xcontrol/health.py:185
+#: xcontrol/health.py:186
 msgid "Sound works"
+msgstr ""
+
+#: xcontrol/health.py:205
+msgid "X ignored some of XControl's X options"
+msgstr ""
+
+#: xcontrol/health.py:206
+#, python-brace-format
+msgid ""
+"At its last start X didn't use: {names}. The driver in use may not have them "
+"(System > X server)."
 msgstr ""
 
 #: xcontrol/i3_page.py:17
@@ -3443,7 +3454,8 @@ msgstr ""
 msgid "Add…"
 msgstr ""
 
-#: xcontrol/i3_page.py:357 xcontrol/system_page.py:340
+#: xcontrol/i3_page.py:357 xcontrol/system_page.py:344
+#: xcontrol/xserver_page.py:331 xcontrol/xserver_page.py:384
 msgid "Change…"
 msgstr ""
 
@@ -3835,7 +3847,8 @@ msgid "Device:"
 msgstr ""
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:197
+#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:201
+#: xcontrol/xserver_page.py:171
 msgid "Refresh"
 msgstr ""
 
@@ -3848,7 +3861,7 @@ msgid "Slow"
 msgstr ""
 
 #: xcontrol/input_page.py:169 xcontrol/input_page.py:171
-#: xcontrol/input_page.py:478
+#: xcontrol/input_page.py:478 xcontrol/xserver_page.py:57
 msgid "Default"
 msgstr ""
 
@@ -4236,16 +4249,16 @@ msgstr ""
 msgid "This section could not be loaded: {error}"
 msgstr ""
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:338
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:342
 msgid "Parameters"
 msgstr ""
 
 #: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
-#: xcontrol/system_page.py:356
+#: xcontrol/system_page.py:360
 msgid "(only readable by root)"
 msgstr ""
 
-#: xcontrol/kmods.py:256 xcontrol/system_page.py:376
+#: xcontrol/kmods.py:256 xcontrol/system_page.py:380
 msgid "Set in modprobe.d"
 msgstr ""
 
@@ -4267,11 +4280,12 @@ msgid ""
 "The kernel command line sets {items}. Those win over anything saved here."
 msgstr ""
 
-#: xcontrol/module_params_dialog.py:53
+#: xcontrol/module_params_dialog.py:53 xcontrol/xserver_page.py:64
+#: xcontrol/xserver_page.py:280
 msgid "default"
 msgstr ""
 
-#: xcontrol/module_params_dialog.py:59
+#: xcontrol/module_params_dialog.py:59 xcontrol/xserver_page.py:67
 #, python-brace-format
 msgid "now: {value}"
 msgstr ""
@@ -4328,7 +4342,7 @@ msgstr ""
 msgid "Rebuilding the initramfs, this takes a minute…"
 msgstr ""
 
-#: xcontrol/module_params_dialog.py:168
+#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:450
 msgid "Saving…"
 msgstr ""
 
@@ -4651,11 +4665,11 @@ msgstr ""
 msgid "Copy details"
 msgstr ""
 
-#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:73
+#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:77
 msgid "More copy options"
 msgstr ""
 
-#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:75
+#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:79
 msgid "Copy in English (for bug reports)"
 msgstr ""
 
@@ -6580,7 +6594,7 @@ msgstr ""
 msgid "removable"
 msgstr ""
 
-#: xcontrol/sysinfo.py:890
+#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:365
 msgid "Drives"
 msgstr ""
 
@@ -6625,194 +6639,199 @@ msgstr ""
 msgid "Kernel modules"
 msgstr ""
 
-#: xcontrol/system_page.py:32
+#: xcontrol/system_page.py:33
+msgid "X server"
+msgstr ""
+
+#: xcontrol/system_page.py:36
 msgid "Check & Backup"
 msgstr ""
 
-#: xcontrol/system_page.py:69
+#: xcontrol/system_page.py:73
 msgid "Copy this information (without your computer and user names)"
 msgstr ""
 
-#: xcontrol/system_page.py:163
+#: xcontrol/system_page.py:167
 msgid "System information copied"
 msgstr ""
 
-#: xcontrol/system_page.py:190
+#: xcontrol/system_page.py:194
 msgid "Search modules, devices or parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:193
+#: xcontrol/system_page.py:197
 msgid "Include parts built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:194
+#: xcontrol/system_page.py:198
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:208
+#: xcontrol/system_page.py:212 xcontrol/xserver_page.py:13
+#: xcontrol/xserver_page.py:148
 msgid "Module"
 msgstr ""
 
-#: xcontrol/system_page.py:209 xcontrol/system_page.py:324
+#: xcontrol/system_page.py:213 xcontrol/system_page.py:328
 msgid "Used by"
 msgstr ""
 
-#: xcontrol/system_page.py:247
+#: xcontrol/system_page.py:251
 msgid "built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:255
+#: xcontrol/system_page.py:259
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr ""
 
-#: xcontrol/system_page.py:256
+#: xcontrol/system_page.py:260
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr ""
 
-#: xcontrol/system_page.py:298
+#: xcontrol/system_page.py:302
 msgid "Select a module to see what it drives and its parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:318
+#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:356
 msgid "File"
 msgstr ""
 
-#: xcontrol/system_page.py:320
+#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:358
 msgid "Version"
 msgstr ""
 
-#: xcontrol/system_page.py:322
+#: xcontrol/system_page.py:326
 msgid "License"
 msgstr ""
 
-#: xcontrol/system_page.py:326
+#: xcontrol/system_page.py:330
 msgid "Needs"
 msgstr ""
 
-#: xcontrol/system_page.py:328
+#: xcontrol/system_page.py:332
 msgid "Firmware files"
 msgstr ""
 
-#: xcontrol/system_page.py:333
+#: xcontrol/system_page.py:337
 msgid "Devices it drives"
 msgstr ""
 
-#: xcontrol/system_page.py:341
+#: xcontrol/system_page.py:345
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
 
-#: xcontrol/system_page.py:346
+#: xcontrol/system_page.py:350
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
 "on the kernel command line as {example}."
 msgstr ""
 
-#: xcontrol/system_page.py:374
+#: xcontrol/system_page.py:378
 msgid "This module has no parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:385
+#: xcontrol/system_page.py:389
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
 
-#: xcontrol/system_page.py:422
+#: xcontrol/system_page.py:426
 msgid "Module details copied"
 msgstr ""
 
-#: xcontrol/system_page.py:435
+#: xcontrol/system_page.py:439
 msgid "Session check"
 msgstr ""
 
-#: xcontrol/system_page.py:437
+#: xcontrol/system_page.py:441
 msgid "Check again"
 msgstr ""
 
-#: xcontrol/system_page.py:448
+#: xcontrol/system_page.py:452
 msgid "Back up settings"
 msgstr ""
 
-#: xcontrol/system_page.py:450
+#: xcontrol/system_page.py:454
 msgid ""
 "One file with everything set in XControl, plus the theme, default apps, "
 "terminal, language and your picture. Restoring keeps the current files as *."
 "before-restore."
 msgstr ""
 
-#: xcontrol/system_page.py:456
+#: xcontrol/system_page.py:460
 msgid "Save a backup…"
 msgstr ""
 
-#: xcontrol/system_page.py:458
+#: xcontrol/system_page.py:462
 msgid "Restore a backup…"
 msgstr ""
 
-#: xcontrol/system_page.py:473
+#: xcontrol/system_page.py:477
 msgid "The check failed"
 msgstr ""
 
-#: xcontrol/system_page.py:475
+#: xcontrol/system_page.py:479
 msgid "Everything looks right."
 msgstr ""
 
-#: xcontrol/system_page.py:476
+#: xcontrol/system_page.py:480
 #, python-brace-format
 msgid "{n} thing needs a look."
 msgstr ""
 
-#: xcontrol/system_page.py:477
+#: xcontrol/system_page.py:481
 #, python-brace-format
 msgid "{n} things need a look."
 msgstr ""
 
-#: xcontrol/system_page.py:514
+#: xcontrol/system_page.py:518
 msgid "Save a backup"
 msgstr ""
 
-#: xcontrol/system_page.py:526
+#: xcontrol/system_page.py:530
 msgid "Could not save the backup"
 msgstr ""
 
-#: xcontrol/system_page.py:528
+#: xcontrol/system_page.py:532
 #, python-brace-format
 msgid "Backup saved ({n} files and the settings)"
 msgstr ""
 
-#: xcontrol/system_page.py:534
+#: xcontrol/system_page.py:538
 msgid "Restore a backup"
 msgstr ""
 
-#: xcontrol/system_page.py:536 xcontrol/users_page.py:456
+#: xcontrol/system_page.py:540 xcontrol/users_page.py:456
 msgid "Open"
 msgstr ""
 
-#: xcontrol/system_page.py:538
+#: xcontrol/system_page.py:542
 msgid "XControl backups"
 msgstr ""
 
-#: xcontrol/system_page.py:548
+#: xcontrol/system_page.py:552
 msgid "That isn't an XControl backup"
 msgstr ""
 
-#: xcontrol/system_page.py:552
+#: xcontrol/system_page.py:556
 #, python-brace-format
 msgid "Restore the backup from {date}?"
 msgstr ""
 
-#: xcontrol/system_page.py:553
+#: xcontrol/system_page.py:557
 msgid ""
 "Your current settings are replaced (and kept as *.before-restore). XControl "
 "restarts afterwards."
 msgstr ""
 
-#: xcontrol/system_page.py:563
+#: xcontrol/system_page.py:567
 msgid "Could not restore the backup"
 msgstr ""
 
-#: xcontrol/system_page.py:566
+#: xcontrol/system_page.py:570
 msgid "Restored, with problems"
 msgstr ""
 
@@ -7123,6 +7142,187 @@ msgstr ""
 
 #: xcontrol/xrandr.py:75
 msgid "No X11 display found (DISPLAY is not set)."
+msgstr ""
+
+#: xcontrol/xserver_page.py:12 xcontrol/xserver_page.py:324
+msgid "Video driver"
+msgstr ""
+
+#: xcontrol/xserver_page.py:12
+msgid "Input driver"
+msgstr ""
+
+#: xcontrol/xserver_page.py:12
+msgid "Extension"
+msgstr ""
+
+#: xcontrol/xserver_page.py:65
+#, python-brace-format
+msgid "Type: {type}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:68
+msgid "now: default"
+msgstr ""
+
+#: xcontrol/xserver_page.py:85
+msgid "Other options"
+msgstr ""
+
+#: xcontrol/xserver_page.py:86
+msgid ""
+"For options the manual doesn't list (one per line: Name value). XControl "
+"can't check these, so only add what you know the driver takes."
+msgstr ""
+
+#: xcontrol/xserver_page.py:116
+#, python-brace-format
+msgid ""
+"Not allowed (names are letters, digits and _; values can't have spaces or "
+"quotes): {items}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:192
+msgid "Video driver, in use"
+msgstr ""
+
+#: xcontrol/xserver_page.py:192
+msgid "Video driver, not used"
+msgstr ""
+
+#: xcontrol/xserver_page.py:208
+msgid ""
+"No X server log found for this display, so XControl can't tell what X "
+"loaded. (Is this an X session?)"
+msgstr ""
+
+#: xcontrol/xserver_page.py:215
+#, python-brace-format
+msgid "From its log: {path}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:218
+#, python-brace-format
+msgid ""
+"XControl's options are in {file}. They take effect the next time X starts. "
+"If X ever won't start, undo them from a text console (Ctrl+Alt+F3): sudo rm "
+"{file}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:223
+#, python-brace-format
+msgid ""
+"They were chosen for the {old} X driver, but X now runs {new}; options {new} "
+"doesn't know are ignored."
+msgstr ""
+
+#: xcontrol/xserver_page.py:229
+#, python-brace-format
+msgid "X ignored these options of XControl's at its last start: {names}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:298
+msgid "Also set in other files"
+msgstr ""
+
+#: xcontrol/xserver_page.py:310
+msgid "Select the server or a module."
+msgstr ""
+
+#: xcontrol/xserver_page.py:325
+msgid "GPUs"
+msgstr ""
+
+#: xcontrol/xserver_page.py:329 xcontrol/xserver_page.py:431
+msgid "Server-wide options"
+msgstr ""
+
+#: xcontrol/xserver_page.py:336
+#, python-brace-format
+msgid ""
+"{files} has its own ServerFlags section; X may use that one instead of "
+"XControl's."
+msgstr ""
+
+#: xcontrol/xserver_page.py:341
+msgid ""
+"xorg.conf's manual isn't installed, so the options can't be listed (it comes "
+"with the X server's package)."
+msgstr ""
+
+#: xcontrol/xserver_page.py:360
+msgid "ABI"
+msgstr ""
+
+#: xcontrol/xserver_page.py:366
+#, python-brace-format
+msgid "screen {n}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:369 xcontrol/xserver_page.py:372
+msgid "State"
+msgstr ""
+
+#: xcontrol/xserver_page.py:369
+msgid "Loaded, then let go: it didn't find hardware of its own"
+msgstr ""
+
+#: xcontrol/xserver_page.py:370
+msgid "Loaded, but drives no screen"
+msgstr ""
+
+#: xcontrol/xserver_page.py:372
+msgid "Loaded, then let go"
+msgstr ""
+
+#: xcontrol/xserver_page.py:376
+msgid "Input devices' settings are on the Input page."
+msgstr ""
+
+#: xcontrol/xserver_page.py:385
+msgid "Saved for the next time X starts (needs your password)"
+msgstr ""
+
+#: xcontrol/xserver_page.py:392
+#, python-brace-format
+msgid ""
+"{driver}'s manual isn't installed, so its options can't be listed. Other "
+"options can still be set by name."
+msgstr ""
+
+#: xcontrol/xserver_page.py:408
+msgid "No GPU found"
+msgstr ""
+
+#: xcontrol/xserver_page.py:408
+msgid "XControl couldn't tell which GPU's driver to set options for."
+msgstr ""
+
+#: xcontrol/xserver_page.py:415
+#, python-brace-format
+msgid ""
+"For the {driver} X driver on {gpus}. Saved in {file}; they take effect the "
+"next time X starts (log out and back in, or restart your login screen)."
+msgstr ""
+
+#: xcontrol/xserver_page.py:418
+#, python-brace-format
+msgid "{driver} options"
+msgstr ""
+
+#: xcontrol/xserver_page.py:429
+#, python-brace-format
+msgid ""
+"For the whole X server. Saved in {file}; they take effect the next time X "
+"starts."
+msgstr ""
+
+#: xcontrol/xserver_page.py:445
+msgid "Saved; X uses it the next time it starts"
+msgstr ""
+
+#: xcontrol/xserver_page.py:448
+msgid "Could not save the X options"
 msgstr ""
 
 #: data/xcontrol.desktop.in:4

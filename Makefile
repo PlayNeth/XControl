@@ -64,6 +64,7 @@ install: all
 	install -Dm755 data/xcontrol-power-helper $(DESTDIR)$(LIBDIR)/xcontrol-power-helper
 	install -Dm755 data/xcontrol-controller-helper $(DESTDIR)$(LIBDIR)/xcontrol-controller-helper
 	install -Dm755 data/xcontrol-controller-hide $(DESTDIR)$(LIBDIR)/xcontrol-controller-hide
+	install -Dm755 data/xcontrol-xorg-helper $(DESTDIR)$(LIBDIR)/xcontrol-xorg-helper
 	install -Dm644 data/70-xcontrol-controllers.rules $(DESTDIR)$(PREFIX)/lib/udev/rules.d/70-xcontrol-controllers.rules
 	install -dm755 $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 	sed 's|@LIBDIR@|$(LIBDIR)|g' data/io.github.xcontrol.policy.in > $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
@@ -119,6 +120,7 @@ check:
 	$(PYTHON) tests/check_dualsense.py
 	$(PYTHON) tests/check_layouts.py
 	$(PYTHON) tests/check_touch.py
+	$(PYTHON) tests/check_xserver.py
 	$(PYTHON) tests/check_poweralerts.py
 	$(PYTHON) tests/check_health.py
 	$(PYTHON) tests/check_backup.py
@@ -129,6 +131,7 @@ check:
 	sh -n data/xcontrol-power-helper
 	sh -n data/xcontrol-controller-helper
 	sh -n data/xcontrol-controller-hide
+	sh -n data/xcontrol-xorg-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

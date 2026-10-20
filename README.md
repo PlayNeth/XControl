@@ -777,6 +777,33 @@ field empty for the module's default; **Remove XControl's settings** deletes the
 - Parts built into the kernel can't be set through modprobe.d; the page shows the command-line
   form instead.
 
+### X server
+
+The **X server** tab on the System page is the X counterpart of Kernel modules. It reads the
+running server's log (`~/.local/share/xorg/Xorg.N.log` or `/var/log/Xorg.N.log`) for:
+
+- which server runs (X.Org or XLibre) and its version;
+- every module it loaded: video drivers (the one in use, and the ones it tried and let go),
+  input drivers, extensions and others, with their files, versions and ABI classes, and the
+  GPU (`/dev/dri/cardN`) each video driver drives;
+- every option and where its value came from: a config file, or the default.
+
+Options come from the manuals: the video driver's (`man 4 modesetting`, `man 4 amdgpu`, ...)
+and xorg.conf's ServerFlags section (`man 5 xorg.conf`), read from the installed roff sources,
+so you see exactly what your driver version documents (XLibre's modesetting has `TearFree`, on
+by default, and `Atomic`, off). Undocumented options can still be set by name. Changes go to
+one file, `/etc/X11/xorg.conf.d/30-xcontrol.conf`, through a root helper
+(`xcontrol-xorg-helper`, password asked) that accepts only plain option names and values:
+driver options in an `OutputClass` section per kernel driver (`MatchDriver "amdgpu"`), which X
+applies to whichever X driver runs that GPU without touching your own Device sections, and
+server-wide ones in a `ServerFlags` section. `AutoAddDevices` and `AutoEnableDevices` aren't
+offered (they can leave X without a keyboard and mouse).
+
+They take effect the next time X starts. If X ever won't start, undo everything from a text
+console: `sudo rm /etc/X11/xorg.conf.d/30-xcontrol.conf`. After each start, the tab (and the
+session check) says which of XControl's options X ignored, and warns when they were chosen for
+another X driver than the one now running. Options set in other files are listed too.
+
 ## Display details
 
 **Details** on the Displays page opens what the selected display reports in its EDID,
