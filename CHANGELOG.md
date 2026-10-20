@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.23.1 (2026-10-20)
+
+**Fix DualShock 4 touchpad and motion sensors being unreadable**
+
+- Fix the measured report rate and touchpad hiding not working because the DualShock
+  4's motion sensors and touchpad could not be opened: the udev rules now give the
+  logged-in user access to them
+- Show a note on the Controllers page when the touchpad or motion sensors can't be read
+  yet, asking to reconnect the controller so the new permissions apply
+
 ## 0.23.0 (2026-10-20)
 
 **Add a Controllers page for DualShock 4 controllers**

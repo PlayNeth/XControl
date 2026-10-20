@@ -1,4 +1,5 @@
 """The Controllers page: DualShock 4 light bar, polling rate, Xbox 360 emulation and buttons."""
+import os
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
@@ -286,6 +287,9 @@ class ControllersPage(Gtk.Box):
             if not P.lightbar_writable(pad):
                 notes.add(_("The light bar can't be changed yet: XControl's device permissions apply after the "
                             "controller is reconnected (or after a reboot, right after installing)."))
+            if any(n and not os.access(n, os.R_OK) for n in (pad.gamepad, pad.sensors, pad.touchpad)):
+                notes.add(_("The touchpad and motion sensors can't be read yet: reconnect the controller so "
+                            "XControl's device permissions apply."))
             if pad.bus == "bluetooth" and not P.hidraw_writable(pad):
                 notes.add(_("The Bluetooth report rate can't be set yet: reconnect the controller so XControl's "
                             "device permissions apply."))

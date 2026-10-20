@@ -7,6 +7,10 @@ KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uacces
 KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4|09cc|0ba0", TAG+="uaccess"
 KERNEL=="hidraw*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*", TAG+="uaccess"
 
+# DualShock 4 motion sensors and touchpad (the gamepad itself already is the user's, as a joystick):
+# to measure the report rate, and to hide the touchpad or keep it as a mouse
+SUBSYSTEM=="input", KERNEL=="event*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*", TAG+="uaccess"
+
 # DualShock 4 light bar (the kernel's LEDs: inputN:red/green/blue/global)
 ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:red|input*:green|input*:blue|input*:global", \
   DRIVERS=="playstation|sony", RUN+="/bin/chmod 0666 /sys%p/brightness"
