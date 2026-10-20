@@ -113,6 +113,10 @@ def load():
     au = raw.get("audio")
     if isinstance(au, dict):
         data["audio"] = au
+    # controllers: XControl's controller service (checked by pad_service.normalize)
+    co = raw.get("controllers")
+    if isinstance(co, dict):
+        data["controllers"] = co
     # small interface preferences, e.g. {"preview": false}
     ui = raw.get("ui")
     if isinstance(ui, dict):

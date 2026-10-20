@@ -2,6 +2,29 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.23.0 (2026-10-20)
+
+**Add a Controllers page for DualShock 4 controllers**
+
+- Add a Controllers page (under Gaming & Hardware) for DualShock 4 controllers over
+  USB or Bluetooth, driven by a background service that runs with the desktop service
+- Set the light bar color and brightness (0 turns it off); changes apply right away
+- Set the Bluetooth report rate (1, 2, 4 or 8 ms, up to 1000 Hz), reapplied on every
+  reconnect, and show the rate the controller actually reports at
+- Set the USB polling rate for all USB gamepads (usbhid jspoll) after a password
+  prompt, kept for the next boots, reconnecting a plugged-in DualShock 4 so it applies
+- Show the controller to games as a virtual Xbox 360 controller, optionally hiding the
+  real DualShock 4, with rumble from games passed back to it
+- Remap every DualShock 4 button and the touchpad click to any Xbox button, trigger,
+  d-pad direction or nothing; L2/R2 stay analog while mapped to the triggers
+- Let the touchpad keep moving the mouse pointer or hide it from the desktop
+- Show each connected controller with its connection, battery level and charging state,
+  plus hints when device permissions are not active yet
+- Install udev rules giving the logged-in user access to /dev/uinput and the
+  DualShock 4's raw device and light bar, and a new root helper for the USB polling
+- Add tests for controller detection, the light bar, the Bluetooth report, the USB
+  polling helper, button mapping and rumble forwarding
+
 ## 0.22.3 (2026-10-20)
 
 **Leave volumes and profiles to the mixer on the Sound page**

@@ -1,0 +1,59 @@
+#!/bin/sh
+# xcontrol-controller-helper: USB polling rate of game controllers (runs as root via pkexec).
+#
+#   usbpoll MS        MS = 1..16 milliseconds (1 = 1000 Hz), or 0 for each device's own rate
+#
+#     Sets usbhid's joystick polling override (the jspoll parameter) right away, keeps it for
+#     the next boots (/etc/tmpfiles.d, plus /etc/modprobe.d when usbhid is a module), and
+#     reconnects USB DualShock 4 controllers so the new rate applies now. It covers every USB
+#     gamepad and joystick usbhid drives. Only those files are ever written.
+set -eu
+
+die() { echo "xcontrol-controller-helper: $*" >&2; exit 1; }
+
+SYS=/sys
+ETC=/etc
+if [ "$(id -u)" != 0 ]; then   # test hooks, ignored when running as root
+    SYS=${XCONTROL_SYSROOT:-$SYS}
+    ETC=${XCONTROL_ETC:-$ETC}
+fi
+
+[ $# -eq 2 ] || die "usage: usbpoll MS"
+[ "$1" = usbpoll ] || die "unknown command: $1"
+ms=$2
+case $ms in ''|*[!0-9]*) die "not a number: $ms";; esac
+[ "$ms" -le 16 ] || die "out of range (0-16): $ms"
+
+param=$SYS/module/usbhid/parameters/jspoll
+[ -e "$param" ] || die "usbhid isn't loaded"
+echo "$ms" > "$param"
+
+tmpfiles=$ETC/tmpfiles.d/xcontrol-usbhid.conf
+modprobe=$ETC/modprobe.d/xcontrol-usbhid.conf
+if [ "$ms" = 0 ]; then
+    rm -f "$tmpfiles" "$modprobe"
+else
+    mkdir -p "$ETC/tmpfiles.d"
+    printf '# Written by XControl (Controllers page): USB game controller polling, %s ms\nw %s - - - - %s\n' \
+        "$ms" /sys/module/usbhid/parameters/jspoll "$ms" > "$tmpfiles"
+    if [ -e "$SYS/module/usbhid/initstate" ]; then   # a module: also when it's loaded
+        mkdir -p "$ETC/modprobe.d"
+        printf '# Written by XControl (Controllers page)\noptions usbhid jspoll=%s\n' "$ms" > "$modprobe"
+    else
+        rm -f "$modprobe"
+    fi
+fi
+
+# reconnect USB DualShock 4s (Sony 054c: 05c4, 09cc, 0ba0) so the rate applies now
+drv=$SYS/bus/usb/drivers/usbhid
+for intf in "$drv"/*:*; do
+    [ -e "$intf" ] || continue
+    dev=$(dirname "$(readlink -f "$intf")")
+    [ "$(cat "$dev/idVendor" 2>/dev/null)" = 054c ] || continue
+    case $(cat "$dev/idProduct" 2>/dev/null) in 05c4|09cc|0ba0) ;; *) continue;; esac
+    name=$(basename "$intf")
+    echo "$name" > "$drv/unbind" 2>/dev/null || true
+    echo "$name" > "$drv/bind" 2>/dev/null || true
+    echo "reconnected $name"
+done
+echo "saved"

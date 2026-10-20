@@ -283,6 +283,43 @@ with onboard profiles (most Logitech G mice), saving makes the mouse reload its 
 switch to the DPI stage chosen under **After saving, use** next to the button. libratbag can't
 see presses of the mouse's own DPI button, so pick the stage you want there before saving.
 
+## Controllers
+
+A replacement for sc-controller / DS4Windows-style tools, starting with the
+**DualShock 4** (PS4 controller, both models and the USB adapter), over USB or
+Bluetooth. Turn on "Use XControl for controllers"; a small service
+(`xcontrol --pads`) then runs with the desktop service and picks up controllers
+as they connect.
+
+- **Light bar**: color and brightness (0 turns it off), set through the kernel
+  driver's LEDs (`/sys/class/leds/inputN:red|green|blue|global`), so rumble
+  doesn't reset it. Changes apply right away.
+- **Report rate over Bluetooth**: the controller can send its state every 1 ms
+  (1000 Hz); Linux's driver asks for 4 ms (250 Hz). XControl sends the
+  controller a report with the interval you pick (1, 2, 4 or 8 ms) through its
+  hidraw node, right away and again whenever it reconnects. The page shows the
+  rate actually measured.
+- **Report rate over USB**: Linux picks the USB polling interval, so this is
+  usbhid's `jspoll` setting, which covers every USB gamepad. It asks for your
+  password (`xcontrol-controller-helper`), is kept for the next boots
+  (`/etc/tmpfiles.d/xcontrol-usbhid.conf`, plus `/etc/modprobe.d` when usbhid is
+  a module), and reconnects a plugged-in DualShock 4 so it applies now.
+- **Xbox 360 controller for games**: games see a virtual Xbox 360 pad (uinput,
+  045e:028e, the same as xpad) instead of the DualShock 4, which is hidden from
+  them (grabbed) unless you untick that. Rumble from the game is passed on to
+  the DualShock 4. Steam has its own controller support: turn off "PlayStation
+  Configuration Support" in Steam, or it sees the DualShock 4 as well.
+- **Button remapping**: every DualShock 4 button (and the touchpad click) can be
+  any Xbox button, a trigger, a d-pad direction or nothing. L2/R2 stay analog
+  while they're mapped to LT/RT.
+- The touchpad can keep moving the mouse pointer, or be hidden too.
+
+Permissions come from `/usr/lib/udev/rules.d/70-xcontrol-controllers.rules`:
+`/dev/uinput`, the DualShock 4's hidraw node and its light bar LEDs for the
+logged-in user. They apply to controllers connected after installing, so
+reconnect the controller once (or reboot). Stop sc-controller (`scc-daemon`)
+first, or both will drive the controller and games see an extra pad.
+
 ## Appearance
 
 One place to pick the GTK theme, icon theme, cursor (theme and size), interface font

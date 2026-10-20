@@ -114,12 +114,17 @@ def xset_commands(desk):
     return out
 
 
+def _controllers():
+    from . import pad_service
+    return pad_service.load()
+
+
 def wanted(desk):
     """Whether the background service is needed at all."""
     return bool(desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
                 or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
                 or desk["notify"]["enabled"] or desk["night"]["enabled"] or desk["power"]["sleep_minutes"]
-                or night.forced(_runtime) is not None
+                or night.forced(_runtime) is not None or _controllers()["enabled"]
                 or awake.manual_until(_runtime) is not None)
 
 
@@ -428,6 +433,16 @@ def wanted_children(desk):
         out["xss-lock"] = (xss_lock_command(lock, lock_image_path()), {})
     if desk["picom"]["enabled"] and shutil.which("picom"):
         out["picom"] = (compositor.command(), {})
+    pads_cfg = _controllers()
+    if pads_cfg["enabled"]:
+        here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        out["pads"] = ([sys.executable, "-c", "import sys; from xcontrol.app import main; "
+                        "sys.exit(main(['xcontrol', '--pads']))"],
+                       {"PYTHONPATH": here + os.pathsep + os.environ.get("PYTHONPATH", ""),
+                        # a different value restarts it with the new settings
+                        "XCONTROL_PADS": json.dumps({k: v for k, v in pads_cfg.items()
+                                                     if k not in ("lightbar", "brightness", "bt_poll_ms")},
+                                                    sort_keys=True)})
     if desk["notify"]["enabled"] and shutil.which("dunst"):
         out["dunst"] = (notify.command(), {})
     b = desk["bar"]
@@ -455,7 +470,7 @@ def _die_with_parent():
         _prctl(_PR_SET_PDEATHSIG, int(signal.SIGTERM), 0, 0, 0)
 
 
-CHILD_PROGRAMS = {"polybar", "picom", "dunst", "xss-lock"}
+CHILD_PROGRAMS = {"polybar", "picom", "dunst", "xss-lock"}   # (the controller service ties itself to us too)
 
 
 def _stop_leftovers():

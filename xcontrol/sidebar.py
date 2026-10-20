@@ -6,7 +6,7 @@ from gi.repository import GLib, Gtk, Pango  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 GROUPS = [
-    (N_("Gaming & Hardware"), ["gaming", "displays", "input", "sound"]),
+    (N_("Gaming & Hardware"), ["gaming", "controllers", "displays", "input", "sound"]),
     (N_("Desktop"), ["appearance", "desktop", "panel", "notifications", "i3", "defaults"]),
     (N_("System"), ["region", "power", "users", "system"]),
 ]

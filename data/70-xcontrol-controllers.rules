@@ -1,0 +1,12 @@
+# XControl (Controllers page): let the logged-in user drive game controllers.
+
+# virtual controllers (Xbox 360 emulation)
+KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
+
+# DualShock 4 raw reports (the Bluetooth report rate), over USB and over Bluetooth
+KERNEL=="hidraw*", ATTRS{idVendor}=="054c", ATTRS{idProduct}=="05c4|09cc|0ba0", TAG+="uaccess"
+KERNEL=="hidraw*", KERNELS=="*054C:05C4*|*054C:09CC*|*054C:0BA0*", TAG+="uaccess"
+
+# DualShock 4 light bar (the kernel's LEDs: inputN:red/green/blue/global)
+ACTION=="add", SUBSYSTEM=="leds", KERNEL=="input*:red|input*:green|input*:blue|input*:global", \
+  DRIVERS=="playstation|sony", RUN+="/bin/chmod 0666 /sys%p/brightness"

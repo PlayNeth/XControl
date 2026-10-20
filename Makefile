@@ -62,6 +62,8 @@ install: all
 	install -Dm755 data/xcontrol-user-helper $(DESTDIR)$(LIBDIR)/xcontrol-user-helper
 	install -Dm755 data/xcontrol-locale-helper $(DESTDIR)$(LIBDIR)/xcontrol-locale-helper
 	install -Dm755 data/xcontrol-power-helper $(DESTDIR)$(LIBDIR)/xcontrol-power-helper
+	install -Dm755 data/xcontrol-controller-helper $(DESTDIR)$(LIBDIR)/xcontrol-controller-helper
+	install -Dm644 data/70-xcontrol-controllers.rules $(DESTDIR)$(PREFIX)/lib/udev/rules.d/70-xcontrol-controllers.rules
 	install -dm755 $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 	sed 's|@LIBDIR@|$(LIBDIR)|g' data/io.github.xcontrol.policy.in > $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
 	chmod 644 $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
@@ -111,6 +113,7 @@ check:
 	$(PYTHON) tests/check_region.py
 	$(PYTHON) tests/check_audio.py
 	$(PYTHON) tests/check_power.py
+	$(PYTHON) tests/check_pads.py
 	$(PYTHON) tests/check_health.py
 	$(PYTHON) tests/check_backup.py
 	sh -n data/xcontrol-edid-helper
@@ -118,6 +121,7 @@ check:
 	sh -n data/xcontrol-user-helper
 	sh -n data/xcontrol-locale-helper
 	sh -n data/xcontrol-power-helper
+	sh -n data/xcontrol-controller-helper
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

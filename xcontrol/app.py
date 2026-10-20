@@ -20,12 +20,13 @@ from .defaults_page import DefaultsPage  # noqa: E402
 from .region_page import RegionPage  # noqa: E402
 from .audio_page import AudioPage  # noqa: E402
 from .power_page import PowerPage  # noqa: E402
+from .controllers_page import ControllersPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
 from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "sound", "appearance", "desktop", "panel", "notifications", "i3",
-         "defaults", "region", "power", "users", "system")
+PAGES = ("gaming", "controllers", "displays", "input", "sound", "appearance", "desktop", "panel", "notifications",
+         "i3", "defaults", "region", "power", "users", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -53,6 +54,10 @@ class MainWindow(Gtk.ApplicationWindow):
         gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         gaming.add(GamingPage(self))
         stack.add_titled(gaming, "gaming", _("Gaming"))
+
+        controllers = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        controllers.add(ControllersPage(self))
+        stack.add_titled(controllers, "controllers", _("Controllers"))
 
         displays = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         displays.add(DisplayPage(self))
@@ -247,6 +252,9 @@ def main(argv=None):
             import time
             print(f"awake: on until {time.strftime('%H:%M', time.localtime(until))}")
         return 0
+    if "--pads" in argv:  # the controller service (started by the desktop service)
+        from . import pad_service
+        return pad_service.service()
     if "--night" in argv:  # night light by hand: on, off, toggle (until the schedule next changes), auto
         from . import desktop
         i = argv.index("--night")

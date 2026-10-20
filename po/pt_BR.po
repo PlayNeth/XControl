@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 12:42-0300\n"
+"POT-Creation-Date: 2026-10-20 13:07-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -17,68 +17,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: xcontrol/app.py:55
+#: xcontrol/app.py:56
 msgid "Gaming"
 msgstr "Jogos"
 
-#: xcontrol/app.py:59
+#: xcontrol/app.py:60
+msgid "Controllers"
+msgstr "Controles"
+
+#: xcontrol/app.py:64
 msgid "Displays"
 msgstr "Telas"
 
-#: xcontrol/app.py:63
+#: xcontrol/app.py:68
 msgid "Input"
 msgstr "Entrada"
 
-#: xcontrol/app.py:67
+#: xcontrol/app.py:72
 msgid "Appearance"
 msgstr "Aparência"
 
-#: xcontrol/app.py:71 xcontrol/notify_page.py:287
+#: xcontrol/app.py:76 xcontrol/notify_page.py:287
 msgid "Sound"
 msgstr "Som"
 
-#: xcontrol/app.py:75 xcontrol/sidebar.py:10
+#: xcontrol/app.py:80 xcontrol/sidebar.py:10
 msgid "Desktop"
 msgstr "Área de trabalho"
 
-#: xcontrol/app.py:77
+#: xcontrol/app.py:82
 msgid "Bar & Compositor"
 msgstr "Barra e Compositor"
 
-#: xcontrol/app.py:80
+#: xcontrol/app.py:85
 msgid "Notifications"
 msgstr "Notificações"
 
-#: xcontrol/app.py:83
+#: xcontrol/app.py:88
 msgid "Default Apps"
 msgstr "Aplicativos padrão"
 
-#: xcontrol/app.py:84
+#: xcontrol/app.py:89
 msgid "Window Manager (i3)"
 msgstr "Gerenciador de janelas (i3)"
 
-#: xcontrol/app.py:88
+#: xcontrol/app.py:93
 msgid "Date & Language"
 msgstr "Data e idioma"
 
-#: xcontrol/app.py:92
+#: xcontrol/app.py:97
 msgctxt "page"
 msgid "Power"
 msgstr "Opções de energia"
 
-#: xcontrol/app.py:96
+#: xcontrol/app.py:101
 msgid "Users"
 msgstr "Usuários"
 
-#: xcontrol/app.py:98 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:103 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr "Sistema"
 
-#: xcontrol/app.py:137
+#: xcontrol/app.py:142
 msgid "Display details"
 msgstr "Detalhes da tela"
 
-#: xcontrol/app.py:138 xcontrol/appearance_page.py:412
+#: xcontrol/app.py:143 xcontrol/appearance_page.py:412
 #: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:872
 #: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -397,9 +401,9 @@ msgid "Revert"
 msgstr "Reverter"
 
 #: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
-#: xcontrol/bar_module_dialog.py:114 xcontrol/display_page.py:266
-#: xcontrol/input_page.py:212 xcontrol/power_page.py:114
-#: xcontrol/region_page.py:168
+#: xcontrol/bar_module_dialog.py:114 xcontrol/controllers_page.py:121
+#: xcontrol/display_page.py:266 xcontrol/input_page.py:212
+#: xcontrol/power_page.py:114 xcontrol/region_page.py:168
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -685,9 +689,9 @@ msgstr ""
 "Taxa de amostragem e buffer mudam na hora; o resto reinicia o WirePlumber. "
 "Salvo em ~/.config/pipewire e ~/.config/wireplumber."
 
-#: xcontrol/audio_page.py:137 xcontrol/night_page.py:202
-#: xcontrol/notify_page.py:464 xcontrol/panel_page.py:483
-#: xcontrol/power_page.py:97
+#: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:220
+#: xcontrol/night_page.py:202 xcontrol/notify_page.py:464
+#: xcontrol/panel_page.py:483 xcontrol/power_page.py:97
 msgid "Could not save the settings"
 msgstr "Não foi possível salvar as configurações"
 
@@ -704,8 +708,9 @@ msgstr ""
 "Reinicie o WirePlumber (ou entre de novo) para usar: systemctl --user "
 "restart wireplumber"
 
-#: xcontrol/audio_page.py:144 xcontrol/notify_page.py:466
-#: xcontrol/panel_page.py:485 xcontrol/power_page.py:99
+#: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:222
+#: xcontrol/notify_page.py:466 xcontrol/panel_page.py:485
+#: xcontrol/power_page.py:99
 msgid "Applied"
 msgstr "Aplicado"
 
@@ -1016,6 +1021,328 @@ msgstr ""
 "Qualquer outra configuração da documentação do polybar, uma por linha como "
 "numa config do polybar (chave = valor). Elas vão para a seção [{section}] e "
 "substituem a linha do próprio XControl com a mesma chave."
+
+#: xcontrol/controllers_page.py:11
+msgid "Cross ✕"
+msgstr "Xis ✕"
+
+#: xcontrol/controllers_page.py:11
+msgid "Circle ○"
+msgstr "Círculo ○"
+
+#: xcontrol/controllers_page.py:11
+msgid "Square □"
+msgstr "Quadrado □"
+
+#: xcontrol/controllers_page.py:12
+msgid "Triangle △"
+msgstr "Triângulo △"
+
+#: xcontrol/controllers_page.py:13
+msgid "L3 (left stick click)"
+msgstr "L3 (clique do analógico esquerdo)"
+
+#: xcontrol/controllers_page.py:13
+msgid "R3 (right stick click)"
+msgstr "R3 (clique do analógico direito)"
+
+#: xcontrol/controllers_page.py:13
+msgid "Share"
+msgstr "Share"
+
+#: xcontrol/controllers_page.py:14
+msgid "Options"
+msgstr "Options"
+
+#: xcontrol/controllers_page.py:14
+msgid "PS button"
+msgstr "Botão PS"
+
+#: xcontrol/controllers_page.py:14
+msgid "Touchpad click"
+msgstr "Clique do touchpad"
+
+#: xcontrol/controllers_page.py:15 xcontrol/controllers_page.py:20
+msgid "D-pad up"
+msgstr "Direcional para cima"
+
+#: xcontrol/controllers_page.py:15 xcontrol/controllers_page.py:20
+msgid "D-pad down"
+msgstr "Direcional para baixo"
+
+#: xcontrol/controllers_page.py:15 xcontrol/controllers_page.py:20
+msgid "D-pad left"
+msgstr "Direcional para a esquerda"
+
+#: xcontrol/controllers_page.py:16 xcontrol/controllers_page.py:21
+msgid "D-pad right"
+msgstr "Direcional para a direita"
+
+#: xcontrol/controllers_page.py:17
+msgid "LB (left bumper)"
+msgstr "LB (bumper esquerdo)"
+
+#: xcontrol/controllers_page.py:17
+msgid "RB (right bumper)"
+msgstr "RB (bumper direito)"
+
+#: xcontrol/controllers_page.py:18
+msgid "LT (left trigger)"
+msgstr "LT (gatilho esquerdo)"
+
+#: xcontrol/controllers_page.py:18
+msgid "RT (right trigger)"
+msgstr "RT (gatilho direito)"
+
+#: xcontrol/controllers_page.py:18
+msgid "Left stick click"
+msgstr "Clique do analógico esquerdo"
+
+#: xcontrol/controllers_page.py:19
+msgid "Right stick click"
+msgstr "Clique do analógico direito"
+
+#: xcontrol/controllers_page.py:19 xcontrol/input_page.py:41
+msgid "Back"
+msgstr "Voltar"
+
+#: xcontrol/controllers_page.py:19
+msgid "Start"
+msgstr "Start"
+
+#: xcontrol/controllers_page.py:19
+msgid "Guide (Xbox)"
+msgstr "Guia (Xbox)"
+
+#: xcontrol/controllers_page.py:21 xcontrol/notify_page.py:29
+#: xcontrol/power_page.py:14
+msgid "Nothing"
+msgstr "Nada"
+
+#: xcontrol/controllers_page.py:22
+msgid "Leave it to the driver (250 Hz)"
+msgstr "Deixar com o driver (250 Hz)"
+
+#: xcontrol/controllers_page.py:22 xcontrol/controllers_page.py:24
+msgid "1 ms (1000 Hz)"
+msgstr "1 ms (1000 Hz)"
+
+#: xcontrol/controllers_page.py:22 xcontrol/controllers_page.py:24
+msgid "2 ms (500 Hz)"
+msgstr "2 ms (500 Hz)"
+
+#: xcontrol/controllers_page.py:23 xcontrol/controllers_page.py:25
+msgid "4 ms (250 Hz)"
+msgstr "4 ms (250 Hz)"
+
+#: xcontrol/controllers_page.py:23 xcontrol/controllers_page.py:25
+msgid "8 ms (125 Hz)"
+msgstr "8 ms (125 Hz)"
+
+#: xcontrol/controllers_page.py:24
+msgid "The controller's own (usually 250 Hz)"
+msgstr "A do próprio controle (normalmente 250 Hz)"
+
+#: xcontrol/controllers_page.py:49
+msgid "Use XControl for controllers"
+msgstr "Usar o XControl para os controles"
+
+#: xcontrol/controllers_page.py:55
+msgid ""
+"For DualShock 4 controllers (PS4), over USB or Bluetooth: light bar, report "
+"rate, and an Xbox 360 controller for games, with your own button layout. "
+"Runs in the background with the desktop service; stop sc-controller or "
+"DS4Windows-like tools first, or both will drive the controller."
+msgstr ""
+"Para controles DualShock 4 (PS4), por USB ou Bluetooth: barra de luz, taxa "
+"de envio e um controle de Xbox 360 para os jogos, com o seu próprio layout "
+"de botões. Roda em segundo plano com o serviço da área de trabalho; feche o "
+"sc-controller ou ferramentas parecidas com o DS4Windows antes, senão os dois"
+" vão controlar o controle ao mesmo tempo."
+
+#: xcontrol/controllers_page.py:94
+msgid "Light bar"
+msgstr "Barra de luz"
+
+#: xcontrol/controllers_page.py:98
+msgid "Color"
+msgstr "Cor"
+
+#. TRANSLATORS: slider position meaning the feature is forced off
+#: xcontrol/controllers_page.py:102 xcontrol/display_color.py:21
+#: xcontrol/gaming_page.py:18 xcontrol/gaming_page.py:39
+#: xcontrol/gaming_page.py:44 xcontrol/gaming_page.py:49
+#: xcontrol/i3_page.py:21 xcontrol/input_page.py:26 xcontrol/input_page.py:31
+#: xcontrol/input_page.py:42 xcontrol/notify_page.py:36
+#: xcontrol/panel_page.py:33
+msgid "Off"
+msgstr "Desligado"
+
+#: xcontrol/controllers_page.py:104 xcontrol/input_page.py:1014
+msgid "Brightness"
+msgstr "Brilho"
+
+#: xcontrol/controllers_page.py:105
+msgid "A dimmer light bar makes a Bluetooth controller's battery last longer."
+msgstr ""
+"Uma barra de luz mais fraca faz a bateria de um controle Bluetooth durar "
+"mais."
+
+#: xcontrol/controllers_page.py:108
+msgid "Report rate"
+msgstr "Taxa de envio"
+
+#: xcontrol/controllers_page.py:113
+msgid "Over Bluetooth"
+msgstr "Por Bluetooth"
+
+#: xcontrol/controllers_page.py:114
+msgid ""
+"How often the controller sends its state. 1000 Hz means less input delay; it"
+" uses a little more battery. Applies right away."
+msgstr ""
+"Com que frequência o controle envia o seu estado. 1000 Hz significa menos "
+"atraso de entrada; gasta um pouco mais de bateria. Aplica na hora."
+
+#: xcontrol/controllers_page.py:124
+msgid "Over USB"
+msgstr "Por USB"
+
+#: xcontrol/controllers_page.py:125
+msgid ""
+"Over USB the rate is set by Linux for every USB gamepad (usbhid's jspoll). "
+"Asks for your password, kept for the next boots; a connected DualShock 4 "
+"reconnects to use it."
+msgstr ""
+"Por USB a taxa é definida pelo Linux para todo controle USB (o jspoll do "
+"usbhid). Pede a sua senha e fica valendo nas próximas inicializações; um "
+"DualShock 4 conectado se reconecta para usá-la."
+
+#: xcontrol/controllers_page.py:130
+msgid "For games"
+msgstr "Para os jogos"
+
+#: xcontrol/controllers_page.py:132
+msgid "Show it as an Xbox 360 controller (works in almost every game)"
+msgstr "Mostrar como um controle de Xbox 360 (funciona em quase todo jogo)"
+
+#: xcontrol/controllers_page.py:133
+msgid "Leave it as a DualShock 4"
+msgstr "Deixar como DualShock 4"
+
+#: xcontrol/controllers_page.py:135
+msgid "Games see"
+msgstr "Os jogos veem"
+
+#: xcontrol/controllers_page.py:136
+msgid "Hide the DualShock 4 itself, so games don't see two controllers"
+msgstr ""
+"Esconder o próprio DualShock 4, para os jogos não verem dois controles"
+
+#: xcontrol/controllers_page.py:139
+msgid "The touchpad moves the mouse pointer"
+msgstr "O touchpad move o ponteiro do mouse"
+
+#: xcontrol/controllers_page.py:142
+msgid ""
+"Rumble from games reaches the DualShock 4. Steam reads controllers its own "
+"way: in Steam, turn off PlayStation Configuration Support, or Steam sees the"
+" DualShock 4 as well."
+msgstr ""
+"A vibração dos jogos chega ao DualShock 4. A Steam lê os controles do jeito "
+"dela: na Steam, desative o \"Suporte à configuração de controles "
+"PlayStation\", senão ela também vê o DualShock 4."
+
+#: xcontrol/controllers_page.py:147 xcontrol/input_page.py:930
+#: xcontrol/power_page.py:103
+msgid "Buttons"
+msgstr "Botões"
+
+#: xcontrol/controllers_page.py:161
+msgid "Default layout"
+msgstr "Layout padrão"
+
+#: xcontrol/controllers_page.py:164
+msgid ""
+"Each DualShock 4 button can be any Xbox button, or nothing. L2 and R2 stay "
+"analog while they're the triggers."
+msgstr ""
+"Cada botão do DualShock 4 pode ser qualquer botão do Xbox, ou nada. L2 e R2 "
+"continuam analógicos enquanto forem os gatilhos."
+
+#: xcontrol/controllers_page.py:248
+msgid "USB polling changed"
+msgstr "Taxa de USB alterada"
+
+#: xcontrol/controllers_page.py:250
+msgid "Could not change the USB polling"
+msgstr "Não foi possível alterar a taxa de USB"
+
+#: xcontrol/controllers_page.py:267
+msgid ""
+"No DualShock 4 connected. Plug it in, or pair it over Bluetooth (hold Share "
+"and PS until the light bar flashes)."
+msgstr ""
+"Nenhum DualShock 4 conectado. Conecte pelo cabo, ou pareie por Bluetooth "
+"(segure Share e PS até a barra de luz piscar)."
+
+#: xcontrol/controllers_page.py:273
+msgid "USB"
+msgstr "USB"
+
+#: xcontrol/controllers_page.py:273
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: xcontrol/controllers_page.py:275
+#, python-brace-format
+msgid "battery {pct} %"
+msgstr "bateria {pct} %"
+
+#: xcontrol/controllers_page.py:277
+#, python-brace-format
+msgid "reporting at {hz} Hz"
+msgstr "enviando a {hz} Hz"
+
+#: xcontrol/controllers_page.py:279
+msgid "games see an Xbox 360 controller"
+msgstr "os jogos veem um controle de Xbox 360"
+
+#: xcontrol/controllers_page.py:285
+#, python-brace-format
+msgid "The controller service: {error}"
+msgstr "O serviço de controles: {error}"
+
+#: xcontrol/controllers_page.py:287
+msgid ""
+"The light bar can't be changed yet: XControl's device permissions apply "
+"after the controller is reconnected (or after a reboot, right after "
+"installing)."
+msgstr ""
+"A barra de luz ainda não pode ser alterada: as permissões de dispositivo do "
+"XControl valem depois que o controle for reconectado (ou depois de "
+"reiniciar, logo após instalar)."
+
+#: xcontrol/controllers_page.py:290
+msgid ""
+"The Bluetooth report rate can't be set yet: reconnect the controller so "
+"XControl's device permissions apply."
+msgstr ""
+"A taxa de envio por Bluetooth ainda não pode ser definida: reconecte o "
+"controle para as permissões de dispositivo do XControl valerem."
+
+#: xcontrol/controllers_page.py:298
+msgid "The controller service is running."
+msgstr "O serviço de controles está rodando."
+
+#: xcontrol/controllers_page.py:301
+#, python-brace-format
+msgid "The controller service isn't running: {why}"
+msgstr "O serviço de controles não está rodando: {why}"
+
+#: xcontrol/controllers_page.py:302
+msgid "The controller service is starting…"
+msgstr "O serviço de controles está iniciando…"
 
 #: xcontrol/defaults_page.py:11
 msgid "Web browser"
@@ -1576,15 +1903,6 @@ msgstr "Centralizado, sem escala (bordas pretas)"
 #: xcontrol/display_color.py:19
 msgid "Scale, keeping the aspect ratio"
 msgstr "Escalar mantendo a proporção"
-
-#. TRANSLATORS: slider position meaning the feature is forced off
-#: xcontrol/display_color.py:21 xcontrol/gaming_page.py:18
-#: xcontrol/gaming_page.py:39 xcontrol/gaming_page.py:44
-#: xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21 xcontrol/input_page.py:26
-#: xcontrol/input_page.py:31 xcontrol/input_page.py:42
-#: xcontrol/notify_page.py:36 xcontrol/panel_page.py:33
-msgid "Off"
-msgstr "Desligado"
 
 #: xcontrol/display_color.py:21 xcontrol/i3_page.py:21
 #: xcontrol/input_page.py:42
@@ -3354,10 +3672,6 @@ msgid "Middle click"
 msgstr "Clique do meio"
 
 #: xcontrol/input_page.py:41
-msgid "Back"
-msgstr "Voltar"
-
-#: xcontrol/input_page.py:41
 msgid "Forward"
 msgstr "Avançar"
 
@@ -3725,10 +4039,6 @@ msgstr ""
 "A correção de ângulo ajuda a desenhar linhas retas, mas atrapalha a mira em "
 "jogos."
 
-#: xcontrol/input_page.py:930 xcontrol/power_page.py:103
-msgid "Buttons"
-msgstr "Botões"
-
 #: xcontrol/input_page.py:932 xcontrol/input_page.py:937
 #, python-brace-format
 msgid "Button {n}"
@@ -3772,10 +4082,6 @@ msgid ""
 msgstr ""
 "Este mouse não tem ajuste de brilho para luz fixa; escolha uma cor mais "
 "escura para diminuí-la."
-
-#: xcontrol/input_page.py:1014
-msgid "Brightness"
-msgstr "Brilho"
 
 #: xcontrol/input_page.py:1019
 #, python-brace-format
@@ -4494,10 +4800,6 @@ msgstr "Escolher uma ação num menu"
 #: xcontrol/notify_page.py:29
 msgid "Open its link"
 msgstr "Abrir o link dela"
-
-#: xcontrol/notify_page.py:29 xcontrol/power_page.py:14
-msgid "Nothing"
-msgstr "Nada"
 
 #: xcontrol/notify_page.py:30
 msgid "Critical"

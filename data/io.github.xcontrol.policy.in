@@ -35,4 +35,10 @@
     <defaults><allow_any>auth_admin</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
     <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-power-helper</annotate>
   </action>
+  <action id="io.github.xcontrol.controllers">
+    <description>Change the USB polling rate of game controllers</description>
+    <message>Authentication is required to change how often USB game controllers are read</message>
+    <defaults><allow_any>auth_admin</allow_any><allow_inactive>auth_admin</allow_inactive><allow_active>auth_admin_keep</allow_active></defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">@LIBDIR@/xcontrol-controller-helper</annotate>
+  </action>
 </policyconfig>
