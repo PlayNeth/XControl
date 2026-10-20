@@ -73,6 +73,7 @@ raw = os.path.join(tmp, "hidraw4")
 put(raw)
 pad.hidraw = raw
 expect("bt poll written", (P.set_bt_poll(pad, 2), open(raw, "rb").read()[:2]), (True, b"\x11\xc2"))
+expect("0 goes back to the driver's 4 ms", (P.set_bt_poll(pad, 0), open(raw, "rb").read()[:2]), (True, b"\x11\xc4"))
 
 # ---- the USB polling helper, unprivileged so its test hooks apply
 prefix = []
@@ -210,6 +211,79 @@ c.read(se_r)
 expect("report rate counted", c.rate > 0, True)
 os.close(gp_w)
 expect("unplugged ends it", c.read(gp_r), False)
+
+# ---- the hide helper: only a DualShock 4's own device files, and only for the calling user
+if prefix is not None:
+    hide = os.path.join(here, "..", "data", "xcontrol-controller-hide")
+    hsys, hdev = os.path.join(tmp, "hsys2"), os.path.join(tmp, "hdev")
+    ds4 = os.path.join(hsys, "devices", "bt", "0005:054C:09CC.0003")
+    other = os.path.join(hsys, "devices", "usb", "0003:046D:C52B.0001")
+    for cls, name, parent in (("input", "event21", ds4), ("input", "js0", ds4), ("hidraw", "hidraw4", ds4),
+                              ("input", "event5", other)):
+        target = os.path.join(parent, cls, name)
+        os.makedirs(target)
+        os.makedirs(os.path.join(hsys, "class", cls), exist_ok=True)
+        os.symlink(target, os.path.join(hsys, "class", cls, name))
+        node = os.path.join(hdev, "hidraw4" if cls == "hidraw" else os.path.join("input", name))
+        put(node)
+    log = os.path.join(tmp, "setfacl.log")
+    fake = os.path.join(tmp, "fake-setfacl")
+    put(fake, f'#!/bin/sh\necho "$@" >> {log}\n')
+    for root, dirs, files in os.walk(tmp):
+        for d in dirs:
+            os.chmod(os.path.join(root, d), 0o777)
+        for f in files:
+            os.chmod(os.path.join(root, f), 0o777 if f == "fake-setfacl" else 0o666)
+            if prefix and root.startswith(hdev):
+                os.chown(os.path.join(root, f), 65534, 65534)   # chmod needs the owner
+    henv = dict(os.environ, XCONTROL_SYSROOT=hsys, XCONTROL_DEVROOT=hdev, XCONTROL_SETFACL=fake, PKEXEC_UID="1000")
+
+    def hrun(*args, env=henv):
+        return subprocess.run(prefix + ["sh", hide, *args], capture_output=True, text=True, env=env)
+
+    ev, js, raw4 = (os.path.join(hdev, "input", "event21"), os.path.join(hdev, "input", "js0"),
+                    os.path.join(hdev, "hidraw4"))
+    res = hrun("hide", ev, js, raw4)
+    expect("hide ok", (res.returncode, res.stderr), (0, ""))
+    with open(log) as f:
+        expect("access taken away", f.read().split("\n")[:3],
+               [f"-x u:1000 {ev}", f"-x u:1000 {js}", f"-x u:1000 {raw4}"])
+    expect("others can't read it", os.stat(js).st_mode & 0o006, 0)
+    res = hrun("show", ev)
+    with open(log) as f:
+        expect("given back", (res.returncode, f.read().split("\n")[3]), (0, f"-m u:1000:rw {ev}"))
+    for args in (("hide", os.path.join(hdev, "input", "event5")), ("hide", "/etc/shadow"),
+                 ("hide", os.path.join(hdev, "input", "event21x")),
+                 ("hide", os.path.join(hdev, "input", "..", "hidraw4")),
+                 ("chmod", ev), ("hide",)):
+        expect(f"refused {args[-1]}", hrun(*args).returncode != 0, True)
+    expect("needs pkexec", hrun("hide", ev, env=dict(henv, PKEXEC_UID="")).returncode != 0, True)
+
+# ---- the service hides the controller once it has it open, and gives it back when it closes
+hid_calls = []
+real_set_hidden, real_vpad = P.set_hidden, S.VirtualPad
+P.set_hidden = lambda nodes, hidden: (hid_calls.append((list(nodes), hidden)), (True, ""))[1]
+S.VirtualPad = type("StubVpadClass", (), {"fd": -7, "send": lambda self, e: None, "close": lambda self: None})
+try:
+    fake_pad = P.Pad(key="k", name="DS4", bus="usb", hid="/x", gamepad=os.path.join(tmp, "g"),
+                     joystick=os.path.join(tmp, "j"), hidraw=os.path.join(tmp, "r"))
+    for n in (fake_pad.gamepad, fake_pad.joystick, fake_pad.hidraw):
+        put(n)
+    settings = S.normalize({"enabled": True})
+    c = S.Controller(fake_pad, settings, lambda m: None)
+    expect("hidden once open", (hid_calls, c.status()["hidden"]),
+           ([([fake_pad.gamepad, fake_pad.joystick, fake_pad.hidraw], True)], True))
+    expect("raw device kept open", c.raw is not None, True)
+    c.close()
+    expect("given back on close", hid_calls[-1], ([fake_pad.gamepad, fake_pad.joystick, fake_pad.hidraw], False))
+    hid_calls.clear()
+    S.Controller(fake_pad, S.normalize({"enabled": True, "hide_real": False}), lambda m: None).close()
+    expect("not hidden when unticked", hid_calls, [])
+finally:
+    P.set_hidden, S.VirtualPad = real_set_hidden, real_vpad
+expect("light bar and rate changes don't reopen it",
+       (S._restart_keys(S.normalize({"lightbar": "#ff0000", "bt_poll_ms": 2})) == S._restart_keys(S.normalize({})),
+        S._restart_keys(S.normalize({"hide_real": False})) == S._restart_keys(S.normalize({}))), (True, False))
 
 print("check_pads:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

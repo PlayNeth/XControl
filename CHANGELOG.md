@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.23.2 (2026-10-20)
+
+**Hide the DualShock 4 from games so they don't see two controllers**
+
+- Fix games (SDL, Wine/Proton, Steam) still finding the real DualShock 4 next to the
+  virtual Xbox 360 controller: once the service holds the controller's device files,
+  your access to them is taken away, and given back when you untick it or it stops
+- Add a root helper for this that needs no password in the active session and only
+  accepts a DualShock 4's own device files
+- Show "hidden from games" for each hidden controller, a note when hiding failed, and a
+  warning that being in the "input" group lets games find it anyway
+- Fix "Leave it to the driver" not restoring the Bluetooth report rate: it now goes
+  back to the driver's 4 ms
+- Apply light bar and Bluetooth report rate changes to a running service without
+  restarting it and reconnecting the controllers
+- Explain that Bluetooth usually tops out around 500-800 Hz and that a true 1000 Hz
+  needs the USB cable
+- Add tests for the hide helper and for the service hiding and restoring the controller
+
 ## 0.23.1 (2026-10-20)
 
 **Fix DualShock 4 touchpad and motion sensors being unreadable**

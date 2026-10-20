@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from .paths import LIBDIR
 
 HELPER = os.path.join(LIBDIR, "xcontrol-controller-helper")
+HIDE_HELPER = os.path.join(LIBDIR, "xcontrol-controller-hide")
 
 SONY = 0x054C
 DS4_PRODUCTS = {0x05C4: "DualShock 4", 0x09CC: "DualShock 4 (v2)", 0x0BA0: "DualShock 4 USB adapter"}
@@ -28,6 +29,7 @@ HWCTL_HID, HWCTL_CRC32, POLL_MASK = 0x80, 0x40, 0x3F
 CRC_SEED = 0xA2
 USB_REPORT_ID, USB_REPORT_SIZE = 0x05, 32
 FLAG_LED = 0x02
+BT_DRIVER_POLL_MS = 4      # what the kernel driver asks for when the controller connects
 
 
 @dataclass
@@ -37,6 +39,7 @@ class Pad:
     bus: str                 # "usb" or "bluetooth"
     hid: str                 # /sys/bus/hid/devices/<id>
     gamepad: str = ""        # /dev/input/eventN
+    joystick: str = ""       # /dev/input/jsN (the old joystick interface of the gamepad)
     sensors: str = ""
     touchpad: str = ""
     hidraw: str = ""         # /dev/hidrawN
@@ -79,6 +82,9 @@ def discover(sysroot="/sys", devroot="/dev"):
                 pad.touchpad = node
             else:
                 pad.gamepad = node
+                js = sorted(glob.glob(os.path.join(inp, "js*")))
+                if js:
+                    pad.joystick = os.path.join(devroot, "input", os.path.basename(js[0]))
                 for led in glob.glob(os.path.join(sysroot, "class", "leds", os.path.basename(inp) + ":*")):
                     color = led.rsplit(":", 1)[-1]
                     if color in ("red", "green", "blue", "global"):
@@ -147,22 +153,27 @@ def bt_report(poll_ms=None, lightbar=None):
     return bytes(data)
 
 
-def set_bt_poll(pad, ms):
+def set_bt_poll(pad, ms, fd=None):
     """Ask a Bluetooth DualShock 4 to report every `ms` milliseconds (1 = 1000 Hz). The hidraw
-    node needs to be writable (steam-devices or XControl's udev rules give it to you)."""
-    if pad.bus != "bluetooth" or not pad.hidraw:
+    node needs to be writable (steam-devices or XControl's udev rules give it to you), or pass
+    an already open `fd` of it."""
+    if pad.bus != "bluetooth" or not (pad.hidraw or fd is not None):
         return False
-    try:
-        fd = os.open(pad.hidraw, os.O_WRONLY | os.O_NONBLOCK)
-    except OSError:
-        return False
+    ms = int(ms) or BT_DRIVER_POLL_MS     # 0: back to the driver's own rate
+    own = fd is None
+    if own:
+        try:
+            fd = os.open(pad.hidraw, os.O_WRONLY | os.O_NONBLOCK)
+        except OSError:
+            return False
     try:
         os.write(fd, bt_report(ms))
         return True
     except OSError:
         return False
     finally:
-        os.close(fd)
+        if own:
+            os.close(fd)
 
 
 def hidraw_writable(pad):
@@ -189,3 +200,27 @@ def set_usb_poll(ms):
     if r.returncode in (126, 127) and not r.stderr.strip():
         return False, ""
     return r.returncode == 0, (r.stderr or r.stdout).strip()[-400:]
+
+
+# ---------------------------------------------------------------- hiding it from games
+def hide_nodes(pad):
+    """The device files games could find the DualShock 4 through."""
+    return [n for n in (pad.gamepad, pad.joystick, pad.sensors, pad.touchpad, pad.hidraw) if n]
+
+
+def set_hidden(nodes, hidden):
+    """(ok, message): take away (or give back) the user's access to these device files, through
+    the root helper (no password for the active session). Open files stay usable."""
+    nodes = [n for n in nodes if os.path.exists(n)]
+    if not nodes:
+        return True, ""
+    if not shutil.which("pkexec") or not os.path.exists(HIDE_HELPER):
+        return False, "xcontrol-controller-hide isn't installed"
+    try:
+        r = subprocess.run(["pkexec", HIDE_HELPER, "hide" if hidden else "show", *nodes],
+                           capture_output=True, text=True, timeout=30, stdin=subprocess.DEVNULL)
+    except (OSError, subprocess.SubprocessError) as e:
+        return False, str(e)
+    if r.returncode == 0:
+        return True, ""
+    return False, (r.stderr or r.stdout).strip()[-300:] or f"pkexec exit {r.returncode}"

@@ -1,0 +1,61 @@
+#!/bin/sh
+# xcontrol-controller-hide: hide a DualShock 4 from games (runs as root via pkexec, no password
+# for the active session).
+#
+#   hide NODE...    take away the calling user's access to these device files
+#   show NODE...    give it back
+#
+# NODE is /dev/input/eventN, /dev/input/jsN or /dev/hidrawN, and must belong to a Sony
+# DualShock 4 (054c: 05c4, 09cc, 0ba0); anything else is refused. XControl's controller service
+# opens them before hiding them, so it keeps reading them while games can't find the
+# controller. A reconnected controller gets the usual access again from udev.
+set -eu
+
+die() { echo "xcontrol-controller-hide: $*" >&2; exit 1; }
+
+SYS=/sys
+DEV=/dev
+SETFACL=setfacl
+if [ "$(id -u)" != 0 ]; then   # test hooks, ignored when running as root
+    SYS=${XCONTROL_SYSROOT:-$SYS}
+    DEV=${XCONTROL_DEVROOT:-$DEV}
+    SETFACL=${XCONTROL_SETFACL:-$SETFACL}
+fi
+
+uid=${PKEXEC_UID:-}
+case $uid in ''|*[!0-9]*) die "run through pkexec";; esac
+[ "$uid" != 0 ] || die "not for root"
+[ $# -ge 2 ] || die "usage: hide|show NODE..."
+cmd=$1
+shift
+case $cmd in hide|show) ;; *) die "unknown command: $cmd";; esac
+[ $# -le 8 ] || die "too many devices"
+
+for node in "$@"; do
+    case $node in
+        "$DEV"/input/event[0-9]*|"$DEV"/input/js[0-9]*) cls=input;;
+        "$DEV"/hidraw[0-9]*) cls=hidraw;;
+        *) die "not a controller device: $node";;
+    esac
+    name=${node##*/}
+    case $name in *[!a-z0-9]*) die "bad name: $node";; esac
+    case $name in event*|js*|hidraw*) ;; *) die "bad name: $node";; esac
+    num=${name#event}; num=${num#js}; num=${num#hidraw}
+    case $num in ''|*[!0-9]*) die "bad name: $node";; esac
+    [ -c "$node" ] || [ "$(id -u)" != 0 ] || die "not a device: $node"
+    path=$(readlink -f "$SYS/class/$cls/$name") || die "no such device: $node"
+    case $path in
+        *054C:05C4.*|*054C:09CC.*|*054C:0BA0.*|*054c:05c4.*|*054c:09cc.*|*054c:0ba0.*) ;;
+        *) die "not a DualShock 4: $node";;
+    esac
+done
+
+for node in "$@"; do
+    if [ "$cmd" = hide ]; then
+        "$SETFACL" -x "u:$uid" "$node" 2>/dev/null || true
+        chmod o-rw "$node"
+    else
+        "$SETFACL" -m "u:$uid:rw" "$node"
+    fi
+done
+echo "$cmd: $*"

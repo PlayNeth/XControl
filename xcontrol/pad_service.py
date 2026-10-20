@@ -198,10 +198,15 @@ class Controller:
         self.mapper = None
         self.rate_count, self.rate_since, self.rate = 0, time.monotonic(), 0
         self.error = ""
-        self.lightbar_ok = pads.set_lightbar(pad, settings["lightbar"], settings["brightness"])
-        self.poll_ok = None
-        if pad.bus == "bluetooth" and settings["bt_poll_ms"]:
-            self.poll_ok = pads.set_bt_poll(pad, settings["bt_poll_ms"])
+        self.hidden, self.hide_error = [], ""
+        self.raw = None          # the hidraw node, kept open: the report rate still works once it's hidden
+        if pad.hidraw:
+            try:
+                self.raw = os.open(pad.hidraw, os.O_WRONLY | os.O_NONBLOCK)
+            except OSError:
+                pass
+        self.lightbar_ok = self.poll_ok = None
+        self.apply(settings)
         if pad.sensors:
             self._open(pad.sensors, "sensors", grab=False)
         if settings["emulate"] == "xbox360":
@@ -216,6 +221,27 @@ class Controller:
                 self.mapper = padmap.Mapper(settings["map"])
                 self.rumble = Rumble(self.vpad, real)
                 self.fds[self.vpad.fd] = "virtual"
+                if settings["hide_real"]:
+                    self._hide()
+
+    def apply(self, settings):
+        """The light bar and the Bluetooth report rate (no need to reopen anything)."""
+        self.lightbar_ok = pads.set_lightbar(self.pad, settings["lightbar"], settings["brightness"])
+        if self.pad.bus == "bluetooth":
+            self.poll_ok = pads.set_bt_poll(self.pad, settings["bt_poll_ms"], self.raw)
+
+    def _hide(self):
+        """Games find controllers through their device files (SDL, Wine and Steam read the raw
+        HID device, past any grab), so take the user's access to them away; what this service
+        already opened keeps working."""
+        nodes = pads.hide_nodes(self.pad)
+        ok, msg = pads.set_hidden(nodes, True)
+        if ok:
+            self.hidden = nodes
+            self.log(f"hidden: {' '.join(nodes)}")
+        else:
+            self.hide_error = msg
+            self.log(f"couldn't hide: {msg}")
 
     def _open(self, path, role, grab=False, write=False):
         try:
@@ -270,7 +296,8 @@ class Controller:
         return {"key": self.pad.key, "name": self.pad.name, "bus": self.pad.bus, "battery": pct,
                 "charging": charging, "rate": self.rate, "virtual": bool(self.vpad),
                 "lightbar_ok": self.lightbar_ok, "poll_ok": self.poll_ok, "error": self.error,
-                "hidraw_ok": pads.hidraw_writable(self.pad)}
+                "hidraw_ok": self.raw is not None or pads.hidraw_writable(self.pad),
+                "hidden": bool(self.hidden), "hide_error": self.hide_error}
 
     def close(self):
         for fd in list(self.fds):
@@ -283,9 +310,37 @@ class Controller:
         if self.vpad:
             self.vpad.close()
         self.fds.clear()
+        if self.raw is not None:
+            try:
+                os.close(self.raw)
+            except OSError:
+                pass
+            self.raw = None
+        if self.hidden:
+            pads.set_hidden(self.hidden, False)     # (gone already when it was unplugged)
+            self.hidden = []
 
 
 # ---------------------------------------------------------------- the service
+LIVE = ("lightbar", "brightness", "bt_poll_ms")    # applied without reopening the controllers
+
+
+def _restart_keys(settings):
+    return {k: v for k, v in settings.items() if k not in LIVE}
+
+
+def reload_running():
+    """Tell a running service to pick up the saved settings; False when none runs."""
+    pid = state().get("pid")
+    if not pid:
+        return False
+    try:
+        os.kill(pid, signal.SIGHUP)
+        return True
+    except OSError:
+        return False
+
+
 def service():
     def log(msg):
         if os.environ.get("XCONTROL_DEBUG"):
@@ -303,11 +358,17 @@ def service():
         while not flags["quit"]:
             if flags["reload"]:
                 flags["reload"] = False
-                settings = load()
-                for c in controllers.values():
-                    c.close()
-                controllers.clear()
-                scanned = 0.0
+                new = load()
+                if _restart_keys(new) == _restart_keys(settings) and controllers:
+                    for c in controllers.values():      # only the light bar or the report rate
+                        c.apply(new)
+                    settings = new
+                else:
+                    settings = new
+                    for c in controllers.values():
+                        c.close()
+                    controllers.clear()
+                    scanned = 0.0
             if time.monotonic() - scanned >= 2:
                 scanned = time.monotonic()
                 found = {p.key: p for p in pads.discover()}

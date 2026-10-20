@@ -1,4 +1,5 @@
 """The Controllers page: DualShock 4 light bar, polling rate, Xbox 360 emulation and buttons."""
+import grp
 import os
 import gi
 gi.require_version("Gtk", "3.0")
@@ -24,6 +25,13 @@ BT_RATES = [(0, N_("Leave it to the driver (250 Hz)")), (1, N_("1 ms (1000 Hz)")
             (4, N_("4 ms (250 Hz)")), (8, N_("8 ms (125 Hz)"))]
 USB_RATES = [(0, N_("The controller's own (usually 250 Hz)")), (1, N_("1 ms (1000 Hz)")), (2, N_("2 ms (500 Hz)")),
              (4, N_("4 ms (250 Hz)")), (8, N_("8 ms (125 Hz)"))]
+
+
+def _in_input_group():
+    try:
+        return grp.getgrnam("input").gr_gid in os.getgroups()
+    except KeyError:
+        return False
 
 
 def _rgba(text):
@@ -112,8 +120,10 @@ class ControllersPage(Gtk.Box):
             self.bt_rate.append(str(ms), _(label))
         self.bt_rate.connect("changed", self._bt_rate_changed)
         self._row(g, 0, _("Over Bluetooth"), self.bt_rate)
-        g.attach(_hint(_("How often the controller sends its state. 1000 Hz means less input delay; it uses a "
-                         "little more battery. Applies right away.")), 1, 1, 1, 1)
+        g.attach(_hint(_("How often the controller sends its state; it applies right away, and the rate it "
+                         "really reaches shows above. Bluetooth itself usually tops out around 500–800 Hz, "
+                         "depending on the adapter (Wi-Fi + Bluetooth cards share the radio); for a true "
+                         "1000 Hz use the cable with the USB rate at 1 ms.")), 1, 1, 1, 1)
         usb = Gtk.Box(spacing=6)
         self.usb_rate = Gtk.ComboBoxText(hexpand=True)
         for ms, label in USB_RATES:
@@ -217,6 +227,7 @@ class ControllersPage(Gtk.Box):
         try:
             S.save(S.normalize(self.c))
             D.notify_daemon(D.load())    # starts, restarts or stops the controller service
+            S.reload_running()           # the light bar and report rate apply in place
         except Exception as e:  # noqa: BLE001
             self.window.message(_("Could not save the settings"), str(e))
             return False
@@ -237,9 +248,8 @@ class ControllersPage(Gtk.Box):
         if self.loading:
             return
         self.c["bt_poll_ms"] = int(self.bt_rate.get_active_id() or 0)
-        if self.c["bt_poll_ms"]:
-            for pad in P.discover():
-                P.set_bt_poll(pad, self.c["bt_poll_ms"])
+        for pad in P.discover():     # (when it's hidden, the service does it with the file it holds)
+            P.set_bt_poll(pad, self.c["bt_poll_ms"])
         self._commit_later()
 
     def _usb_apply(self, *_a):
@@ -278,15 +288,25 @@ class ControllersPage(Gtk.Box):
                 parts.append(_("reporting at {hz} Hz").format(hz=info["rate"]))
             if info.get("virtual"):
                 parts.append(_("games see an Xbox 360 controller"))
+            if info.get("hidden"):
+                parts.append(_("hidden from games"))
             row = Gtk.Label(xalign=0, wrap=True)
             row.set_markup("<b>{}</b>  <span alpha='70%'>{}</span>".format(
                 GLib.markup_escape_text(pad.name), GLib.markup_escape_text(" · ".join(parts))))
             self.pads_box.pack_start(row, False, False, 0)
             if info.get("error"):
                 notes.add(_("The controller service: {error}").format(error=info["error"]))
+            if info.get("hide_error"):
+                notes.add(_("Couldn't hide the DualShock 4 from games: {error}").format(error=info["hide_error"]))
+            if info.get("hidden") and _in_input_group():
+                notes.add(_("You're in the \"input\" group, which lets every program read every input device, "
+                            "so games can still find the DualShock 4. Leave the group (gpasswd -d $USER input, "
+                            "then log in again) to hide it."))
             if not P.lightbar_writable(pad):
                 notes.add(_("The light bar can't be changed yet: XControl's device permissions apply after the "
                             "controller is reconnected (or after a reboot, right after installing)."))
+            if info.get("hidden"):
+                continue     # its files are deliberately off-limits now; the service has them open
             if any(n and not os.access(n, os.R_OK) for n in (pad.gamepad, pad.sensors, pad.touchpad)):
                 notes.add(_("The touchpad and motion sensors can't be read yet: reconnect the controller so "
                             "XControl's device permissions apply."))

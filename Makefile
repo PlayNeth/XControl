@@ -63,6 +63,7 @@ install: all
 	install -Dm755 data/xcontrol-locale-helper $(DESTDIR)$(LIBDIR)/xcontrol-locale-helper
 	install -Dm755 data/xcontrol-power-helper $(DESTDIR)$(LIBDIR)/xcontrol-power-helper
 	install -Dm755 data/xcontrol-controller-helper $(DESTDIR)$(LIBDIR)/xcontrol-controller-helper
+	install -Dm755 data/xcontrol-controller-hide $(DESTDIR)$(LIBDIR)/xcontrol-controller-hide
 	install -Dm644 data/70-xcontrol-controllers.rules $(DESTDIR)$(PREFIX)/lib/udev/rules.d/70-xcontrol-controllers.rules
 	install -dm755 $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 	sed 's|@LIBDIR@|$(LIBDIR)|g' data/io.github.xcontrol.policy.in > $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
@@ -122,6 +123,7 @@ check:
 	sh -n data/xcontrol-locale-helper
 	sh -n data/xcontrol-power-helper
 	sh -n data/xcontrol-controller-helper
+	sh -n data/xcontrol-controller-hide
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

@@ -435,13 +435,14 @@ def wanted_children(desk):
         out["picom"] = (compositor.command(), {})
     pads_cfg = _controllers()
     if pads_cfg["enabled"]:
+        from . import pad_service
         here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         out["pads"] = ([sys.executable, "-c", "import sys; from xcontrol.app import main; "
                         "sys.exit(main(['xcontrol', '--pads']))"],
                        {"PYTHONPATH": here + os.pathsep + os.environ.get("PYTHONPATH", ""),
                         # a different value restarts it with the new settings
                         "XCONTROL_PADS": json.dumps({k: v for k, v in pads_cfg.items()
-                                                     if k not in ("lightbar", "brightness", "bt_poll_ms")},
+                                                     if k not in pad_service.LIVE},
                                                     sort_keys=True)})
     if desk["notify"]["enabled"] and shutil.which("dunst"):
         out["dunst"] = (notify.command(), {})

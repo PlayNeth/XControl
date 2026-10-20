@@ -294,21 +294,31 @@ as they connect.
 - **Light bar**: color and brightness (0 turns it off), set through the kernel
   driver's LEDs (`/sys/class/leds/inputN:red|green|blue|global`), so rumble
   doesn't reset it. Changes apply right away.
-- **Report rate over Bluetooth**: the controller can send its state every 1 ms
-  (1000 Hz); Linux's driver asks for 4 ms (250 Hz). XControl sends the
-  controller a report with the interval you pick (1, 2, 4 or 8 ms) through its
-  hidraw node, right away and again whenever it reconnects. The page shows the
-  rate actually measured.
+- **Report rate over Bluetooth**: Linux's driver asks the controller for a
+  report every 4 ms (250 Hz). XControl sends it the interval you pick (1, 2, 4
+  or 8 ms) through its hidraw node, right away and whenever it reconnects; the
+  page shows the rate actually measured. Bluetooth itself is the ceiling: a
+  full DualShock 4 report needs at least two radio slots, so 1 ms usually lands
+  around 500–800 Hz depending on the adapter (Wi-Fi + Bluetooth combo cards
+  share their radio and sit at the low end). A real 1000 Hz takes the cable.
 - **Report rate over USB**: Linux picks the USB polling interval, so this is
   usbhid's `jspoll` setting, which covers every USB gamepad. It asks for your
   password (`xcontrol-controller-helper`), is kept for the next boots
   (`/etc/tmpfiles.d/xcontrol-usbhid.conf`, plus `/etc/modprobe.d` when usbhid is
   a module), and reconnects a plugged-in DualShock 4 so it applies now.
 - **Xbox 360 controller for games**: games see a virtual Xbox 360 pad (uinput,
-  045e:028e, the same as xpad) instead of the DualShock 4, which is hidden from
-  them (grabbed) unless you untick that. Rumble from the game is passed on to
-  the DualShock 4. Steam has its own controller support: turn off "PlayStation
-  Configuration Support" in Steam, or it sees the DualShock 4 as well.
+  045e:028e, the same as xpad) instead of the DualShock 4. Rumble from the game
+  is passed on to the DualShock 4.
+- **Hiding the DualShock 4**: SDL, Wine/Proton and Steam find controllers
+  through their device files (the raw HID one too), so grabbing the input isn't
+  enough. Once the service has the controller's files open, a small root helper
+  (`xcontrol-controller-hide`, allowed without a password for the active
+  session) takes your user's access to them away; it gives it back when you
+  untick it or the service stops, and a reconnected controller gets it from udev
+  as usual. Games already running keep what they had open. Being in the `input`
+  group defeats this (every program can read every input device then). Steam
+  has its own controller support: turn off "PlayStation Configuration Support"
+  in Steam, or it uses the DualShock 4 as well.
 - **Button remapping**: every DualShock 4 button (and the touchpad click) can be
   any Xbox button, a trigger, a d-pad direction or nothing. L2/R2 stay analog
   while they're mapped to LT/RT.
