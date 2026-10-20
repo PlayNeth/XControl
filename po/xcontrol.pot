@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.20.1\n"
+"Project-Id-Version: xcontrol 0.21.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 02:12-0300\n"
+"POT-Creation-Date: 2026-10-20 01:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Sound"
 msgstr ""
 
-#: xcontrol/app.py:75
+#: xcontrol/app.py:75 xcontrol/sidebar.py:10
 msgid "Desktop"
 msgstr ""
 
@@ -62,20 +62,24 @@ msgstr ""
 msgid "Date & Language"
 msgstr ""
 
-#: xcontrol/app.py:92
+#: xcontrol/app.py:92 xcontrol/sysinfo.py:846
+msgid "Power"
+msgstr ""
+
+#: xcontrol/app.py:96
 msgid "Users"
 msgstr ""
 
-#: xcontrol/app.py:94 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:98 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:757
 msgid "System"
 msgstr ""
 
-#: xcontrol/app.py:130
+#: xcontrol/app.py:137
 msgid "Display details"
 msgstr ""
 
-#: xcontrol/app.py:131 xcontrol/appearance_page.py:412
-#: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:866
+#: xcontrol/app.py:138 xcontrol/appearance_page.py:412
+#: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:872
 #: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr ""
@@ -260,7 +264,7 @@ msgstr ""
 msgid "{px} px"
 msgstr ""
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:205
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:208
 msgid "Size"
 msgstr ""
 
@@ -348,7 +352,8 @@ msgstr ""
 
 #: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
 #: xcontrol/bar_module_dialog.py:114 xcontrol/display_page.py:266
-#: xcontrol/input_page.py:212 xcontrol/region_page.py:168
+#: xcontrol/input_page.py:212 xcontrol/power_page.py:114
+#: xcontrol/region_page.py:168
 msgid "Apply"
 msgstr ""
 
@@ -427,7 +432,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:454
-#: xcontrol/users_page.py:335
+#: xcontrol/system_page.py:508 xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr ""
 
@@ -521,15 +526,16 @@ msgstr ""
 
 #: xcontrol/audio_page.py:22 xcontrol/bar_module_dialog.py:113
 #: xcontrol/edid_override_dialog.py:253 xcontrol/gaming_page.py:138
-#: xcontrol/gaming_page.py:494 xcontrol/i3_page.py:80 xcontrol/i3_page.py:799
+#: xcontrol/gaming_page.py:494 xcontrol/i3_page.py:81 xcontrol/i3_page.py:805
 #: xcontrol/monitors_page.py:138 xcontrol/region_page.py:248
+#: xcontrol/system_page.py:516 xcontrol/system_page.py:536
 #: xcontrol/users_page.py:358 xcontrol/users_page.py:380
 #: xcontrol/users_page.py:444 xcontrol/users_page.py:456
 msgid "Cancel"
 msgstr ""
 
 #: xcontrol/audio_page.py:30 xcontrol/bar_module_dialog.py:66
-#: xcontrol/gaming_page.py:226 xcontrol/i3_page.py:480
+#: xcontrol/gaming_page.py:226 xcontrol/i3_page.py:486
 msgid "Name"
 msgstr ""
 
@@ -600,11 +606,13 @@ msgid ""
 msgstr ""
 
 #: xcontrol/audio_page.py:133 xcontrol/night_page.py:202
-#: xcontrol/notify_page.py:463 xcontrol/panel_page.py:483
+#: xcontrol/notify_page.py:464 xcontrol/panel_page.py:483
+#: xcontrol/power_page.py:97
 msgid "Could not save the settings"
 msgstr ""
 
 #: xcontrol/audio_page.py:138 xcontrol/gaming_page.py:470
+#: xcontrol/power_page.py:127
 msgid "Saved"
 msgstr ""
 
@@ -614,8 +622,8 @@ msgid ""
 "wireplumber"
 msgstr ""
 
-#: xcontrol/audio_page.py:140 xcontrol/notify_page.py:465
-#: xcontrol/panel_page.py:485
+#: xcontrol/audio_page.py:140 xcontrol/notify_page.py:466
+#: xcontrol/panel_page.py:485 xcontrol/power_page.py:99
 msgid "Applied"
 msgstr ""
 
@@ -1134,8 +1142,8 @@ msgstr ""
 msgid "For 4 hours"
 msgstr ""
 
-#: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:865
-#: xcontrol/system_page.py:65 xcontrol/system_page.py:308
+#: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:871
+#: xcontrol/system_page.py:68 xcontrol/system_page.py:311
 msgid "Copy"
 msgstr ""
 
@@ -1154,8 +1162,8 @@ msgstr ""
 msgid "{name} (virtual, made by a system service)"
 msgstr ""
 
-#: xcontrol/desktop_page.py:85 xcontrol/i3_page.py:50
-#: xcontrol/notify_page.py:34
+#: xcontrol/desktop_page.py:85 xcontrol/i3_page.py:51
+#: xcontrol/notify_page.py:34 xcontrol/power_page.py:26
 msgid "Never"
 msgstr ""
 
@@ -1191,7 +1199,7 @@ msgid "Layout"
 msgstr ""
 
 #: xcontrol/desktop_page.py:158 xcontrol/display_page.py:234
-#: xcontrol/i3_page.py:480 xcontrol/notify_page.py:170
+#: xcontrol/i3_page.py:486 xcontrol/notify_page.py:170
 msgid "Display"
 msgstr ""
 
@@ -1823,7 +1831,8 @@ msgid "Save EDID"
 msgstr ""
 
 #: xcontrol/edid_override_dialog.py:253 xcontrol/module_params_dialog.py:120
-#: xcontrol/monitors_page.py:138 xcontrol/users_page.py:234
+#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:516
+#: xcontrol/users_page.py:234
 msgid "Save"
 msgstr ""
 
@@ -1941,7 +1950,7 @@ msgid "Add Steam game"
 msgstr ""
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:582 xcontrol/notify_page.py:314
+#: xcontrol/i3_page.py:588 xcontrol/notify_page.py:314
 #: xcontrol/region_page.py:249 xcontrol/resolutions_dialog.py:153
 #: xcontrol/users_page.py:381
 msgid "Add"
@@ -2005,7 +2014,7 @@ msgstr ""
 msgid "Applies to"
 msgstr ""
 
-#: xcontrol/gaming_page.py:230 xcontrol/i3_page.py:516
+#: xcontrol/gaming_page.py:230 xcontrol/i3_page.py:522
 msgid "Command"
 msgstr ""
 
@@ -2178,6 +2187,167 @@ msgstr ""
 msgid "Launch options copied"
 msgstr ""
 
+#: xcontrol/health.py:73
+msgid "XControl doesn't start when you log in"
+msgstr ""
+
+#: xcontrol/health.py:74
+msgid ""
+"Your i3 config doesn't run xcontrol --session, so after the next login the "
+"wallpaper, bar, compositor, screen lock and other desktop settings won't "
+"start. Add this line:"
+msgstr ""
+
+#: xcontrol/health.py:78
+msgid "XControl starts when you log in"
+msgstr ""
+
+#: xcontrol/health.py:80
+msgid "XControl's desktop service isn't running"
+msgstr ""
+
+#: xcontrol/health.py:81
+msgid ""
+"The wallpaper, bar, compositor, lock and the rest of the Desktop pages' "
+"settings are handled by it."
+msgstr ""
+
+#: xcontrol/health.py:82 xcontrol/health.py:100
+msgid "Start it"
+msgstr ""
+
+#: xcontrol/health.py:84
+msgid "The desktop service is running"
+msgstr ""
+
+#: xcontrol/health.py:86
+#, python-brace-format
+msgid "{program} keeps stopping"
+msgstr ""
+
+#: xcontrol/health.py:92
+msgid "Password prompts work"
+msgstr ""
+
+#: xcontrol/health.py:92
+#, python-brace-format
+msgid "The polkit agent is {agent}."
+msgstr ""
+
+#: xcontrol/health.py:95
+msgid ""
+"No polkit agent is running, so everything that asks for a password (users, "
+"kernel modules, EDID, power buttons, languages, time) fails without a word. "
+"i3 doesn't start one."
+msgstr ""
+
+#: xcontrol/health.py:98 xcontrol/health.py:104
+msgid "Password prompts can't appear"
+msgstr ""
+
+#: xcontrol/health.py:99
+msgid "Start it now, and add this to your i3 config:"
+msgstr ""
+
+#: xcontrol/health.py:101
+msgid "Start the polkit agent at login"
+msgstr ""
+
+#: xcontrol/health.py:105
+msgid "Install one, e.g. polkit-gnome, and start it from your i3 config."
+msgstr ""
+
+#: xcontrol/health.py:109
+msgid "Another bar is running besides XControl's"
+msgstr ""
+
+#: xcontrol/health.py:110
+msgid "Another compositor is running besides XControl's"
+msgstr ""
+
+#: xcontrol/health.py:112
+msgid "Another notification program is running besides XControl's"
+msgstr ""
+
+#: xcontrol/health.py:114
+msgid "Another screen lock is running besides XControl's"
+msgstr ""
+
+#: xcontrol/health.py:121
+msgid "Stop the extra ones"
+msgstr ""
+
+#: xcontrol/health.py:129
+msgid "Your i3 config starts things XControl also starts"
+msgstr ""
+
+#: xcontrol/health.py:130
+msgid "Remove these lines, or there'll be two of each after the next login:"
+msgstr ""
+
+#: xcontrol/health.py:134
+msgid "Another night-light program is running"
+msgstr ""
+
+#: xcontrol/health.py:135
+#, python-brace-format
+msgid "{programs} also changes the colors; the two will fight."
+msgstr ""
+
+#: xcontrol/health.py:141
+msgid "Open apps don't follow theme changes"
+msgstr ""
+
+#: xcontrol/health.py:142
+msgid ""
+"Nothing provides XSETTINGS. Applying on the Appearance page starts "
+"xsettingsd (if it's installed) and adds it to your login."
+msgstr ""
+
+#: xcontrol/health.py:145
+msgid "Open apps follow theme changes"
+msgstr ""
+
+#: xcontrol/health.py:145
+#, python-brace-format
+msgid "XSETTINGS from {kind}."
+msgstr ""
+
+#: xcontrol/health.py:150
+msgid "Nothing shows notifications"
+msgstr ""
+
+#: xcontrol/health.py:151
+msgid ""
+"Programs' notifications are lost. Turn on XControl's on the Notifications "
+"page."
+msgstr ""
+
+#: xcontrol/health.py:152
+msgid "Install dunst first."
+msgstr ""
+
+#: xcontrol/health.py:154
+msgid "Notifications are shown"
+msgstr ""
+
+#: xcontrol/health.py:154
+#, python-brace-format
+msgid "By {program}."
+msgstr ""
+
+#: xcontrol/health.py:157
+msgid "No sound server answers"
+msgstr ""
+
+#: xcontrol/health.py:157
+msgid "Install and start PipeWire (pipewire-pulse) or PulseAudio."
+msgstr ""
+
+#: xcontrol/health.py:160
+msgid "Sound works"
+msgstr ""
+
 #: xcontrol/i3_page.py:17
 msgid "With title bar"
 msgstr ""
@@ -2261,7 +2431,7 @@ msgstr ""
 msgid "Automatic (by the display's shape)"
 msgstr ""
 
-#: xcontrol/i3_page.py:27 xcontrol/i3_page.py:49
+#: xcontrol/i3_page.py:27 xcontrol/i3_page.py:50
 msgid "Side by side"
 msgstr ""
 
@@ -2334,66 +2504,70 @@ msgid "Show it if it belongs to the fullscreen window"
 msgstr ""
 
 #: xcontrol/i3_page.py:49
+msgid "Always show it on top (i3 4.24 and later)"
+msgstr ""
+
+#: xcontrol/i3_page.py:50
 msgid "One above the other"
 msgstr ""
 
-#: xcontrol/i3_page.py:78
+#: xcontrol/i3_page.py:79
 msgid "Key binding"
 msgstr ""
 
-#: xcontrol/i3_page.py:81 xcontrol/i3_page.py:800
+#: xcontrol/i3_page.py:82 xcontrol/i3_page.py:806
 msgid "OK"
 msgstr ""
 
-#: xcontrol/i3_page.py:91 xcontrol/i3_page.py:227 xcontrol/i3_page.py:365
+#: xcontrol/i3_page.py:92 xcontrol/i3_page.py:228 xcontrol/i3_page.py:371
 msgid "Keys"
 msgstr ""
 
-#: xcontrol/i3_page.py:96
+#: xcontrol/i3_page.py:97
 msgid "Press keys…"
 msgstr ""
 
-#: xcontrol/i3_page.py:100
+#: xcontrol/i3_page.py:101
 msgid "Press the combination now. Esc cancels."
 msgstr ""
 
-#: xcontrol/i3_page.py:104 xcontrol/i3_page.py:365
+#: xcontrol/i3_page.py:105 xcontrol/i3_page.py:371
 msgid "Action"
 msgstr ""
 
-#: xcontrol/i3_page.py:111
+#: xcontrol/i3_page.py:112
 msgid ""
 "Any i3 command. \"exec\" runs a program, e.g. exec --no-startup-id flameshot "
 "gui."
 msgstr ""
 
-#: xcontrol/i3_page.py:114 xcontrol/i3_page.py:365
+#: xcontrol/i3_page.py:115 xcontrol/i3_page.py:371
 msgid "Mode"
 msgstr ""
 
-#: xcontrol/i3_page.py:120
+#: xcontrol/i3_page.py:121
 msgid ""
 "\"default\" is the normal mode. Other modes (like \"resize\") are entered "
 "with mode \"name\" and only their own keys work there."
 msgstr ""
 
-#: xcontrol/i3_page.py:122
+#: xcontrol/i3_page.py:123
 msgid "Run when the keys are released"
 msgstr ""
 
-#: xcontrol/i3_page.py:196
+#: xcontrol/i3_page.py:197
 msgid "Use XControl's i3 config"
 msgstr ""
 
-#: xcontrol/i3_page.py:201
+#: xcontrol/i3_page.py:202
 msgid "Show the file…"
 msgstr ""
 
-#: xcontrol/i3_page.py:204
+#: xcontrol/i3_page.py:205
 msgid "Import my previous config…"
 msgstr ""
 
-#: xcontrol/i3_page.py:208
+#: xcontrol/i3_page.py:209
 msgid ""
 "XControl writes ~/.config/i3/config from this page and reloads i3 after each "
 "change. Your current config is kept as config.before-xcontrol and can be put "
@@ -2401,369 +2575,369 @@ msgid ""
 "mistake never replaces a working config."
 msgstr ""
 
-#: xcontrol/i3_page.py:226 xcontrol/notify_page.py:183
+#: xcontrol/i3_page.py:227 xcontrol/notify_page.py:183
 msgid "Look"
 msgstr ""
 
-#: xcontrol/i3_page.py:228
+#: xcontrol/i3_page.py:229
 msgid "Behavior & Workspaces"
 msgstr ""
 
-#: xcontrol/i3_page.py:229
+#: xcontrol/i3_page.py:230
 msgid "Startup & Rules"
 msgstr ""
 
-#: xcontrol/i3_page.py:254 xcontrol/i3_page.py:466
+#: xcontrol/i3_page.py:255 xcontrol/i3_page.py:472
 msgid "Windows"
 msgstr ""
 
-#: xcontrol/i3_page.py:257
+#: xcontrol/i3_page.py:258
 msgid "Title font"
 msgstr ""
 
-#: xcontrol/i3_page.py:260
+#: xcontrol/i3_page.py:261
 msgid "Tiled windows"
 msgstr ""
 
-#: xcontrol/i3_page.py:263
+#: xcontrol/i3_page.py:264
 msgid "Floating windows"
 msgstr ""
 
-#: xcontrol/i3_page.py:265
+#: xcontrol/i3_page.py:266
 msgid "Title position"
 msgstr ""
 
-#: xcontrol/i3_page.py:267
+#: xcontrol/i3_page.py:268
 msgid "Hide borders at the screen edge"
 msgstr ""
 
-#: xcontrol/i3_page.py:269
+#: xcontrol/i3_page.py:270
 msgid "No border when it's the only window"
 msgstr ""
 
-#: xcontrol/i3_page.py:275
+#: xcontrol/i3_page.py:281
 msgid "Gaps"
 msgstr ""
 
-#: xcontrol/i3_page.py:277
+#: xcontrol/i3_page.py:283
 msgid "Between windows"
 msgstr ""
 
-#: xcontrol/i3_page.py:279
+#: xcontrol/i3_page.py:285
 msgid "Around the edge"
 msgstr ""
 
-#: xcontrol/i3_page.py:279
+#: xcontrol/i3_page.py:285
 msgid "Added to the space between windows."
 msgstr ""
 
-#: xcontrol/i3_page.py:281
+#: xcontrol/i3_page.py:287
 msgid "No gaps when it's the only window"
 msgstr ""
 
-#: xcontrol/i3_page.py:286 xcontrol/panel_page.py:190
+#: xcontrol/i3_page.py:292 xcontrol/panel_page.py:190
 msgid "Colors"
 msgstr ""
 
-#: xcontrol/i3_page.py:304
+#: xcontrol/i3_page.py:310
 msgid "Behind windows"
 msgstr ""
 
-#: xcontrol/i3_page.py:306
+#: xcontrol/i3_page.py:312
 msgid "i3's colors"
 msgstr ""
 
-#: xcontrol/i3_page.py:314
+#: xcontrol/i3_page.py:320
 msgid "px"
 msgstr ""
 
-#: xcontrol/i3_page.py:332
+#: xcontrol/i3_page.py:338
 msgid "Modifier"
 msgstr ""
 
-#: xcontrol/i3_page.py:337
+#: xcontrol/i3_page.py:343
 msgid "Main key ($mod)"
 msgstr ""
 
-#: xcontrol/i3_page.py:338
+#: xcontrol/i3_page.py:344
 msgid "Used by almost every shortcut. Super keeps Alt free for programs."
 msgstr ""
 
-#: xcontrol/i3_page.py:339
+#: xcontrol/i3_page.py:345
 msgid "Hold it and drag to move floating windows (right button resizes)"
 msgstr ""
 
-#: xcontrol/i3_page.py:341
+#: xcontrol/i3_page.py:347
 msgid "Drag tiled windows by their title bar to move them"
 msgstr ""
 
-#: xcontrol/i3_page.py:348
+#: xcontrol/i3_page.py:354
 msgid "Search keys or actions"
 msgstr ""
 
-#: xcontrol/i3_page.py:351
+#: xcontrol/i3_page.py:357
 msgid "Add…"
 msgstr ""
 
-#: xcontrol/i3_page.py:351 xcontrol/system_page.py:337
+#: xcontrol/i3_page.py:357 xcontrol/system_page.py:340
 msgid "Change…"
 msgstr ""
 
-#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:582 xcontrol/notify_page.py:316
+#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:588 xcontrol/notify_page.py:316
 #: xcontrol/resolutions_dialog.py:242
 msgid "Remove"
 msgstr ""
 
-#: xcontrol/i3_page.py:352 xcontrol/i3_page.py:820
+#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:826
 msgid "i3's defaults"
 msgstr ""
 
-#: xcontrol/i3_page.py:390
+#: xcontrol/i3_page.py:396
 #, python-brace-format
 msgid "Same keys as: {others}"
 msgstr ""
 
-#: xcontrol/i3_page.py:395
+#: xcontrol/i3_page.py:401
 msgid "Some keys are used twice (shown in red); only one of them will work."
 msgstr ""
 
-#: xcontrol/i3_page.py:446
+#: xcontrol/i3_page.py:452
 msgid "Replace all key bindings with i3's defaults?"
 msgstr ""
 
-#: xcontrol/i3_page.py:447
+#: xcontrol/i3_page.py:453
 msgid "Your own bindings on this page are removed."
 msgstr ""
 
-#: xcontrol/i3_page.py:455
+#: xcontrol/i3_page.py:461
 msgid "Focus"
 msgstr ""
 
-#: xcontrol/i3_page.py:456
+#: xcontrol/i3_page.py:462
 msgid "Focus follows the mouse"
 msgstr ""
 
-#: xcontrol/i3_page.py:460
+#: xcontrol/i3_page.py:466
 msgid "Move the mouse pointer"
 msgstr ""
 
-#: xcontrol/i3_page.py:462
+#: xcontrol/i3_page.py:468
 msgid "A window asks for attention"
 msgstr ""
 
-#: xcontrol/i3_page.py:464
+#: xcontrol/i3_page.py:470
 msgid "Moving focus past the last window"
 msgstr ""
 
-#: xcontrol/i3_page.py:468
+#: xcontrol/i3_page.py:474
 msgid "New windows are placed"
 msgstr ""
 
-#: xcontrol/i3_page.py:470
+#: xcontrol/i3_page.py:476
 msgid "New workspaces start"
 msgstr ""
 
-#: xcontrol/i3_page.py:472
+#: xcontrol/i3_page.py:478
 msgid "A dialog opens over a fullscreen window"
 msgstr ""
 
-#: xcontrol/i3_page.py:476
+#: xcontrol/i3_page.py:482
 msgid "Workspaces"
 msgstr ""
 
-#: xcontrol/i3_page.py:477
+#: xcontrol/i3_page.py:483
 msgid "Choosing the current workspace again goes back to the previous one"
 msgstr ""
 
-#: xcontrol/i3_page.py:480
+#: xcontrol/i3_page.py:486
 msgid "Key"
 msgstr ""
 
-#: xcontrol/i3_page.py:496
+#: xcontrol/i3_page.py:502
 msgid "Any"
 msgstr ""
 
-#: xcontrol/i3_page.py:502
+#: xcontrol/i3_page.py:508
 msgid ""
 "A name like \"2:web\" shows \"web\" in the bar when the bar hides numbers. A "
 "workspace with a display opens there."
 msgstr ""
 
-#: xcontrol/i3_page.py:507
+#: xcontrol/i3_page.py:513
 msgid "Start with i3"
 msgstr ""
 
-#: xcontrol/i3_page.py:508
+#: xcontrol/i3_page.py:514
 #, python-brace-format
 msgid ""
 "Always first: {line} (wallpaper, bar, compositor, screen lock, input "
 "settings)."
 msgstr ""
 
-#: xcontrol/i3_page.py:521
+#: xcontrol/i3_page.py:527
 msgid "Also on reload"
 msgstr ""
 
-#: xcontrol/i3_page.py:524
+#: xcontrol/i3_page.py:530
 msgid ""
 "Double-click a command to change it. \"Also on reload\" runs it again on "
 "every i3 reload, not just at login."
 msgstr ""
 
-#: xcontrol/i3_page.py:527
+#: xcontrol/i3_page.py:533
 msgid "Window rules"
 msgstr ""
 
-#: xcontrol/i3_page.py:532 xcontrol/i3_page.py:538
+#: xcontrol/i3_page.py:538 xcontrol/i3_page.py:544
 msgid "Do"
 msgstr ""
 
-#: xcontrol/i3_page.py:533 xcontrol/i3_page.py:538
+#: xcontrol/i3_page.py:539 xcontrol/i3_page.py:544
 msgid "Open on"
 msgstr ""
 
-#: xcontrol/i3_page.py:536
+#: xcontrol/i3_page.py:542
 msgid "Rule"
 msgstr ""
 
-#: xcontrol/i3_page.py:540
+#: xcontrol/i3_page.py:546
 msgid "Windows (criteria)"
 msgstr ""
 
-#: xcontrol/i3_page.py:540
+#: xcontrol/i3_page.py:546
 msgid "Action / workspace"
 msgstr ""
 
-#: xcontrol/i3_page.py:550
+#: xcontrol/i3_page.py:556
 msgid "Pick a window…"
 msgstr ""
 
-#: xcontrol/i3_page.py:551
+#: xcontrol/i3_page.py:557
 msgid "Click a window to add a rule for its program"
 msgstr ""
 
-#: xcontrol/i3_page.py:555
+#: xcontrol/i3_page.py:561
 msgid ""
 "Criteria like class=\"Steam\" or title=\"Picture-in-Picture\". \"Do\" runs "
 "i3 commands on matching windows, e.g. floating enable, border none, move to "
 "workspace number 3. \"Open on\" puts them on a workspace, e.g. number 2."
 msgstr ""
 
-#: xcontrol/i3_page.py:560
+#: xcontrol/i3_page.py:566
 msgid "i3's bar"
 msgstr ""
 
-#: xcontrol/i3_page.py:561
+#: xcontrol/i3_page.py:567
 msgid "Show i3's own bar (i3bar) when XControl's bar is off"
 msgstr ""
 
-#: xcontrol/i3_page.py:565
+#: xcontrol/i3_page.py:571
 msgid "Extra i3 config"
 msgstr ""
 
-#: xcontrol/i3_page.py:566
+#: xcontrol/i3_page.py:572
 msgid ""
 "Anything else from i3's user guide, as in an i3 config file. Checked with i3 "
 "like everything else."
 msgstr ""
 
-#: xcontrol/i3_page.py:656
+#: xcontrol/i3_page.py:662
 msgid "Click the window…"
 msgstr ""
 
-#: xcontrol/i3_page.py:785
+#: xcontrol/i3_page.py:791
 msgid "Applied, i3 reloaded"
 msgstr ""
 
-#: xcontrol/i3_page.py:791
+#: xcontrol/i3_page.py:797
 msgid "i3 doesn't accept this, so nothing was changed:"
 msgstr ""
 
-#: xcontrol/i3_page.py:812
+#: xcontrol/i3_page.py:818
 msgid "i3 isn't installed"
 msgstr ""
 
-#: xcontrol/i3_page.py:812
+#: xcontrol/i3_page.py:818
 msgid "Install the i3-wm package first."
 msgstr ""
 
-#: xcontrol/i3_page.py:817
+#: xcontrol/i3_page.py:823
 msgid "Start from your current i3 config?"
 msgstr ""
 
-#: xcontrol/i3_page.py:818
+#: xcontrol/i3_page.py:824
 msgid ""
 "Its keys, startup programs, window rules and look are brought over to this "
 "page. Otherwise the page starts from i3's defaults. Either way your file is "
 "kept as a backup."
 msgstr ""
 
-#: xcontrol/i3_page.py:820
+#: xcontrol/i3_page.py:826
 msgid "Import it"
 msgstr ""
 
-#: xcontrol/i3_page.py:823
+#: xcontrol/i3_page.py:829
 msgid "Put your previous i3 config back?"
 msgstr ""
 
-#: xcontrol/i3_page.py:824
+#: xcontrol/i3_page.py:830
 msgid "XControl's config is kept as config.xcontrol."
 msgstr ""
 
-#: xcontrol/i3_page.py:824
+#: xcontrol/i3_page.py:830
 msgid "Put it back"
 msgstr ""
 
-#: xcontrol/i3_page.py:824
+#: xcontrol/i3_page.py:830
 msgid "Keep XControl's"
 msgstr ""
 
-#: xcontrol/i3_page.py:839
+#: xcontrol/i3_page.py:845
 msgid "Nothing to import"
 msgstr ""
 
-#: xcontrol/i3_page.py:839
+#: xcontrol/i3_page.py:845
 msgid "No i3 config other than XControl's was found."
 msgstr ""
 
-#: xcontrol/i3_page.py:841
+#: xcontrol/i3_page.py:847
 #, python-brace-format
 msgid "Import {path}?"
 msgstr ""
 
-#: xcontrol/i3_page.py:842
+#: xcontrol/i3_page.py:848
 msgid "The settings on this page are replaced by the ones in that file."
 msgstr ""
 
-#: xcontrol/i3_page.py:842
+#: xcontrol/i3_page.py:848
 msgid "Import"
 msgstr ""
 
-#: xcontrol/i3_page.py:851
+#: xcontrol/i3_page.py:857
 msgid "Could not read the config"
 msgstr ""
 
-#: xcontrol/i3_page.py:858
+#: xcontrol/i3_page.py:864
 msgid "Imported"
 msgstr ""
 
-#: xcontrol/i3_page.py:858
+#: xcontrol/i3_page.py:864
 msgid "Left out because XControl takes care of them now:"
 msgstr ""
 
-#: xcontrol/i3_page.py:881
+#: xcontrol/i3_page.py:887
 msgid "i3 isn't installed."
 msgstr ""
 
-#: xcontrol/i3_page.py:886
+#: xcontrol/i3_page.py:892
 msgid "~/.i3/config is in the way; it's moved aside on the next change."
 msgstr ""
 
-#: xcontrol/i3_page.py:888
+#: xcontrol/i3_page.py:894
 msgid "XControl's config is in use."
 msgstr ""
 
-#: xcontrol/i3_page.py:890
+#: xcontrol/i3_page.py:896
 msgid "Your previous config is kept as config.before-xcontrol."
 msgstr ""
 
@@ -2905,7 +3079,7 @@ msgid "Device:"
 msgstr ""
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:194
+#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:197
 msgid "Refresh"
 msgstr ""
 
@@ -3234,7 +3408,7 @@ msgstr ""
 msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
 msgstr ""
 
-#: xcontrol/input_page.py:930
+#: xcontrol/input_page.py:930 xcontrol/power_page.py:103
 msgid "Buttons"
 msgstr ""
 
@@ -3318,16 +3492,16 @@ msgstr ""
 msgid "This section could not be loaded: {error}"
 msgstr ""
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:335
+#: xcontrol/kmods.py:250 xcontrol/system_page.py:338
 msgid "Parameters"
 msgstr ""
 
 #: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
-#: xcontrol/system_page.py:353
+#: xcontrol/system_page.py:356
 msgid "(only readable by root)"
 msgstr ""
 
-#: xcontrol/kmods.py:256 xcontrol/system_page.py:373
+#: xcontrol/kmods.py:256 xcontrol/system_page.py:376
 msgid "Set in modprobe.d"
 msgstr ""
 
@@ -3733,11 +3907,11 @@ msgstr ""
 msgid "Copy details"
 msgstr ""
 
-#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:70
+#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:73
 msgid "More copy options"
 msgstr ""
 
-#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:72
+#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:75
 msgid "Copy in English (for bug reports)"
 msgstr ""
 
@@ -3982,7 +4156,7 @@ msgstr ""
 msgid "Open its link"
 msgstr ""
 
-#: xcontrol/notify_page.py:29
+#: xcontrol/notify_page.py:29 xcontrol/power_page.py:14
 msgid "Nothing"
 msgstr ""
 
@@ -4260,135 +4434,135 @@ msgstr ""
 msgid "What happens"
 msgstr ""
 
-#: xcontrol/notify_page.py:324
+#: xcontrol/notify_page.py:325
 msgid ""
 "The app name is the one the program gives (as shown with \"App name, title "
 "and text\"); * matches anything, e.g. Steam*."
 msgstr ""
 
-#: xcontrol/notify_page.py:328
+#: xcontrol/notify_page.py:329
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: xcontrol/notify_page.py:329
+#: xcontrol/notify_page.py:330
 msgid ""
 "These commands control the notifications. Bind them to keys in your i3 "
 "config (or on the Window Manager page):"
 msgstr ""
 
-#: xcontrol/notify_page.py:331
+#: xcontrol/notify_page.py:332
 msgid "Close the newest notification:"
 msgstr ""
 
-#: xcontrol/notify_page.py:332
+#: xcontrol/notify_page.py:333
 msgid "Close all of them:"
 msgstr ""
 
-#: xcontrol/notify_page.py:333
+#: xcontrol/notify_page.py:334
 msgid "Bring back the last closed one:"
 msgstr ""
 
-#: xcontrol/notify_page.py:334
+#: xcontrol/notify_page.py:335
 msgid "Choose one of its actions from a menu:"
 msgstr ""
 
-#: xcontrol/notify_page.py:335
+#: xcontrol/notify_page.py:336
 msgid "Do not disturb on/off:"
 msgstr ""
 
-#: xcontrol/notify_page.py:339
+#: xcontrol/notify_page.py:340
 msgid "Extra dunst settings"
 msgstr ""
 
-#: xcontrol/notify_page.py:340
+#: xcontrol/notify_page.py:341
 msgid ""
 "Anything else from dunst's documentation, as in a dunstrc. Lines before any "
 "[section] go into [global] and replace XControl's line with the same key; "
 "[sections] are added as they are."
 msgstr ""
 
-#: xcontrol/notify_page.py:378 xcontrol/notify_page.py:381
+#: xcontrol/notify_page.py:379 xcontrol/notify_page.py:382
 #, python-brace-format
 msgid "After {n} seconds"
 msgstr ""
 
-#: xcontrol/notify_page.py:525
+#: xcontrol/notify_page.py:526
 msgid "Add a recent app…"
 msgstr ""
 
-#: xcontrol/notify_page.py:533
+#: xcontrol/notify_page.py:534
 msgid "A low notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:533
+#: xcontrol/notify_page.py:534
 msgid "Like a finished download."
 msgstr ""
 
-#: xcontrol/notify_page.py:534
+#: xcontrol/notify_page.py:535
 msgid "A normal notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:534
+#: xcontrol/notify_page.py:535
 msgid "Like a new message. <i>Formatting</i> works too."
 msgstr ""
 
-#: xcontrol/notify_page.py:535
+#: xcontrol/notify_page.py:536
 msgid "A critical notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:535
+#: xcontrol/notify_page.py:536
 msgid "Like a low battery. It stays until clicked."
 msgstr ""
 
-#: xcontrol/notify_page.py:539
+#: xcontrol/notify_page.py:540
 msgid "Nothing shows notifications right now"
 msgstr ""
 
-#: xcontrol/notify_page.py:545 xcontrol/region_page.py:106
+#: xcontrol/notify_page.py:546 xcontrol/region_page.py:106
 msgid "Could not change it"
 msgstr ""
 
-#: xcontrol/notify_page.py:545
+#: xcontrol/notify_page.py:546
 msgid "dunst isn't running."
 msgstr ""
 
-#: xcontrol/notify_page.py:565
+#: xcontrol/notify_page.py:566
 msgid "dunst isn't installed."
 msgstr ""
 
-#: xcontrol/notify_page.py:567
+#: xcontrol/notify_page.py:568
 #, python-brace-format
 msgid "Notifications are shown by {name} now."
 msgstr ""
 
-#: xcontrol/notify_page.py:568
+#: xcontrol/notify_page.py:569
 msgid "Nothing shows notifications right now."
 msgstr ""
 
-#: xcontrol/notify_page.py:570
+#: xcontrol/notify_page.py:571
 #, python-brace-format
 msgid "Running (dunst {v})."
 msgstr ""
 
-#: xcontrol/notify_page.py:572 xcontrol/panel_page.py:515
+#: xcontrol/notify_page.py:573 xcontrol/panel_page.py:515
 #: xcontrol/panel_page.py:535
 #, python-brace-format
 msgid "Not running: {why}"
 msgstr ""
 
-#: xcontrol/notify_page.py:572 xcontrol/panel_page.py:515
+#: xcontrol/notify_page.py:573 xcontrol/panel_page.py:515
 #: xcontrol/panel_page.py:535
 msgid "Starting…"
 msgstr ""
 
-#: xcontrol/notify_page.py:575
+#: xcontrol/notify_page.py:576
 #, python-brace-format
 msgid ""
 "{name} (process {pid}) is showing notifications, so XControl's dunst can't "
 "start. Stop it, and remove it from your i3 config or autostart."
 msgstr ""
 
-#: xcontrol/notify_page.py:583
+#: xcontrol/notify_page.py:584
 msgid ""
 "Remove these from your i3 config, or another notification program starts "
 "first after the next login:"
@@ -4797,6 +4971,174 @@ msgid ""
 "the next login:"
 msgstr ""
 
+#: xcontrol/power_page.py:12
+msgid "Shut down"
+msgstr ""
+
+#: xcontrol/power_page.py:12
+msgid "Sleep (suspend)"
+msgstr ""
+
+#: xcontrol/power_page.py:12
+msgid "Hibernate"
+msgstr ""
+
+#: xcontrol/power_page.py:13
+msgid "Hybrid sleep"
+msgstr ""
+
+#: xcontrol/power_page.py:13
+msgid "Sleep, then hibernate"
+msgstr ""
+
+#: xcontrol/power_page.py:14
+msgid "Lock the screen"
+msgstr ""
+
+#: xcontrol/power_page.py:14
+msgid "Restart"
+msgstr ""
+
+#: xcontrol/power_page.py:15
+msgid "Power button"
+msgstr ""
+
+#: xcontrol/power_page.py:15
+msgid "Sleep key"
+msgstr ""
+
+#: xcontrol/power_page.py:16
+msgid "Hibernate key"
+msgstr ""
+
+#: xcontrol/power_page.py:16
+msgid "Closing the lid"
+msgstr ""
+
+#: xcontrol/power_page.py:17
+msgid "Closing the lid, plugged in"
+msgstr ""
+
+#: xcontrol/power_page.py:18
+msgid "Closing the lid, with a monitor connected"
+msgstr ""
+
+#: xcontrol/power_page.py:19
+msgid "Power saver"
+msgstr ""
+
+#: xcontrol/power_page.py:19
+msgid "Quieter and cooler, slower"
+msgstr ""
+
+#: xcontrol/power_page.py:20
+msgid "Balanced"
+msgstr ""
+
+#: xcontrol/power_page.py:20
+msgid "The usual"
+msgstr ""
+
+#: xcontrol/power_page.py:21
+msgid "Performance"
+msgstr ""
+
+#: xcontrol/power_page.py:21
+msgid "Fastest, louder and warmer"
+msgstr ""
+
+#: xcontrol/power_page.py:29
+#, python-brace-format
+msgid "After {n} hour"
+msgstr ""
+
+#: xcontrol/power_page.py:29
+#, python-brace-format
+msgid "After {n} hours"
+msgstr ""
+
+#: xcontrol/power_page.py:30
+#, python-brace-format
+msgid "After {n} minutes"
+msgstr ""
+
+#: xcontrol/power_page.py:66
+msgid "Sleep"
+msgstr ""
+
+#: xcontrol/power_page.py:71
+msgid "Sleep when idle"
+msgstr ""
+
+#: xcontrol/power_page.py:72
+msgid "Not while sound is playing (music, a video call)"
+msgstr ""
+
+#: xcontrol/power_page.py:75
+msgid ""
+"Counted from the last time you used the mouse, keyboard or a gamepad. "
+"Nothing sleeps while the screen is kept on (Desktop page, Keep the screen "
+"on). The screen lock, if it's on, locks first."
+msgstr ""
+
+#: xcontrol/power_page.py:80
+msgid "Sleep now"
+msgstr ""
+
+#: xcontrol/power_page.py:82
+msgid "Could not sleep"
+msgstr ""
+
+#: xcontrol/power_page.py:82
+msgid "systemd-logind refused, or something is holding sleep off."
+msgstr ""
+
+#: xcontrol/power_page.py:129
+msgid "Could not change the buttons"
+msgstr ""
+
+#: xcontrol/power_page.py:134
+msgid "Power profile"
+msgstr ""
+
+#: xcontrol/power_page.py:143
+msgid ""
+"Install power-profiles-daemon (or tuned-ppd) to switch between power saver, "
+"balanced and performance."
+msgstr ""
+
+#: xcontrol/power_page.py:160
+#, python-brace-format
+msgid "Performance is held back right now ({why})."
+msgstr ""
+
+#: xcontrol/power_page.py:170
+msgid "Could not change the profile"
+msgstr ""
+
+#: xcontrol/power_page.py:172
+msgid "Power profile changed"
+msgstr ""
+
+#: xcontrol/power_page.py:184
+msgid "This computer can't sleep (systemd-logind says no)."
+msgstr ""
+
+#: xcontrol/power_page.py:198
+msgid ""
+"systemd-logind isn't reachable, so the buttons can't be read or changed here."
+msgstr ""
+
+#: xcontrol/power_page.py:200
+msgid "Changing them needs pkexec (polkit)."
+msgstr ""
+
+#: xcontrol/power_page.py:202
+msgid ""
+"Saved for the whole computer (/etc/systemd/logind.conf.d), asks for your "
+"password."
+msgstr ""
+
 #: xcontrol/preview3d.py:339
 msgid "Drag to turn the scene"
 msgstr ""
@@ -5197,6 +5539,10 @@ msgstr ""
 msgid "Switch the display to another resolution before removing it."
 msgstr ""
 
+#: xcontrol/sidebar.py:9
+msgid "Gaming & Hardware"
+msgstr ""
+
 #: xcontrol/sysinfo.py:721
 #, python-brace-format
 msgid "{h} h {m} min"
@@ -5355,10 +5701,6 @@ msgstr ""
 msgid "memory {clock}"
 msgstr ""
 
-#: xcontrol/sysinfo.py:846
-msgid "Power"
-msgstr ""
-
 #: xcontrol/sysinfo.py:848
 msgid "Fan"
 msgstr ""
@@ -5474,98 +5816,195 @@ msgstr ""
 msgid "Kernel modules"
 msgstr ""
 
-#: xcontrol/system_page.py:66
+#: xcontrol/system_page.py:32
+msgid "Check & Backup"
+msgstr ""
+
+#: xcontrol/system_page.py:69
 msgid "Copy this information (without your computer and user names)"
 msgstr ""
 
-#: xcontrol/system_page.py:160
+#: xcontrol/system_page.py:163
 msgid "System information copied"
 msgstr ""
 
-#: xcontrol/system_page.py:187
+#: xcontrol/system_page.py:190
 msgid "Search modules, devices or parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:190
+#: xcontrol/system_page.py:193
 msgid "Include parts built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:191
+#: xcontrol/system_page.py:194
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:205
+#: xcontrol/system_page.py:208
 msgid "Module"
 msgstr ""
 
-#: xcontrol/system_page.py:206 xcontrol/system_page.py:321
+#: xcontrol/system_page.py:209 xcontrol/system_page.py:324
 msgid "Used by"
 msgstr ""
 
-#: xcontrol/system_page.py:244
+#: xcontrol/system_page.py:247
 msgid "built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:252
+#: xcontrol/system_page.py:255
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr ""
 
-#: xcontrol/system_page.py:253
+#: xcontrol/system_page.py:256
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr ""
 
-#: xcontrol/system_page.py:295
+#: xcontrol/system_page.py:298
 msgid "Select a module to see what it drives and its parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:315
+#: xcontrol/system_page.py:318
 msgid "File"
 msgstr ""
 
-#: xcontrol/system_page.py:317
+#: xcontrol/system_page.py:320
 msgid "Version"
 msgstr ""
 
-#: xcontrol/system_page.py:319
+#: xcontrol/system_page.py:322
 msgid "License"
 msgstr ""
 
-#: xcontrol/system_page.py:323
+#: xcontrol/system_page.py:326
 msgid "Needs"
 msgstr ""
 
-#: xcontrol/system_page.py:325
+#: xcontrol/system_page.py:328
 msgid "Firmware files"
 msgstr ""
 
-#: xcontrol/system_page.py:330
+#: xcontrol/system_page.py:333
 msgid "Devices it drives"
 msgstr ""
 
-#: xcontrol/system_page.py:338
+#: xcontrol/system_page.py:341
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
 
-#: xcontrol/system_page.py:343
+#: xcontrol/system_page.py:346
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
 "on the kernel command line as {example}."
 msgstr ""
 
-#: xcontrol/system_page.py:371
+#: xcontrol/system_page.py:374
 msgid "This module has no parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:382
+#: xcontrol/system_page.py:385
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
 
-#: xcontrol/system_page.py:419
+#: xcontrol/system_page.py:422
 msgid "Module details copied"
+msgstr ""
+
+#: xcontrol/system_page.py:435
+msgid "Session check"
+msgstr ""
+
+#: xcontrol/system_page.py:437
+msgid "Check again"
+msgstr ""
+
+#: xcontrol/system_page.py:448
+msgid "Back up settings"
+msgstr ""
+
+#: xcontrol/system_page.py:450
+msgid ""
+"One file with everything set in XControl, plus the theme, default apps, "
+"terminal, language and your picture. Restoring keeps the current files as *."
+"before-restore."
+msgstr ""
+
+#: xcontrol/system_page.py:456
+msgid "Save a backup…"
+msgstr ""
+
+#: xcontrol/system_page.py:458
+msgid "Restore a backup…"
+msgstr ""
+
+#: xcontrol/system_page.py:473
+msgid "The check failed"
+msgstr ""
+
+#: xcontrol/system_page.py:475
+msgid "Everything looks right."
+msgstr ""
+
+#: xcontrol/system_page.py:476
+#, python-brace-format
+msgid "{n} thing needs a look."
+msgstr ""
+
+#: xcontrol/system_page.py:477
+#, python-brace-format
+msgid "{n} things need a look."
+msgstr ""
+
+#: xcontrol/system_page.py:514
+msgid "Save a backup"
+msgstr ""
+
+#: xcontrol/system_page.py:526
+msgid "Could not save the backup"
+msgstr ""
+
+#: xcontrol/system_page.py:528
+#, python-brace-format
+msgid "Backup saved ({n} files and the settings)"
+msgstr ""
+
+#: xcontrol/system_page.py:534
+msgid "Restore a backup"
+msgstr ""
+
+#: xcontrol/system_page.py:536 xcontrol/users_page.py:456
+msgid "Open"
+msgstr ""
+
+#: xcontrol/system_page.py:538
+msgid "XControl backups"
+msgstr ""
+
+#: xcontrol/system_page.py:548
+msgid "That isn't an XControl backup"
+msgstr ""
+
+#: xcontrol/system_page.py:552
+#, python-brace-format
+msgid "Restore the backup from {date}?"
+msgstr ""
+
+#: xcontrol/system_page.py:553
+msgid ""
+"Your current settings are replaced (and kept as *.before-restore). XControl "
+"restarts afterwards."
+msgstr ""
+
+#: xcontrol/system_page.py:563
+msgid "Could not restore the backup"
+msgstr ""
+
+#: xcontrol/system_page.py:566
+msgid "Restored, with problems"
 msgstr ""
 
 #: xcontrol/users_page.py:18
@@ -5849,15 +6288,11 @@ msgstr ""
 msgid "User removed"
 msgstr ""
 
-#: xcontrol/users_page.py:456
-msgid "Open"
-msgstr ""
-
 #: xcontrol/users_page.py:474
 msgid "Could not use that picture"
 msgstr ""
 
-#: xcontrol/users_page.py:487
+#: xcontrol/users_page.py:480 xcontrol/users_page.py:491
 msgid "Picture changed"
 msgstr ""
 

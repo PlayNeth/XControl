@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-from . import awake, bar, compositor, config, night, notify, wallpaper
+from . import awake, bar, compositor, config, night, notify, power, wallpaper
 
 LOCKERS = ["i3lock", "xsecurelock", "slock"]
 LOCK_DEFAULT = {"enabled": False, "locker": "i3lock", "image": "wallpaper", "color": "#000000",
@@ -49,6 +49,7 @@ def normalize(d):
     awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
     return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake, "notify": notify.normalize(d.get("notify")),
             "night": night.normalize(d.get("night")),
+            "power": power.normalize(d.get("power")),
             "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
 
@@ -115,11 +116,11 @@ def xset_commands(desk):
 
 def wanted(desk):
     """Whether the background service is needed at all."""
-    return (desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
-            or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
-            or desk["notify"]["enabled"] or desk["night"]["enabled"]
-            or night.forced(_runtime) is not None
-            or awake.manual_until(_runtime) is not None)
+    return bool(desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
+                or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
+                or desk["notify"]["enabled"] or desk["night"]["enabled"] or desk["power"]["sleep_minutes"]
+                or night.forced(_runtime) is not None
+                or awake.manual_until(_runtime) is not None)
 
 
 # ---------------------------------------------------------------- state of the session
@@ -514,6 +515,7 @@ def daemon():
     pads = None          # awake.Gamepads while gamepads count as activity
     inhibit = None       # awake.InhibitService while apps may keep the screen on
     aw = {"reset": 0.0, "full_check": 0.0, "fullscreen": False}
+    sleeper = power.IdleSleep()
     try:
         gamma = night.Gamma(rr.x11, rr.dpy)
     except (OSError, AttributeError) as e:
@@ -640,6 +642,11 @@ def daemon():
                 pads.rescan()
             night_step()
             reasons = keep_awake()
+            if desk["power"]["sleep_minutes"] and time.time() - aw.get("sleep_check", 0) >= 5:
+                aw["sleep_check"] = time.time()
+                if sleeper.check(desk["power"], xidle.idle_ms(), bool(reasons), time.time()):
+                    log("idle: suspending")
+                    power.suspend()
             xidle.suspend(bool(reasons))
             st = {"daemon": os.getpid(),
                   "children": {k: c.proc.pid for k, c in children.items() if c.alive()},

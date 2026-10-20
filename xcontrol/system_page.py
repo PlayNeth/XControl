@@ -27,6 +27,9 @@ class SystemPage(Gtk.Box):
                                      vscrollbar_policy=Gtk.PolicyType.NEVER)
         modules.add(ModulesTab(window))
         stack.add_titled(modules, "modules", _("Kernel modules"))
+        check = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
+        check.add(CheckTab(window))
+        stack.add_titled(check, "check", _("Check & Backup"))
         self.pack_start(stack, True, True, 0)
 
 
@@ -417,3 +420,155 @@ class ModulesTab(Gtk.Box):
     def _copy(self, d):
         Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(kmods.as_text(d), -1)
         self.window.set_status(_("Module details copied"))
+
+
+class CheckTab(Gtk.Box):
+    """The session check, and backing up / restoring the settings."""
+    ICONS = {"ok": "emblem-ok-symbolic", "info": "dialog-information-symbolic", "warn": "dialog-warning-symbolic",
+             "error": "dialog-error-symbolic"}
+
+    def __init__(self, window):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        self.window = window
+        head = Gtk.Box(spacing=10)
+        lbl = Gtk.Label(xalign=0)
+        lbl.set_markup("<b>{}</b>".format(GLib.markup_escape_text(_("Session check"))))
+        head.pack_start(lbl, False, False, 0)
+        again = Gtk.Button(label=_("Check again"))
+        again.connect("clicked", lambda *_a: self.run())
+        head.pack_end(again, False, False, 0)
+        self.pack_start(head, False, False, 0)
+        self.summary = Gtk.Label(xalign=0, wrap=True)
+        self.pack_start(self.summary, False, False, 0)
+        self.list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.pack_start(self.list, False, False, 0)
+
+        self.pack_start(Gtk.Separator(margin_top=6), False, False, 0)
+        lbl = Gtk.Label(xalign=0)
+        lbl.set_markup("<b>{}</b>".format(GLib.markup_escape_text(_("Back up settings"))))
+        self.pack_start(lbl, False, False, 0)
+        hint = Gtk.Label(label=_("One file with everything set in XControl, plus the theme, default apps, terminal, "
+                                 "language and your picture. Restoring keeps the current files as "
+                                 "*.before-restore."), xalign=0, wrap=True)
+        hint.get_style_context().add_class("dim-label")
+        self.pack_start(hint, False, False, 0)
+        bb = Gtk.Box(spacing=6)
+        save = Gtk.Button(label=_("Save a backup…"))
+        save.connect("clicked", self._save)
+        restore = Gtk.Button(label=_("Restore a backup…"))
+        restore.connect("clicked", self._restore)
+        bb.pack_start(save, False, False, 0)
+        bb.pack_start(restore, False, False, 0)
+        self.pack_start(bb, False, False, 0)
+        self.connect("map", lambda *_a: self.run())
+
+    def run(self):
+        from . import health
+        from .desktop_page import _command
+        for c in self.list.get_children():
+            c.destroy()
+        try:
+            results = health.checks()
+        except Exception as e:  # noqa: BLE001
+            results = [("error", _("The check failed"), str(e), None)]
+        problems = sum(1 for r in results if r[0] in ("warn", "error"))
+        self.summary.set_text(_("Everything looks right.") if not problems else
+                              (_("{n} thing needs a look.") if problems == 1 else
+                               _("{n} things need a look.")).format(n=problems))
+        for level, title, detail, fix in results:
+            row = Gtk.Box(spacing=10)
+            icon = Gtk.Image.new_from_icon_name(self.ICONS[level], Gtk.IconSize.LARGE_TOOLBAR)
+            icon.set_valign(Gtk.Align.START)
+            row.pack_start(icon, False, False, 0)
+            col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            t = Gtk.Label(xalign=0, wrap=True)
+            t.set_markup("<b>{}</b>".format(GLib.markup_escape_text(title)) if level != "ok"
+                         else GLib.markup_escape_text(title))
+            col.pack_start(t, False, False, 0)
+            if fix and fix[0] == "copy":
+                col.pack_start(_command(detail, fix[1], self.window), False, False, 0)
+            elif detail:
+                d = Gtk.Label(label=detail, xalign=0, wrap=True, selectable=True)
+                d.set_can_focus(False)
+                d.set_max_width_chars(90)
+                d.get_style_context().add_class("dim-label")
+                col.pack_start(d, False, False, 0)
+            row.pack_start(col, True, True, 0)
+            if fix and fix[0] != "copy":
+                b = Gtk.Button(label=fix[0], valign=Gtk.Align.START)
+                b.connect("clicked", self._fix, fix[1])
+                row.pack_start(b, False, False, 0)
+            self.list.pack_start(row, False, False, 0)
+        self.list.show_all()
+
+    def _fix(self, _b, action):
+        try:
+            action()
+        except Exception as e:  # noqa: BLE001
+            self.window.message(_("That didn't work"), str(e))
+        GLib.timeout_add(1500, lambda: self.run() and False)
+
+    def _save(self, *_a):
+        import datetime
+        from . import backup
+        dlg = Gtk.FileChooserDialog(title=_("Save a backup"), transient_for=self.window,
+                                    action=Gtk.FileChooserAction.SAVE)
+        dlg.add_buttons(_("Cancel"), Gtk.ResponseType.CANCEL, _("Save"), Gtk.ResponseType.OK)
+        dlg.set_do_overwrite_confirmation(True)
+        dlg.set_current_name(f"xcontrol-backup-{datetime.date.today().isoformat()}.json")
+        path = dlg.get_filename() if dlg.run() == Gtk.ResponseType.OK else None
+        dlg.destroy()
+        if not path:
+            return
+        try:
+            n = backup.export(path)
+        except OSError as e:
+            self.window.message(_("Could not save the backup"), str(e))
+            return
+        self.window.set_status(_("Backup saved ({n} files and the settings)").format(n=n))
+
+    def _restore(self, *_a):
+        import os
+        import sys
+        from . import backup
+        dlg = Gtk.FileChooserDialog(title=_("Restore a backup"), transient_for=self.window,
+                                    action=Gtk.FileChooserAction.OPEN)
+        dlg.add_buttons(_("Cancel"), Gtk.ResponseType.CANCEL, _("Open"), Gtk.ResponseType.OK)
+        flt = Gtk.FileFilter()
+        flt.set_name(_("XControl backups"))
+        flt.add_pattern("*.json")
+        dlg.add_filter(flt)
+        path = dlg.get_filename() if dlg.run() == Gtk.ResponseType.OK else None
+        dlg.destroy()
+        if not path:
+            return
+        try:
+            bundle = backup.read(path)
+        except (OSError, ValueError) as e:
+            self.window.message(_("That isn't an XControl backup"), str(e))
+            return
+        ask = Gtk.MessageDialog(transient_for=self.window, modal=True, message_type=Gtk.MessageType.QUESTION,
+                                buttons=Gtk.ButtonsType.OK_CANCEL,
+                                text=_("Restore the backup from {date}?").format(date=bundle.get("created", "?")))
+        ask.format_secondary_text(_("Your current settings are replaced (and kept as *.before-restore). XControl "
+                                    "restarts afterwards."))
+        ok = ask.run() == Gtk.ResponseType.OK
+        ask.destroy()
+        if not ok:
+            return
+        try:
+            backup.restore(bundle)
+            notes = backup.apply_restored()
+        except Exception as e:  # noqa: BLE001
+            self.window.message(_("Could not restore the backup"), str(e))
+            return
+        if notes:
+            self.window.message(_("Restored, with problems"), "\n".join(notes[:6]))
+        import shutil
+        exe = shutil.which("xcontrol")
+        if exe:
+            os.execv(exe, [exe, "--page", "system"])
+        here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        env = dict(os.environ, PYTHONPATH=here + os.pathsep + os.environ.get("PYTHONPATH", ""))
+        os.execve(sys.executable, [sys.executable, "-c", "import sys; from xcontrol.app import main; "
+                                   "sys.exit(main(['xcontrol', '--page', 'system']))"], env)

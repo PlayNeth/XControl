@@ -33,6 +33,8 @@ too, since Wine's WoW64 mode makes the Vulkan calls from 64-bit code. Native
 
 ## Using it
 
+The pages are grouped in the sidebar: Gaming & Hardware, Desktop and System.
+
 1. Open **XControl**, set the global settings, and use **Add game** for
    per-game profiles. Changes save automatically.
 2. Start games through the launcher:
@@ -572,6 +574,33 @@ config uses it for the terminal key instead of i3-sensible-terminal.
 - **More languages…** turns languages on for the whole computer: it enables them in
   `/etc/locale.gen` and runs `locale-gen`, through a small root helper (pkexec) that only accepts
   names listed in `/usr/share/i18n/SUPPORTED`.
+
+## Power
+
+- **Sleep when idle** after 10 minutes to 3 hours, counted from the last mouse, keyboard or
+  gamepad input. It never sleeps while something keeps the screen on (Desktop page) or, if you
+  want, while sound is playing. The screen lock locks first when it's on. **Sleep now** too.
+- **Buttons**: what the power button, the sleep and hibernate keys and (on laptops) closing the
+  lid do: shut down, sleep, hibernate, hybrid sleep, sleep then hibernate, lock, restart or
+  nothing. Saved in `/etc/systemd/logind.conf.d/50-xcontrol.conf` through a small root helper
+  (pkexec), and logind re-reads it right away (it's never restarted).
+- **Power profile**: power saver, balanced or performance, when power-profiles-daemon (or
+  tuned-ppd) runs.
+
+## Session check and backups
+
+System → **Check & Backup** looks at everything that quietly breaks other pages and offers a fix
+where it can: whether `xcontrol --session` runs at login, whether the desktop service is up and
+what keeps stopping, whether a **polkit agent** runs (on i3 nothing starts one, and then every
+password prompt fails silently; it can start an installed agent and gives the line for your i3
+config), extra bars, compositors, notification programs or locks running besides XControl's,
+lines in your i3 config that start them twice, another night-light program, XSETTINGS for live
+theme changes, notifications and sound.
+
+**Save a backup…** writes one JSON file with all of XControl's settings plus the files it
+writes that aren't regenerated from them (theme files, `mimeapps.list`, the terminal choice,
+`locale.conf`, `~/.face`). **Restore a backup…** puts them back (keeping the current files as
+`*.before-restore`; only those known files are ever written), applies them and restarts XControl.
 
 ## Users
 

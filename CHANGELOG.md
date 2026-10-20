@@ -2,6 +2,28 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.22.0 (2026-10-20)
+
+**Add a Power page, a session check and settings backups**
+
+- Add a Power page with "Sleep when idle" (10 minutes to 3 hours, counting
+  gamepad input), which never sleeps while the screen is kept on, and "Sleep now"
+- Optionally don't sleep while sound is playing; the screen lock locks first
+  when it's on
+- Set what the power button, sleep and hibernate keys and a laptop's lid do,
+  through a new root helper that writes a logind drop-in and reloads logind
+- Switch the power profile (power saver, balanced, performance) when
+  power-profiles-daemon or tuned-ppd runs
+- Add System > Check & Backup: a session check that finds what quietly breaks
+  other pages (session not started, desktop service down, no polkit agent,
+  programs running twice, another night light) and offers fixes
+- Start an installed polkit agent from the check and give the line for the i3
+  config, since nothing starts one on i3
+- Save all XControl settings and the files it writes (theme, default apps,
+  terminal, language, picture) to one backup file, and restore it
+- Group the sidebar pages under Gaming & Hardware, Desktop and System
+- Add power-profiles-daemon and polkit-gnome as optional dependencies
+
 ## 0.21.3 (2026-10-20)
 
 **Change your own picture without asking for a password**

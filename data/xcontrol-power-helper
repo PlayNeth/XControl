@@ -1,0 +1,57 @@
+#!/bin/sh
+# xcontrol-power-helper: what the power and sleep buttons (and a laptop's lid) do (runs as root via pkexec).
+#
+#   logind KEY=ACTION [KEY=ACTION ...]
+#
+#     Writes /etc/systemd/logind.conf.d/50-xcontrol.conf with those settings (no KEY=ACTION
+#     removes the file) and tells systemd-logind to re-read its configuration (SIGHUP; logind
+#     is never restarted, that could end sessions). Only these keys and actions are accepted.
+set -eu
+
+die() { echo "xcontrol-power-helper: $*" >&2; exit 1; }
+
+CONFDIR=/etc/systemd/logind.conf.d
+RELOAD=1
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    CONFDIR=${XCONTROL_LOGIND_DIR:-$CONFDIR}
+    RELOAD=${XCONTROL_LOGIND_RELOAD:-1}
+fi
+
+[ $# -ge 1 ] || die "usage: logind [KEY=ACTION ...]"
+cmd=$1; shift
+[ "$cmd" = logind ] || die "unknown command: $cmd"
+
+lines=""
+for a in "$@"; do
+    key=${a%%=*}
+    value=${a#*=}
+    [ "$key" != "$a" ] || die "expected KEY=ACTION: $a"
+    case $key in
+        HandlePowerKey|HandlePowerKeyLongPress|HandleSuspendKey|HandleHibernateKey|HandleLidSwitch|\
+        HandleLidSwitchExternalPower|HandleLidSwitchDocked) ;;
+        *) die "not allowed: $key";;
+    esac
+    case $value in
+        ignore|poweroff|reboot|halt|suspend|hibernate|hybrid-sleep|suspend-then-hibernate|lock|sleep) ;;
+        *) die "not an action: $value";;
+    esac
+    lines="$lines$key=$value
+"
+done
+
+conf=$CONFDIR/50-xcontrol.conf
+if [ -z "$lines" ]; then
+    rm -f "$conf"
+else
+    mkdir -p "$CONFDIR"
+    tmp=$(mktemp "$conf.XXXXXX")
+    printf '# Written by XControl (Power page).\n[Login]\n%s' "$lines" > "$tmp"
+    chmod 644 "$tmp"
+    mv "$tmp" "$conf"
+fi
+
+if [ "$RELOAD" = 1 ]; then
+    systemctl kill -s HUP systemd-logind 2>/dev/null || pkill -HUP -x systemd-logind || true
+fi
+echo "saved"

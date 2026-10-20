@@ -19,11 +19,13 @@ from .notify_page import NotifyPage  # noqa: E402
 from .defaults_page import DefaultsPage  # noqa: E402
 from .region_page import RegionPage  # noqa: E402
 from .audio_page import AudioPage  # noqa: E402
+from .power_page import PowerPage  # noqa: E402
 from .system_page import SystemPage  # noqa: E402
 from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
-PAGES = ("gaming", "displays", "input", "appearance", "sound", "desktop", "panel", "notifications", "defaults", "i3", "region", "users", "system")
+PAGES = ("gaming", "displays", "input", "sound", "appearance", "desktop", "panel", "notifications", "i3",
+         "defaults", "region", "power", "users", "system")
 
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -47,8 +49,6 @@ class MainWindow(Gtk.ApplicationWindow):
         # otherwise the window manager draws the title bar, like it does for Thunar
 
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
-        sidebar = Gtk.StackSidebar(stack=stack)
-        sidebar.set_size_request(170, -1)
 
         gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         gaming.add(GamingPage(self))
@@ -87,6 +87,10 @@ class MainWindow(Gtk.ApplicationWindow):
         region.add(RegionPage(self))
         stack.add_titled(region, "region", _("Date & Language"))
 
+        power = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        power.add(PowerPage(self))
+        stack.add_titled(power, "power", _("Power"))
+
         users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         users.add(UsersPage(self))
         stack.add_titled(users, "users", _("Users"))
@@ -94,6 +98,9 @@ class MainWindow(Gtk.ApplicationWindow):
         stack.add_titled(SystemPage(self), "system", _("System"))  # scrolls inside its tabs
 
         self.stack = stack
+        from .sidebar import Sidebar
+        sidebar = Sidebar(stack)
+        sidebar.set_size_request(190, -1)
         widgets.protect(stack)  # the wheel scrolls pages instead of changing settings under the pointer
         box = Gtk.Box()
         box.pack_start(sidebar, False, False, 0)

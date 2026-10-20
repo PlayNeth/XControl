@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.21.3
+pkgver=0.22.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -44,9 +44,11 @@ optdepends=(
   'desktop-file-utils: your own launchers on the Default Apps page'
   'ttf-nerd-fonts-symbols: icons in the bar'
   "pavucontrol: right-click the bar's volume to open the mixer"
+  'power-profiles-daemon: power saver / balanced / performance on the Power page (or tuned-ppd)'
+  'polkit-gnome: a polkit agent for password prompts on i3 (any agent works)'
   'accountsservice: your own picture shows on the login screen without a password'
   'hwdata: full monitor manufacturer, graphics card and network adapter names'
-  'polkit: EDID overrides, kernel modules, user accounts, time and languages (needs a polkit agent, e.g. polkit-gnome)'
+  'polkit: EDID overrides, kernel modules, user accounts, time, languages and power buttons (needs a polkit agent)'
   'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'
   'vulkan-tools: Vulkan version on the System page, "Test with vkcube" button'
 )

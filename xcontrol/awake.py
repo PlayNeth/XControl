@@ -292,6 +292,24 @@ class XIdle:
         self.suspended = False
         self._atoms = {}
 
+    def idle_ms(self):
+        """Milliseconds since the last input (mouse, keyboard, or a reset by a gamepad)."""
+        if not self.xss:
+            return 0
+
+        class Info(ctypes.Structure):
+            _fields_ = [("window", ctypes.c_ulong), ("state", ctypes.c_int), ("kind", ctypes.c_int),
+                        ("til_or_since", ctypes.c_ulong), ("idle", ctypes.c_ulong), ("event_mask", ctypes.c_ulong)]
+        if not hasattr(self, "_info"):
+            self.xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(Info)
+            self.xss.XScreenSaverQueryInfo.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(Info)]
+            self.x11.XDefaultRootWindow.restype = ctypes.c_ulong
+            self.x11.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+            self._info = self.xss.XScreenSaverAllocInfo()
+        if not self.xss.XScreenSaverQueryInfo(self.dpy, self.x11.XDefaultRootWindow(self.dpy), self._info):
+            return 0
+        return int(self._info.contents.idle)
+
     def activity(self):
         """Like a key press: restart the idle timers, and wake a screen that's off."""
         self.x11.XResetScreenSaver(self.dpy)
