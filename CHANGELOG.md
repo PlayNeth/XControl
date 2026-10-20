@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.25.2 (2026-10-20)
+
+**Allow device settings for Bluetooth headsets and speakers**
+
+- Fix the gear button being greyed out for Bluetooth audio devices on the Sound page:
+  Bluetooth headsets, speakers and their cards can now be renamed, hidden, kept awake
+  and preferred like other devices
+- Make a Bluetooth headset's settings follow its address, so they hold in both music
+  and headset-with-mic mode
+- Write the Bluetooth rules for WirePlumber 0.5 and, for WirePlumber 0.4, to a separate
+  bluetooth.lua.d script
+- Add tests for the Bluetooth WirePlumber rules
+
 ## 0.25.1 (2026-10-20)
 
 **Fix per-user language not applying and Sound page in other locales**

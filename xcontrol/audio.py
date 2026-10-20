@@ -168,11 +168,11 @@ def pulse_path():
     return _cfg("pipewire", "pipewire-pulse.conf.d", "50-xcontrol.conf")
 
 
-def wireplumber_path(ver=None):
+def wireplumber_path(ver=None, monitor="alsa"):
     ver = ver or wireplumber_version() or (0, 5)
     if ver >= (0, 5):
         return _cfg("wireplumber", "wireplumber.conf.d", "50-xcontrol.conf")
-    return _cfg("wireplumber", "main.lua.d", "51-xcontrol.lua")
+    return _cfg("wireplumber", "main.lua.d" if monitor == "alsa" else "bluetooth.lua.d", "51-xcontrol.lua")
 
 
 HEADER = "# Written by XControl (Sound page); rewritten on every change.\n"
@@ -206,25 +206,53 @@ def pulse_conf(a):
             f"    pulse.min.frag = {qmin}/{rate}\n    pulse.min.quantum = {qmin}/{rate}\n}}\n")
 
 
+PREFIXES = {"output": ("alsa_output.", "bluez_output."), "input": ("alsa_input.", "bluez_input."),
+            "card": ("alsa_card.", "bluez_card.")}
+_BT_NODE = re.compile(r"^bluez_(output|input)\.([0-9A-Fa-f]{2}(?:_[0-9A-Fa-f]{2}){5})(?:\.|$)")
+
+
+def configurable(name):
+    """Whether the Sound page can give this device its own settings (ALSA and Bluetooth)."""
+    return name.startswith(sum(PREFIXES.values(), ()))
+
+
+def _match(name):
+    """(monitor, [(key, value)]) a rule for this device matches on. A Bluetooth headset's output
+    and input change names with its profile (music, or headset with mic): those match on the
+    headset's address and direction instead, so the setting holds in every profile."""
+    if name.startswith("bluez_card."):
+        return "bluez", [("device.name", name)]
+    m = _BT_NODE.match(name)
+    if m:
+        return "bluez", [("api.bluez5.address", m.group(2).replace("_", ":").upper()),
+                         ("media.class", "Audio/Sink" if m.group(1) == "output" else "Audio/Source")]
+    if name.startswith("alsa_card."):
+        return "alsa", [("device.name", name)]
+    return "alsa", [("node.name", name)]
+
+
 def _rules(a):
-    """[(match key, match value or pattern, {prop: value})]."""
+    """[(monitor "alsa"/"bluez", [(match key, value or pattern)], {prop: value})]."""
     rules = []
     if a["no_suspend"]:
         for prefix in ("alsa_output.", "alsa_input."):
-            rules.append(("node.name", prefix + "*", {"session.suspend-timeout-seconds": 0}))
+            rules.append(("alsa", [("node.name", prefix + "*")], {"session.suspend-timeout-seconds": 0}))
     for name, d in sorted(a["devices"].items()):
-        key = "device.name" if name.startswith("alsa_card.") else "node.name"
+        if not configurable(name):
+            continue
+        monitor, match = _match(name)
+        device = match[0][0] == "device.name"
         props = {}
         if d["name"]:
-            props["device.description" if key == "device.name" else "node.description"] = d["name"]
+            props["device.description" if device else "node.description"] = d["name"]
         if d["hidden"]:
-            props["device.disabled" if key == "device.name" else "node.disabled"] = True
-        if d["no_suspend"] and key == "node.name":
+            props["device.disabled" if device else "node.disabled"] = True
+        if d["no_suspend"] and not device:
             props["session.suspend-timeout-seconds"] = 0
-        if d["priority"] is not None and key == "node.name":
+        if d["priority"] is not None and not device:
             props["priority.session"] = d["priority"]
         if props:
-            rules.append((key, name, props))
+            rules.append((monitor, match, props))
     return rules
 
 
@@ -236,26 +264,38 @@ def _spa(v):
     return '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def wireplumber_conf(a, ver=None):
+def wireplumber_conf(a, ver=None, monitor="alsa"):
+    """The drop-in for WirePlumber. 0.5: one file with both monitors; 0.4: one Lua file per monitor
+    (alsa in main.lua.d, bluez in bluetooth.lua.d)."""
     rules = _rules(a)
-    if not rules:
-        return None
     ver = ver or wireplumber_version() or (0, 5)
     if ver >= (0, 5):
-        L = [HEADER.rstrip("\n"), "monitor.alsa.rules = ["]
-        for key, value, props in rules:
-            match = f'"~{value}"' if value.endswith("*") else _spa(value)
-            L += ["  {", f"    matches = [ {{ {key} = {match} }} ]", "    actions = {", "      update-props = {"]
-            L += [f"        {k} = {_spa(v)}" for k, v in props.items()]
-            L += ["      }", "    }", "  }"]
-        return "\n".join(L + ["]"]) + "\n"
+        if not rules:
+            return None
+        L = [HEADER.rstrip("\n")]
+        for mon in ("alsa", "bluez"):
+            mine = [r for r in rules if r[0] == mon]
+            if not mine:
+                continue
+            L.append(f"monitor.{mon}.rules = [")
+            for _m, match, props in mine:
+                cond = " ".join(f"{k} = " + (f'"~{v}"' if v.endswith("*") else _spa(v)) for k, v in match)
+                L += ["  {", f"    matches = [ {{ {cond} }} ]", "    actions = {", "      update-props = {"]
+                L += [f"        {k} = {_spa(v)}" for k, v in props.items()]
+                L += ["      }", "    }", "  }"]
+            L.append("]")
+        return "\n".join(L) + "\n"
+    mine = [r for r in rules if r[0] == monitor]
+    if not mine:
+        return None
+    table = "alsa_monitor" if monitor == "alsa" else "bluez_monitor"
     L = [HEADER.replace("#", "--", 1).rstrip("\n")]
-    for key, value, props in rules:
-        if value.endswith("*"):
-            match = f'{{ "{key}", "matches", "{value}" }}'
-        else:
-            match = f'{{ "{key}", "equals", {_spa(value)} }}'
-        L += ["table.insert(alsa_monitor.rules, {", f"  matches = {{ {{ {match}, }}, }},", "  apply_properties = {"]
+    for _m, match, props in mine:
+        conds = []
+        for k, v in match:
+            conds.append(f'{{ "{k}", "matches", "{v}" }}' if v.endswith("*") else f'{{ "{k}", "equals", {_spa(v)} }}')
+        L += [f"table.insert({table}.rules, {{", f"  matches = {{ {{ {', '.join(conds)}, }}, }},",
+              "  apply_properties = {"]
         L += [f'    ["{k}"] = {_spa(v)},' for k, v in props.items()]
         L += ["  },", "})"]
     return "\n".join(L) + "\n"
@@ -287,8 +327,10 @@ def write(a, ver=None):
         changed.add("pipewire")
     if _put(pulse_path(), pulse_conf(a)):
         changed.add("pulse")
-    if _put(wireplumber_path(ver), wireplumber_conf(a, ver)):
-        changed.add("wireplumber")
+    ver = ver or wireplumber_version() or (0, 5)
+    for monitor in (("alsa",) if ver >= (0, 5) else ("alsa", "bluez")):
+        if _put(wireplumber_path(ver, monitor), wireplumber_conf(a, ver, monitor)):
+            changed.add("wireplumber")
     return changed
 
 

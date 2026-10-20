@@ -189,10 +189,12 @@ class AudioPage(Gtk.Box):
         box.pack_start(_hint(_("What the mixer can't do: give a device your own name, hide it from every program, "
                                "keep it from sleeping, or prefer it whenever it's connected.")), False, False, 0)
         groups = [
-            (_("Outputs"), [(o["name"], o.get("description") or o["name"]) for o in outs], "alsa_output.", False, True),
-            (_("Inputs"), [(i["name"], i.get("description") or i["name"]) for i in ins], "alsa_input.", False, False),
+            (_("Outputs"), [(o["name"], o.get("description") or o["name"]) for o in outs], A.PREFIXES["output"],
+             False, True),
+            (_("Inputs"), [(i["name"], i.get("description") or i["name"]) for i in ins], A.PREFIXES["input"],
+             False, False),
             (_("Sound cards"), [(c["name"], (c.get("properties") or {}).get("device.description") or c["name"])
-                                for c in cards], "alsa_card.", True, False),
+                                for c in cards], A.PREFIXES["card"], True, False),
         ]
         for title, devs, prefix, is_card, is_output in groups:
             present = {n for n, _d in devs}
@@ -246,7 +248,7 @@ class AudioPage(Gtk.Box):
         b = Gtk.Button.new_from_icon_name("emblem-system-symbolic", Gtk.IconSize.BUTTON)
         b.set_relief(Gtk.ReliefStyle.NONE)
         b.set_tooltip_text(_("Name, hide, keep awake"))
-        b.set_sensitive(name.startswith(("alsa_card.", "alsa_output.", "alsa_input.")))
+        b.set_sensitive(A.configurable(name))
         b.connect("clicked", self._device_settings, name, title, is_card, is_output)
         return b
 

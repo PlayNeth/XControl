@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 19:23-0300\n"
+"POT-Creation-Date: 2026-10-20 19:29-0300\n"
 "PO-Revision-Date: 2026-10-18 15:24-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -737,39 +737,39 @@ msgstr ""
 msgid "Outputs"
 msgstr "Saídas"
 
-#: xcontrol/audio_page.py:193
+#: xcontrol/audio_page.py:194
 msgid "Inputs"
 msgstr "Entradas"
 
-#: xcontrol/audio_page.py:194
+#: xcontrol/audio_page.py:196
 msgid "Sound cards"
 msgstr "Placas de som"
 
-#: xcontrol/audio_page.py:213
+#: xcontrol/audio_page.py:215
 msgid "None found."
 msgstr "Nenhum encontrado."
 
-#: xcontrol/audio_page.py:221
+#: xcontrol/audio_page.py:223
 msgid "not used"
 msgstr "não usado"
 
-#: xcontrol/audio_page.py:223
+#: xcontrol/audio_page.py:225
 msgid "never sleeps"
 msgstr "nunca dorme"
 
-#: xcontrol/audio_page.py:225
+#: xcontrol/audio_page.py:227
 msgid "preferred"
 msgstr "preferido"
 
-#: xcontrol/audio_page.py:241
+#: xcontrol/audio_page.py:243
 msgid "No mixer installed"
 msgstr "Nenhum mixer instalado"
 
-#: xcontrol/audio_page.py:241
+#: xcontrol/audio_page.py:243
 msgid "Install pavucontrol (or pwvucontrol)."
 msgstr "Instale o pavucontrol (ou pwvucontrol)."
 
-#: xcontrol/audio_page.py:248
+#: xcontrol/audio_page.py:250
 msgid "Name, hide, keep awake"
 msgstr "Nome, ocultar, manter acordado"
 

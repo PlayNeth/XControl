@@ -49,6 +49,33 @@ expect("0.5 file", os.path.exists(os.path.join(tmp, "config", "wireplumber", "wi
 expect("back to defaults removes them", A.write(A.normalize({}), (0, 5)), {"pipewire", "pulse", "wireplumber"})
 expect("removed", os.path.exists(A.pipewire_path()), False)
 
+# Bluetooth: its own monitor; a headset's output/input match its address, in every profile
+bt = A.normalize({"devices": {"bluez_output.AC_80_0A_12_34_56.1": {"name": "My headset", "priority": 3000},
+                              "bluez_input.AC_80_0A_12_34_56.0": {"hidden": True},
+                              "bluez_card.AC_80_0A_12_34_56": {"name": "Headset"}}})
+names = ("bluez_output.AC_80_0A_12_34_56.1", "bluez_card.X", "v4l2_input.cam")
+expect("bluetooth can be configured", [A.configurable(n) for n in names], [True, True, False])
+w = A.wireplumber_conf(bt, (0, 5))
+for line in ("monitor.bluez.rules = [",
+             'matches = [ { api.bluez5.address = "AC:80:0A:12:34:56" media.class = "Audio/Sink" } ]',
+             'matches = [ { api.bluez5.address = "AC:80:0A:12:34:56" media.class = "Audio/Source" } ]',
+             'node.description = "My headset"', "node.disabled = true",
+             'matches = [ { device.name = "bluez_card.AC_80_0A_12_34_56" } ]', 'device.description = "Headset"'):
+    expect(f"0.5 bluetooth: {line}", line in w, True)
+expect("0.5: no alsa section when there's nothing for it", "monitor.alsa.rules" in w, False)
+expect("0.5 braces balance", w.count("{") == w.count("}") and w.count("[") == w.count("]"), True)
+expect("0.4: alsa file empty", A.wireplumber_conf(bt, (0, 4), "alsa"), None)
+w4 = A.wireplumber_conf(bt, (0, 4), "bluez")
+for line in ("table.insert(bluez_monitor.rules, {",
+             '{ "api.bluez5.address", "equals", "AC:80:0A:12:34:56" }, { "media.class", "equals", "Audio/Sink" }, },'):
+    expect(f"0.4 bluetooth: {line}", line in w4, True)
+expect("0.4 bluetooth file", A.wireplumber_path((0, 4), "bluez").endswith("bluetooth.lua.d/51-xcontrol.lua"), True)
+expect("0.4 written to both", (A.write(bt, (0, 4)), os.path.exists(A.wireplumber_path((0, 4), "bluez")),
+                               os.path.exists(A.wireplumber_path((0, 4), "alsa"))),
+       ({"wireplumber"}, True, False))
+A.write(A.normalize({}), (0, 4))
+expect("0.4 removed", os.path.exists(A.wireplumber_path((0, 4), "bluez")), False)
+
 # pactl prints numbers the local way unless told otherwise (pt_BR: "0,000000" breaks its JSON)
 import tempfile as _tf  # noqa: E402
 _bin = _tf.mkdtemp()
@@ -66,7 +93,8 @@ os.chmod(os.path.join(_bin, "pactl"), 0o755)
 _path = os.environ["PATH"]
 os.environ.update(PATH=_bin + os.pathsep + _path, LC_ALL="pt_BR.UTF-8", LANG="pt_BR.UTF-8")
 try:
-    expect("outputs listed in pt_BR too", [o["name"] for o in A.outputs()], ["alsa_output.pci-0000_0b_00.4.analog-stereo"])
+    expect("outputs listed in pt_BR too", [o["name"] for o in A.outputs()],
+           ["alsa_output.pci-0000_0b_00.4.analog-stereo"])
     expect("server found in pt_BR too", A.server() is not None and "PipeWire" in str(A.server()), True)
 finally:
     os.environ["PATH"] = _path
