@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.24.0
+pkgver=0.25.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices, controllers and system information"
 arch=('x86_64')
@@ -36,6 +36,7 @@ optdepends=(
   'picom: compositor: shadows, fading, transparency, no tearing (Bar & Compositor page)'
   'dunst: notifications (Notifications page)'
   "rofi: menu for a notification's actions (dmenu works too)"
+  'poweralertd: battery and power alerts (Notifications page)'
   'libpulse: sound devices and profiles (pactl, Sound page)'
   'pipewire: sample rate and buffer size on the Sound page (pw-metadata), notification sounds (pw-play)'
   'pipewire-pulse: PulseAudio programs and pactl on PipeWire (Sound page)'

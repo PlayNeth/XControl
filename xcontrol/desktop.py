@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-from . import awake, bar, compositor, config, night, notify, power, wallpaper
+from . import awake, bar, compositor, config, night, notify, power, poweralerts, wallpaper
 
 LOCKERS = ["i3lock", "xsecurelock", "slock"]
 LOCK_DEFAULT = {"enabled": False, "locker": "i3lock", "image": "wallpaper", "color": "#000000",
@@ -49,7 +49,7 @@ def normalize(d):
     awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
     return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake, "notify": notify.normalize(d.get("notify")),
             "night": night.normalize(d.get("night")),
-            "power": power.normalize(d.get("power")),
+            "power": power.normalize(d.get("power")), "power_alerts": poweralerts.normalize(d.get("power_alerts")),
             "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
 
@@ -123,7 +123,8 @@ def wanted(desk):
     """Whether the background service is needed at all."""
     return bool(desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
                 or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
-                or desk["notify"]["enabled"] or desk["night"]["enabled"] or desk["power"]["sleep_minutes"]
+                or desk["notify"]["enabled"] or desk["power_alerts"]["enabled"] or desk["night"]["enabled"]
+                or desk["power"]["sleep_minutes"]
                 or night.forced(_runtime) is not None or _controllers()["enabled"]
                 or awake.manual_until(_runtime) is not None)
 
@@ -207,6 +208,8 @@ def session_conflicts():
             elif re.search(r"\b(dunst|xfce4-notifyd|notify-osd|notification-daemon|deadd-notification-center|"
                            r"lxqt-notificationd|twmnd)\b", s):
                 out.append(("notifications", s))
+            elif re.search(r"\bpoweralertd\b", s):
+                out.append(("power_alerts", s))
         break
     return out
 
@@ -446,6 +449,8 @@ def wanted_children(desk):
                                                     sort_keys=True)})
     if desk["notify"]["enabled"] and shutil.which("dunst"):
         out["dunst"] = (notify.command(), {})
+    if desk["power_alerts"]["enabled"] and poweralerts.installed():
+        out["poweralertd"] = (poweralerts.command(desk["power_alerts"]), {})
     b = desk["bar"]
     if b["enabled"] and shutil.which("polybar"):
         names = _primary() if b["displays"] == "primary" else [m[0] for m in wallpaper.monitors()]
@@ -471,7 +476,8 @@ def _die_with_parent():
         _prctl(_PR_SET_PDEATHSIG, int(signal.SIGTERM), 0, 0, 0)
 
 
-CHILD_PROGRAMS = {"polybar", "picom", "dunst", "xss-lock"}   # (the controller service ties itself to us too)
+# (the controller service ties itself to us too)
+CHILD_PROGRAMS = {"polybar", "picom", "dunst", "xss-lock", "poweralertd"}
 
 
 def _stop_leftovers():

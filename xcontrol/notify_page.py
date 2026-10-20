@@ -8,7 +8,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import GLib, Gtk  # noqa: E402
 
-from . import desktop as D, notify as N, widgets  # noqa: E402
+from . import desktop as D, notify as N, poweralerts as PA, widgets  # noqa: E402
 from .desktop_page import _command  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 from .panel_page import _hex, _hint, _rgba, _scale  # noqa: E402
@@ -56,6 +56,7 @@ class NotifyPage(Gtk.Box):
         self.window = window
         self.desk = D.load()
         self.n = self.desk["notify"]
+        self.pa = self.desk["power_alerts"]
         self.loading = True
         self._timer = None
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -92,6 +93,7 @@ class NotifyPage(Gtk.Box):
         self._build_colors()
         self._build_behavior()
         self._build_rules()
+        self._build_power_alerts()
         self._build_keys()
         self._build_extra()
         self._fill()
@@ -325,6 +327,113 @@ class NotifyPage(Gtk.Box):
         g.attach(_hint(_("The app name is the one the program gives (as shown with \"App name, title and text\"); "
                          "* matches anything, e.g. Steam*.")), 0, 2, 2, 1)
 
+    def _build_power_alerts(self):
+        g = self._section(_("Power alerts"), always=True)
+        self.pa_on = Gtk.CheckButton(label=_("Alert about batteries and power (poweralertd)"))
+        g.attach(self.pa_on, 0, 0, 2, 1)
+        g.attach(_hint(_("A notification when the battery starts or stops charging, gets low or critical, or the "
+                         "charger is plugged in or out, also for wireless devices with their own battery. XControl "
+                         "runs poweralertd for the session; any notification program shows its alerts (they're "
+                         "in English), and \"poweralertd\" works in the Per app rules above.")), 0, 1, 2, 1)
+        self.pa_status = _hint("")
+        g.attach(self.pa_status, 0, 2, 2, 1)
+        self.pa_warn = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
+        self.pa_warn_text = _hint("")
+        self.pa_warn_text.get_style_context().remove_class("dim-label")
+        self.pa_warn.get_content_area().add(self.pa_warn_text)
+        self.pa_warn.add_button(_("Stop it"), 1)
+        self.pa_warn.connect("response", self._pa_stop_other)
+        self.pa_warn.set_no_show_all(True)
+        g.attach(self.pa_warn, 0, 3, 2, 1)
+        self.pa_skip = Gtk.CheckButton(label=_("Only for changes, not for how things are when the session starts"))
+        g.attach(self.pa_skip, 0, 4, 2, 1)
+        self.pa_devices = Gtk.CheckButton(label=_("Devices with their own battery too, besides the computer's:"))
+        g.attach(self.pa_devices, 0, 5, 2, 1)
+        grid = Gtk.Grid(column_spacing=18, row_spacing=4, margin_start=24)
+        self.pa_groups = {}
+        labels = {"mouse": _("Mice"), "keyboard": _("Keyboards"), "gaming": _("Game controllers"),
+                  "audio": _("Headsets, headphones and speakers"), "phone": _("Phones, tablets and watches"),
+                  "pen": _("Pens and touchpads"), "other": _("Everything else")}
+        for i, k in enumerate(PA.GROUP_ORDER):
+            b = Gtk.CheckButton(label=labels[k])
+            grid.attach(b, i % 2, i // 2, 1, 1)
+            self.pa_groups[k] = b
+        g.attach(grid, 0, 6, 2, 1)
+        for w in [self.pa_on, self.pa_skip, self.pa_devices] + list(self.pa_groups.values()):
+            w.connect("toggled", self._pa_changed)
+        self.pa_conflicts = Gtk.Label(xalign=0, wrap=True, selectable=True)
+        self.pa_conflicts.set_no_show_all(True)
+        g.attach(self.pa_conflicts, 0, 7, 2, 1)
+
+    def _pa_changed(self, *_a):
+        if self.loading:
+            return
+        pa = self.pa
+        pa["enabled"] = self.pa_on.get_active()
+        pa["skip_startup"] = self.pa_skip.get_active()
+        pa["devices"] = self.pa_devices.get_active()
+        pa["ignore"] = [k for k, b in self.pa_groups.items() if not b.get_active()]
+        self._pa_sensitivity()
+        self._commit_later()
+
+    def _pa_sensitivity(self):
+        on = self.pa_on.get_active() and PA.installed()
+        self.pa_on.set_sensitive(PA.installed() or self.pa_on.get_active())
+        for w in (self.pa_skip, self.pa_devices):
+            w.set_sensitive(on)
+        for b in self.pa_groups.values():
+            b.set_sensitive(on and self.pa_devices.get_active())
+
+    def _pa_stop_other(self, *_a):
+        enabled, active = PA.service_state()
+        if enabled or active:
+            ok, msg = PA.disable_service()
+            if not ok and msg:
+                self.window.message(_("Could not turn off poweralertd's service"), msg)
+        theirs = D.foreign(["poweralertd"])
+        if theirs:
+            D.stop_foreign(["poweralertd"])
+        GLib.timeout_add(1500, lambda: self._status() and False)
+
+    def _pa_status(self):
+        pa = self.pa
+        st = D.state()
+        kids = st.get("children") or {}
+        err = (st.get("errors") or {}).get("poweralertd", "")
+        if not PA.installed():
+            text = _("poweralertd isn't installed (pacman -S poweralertd).")
+        elif not pa["enabled"]:
+            text = ""
+        elif kids.get("poweralertd"):
+            text = _("Running.")
+        else:
+            text = _("Not running: {why}").format(why=err) if err else _("Starting…")
+        self.pa_status.set_text(text)
+        self.pa_status.set_visible(bool(text))
+        if pa["enabled"]:
+            enabled, active = PA.service_state()
+            theirs = D.foreign(["poweralertd"])
+        else:
+            enabled = active = False
+            theirs = {}
+        if enabled or active:
+            warn = _("poweralertd's own service is also enabled, so every alert would show twice. \"Stop it\" "
+                     "turns that service off (systemctl --user disable --now poweralertd).")
+        elif theirs:
+            warn = _("Another poweralertd (process {pid}) is running besides XControl's, so every alert shows "
+                     "twice. Stop it, and remove it from your i3 config or autostart.").format(pid=min(theirs))
+        else:
+            warn = ""
+        self.pa_warn_text.set_text(warn)
+        widgets.reveal(self.pa_warn, bool(warn))
+        lines = [line for kind, line in D.session_conflicts() if kind == "power_alerts"]
+        show = pa["enabled"] and lines
+        if show:
+            self.pa_conflicts.set_markup("⚠ " + GLib.markup_escape_text(
+                _("Remove these from your i3 config, or a second poweralertd starts after the next login:")) + "\n" +
+                "\n".join(f"<tt>{GLib.markup_escape_text(x)}</tt>" for x in lines[:4]))
+        self.pa_conflicts.set_visible(bool(show))
+
     def _build_keys(self):
         g = self._section(_("Keyboard shortcuts"), always=True)
         g.attach(_hint(_("These commands control the notifications. Bind them to keys in your i3 config (or on the "
@@ -394,6 +503,13 @@ class NotifyPage(Gtk.Box):
         for r in n["rules"]:
             self.rule_store.append([r["app"], r["action"]])
         self.extra.get_buffer().set_text(n["extra"])
+        pa = self.pa
+        self.pa_on.set_active(pa["enabled"])
+        self.pa_skip.set_active(pa["skip_startup"])
+        self.pa_devices.set_active(pa["devices"])
+        for k, b in self.pa_groups.items():
+            b.set_active(k not in pa["ignore"])
+        self._pa_sensitivity()
         self._sensitivity()
         self.loading = False
 
@@ -458,6 +574,7 @@ class NotifyPage(Gtk.Box):
         try:
             fresh = D.load()   # other pages keep their parts
             fresh["notify"] = N.normalize(self.n)
+            fresh["power_alerts"] = PA.normalize(self.pa)
             D.save(fresh)
             D.notify_daemon(fresh)
         except Exception as e:  # noqa: BLE001
@@ -555,6 +672,7 @@ class NotifyPage(Gtk.Box):
         GLib.timeout_add(1500, lambda: self._status() and False)
 
     def _status(self):
+        self._pa_status()
         n = self.n
         st = D.state()
         kids = st.get("children") or {}

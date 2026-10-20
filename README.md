@@ -574,6 +574,20 @@ Shortcuts for i3: `dunstctl close`, `dunstctl close-all`, `dunstctl history-pop`
 another notification program holds the session bus (and can stop it) or is started by your i3
 config.
 
+### Power alerts
+
+XControl can run [poweralertd](https://git.sr.ht/~kennylevinsen/poweralertd)
+for the session (Notifications page): a notification when the battery starts
+or stops charging, gets low or critical, or the charger is plugged in or out,
+and the same for wireless devices with their own battery (mice, keyboards,
+controllers, headsets, phones...), which you can pick by kind. Any notification
+program shows them, and `poweralertd` works as the app name in dunst's per-app
+rules. The alerts themselves are poweralertd's, in English.
+
+Start it from one place only: if poweralertd's own systemd user service is
+enabled, or your i3 config runs it, every alert shows twice. The page (and the
+session check) says so and can turn the service off.
+
 ## Window Manager (i3)
 
 When **Use XControl's i3 config** is on, XControl writes `~/.config/i3/config` itself and reloads

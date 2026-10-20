@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.23.3\n"
+"Project-Id-Version: xcontrol 0.25.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 13:54-0300\n"
+"POT-Creation-Date: 2026-10-20 16:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: xcontrol/app.py:76 xcontrol/notify_page.py:287
+#: xcontrol/app.py:76 xcontrol/notify_page.py:289
 msgid "Sound"
 msgstr ""
 
@@ -232,7 +232,7 @@ msgstr ""
 msgid "Turn the override off (renames it, nothing is deleted)"
 msgstr ""
 
-#: xcontrol/appearance_page.py:96
+#: xcontrol/appearance_page.py:96 xcontrol/health.py:151
 msgid "Turn it off"
 msgstr ""
 
@@ -614,7 +614,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:357
-#: xcontrol/night_page.py:202 xcontrol/notify_page.py:464
+#: xcontrol/night_page.py:202 xcontrol/notify_page.py:581
 #: xcontrol/panel_page.py:483 xcontrol/power_page.py:97
 msgid "Could not save the settings"
 msgstr ""
@@ -631,7 +631,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:359
-#: xcontrol/notify_page.py:466 xcontrol/panel_page.py:485
+#: xcontrol/notify_page.py:583 xcontrol/panel_page.py:485
 #: xcontrol/power_page.py:99
 msgid "Applied"
 msgstr ""
@@ -1691,7 +1691,7 @@ msgid "Layout"
 msgstr ""
 
 #: xcontrol/desktop_page.py:158 xcontrol/display_page.py:234
-#: xcontrol/i3_page.py:486 xcontrol/notify_page.py:170
+#: xcontrol/i3_page.py:486 xcontrol/notify_page.py:172
 msgid "Display"
 msgstr ""
 
@@ -2433,7 +2433,7 @@ msgid "Add Steam game"
 msgstr ""
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:588 xcontrol/notify_page.py:314
+#: xcontrol/i3_page.py:588 xcontrol/notify_page.py:316
 #: xcontrol/region_page.py:249 xcontrol/resolutions_dialog.py:153
 #: xcontrol/users_page.py:381
 msgid "Add"
@@ -2756,88 +2756,101 @@ msgstr ""
 msgid "Another screen lock is running besides XControl's"
 msgstr ""
 
-#: xcontrol/health.py:134
+#: xcontrol/health.py:129
+msgid "Another poweralertd is running besides XControl's"
+msgstr ""
+
+#: xcontrol/health.py:136
 msgid "Stop the extra ones"
 msgstr ""
 
-#: xcontrol/health.py:142
+#: xcontrol/health.py:145
 msgid "Your i3 config starts things XControl also starts"
 msgstr ""
 
-#: xcontrol/health.py:143
+#: xcontrol/health.py:146
 msgid "Remove these lines, or there'll be two of each after the next login:"
 msgstr ""
 
-#: xcontrol/health.py:147
+#: xcontrol/health.py:149
+msgid "poweralertd's own service is enabled too"
+msgstr ""
+
+#: xcontrol/health.py:150
+msgid ""
+"It starts a second poweralertd at login, so every power alert shows twice."
+msgstr ""
+
+#: xcontrol/health.py:154
 msgid "Another night-light program is running"
 msgstr ""
 
-#: xcontrol/health.py:148
+#: xcontrol/health.py:155
 #, python-brace-format
 msgid "{programs} also changes the colors; the two will fight."
 msgstr ""
 
-#: xcontrol/health.py:155 xcontrol/health.py:160
+#: xcontrol/health.py:162 xcontrol/health.py:167
 msgid "Open apps don't follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:156
+#: xcontrol/health.py:163
 msgid ""
 "xsettingsd is installed but not running, so open apps keep their old theme, "
 "font and cursor until they restart. Start it now; xcontrol --session starts "
 "it at every login."
 msgstr ""
 
-#: xcontrol/health.py:158
+#: xcontrol/health.py:165
 msgid "Start xsettingsd"
 msgstr ""
 
-#: xcontrol/health.py:161
+#: xcontrol/health.py:168
 msgid ""
 "Nothing provides XSETTINGS. Install xsettingsd; XControl starts it at login."
 msgstr ""
 
-#: xcontrol/health.py:163
+#: xcontrol/health.py:170
 msgid "Open apps follow theme changes"
 msgstr ""
 
-#: xcontrol/health.py:163
+#: xcontrol/health.py:170
 #, python-brace-format
 msgid "XSETTINGS from {kind}."
 msgstr ""
 
-#: xcontrol/health.py:168
+#: xcontrol/health.py:175
 msgid "Nothing shows notifications"
 msgstr ""
 
-#: xcontrol/health.py:169
+#: xcontrol/health.py:176
 msgid ""
 "Programs' notifications are lost. Turn on XControl's on the Notifications "
 "page."
 msgstr ""
 
-#: xcontrol/health.py:170
+#: xcontrol/health.py:177
 msgid "Install dunst first."
 msgstr ""
 
-#: xcontrol/health.py:172
+#: xcontrol/health.py:179
 msgid "Notifications are shown"
 msgstr ""
 
-#: xcontrol/health.py:172
+#: xcontrol/health.py:179
 #, python-brace-format
 msgid "By {program}."
 msgstr ""
 
-#: xcontrol/health.py:175
+#: xcontrol/health.py:182
 msgid "No sound server answers"
 msgstr ""
 
-#: xcontrol/health.py:175
+#: xcontrol/health.py:182
 msgid "Install and start PipeWire (pipewire-pulse) or PulseAudio."
 msgstr ""
 
-#: xcontrol/health.py:178
+#: xcontrol/health.py:185
 msgid "Sound works"
 msgstr ""
 
@@ -3068,7 +3081,7 @@ msgid ""
 "mistake never replaces a working config."
 msgstr ""
 
-#: xcontrol/i3_page.py:227 xcontrol/notify_page.py:183
+#: xcontrol/i3_page.py:227 xcontrol/notify_page.py:185
 msgid "Look"
 msgstr ""
 
@@ -3176,7 +3189,7 @@ msgstr ""
 msgid "Change…"
 msgstr ""
 
-#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:588 xcontrol/notify_page.py:316
+#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:588 xcontrol/notify_page.py:318
 #: xcontrol/resolutions_dialog.py:242
 msgid "Remove"
 msgstr ""
@@ -3538,16 +3551,16 @@ msgstr ""
 msgid "Battery level"
 msgstr ""
 
-#: xcontrol/input_page.py:41 xcontrol/notify_page.py:266
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:268
 msgid "Left click"
 msgstr ""
 
 #: xcontrol/input_page.py:41 xcontrol/input_page.py:200
-#: xcontrol/notify_page.py:267
+#: xcontrol/notify_page.py:269
 msgid "Right click"
 msgstr ""
 
-#: xcontrol/input_page.py:41 xcontrol/notify_page.py:266
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:268
 msgid "Middle click"
 msgstr ""
 
@@ -4661,7 +4674,7 @@ msgstr ""
 msgid "Treat as critical"
 msgstr ""
 
-#: xcontrol/notify_page.py:33 xcontrol/notify_page.py:284
+#: xcontrol/notify_page.py:33 xcontrol/notify_page.py:286
 msgid "No sound"
 msgstr ""
 
@@ -4681,365 +4694,450 @@ msgstr ""
 msgid "After 2 minutes"
 msgstr ""
 
-#: xcontrol/notify_page.py:65
+#: xcontrol/notify_page.py:66
 msgid "Use XControl's notifications (dunst)"
 msgstr ""
 
-#: xcontrol/notify_page.py:71
+#: xcontrol/notify_page.py:72
 msgid ""
 "XControl writes its own dunst setup and runs dunst for the session. Your own "
 "~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
 "notification."
 msgstr ""
 
-#: xcontrol/notify_page.py:80
+#: xcontrol/notify_page.py:81 xcontrol/notify_page.py:344
 msgid "Stop it"
 msgstr ""
 
-#: xcontrol/notify_page.py:145
+#: xcontrol/notify_page.py:147
 msgid "Try it"
 msgstr ""
 
-#: xcontrol/notify_page.py:151
+#: xcontrol/notify_page.py:153
 msgid "Send a test notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:156
+#: xcontrol/notify_page.py:158
 msgid "Do not disturb"
 msgstr ""
 
-#: xcontrol/notify_page.py:157
+#: xcontrol/notify_page.py:159
 msgid "Notifications wait while it's on and show when you turn it off."
 msgstr ""
 
-#: xcontrol/notify_page.py:160
+#: xcontrol/notify_page.py:162
 msgid "Where they show"
 msgstr ""
 
-#: xcontrol/notify_page.py:162
+#: xcontrol/notify_page.py:164
 msgid "Corner"
 msgstr ""
 
-#: xcontrol/notify_page.py:165
+#: xcontrol/notify_page.py:167
 msgid "sideways"
 msgstr ""
 
-#: xcontrol/notify_page.py:165
+#: xcontrol/notify_page.py:167
 msgid "up/down"
 msgstr ""
 
-#: xcontrol/notify_page.py:167
+#: xcontrol/notify_page.py:169
 #, python-brace-format
 msgid "px {direction}"
 msgstr ""
 
-#: xcontrol/notify_page.py:168
+#: xcontrol/notify_page.py:170
 msgid "Distance from the edge"
 msgstr ""
 
-#: xcontrol/notify_page.py:172
+#: xcontrol/notify_page.py:174
 msgid "Width (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:174
+#: xcontrol/notify_page.py:176
 msgid "Tallest (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:176
+#: xcontrol/notify_page.py:178
 msgid "Most at once"
 msgstr ""
 
-#: xcontrol/notify_page.py:176
+#: xcontrol/notify_page.py:178
 msgid "0 shows them all; the rest wait their turn."
 msgstr ""
 
-#: xcontrol/notify_page.py:178
+#: xcontrol/notify_page.py:180
 msgid "Space between them (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:185
+#: xcontrol/notify_page.py:187
 msgid "The interface font"
 msgstr ""
 
-#: xcontrol/notify_page.py:189 xcontrol/panel_page.py:162
+#: xcontrol/notify_page.py:191 xcontrol/panel_page.py:162
 msgid "Font"
 msgstr ""
 
-#: xcontrol/notify_page.py:191
+#: xcontrol/notify_page.py:193
 msgid "Rounded corners (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:193
+#: xcontrol/notify_page.py:195
 msgid "Border (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:195
+#: xcontrol/notify_page.py:197
 msgid "Space inside (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:197
+#: xcontrol/notify_page.py:199
 msgid "Icon"
 msgstr ""
 
-#: xcontrol/notify_page.py:199
+#: xcontrol/notify_page.py:201
 msgid "Largest icon (px)"
 msgstr ""
 
-#: xcontrol/notify_page.py:201
+#: xcontrol/notify_page.py:203
 msgid "Text alignment"
 msgstr ""
 
-#: xcontrol/notify_page.py:203
+#: xcontrol/notify_page.py:205
 msgid "Shows"
 msgstr ""
 
-#: xcontrol/notify_page.py:206
+#: xcontrol/notify_page.py:208
 msgid ""
 "%a app, %s title, %b text, %p progress, \\n a new line; Pango markup like "
 "<b>, <i>."
 msgstr ""
 
-#: xcontrol/notify_page.py:208
+#: xcontrol/notify_page.py:210
 msgid "See-through (%)"
 msgstr ""
 
-#: xcontrol/notify_page.py:208
+#: xcontrol/notify_page.py:210
 msgid "Needs the compositor."
 msgstr ""
 
-#: xcontrol/notify_page.py:209
+#: xcontrol/notify_page.py:211
 msgid "A line between notifications shown together"
 msgstr ""
 
-#: xcontrol/notify_page.py:215
+#: xcontrol/notify_page.py:217
 msgid "Colors and timing"
 msgstr ""
 
-#: xcontrol/notify_page.py:216 xcontrol/panel_page.py:193
+#: xcontrol/notify_page.py:218 xcontrol/panel_page.py:193
 msgid "Background"
 msgstr ""
 
-#: xcontrol/notify_page.py:216 xcontrol/panel_page.py:193
+#: xcontrol/notify_page.py:218 xcontrol/panel_page.py:193
 msgid "Text"
 msgstr ""
 
-#: xcontrol/notify_page.py:216
+#: xcontrol/notify_page.py:218
 msgid "Border"
 msgstr ""
 
-#: xcontrol/notify_page.py:216
+#: xcontrol/notify_page.py:218
 msgid "Disappears after (s)"
 msgstr ""
 
-#: xcontrol/notify_page.py:235
+#: xcontrol/notify_page.py:237
 msgid ""
 "0 seconds: it stays until you click it. Programs choose how urgent a "
 "notification is (a finished download is low, a low battery critical)."
 msgstr ""
 
-#: xcontrol/notify_page.py:237
+#: xcontrol/notify_page.py:239
 msgid "Critical ones show even with \"Do not disturb\" on"
 msgstr ""
 
-#: xcontrol/notify_page.py:240
+#: xcontrol/notify_page.py:242
 msgid "Default colors"
 msgstr ""
 
-#: xcontrol/notify_page.py:245
+#: xcontrol/notify_page.py:247
 msgid "Behavior"
 msgstr ""
 
-#: xcontrol/notify_page.py:247
+#: xcontrol/notify_page.py:249
 msgid "Show how old it is"
 msgstr ""
 
-#: xcontrol/notify_page.py:249
+#: xcontrol/notify_page.py:251
 msgid "Keep them while you're away"
 msgstr ""
 
-#: xcontrol/notify_page.py:250
+#: xcontrol/notify_page.py:252
 msgid ""
 "When you haven't touched the mouse or keyboard for this long, notifications "
 "don't disappear until you're back."
 msgstr ""
 
-#: xcontrol/notify_page.py:253
+#: xcontrol/notify_page.py:255
 msgid "History keeps"
 msgstr ""
 
-#: xcontrol/notify_page.py:255
+#: xcontrol/notify_page.py:257
 msgid "Show repeated notifications once, with a count"
 msgstr ""
 
-#: xcontrol/notify_page.py:256
+#: xcontrol/notify_page.py:258
 msgid "Ones brought back from the history stay until clicked"
 msgstr ""
 
-#: xcontrol/notify_page.py:257
+#: xcontrol/notify_page.py:259
 msgid "Show how many are waiting"
 msgstr ""
 
-#: xcontrol/notify_page.py:258
+#: xcontrol/notify_page.py:260
 msgid "Mark ones that have actions (A) or links (U)"
 msgstr ""
 
-#: xcontrol/notify_page.py:259
+#: xcontrol/notify_page.py:261
 msgid "Show progress bars (e.g. volume, downloads)"
 msgstr ""
 
-#: xcontrol/notify_page.py:273
+#: xcontrol/notify_page.py:275
 msgid "Notification sound"
 msgstr ""
 
-#: xcontrol/notify_page.py:275
+#: xcontrol/notify_page.py:277
 msgid "Sounds"
 msgstr ""
 
-#: xcontrol/notify_page.py:287
+#: xcontrol/notify_page.py:289
 msgid "Played for normal and critical notifications (pw-play or paplay)."
 msgstr ""
 
-#: xcontrol/notify_page.py:290
+#: xcontrol/notify_page.py:292
 msgid "Per app"
 msgstr ""
 
-#: xcontrol/notify_page.py:295
+#: xcontrol/notify_page.py:297
 msgid "App"
 msgstr ""
 
-#: xcontrol/notify_page.py:303
+#: xcontrol/notify_page.py:305
 msgid "What happens"
 msgstr ""
 
-#: xcontrol/notify_page.py:325
+#: xcontrol/notify_page.py:327
 msgid ""
 "The app name is the one the program gives (as shown with \"App name, title "
 "and text\"); * matches anything, e.g. Steam*."
 msgstr ""
 
-#: xcontrol/notify_page.py:329
+#: xcontrol/notify_page.py:331
+msgid "Power alerts"
+msgstr ""
+
+#: xcontrol/notify_page.py:332
+msgid "Alert about batteries and power (poweralertd)"
+msgstr ""
+
+#: xcontrol/notify_page.py:334
+msgid ""
+"A notification when the battery starts or stops charging, gets low or "
+"critical, or the charger is plugged in or out, also for wireless devices "
+"with their own battery. XControl runs poweralertd for the session; any "
+"notification program shows its alerts (they're in English), and "
+"\"poweralertd\" works in the Per app rules above."
+msgstr ""
+
+#: xcontrol/notify_page.py:348
+msgid "Only for changes, not for how things are when the session starts"
+msgstr ""
+
+#: xcontrol/notify_page.py:350
+msgid "Devices with their own battery too, besides the computer's:"
+msgstr ""
+
+#: xcontrol/notify_page.py:354
+msgid "Mice"
+msgstr ""
+
+#: xcontrol/notify_page.py:354
+msgid "Keyboards"
+msgstr ""
+
+#: xcontrol/notify_page.py:354
+msgid "Game controllers"
+msgstr ""
+
+#: xcontrol/notify_page.py:355
+msgid "Headsets, headphones and speakers"
+msgstr ""
+
+#: xcontrol/notify_page.py:355
+msgid "Phones, tablets and watches"
+msgstr ""
+
+#: xcontrol/notify_page.py:356
+msgid "Pens and touchpads"
+msgstr ""
+
+#: xcontrol/notify_page.py:356
+msgid "Everything else"
+msgstr ""
+
+#: xcontrol/notify_page.py:392
+msgid "Could not turn off poweralertd's service"
+msgstr ""
+
+#: xcontrol/notify_page.py:404
+msgid "poweralertd isn't installed (pacman -S poweralertd)."
+msgstr ""
+
+#: xcontrol/notify_page.py:408
+msgid "Running."
+msgstr ""
+
+#: xcontrol/notify_page.py:410 xcontrol/notify_page.py:691
+#: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
+#, python-brace-format
+msgid "Not running: {why}"
+msgstr ""
+
+#: xcontrol/notify_page.py:410 xcontrol/notify_page.py:691
+#: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
+msgid "Starting…"
+msgstr ""
+
+#: xcontrol/notify_page.py:420
+msgid ""
+"poweralertd's own service is also enabled, so every alert would show twice. "
+"\"Stop it\" turns that service off (systemctl --user disable --now "
+"poweralertd)."
+msgstr ""
+
+#: xcontrol/notify_page.py:423
+#, python-brace-format
+msgid ""
+"Another poweralertd (process {pid}) is running besides XControl's, so every "
+"alert shows twice. Stop it, and remove it from your i3 config or autostart."
+msgstr ""
+
+#: xcontrol/notify_page.py:433
+msgid ""
+"Remove these from your i3 config, or a second poweralertd starts after the "
+"next login:"
+msgstr ""
+
+#: xcontrol/notify_page.py:438
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: xcontrol/notify_page.py:330
+#: xcontrol/notify_page.py:439
 msgid ""
 "These commands control the notifications. Bind them to keys in your i3 "
 "config (or on the Window Manager page):"
 msgstr ""
 
-#: xcontrol/notify_page.py:332
+#: xcontrol/notify_page.py:441
 msgid "Close the newest notification:"
 msgstr ""
 
-#: xcontrol/notify_page.py:333
+#: xcontrol/notify_page.py:442
 msgid "Close all of them:"
 msgstr ""
 
-#: xcontrol/notify_page.py:334
+#: xcontrol/notify_page.py:443
 msgid "Bring back the last closed one:"
 msgstr ""
 
-#: xcontrol/notify_page.py:335
+#: xcontrol/notify_page.py:444
 msgid "Choose one of its actions from a menu:"
 msgstr ""
 
-#: xcontrol/notify_page.py:336
+#: xcontrol/notify_page.py:445
 msgid "Do not disturb on/off:"
 msgstr ""
 
-#: xcontrol/notify_page.py:340
+#: xcontrol/notify_page.py:449
 msgid "Extra dunst settings"
 msgstr ""
 
-#: xcontrol/notify_page.py:341
+#: xcontrol/notify_page.py:450
 msgid ""
 "Anything else from dunst's documentation, as in a dunstrc. Lines before any "
 "[section] go into [global] and replace XControl's line with the same key; "
 "[sections] are added as they are."
 msgstr ""
 
-#: xcontrol/notify_page.py:379 xcontrol/notify_page.py:382
+#: xcontrol/notify_page.py:488 xcontrol/notify_page.py:491
 #, python-brace-format
 msgid "After {n} seconds"
 msgstr ""
 
-#: xcontrol/notify_page.py:526
+#: xcontrol/notify_page.py:643
 msgid "Add a recent app…"
 msgstr ""
 
-#: xcontrol/notify_page.py:534
+#: xcontrol/notify_page.py:651
 msgid "A low notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:534
+#: xcontrol/notify_page.py:651
 msgid "Like a finished download."
 msgstr ""
 
-#: xcontrol/notify_page.py:535
+#: xcontrol/notify_page.py:652
 msgid "A normal notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:535
+#: xcontrol/notify_page.py:652
 msgid "Like a new message. <i>Formatting</i> works too."
 msgstr ""
 
-#: xcontrol/notify_page.py:536
+#: xcontrol/notify_page.py:653
 msgid "A critical notification"
 msgstr ""
 
-#: xcontrol/notify_page.py:536
+#: xcontrol/notify_page.py:653
 msgid "Like a low battery. It stays until clicked."
 msgstr ""
 
-#: xcontrol/notify_page.py:540
+#: xcontrol/notify_page.py:657
 msgid "Nothing shows notifications right now"
 msgstr ""
 
-#: xcontrol/notify_page.py:546 xcontrol/region_page.py:106
+#: xcontrol/notify_page.py:663 xcontrol/region_page.py:106
 msgid "Could not change it"
 msgstr ""
 
-#: xcontrol/notify_page.py:546
+#: xcontrol/notify_page.py:663
 msgid "dunst isn't running."
 msgstr ""
 
-#: xcontrol/notify_page.py:566
+#: xcontrol/notify_page.py:684
 msgid "dunst isn't installed."
 msgstr ""
 
-#: xcontrol/notify_page.py:568
+#: xcontrol/notify_page.py:686
 #, python-brace-format
 msgid "Notifications are shown by {name} now."
 msgstr ""
 
-#: xcontrol/notify_page.py:569
+#: xcontrol/notify_page.py:687
 msgid "Nothing shows notifications right now."
 msgstr ""
 
-#: xcontrol/notify_page.py:571
+#: xcontrol/notify_page.py:689
 #, python-brace-format
 msgid "Running (dunst {v})."
 msgstr ""
 
-#: xcontrol/notify_page.py:573 xcontrol/panel_page.py:515
-#: xcontrol/panel_page.py:535
-#, python-brace-format
-msgid "Not running: {why}"
-msgstr ""
-
-#: xcontrol/notify_page.py:573 xcontrol/panel_page.py:515
-#: xcontrol/panel_page.py:535
-msgid "Starting…"
-msgstr ""
-
-#: xcontrol/notify_page.py:576
+#: xcontrol/notify_page.py:694
 #, python-brace-format
 msgid ""
 "{name} (process {pid}) is showing notifications, so XControl's dunst can't "
 "start. Stop it, and remove it from your i3 config or autostart."
 msgstr ""
 
-#: xcontrol/notify_page.py:584
+#: xcontrol/notify_page.py:702
 msgid ""
 "Remove these from your i3 config, or another notification program starts "
 "first after the next login:"

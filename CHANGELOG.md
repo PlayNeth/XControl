@@ -2,6 +2,23 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.25.0 (2026-10-20)
+
+**Add battery and power alerts through poweralertd**
+
+- Add a Power alerts section to the Notifications page: XControl runs poweralertd for
+  the session, notifying when a battery starts or stops charging, gets low or
+  critical, or the charger is plugged in or out
+- Optionally include wireless devices with their own battery, chosen by kind (mice,
+  keyboards, game controllers, headsets, phones, pens, everything else)
+- Add an option to alert only on changes, not on the state at session start
+- Show whether poweralertd is running, or that it isn't installed
+- Warn when poweralertd's own systemd user service or another poweralertd is also
+  running (every alert would show twice), with a button to stop it
+- Warn when the i3 config also starts poweralertd, both on the page and in the session
+  check
+- Add tests for the poweralertd command line and its place in the desktop service
+
 ## 0.24.0 (2026-10-20)
 
 **Add gyro aiming for DualShock 4 controllers**

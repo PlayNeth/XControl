@@ -73,7 +73,7 @@ def _start_xsettingsd():
 
 def checks():
     """All checks, worst first."""
-    from . import audio, i3cfg, night, notify, theming
+    from . import audio, i3cfg, night, notify, poweralerts, theming
     out = []
     desk = D.load()
     st = D.state()
@@ -125,7 +125,9 @@ def checks():
                (N_("Another notification program is running besides XControl's"),
                 ["dunst", "xfce4-notifyd", "notify-osd", "mako"], desk["notify"]["enabled"]),
                (N_("Another screen lock is running besides XControl's"), ["xss-lock", "xautolock"],
-                desk["lock"]["enabled"])]
+                desk["lock"]["enabled"]),
+               (N_("Another poweralertd is running besides XControl's"), ["poweralertd"],
+                desk["power_alerts"]["enabled"])]
     for title, names, on in managed:
         extra = D.foreign(names) if on else {}
         if extra:
@@ -137,11 +139,16 @@ def checks():
                  or (kind == "compositor" and desk["picom"]["enabled"])
                  or (kind == "wallpaper" and desk["wallpaper"]["enabled"])
                  or (kind == "lock" and desk["lock"]["enabled"])
-                 or (kind == "notifications" and desk["notify"]["enabled"])]
+                 or (kind == "notifications" and desk["notify"]["enabled"])
+                 or (kind == "power_alerts" and desk["power_alerts"]["enabled"])]
     if conflicts and not i3cfg.is_ours():
         out.append(("warn", _("Your i3 config starts things XControl also starts"),
                     _("Remove these lines, or there'll be two of each after the next login:") + "\n" +
                     "\n".join(conflicts[:6]), None))
+    if desk["power_alerts"]["enabled"] and poweralerts.service_state()[0]:
+        out.append(("warn", _("poweralertd's own service is enabled too"),
+                    _("It starts a second poweralertd at login, so every power alert shows twice."),
+                    (_("Turn it off"), poweralerts.disable_service)))
     others = night.conflicting()
     if desk["night"]["enabled"] and others:
         out.append(("warn", _("Another night-light program is running"),
