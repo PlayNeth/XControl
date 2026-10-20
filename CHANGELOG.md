@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.21.2 (2026-10-20)
+
+**Support i3 4.24 and picom 12 config changes**
+
+- Write "no border for a lone window" as a hide_edge_borders choice on i3 4.24
+  and later (which deprecated smart_borders), and hide the separate option there
+- Add "Always show it on top" for popups during full screen (i3 4.24 and later)
+- Stop writing the ':c' type for _GTK_FRAME_EXTENTS on picom 12 and later,
+  which ignore it (and picom 13 warns about it)
+- Update the package dependencies: the X libraries used directly, and rofi and
+  pipewire as optional ones
+- Avoid GTK deprecation warnings from the color buttons
+
 ## 0.21.1 (2026-10-20)
 
 **Fix a second bar or compositor running after the service restarts**

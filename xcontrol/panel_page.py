@@ -196,7 +196,7 @@ class PanelPage(Gtk.Box):
                                           ("highlight", _("Highlight (current workspace)")),
                                           ("urgent", _("Urgent")), ("dim", _("Dim (separators)")))):
             btn = Gtk.ColorButton(halign=Gtk.Align.START)
-            btn.set_use_alpha(False)
+            btn.props.use_alpha = False
             if key == "highlight":  # automatic until picked: follows the background and text colors
                 btn.connect("color-set", lambda *_a: setattr(self, "_highlight_set", True))
             btn.connect("color-set", self._changed)

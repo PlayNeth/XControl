@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.21.1
+pkgver=0.21.2
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices and system information"
 arch=('x86_64')
@@ -13,12 +13,13 @@ license=('MIT')
 provides=('mesa-panel')
 conflicts=('mesa-panel')
 replaces=('mesa-panel')
-depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset' 'libxss')
+depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'libx11' 'libxext' 'libxrandr'
+         'libxss' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
 makedepends=('vulkan-headers' 'gettext')
 optdepends=(
   'vulkan-icd-loader: Vulkan and Proton game overrides'
   'wine: Direct3D 8/9 games with forced MSAA (WineD3D renderer)'
-  'vkbasalt: post-process anti-aliasing and sharpening for Vulkan and DXVK games'
+  'vkbasalt: post-process anti-aliasing and sharpening for Vulkan and DXVK games (AUR)'
   'libratbag: gaming mouse DPI, polling rate, buttons and lighting (ratbagd)'
   'xf86-input-libinput: mouse and touchpad settings (the usual X input driver)'
   'xsettingsd: open apps follow theme changes right away (Appearance)'
@@ -34,15 +35,17 @@ optdepends=(
   "polybar: XControl's bar (Bar & Compositor page)"
   'picom: compositor: shadows, fading, transparency, no tearing (Bar & Compositor page)'
   'dunst: notifications (Notifications page)'
+  "rofi: menu for a notification's actions (dmenu works too)"
   'libpulse: sound devices and profiles (pactl, Sound page)'
-  'pipewire-pulse: PipeWire settings on the Sound page'
+  'pipewire: sample rate and buffer size on the Sound page (pw-metadata), notification sounds (pw-play)'
+  'pipewire-pulse: PulseAudio programs and pactl on PipeWire (Sound page)'
   'wireplumber: renaming, hiding and waking sound devices'
   'sound-theme-freedesktop: the Test sound on the Sound page'
   'desktop-file-utils: your own launchers on the Default Apps page'
   'ttf-nerd-fonts-symbols: icons in the bar'
   "pavucontrol: right-click the bar's volume to open the mixer"
   'hwdata: full monitor manufacturer, graphics card and network adapter names'
-  'polkit: EDID overrides, kernel module parameters and user accounts (needs a polkit agent, e.g. polkit-gnome)'
+  'polkit: EDID overrides, kernel modules, user accounts, time and languages (needs a polkit agent, e.g. polkit-gnome)'
   'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'
   'vulkan-tools: Vulkan version on the System page, "Test with vkcube" button'
 )

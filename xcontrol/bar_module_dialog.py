@@ -85,7 +85,7 @@ class ColorChoice(Gtk.Box):
         super().__init__(spacing=8)
         self.custom = Gtk.CheckButton(label=_("Custom"))
         self.button = Gtk.ColorButton()
-        self.button.set_use_alpha(False)
+        self.button.props.use_alpha = False
         c = Gdk.RGBA()
         c.parse(value or "#888888")
         self.button.set_rgba(c)

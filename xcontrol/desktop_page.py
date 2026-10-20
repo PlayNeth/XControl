@@ -179,7 +179,7 @@ class DesktopPage(Gtk.Box):
         self._row(g, 4, _("Placement"), self.mode)
 
         self.color = Gtk.ColorButton(halign=Gtk.Align.START)
-        self.color.set_use_alpha(False)
+        self.color.props.use_alpha = False
         self.color.connect("color-set", self._changed)
         self._row(g, 5, _("Background color"), self.color)
 
@@ -217,7 +217,7 @@ class DesktopPage(Gtk.Box):
         self.lock_image.connect("changed", self._changed)
         img.pack_start(self.lock_image, False, False, 0)
         self.lock_color = Gtk.ColorButton()
-        self.lock_color.set_use_alpha(False)
+        self.lock_color.props.use_alpha = False
         self.lock_color.connect("color-set", self._changed)
         img.pack_start(self.lock_color, False, False, 0)
         self.image_label = self._row(g, 4, _("Lock screen shows"), img)

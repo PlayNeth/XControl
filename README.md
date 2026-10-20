@@ -529,7 +529,9 @@ that part) are left out, and anything else lands in **Extra i3 config**.
 
 - **Look:** title font, borders for tiled and floating windows, title position, hiding borders
   at the screen edge, gaps between windows and around the edge (and none for a lone window), and
-  all of i3's window colors.
+  all of i3's window colors. On i3 4.24 and later, "no border for a lone window" is one of the
+  hide-edge-borders choices (4.24 deprecated the separate `smart_borders`); older i3 gets the old
+  form.
 - **Keys:** the main key (Super or Alt, `$mod`), dragging windows, and every key binding in every
   mode, with search. Add or change a binding by typing it or pressing it (**Press keys…** grabs
   the keyboard, so even combinations i3 uses reach it). Keys used twice are shown in red.

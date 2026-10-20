@@ -152,11 +152,13 @@ p = C.normalize({"backend": "glx", "blur": "medium", "corner_radius": 8, "inacti
 text = C.generate(p, ver=(12, 5))
 for want in ('backend = "glx";', "vsync = true;", "unredir-if-possible = true;", "corner-radius = 8;",
              "inactive-opacity = 0.85;", 'blur-method = "dual_kawase";', "blur-strength = 5;",
-             "shadow-radius = 40;", "shadow-offset-x = -40;", "fade-in-step = 0.01;", '"_GTK_FRAME_EXTENTS@:c"'):
+             "shadow-radius = 40;", "shadow-offset-x = -40;", "fade-in-step = 0.01;", '"_GTK_FRAME_EXTENTS@"'):
     expect(f"picom has {want}", want in text, True)
 expect("xrender: no blur", "blur-method" in C.generate(C.normalize({"backend": "xrender", "blur": "strong"}), ver=(12, 0)),
        False)
 expect("egl needs picom 10", 'backend = "glx";' in C.generate(C.normalize({"backend": "egl"}), ver=(9, 1)), True)
+expect("type suffix only before picom 12", ('"_GTK_FRAME_EXTENTS@:c"' in text,
+                                            '"_GTK_FRAME_EXTENTS@:c"' in C.generate(p, ver=(11, 2))), (False, True))
 expect("braces balanced", text.count("{") == text.count("}") and text.count("[") == text.count("]"), True)
 
 # ---- the service decides what to run

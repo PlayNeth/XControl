@@ -45,7 +45,8 @@ MOD_NAMES = {"Mod4": "Super", "Mod1": "Alt"}
 KEY_LABELS = {   # where the same word means something else
     "focus_on_activation": {"smart": N_("Switch to it if it's on a visible workspace, else mark it urgent"),
                             "none": N_("Ignore it")},
-    "popup_fullscreen": {"smart": N_("Show it if it belongs to the fullscreen window")},
+    "popup_fullscreen": {"smart": N_("Show it if it belongs to the fullscreen window"),
+                         "all": N_("Always show it on top (i3 4.24 and later)")},
     "default_orientation": {"horizontal": N_("Side by side"), "vertical": N_("One above the other")},
     "mouse_warping": {"none": N_("Never")},
 }
@@ -267,6 +268,11 @@ class I3Page(Gtk.Box):
         r = self._row(g, r, _("Hide borders at the screen edge"), self.hide_edges)
         self.smart_borders = _combo(I3.CHOICES["smart_borders"])
         self._row(g, r, _("No border when it's the only window"), self.smart_borders)
+        ver = I3.version()
+        if ver and ver >= (4, 24):   # i3 4.24 folded this into "Hide borders at the screen edge"
+            for w in (self.smart_borders, g.get_child_at(0, r)):
+                w.set_no_show_all(True)
+                w.hide()
         for w in (self.border, self.fborder, self.title_align, self.hide_edges, self.smart_borders):
             w.connect("changed", self._changed)
         for w in (self.border_width, self.fborder_width):

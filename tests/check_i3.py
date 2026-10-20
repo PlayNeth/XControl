@@ -59,6 +59,13 @@ for line in ('set $ws1 "1:web"', 'set $ws2 "chat \\"x\\""', "workspace $ws1 outp
              'for_window [title="pip"] sticky enable'):
     expect(f"line {line!r}", line in text, True)
 valid("everything set", c, True)
+sb = I.normalize({"smart_borders": "no_gaps", "popup_fullscreen": "all"})
+new, old = I.generate(sb, ver=(4, 24)), I.generate(sb, ver=(4, 23))
+expect("4.24: smart_borders becomes hide_edge_borders", ("smart_borders" in new, "hide_edge_borders smart_no_gaps" in new),
+       (False, True))
+expect("4.23 keeps smart_borders", ("smart_borders no_gaps" in old, "hide_edge_borders none" in old), (True, True))
+expect("popup 'all' only from 4.24", ("popup_during_fullscreen all" in new, "popup_during_fullscreen smart" in old),
+       (True, True))
 expect("smart_borders off is left out", "smart_borders" in I.generate(I.normalize({})), False)
 
 # clashes: same keys in the same mode, whatever the spelling
