@@ -289,6 +289,22 @@ class XServerTab(Gtk.Box):
             grid.attach(k, 0, r, 1, 1)
             grid.attach(v, 1, r, 1, 1)
             grid.attach(n, 2, r, 1, 1)
+        r = len(options)
+        for name, value in X.undocumented(self.info, scope, options):
+            k = Gtk.Label(label=name, xalign=0, yalign=0, selectable=True)
+            k.set_can_focus(False)
+            k.get_style_context().add_class("monospace")
+            v = Gtk.Label(xalign=0, yalign=0)
+            v.set_markup("<tt>{}</tt>".format(GLib.markup_escape_text(value or "—")))
+            n = Gtk.Label(label=_("In use, but not in the manual (a patched or newer driver, or an option it "
+                                  "takes without documenting)."), xalign=0, yalign=0, wrap=True, hexpand=True)
+            n.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)
+            n.set_max_width_chars(60)
+            n.get_style_context().add_class("dim-label")
+            grid.attach(k, 0, r, 1, 1)
+            grid.attach(v, 1, r, 1, 1)
+            grid.attach(n, 2, r, 1, 1)
+            r += 1
         return grid
 
     def _set_elsewhere(self, section_match):

@@ -4,15 +4,12 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.28.6
+pkgver=0.28.7
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices, controllers and system information"
 arch=('x86_64')
 url="https://github.com/yourname/xcontrol"
 license=('MIT')
-provides=('mesa-panel')
-conflicts=('mesa-panel')
-replaces=('mesa-panel')
 depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'libx11' 'libxext' 'libxrandr'
          'libxss' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
 makedepends=('vulkan-headers' 'gettext')

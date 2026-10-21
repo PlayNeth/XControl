@@ -67,6 +67,7 @@ class LogInfo:
     version: str = ""
     modules: list = field(default_factory=list)
     used: dict = field(default_factory=dict)       # (scope, option) -> (value, source)
+    names: dict = field(default_factory=dict)      # (scope, option) -> the option as the config spells it
     unused: list = field(default_factory=list)     # [(scope, option)]
     cards: dict = field(default_factory=dict)      # video driver -> {"/dev/dri/card1", ...}
     device: str = ""            # the Device section X used for its screen
@@ -143,6 +144,7 @@ def parse_log(text):
             o = _OPTION.match(rest)
             if o and tag in ("**", "=="):
                 info.used[(scope, o.group(1).lower())] = (o.group(2) or "", "config" if tag == "**" else "default")
+                info.names[(scope, o.group(1).lower())] = o.group(1)
             u = re.match(r'^Option "([^"]+)" is not used', rest)
             if tag == "WW" and u:
                 info.unused.append((scope, u.group(1)))
@@ -154,6 +156,7 @@ def parse_log(text):
         if o and not modules_started:      # (server-wide: ServerFlags, or the command line)
             src = "config" if o.group(1) == "**" else "default"
             info.used[("server", o.group(2).lower())] = (o.group(3) or "", src)
+            info.names[("server", o.group(2).lower())] = o.group(2)
     for mod in mods.values():
         mod.kind = _kind(mod.path, mod.abi)
     order = ["video", "input", "extension", "other"]
@@ -591,3 +594,15 @@ def device_sections(conf_dir=CONF_DIR, patterns=None):
                 if dev:
                     screens.append((path, idn.group(1) if idn else "", dev.group(1)))
     return devices, screens
+
+
+def undocumented(info, scope, options):
+    """Options X used for this scope (a driver, or "server") that the manual doesn't list, and that
+    X didn't report as ignored: [(name, value)]."""
+    known = {o.name.lower() for o in options}
+    ignored = {n.lower() for sc, n in (info.unused if info else []) if sc == scope}
+    out = []
+    for (sc, low), (value, src) in sorted((info.used if info else {}).items()):
+        if sc == scope and src == "config" and low not in known and low not in ignored:
+            out.append((info.names.get((sc, low), low), value))
+    return out

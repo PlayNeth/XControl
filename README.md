@@ -2,7 +2,7 @@
 
 A Catalyst-style control panel for X11 on Linux: per-game graphics overrides for
 Mesa drivers, display settings through xrandr, and mice, touchpads, keyboards and
-gaming mice. (Formerly *mesa-panel*; see [Upgrading from mesa-panel](#upgrading-from-mesa-panel).)
+gaming mice.
 
 | Setting | OpenGL | Vulkan | Wine / Proton (DXVK / VKD3D-Proton) |
 |---|---|---|---|
@@ -430,16 +430,6 @@ Turning the wheel over a dropdown, number field or slider scrolls the page inste
 the setting, so scrolling past settings can't change them by accident. Number fields and
 sliders take the wheel once you've clicked into them; dropdowns never do.
 
-## Upgrading from mesa-panel
-
-XControl was called mesa-panel. The package replaces it, and on first start your profiles,
-display settings and login entry are carried over from `~/.config/mesa-panel`. The old
-commands `mesa-panel` and `mesa-panel-run` still work (they point to `xcontrol` and
-`xcontrol-run`), so Steam launch options don't need changing, and the `MESAPANEL_*`
-environment variables are still read. An EDID override installed as
-`/usr/lib/firmware/edid/mesa-panel-*.bin` keeps working; installing a new one uses the
-`xcontrol-*.bin` name, and the dialog tells you to update the kernel parameter.
-
 ## Sound
 
 Volumes, the default output and input, ports and card profiles are pavucontrol's job (**Open
@@ -791,7 +781,8 @@ running server's log (`~/.local/share/xorg/Xorg.N.log` or `/var/log/Xorg.N.log`)
 Options come from the manuals: the video driver's (`man 4 modesetting`, `man 4 amdgpu`, ...)
 and xorg.conf's ServerFlags section (`man 5 xorg.conf`), read from the installed roff sources,
 so you see exactly what your driver version documents (XLibre's modesetting has `TearFree`, on
-by default, and `Atomic`, off). Undocumented options can still be set by name. Changes go to
+by default, and `Atomic`, off). Options X used that the manual doesn't list (from a patched
+or newer driver) are shown too, marked as such. Undocumented options can still be set by name. Changes go to
 one file, `/etc/X11/xorg.conf.d/30-xcontrol.conf`, through a root helper
 (`xcontrol-xorg-helper`, password asked) that accepts only plain option names and values:
 driver options in an `OutputClass` section per kernel driver (`MatchDriver "amdgpu"`), which X

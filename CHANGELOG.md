@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.7 (2026-10-21)
+
+**Show X options in use that the driver manual doesn't list**
+
+- List options set in the config that X used but the driver's manual doesn't document (from a
+  patched or newer driver), marked as such, on the X server tab
+- Show those options with the spelling used in the config file
+- Drop the "Upgrading from mesa-panel" section from the README
+- Add a test for finding undocumented options
+
 ## 0.28.6 (2026-10-20)
 
 **Fix XLibre crashing at start with XControl's X options**

@@ -224,6 +224,13 @@ expect("one GPU: no BusID line", ("BusID" in single, 'Driver "modesetting"' in s
 expect("no Driver line among the options",
        '\n    Driver "' in X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu"), False)
 expect("the Device X used", X.parse_log('(**) |   |-->Device "XControl: amdgpu"\n').device, "XControl: amdgpu")
+un = X.parse_log('XLibre X Server 1.25.1.9\n(II) LoadModule: "modesetting"\n(II) Loading /usr/lib/xorg/modules/drivers/modesetting_drv.so\n'
+                 '(**) modeset(0): Option "ScaledModes" "false"\n(**) modeset(0): Option "Atomic" "true"\n'
+                 '(**) modeset(0): Option "Bogus" "1"\n(WW) modeset(0): Option "Bogus" is not used\n'
+                 '(==) modeset(0): Option "Hidden" "x"\n')
+expect("options X used that the manual doesn't list (as spelled, not ignored, not defaults)",
+       X.undocumented(un, "modesetting", [X.Option("Atomic", "bool", "")]), [("ScaledModes", "false")])
+expect("no log, nothing undocumented", X.undocumented(None, "modesetting", []), [])
 X.remember("modesetting", {"amdgpu": {"Atomic": "true"}})
 X.remember("amdgpu", {"amdgpu": {"TearFree": "true"}})
 expect("options remembered per X driver", X.remembered(),
