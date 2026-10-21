@@ -1,5 +1,7 @@
 # Displays
 
+![The Displays page](images/displays.png)
+
 The Displays page drives xrandr. You can drag monitors around (edges snap),
 change resolution, refresh rate and rotation, set the primary display, and turn
 outputs on or off. **Apply** asks you to confirm and reverts after 15 seconds

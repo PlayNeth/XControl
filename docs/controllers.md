@@ -1,5 +1,7 @@
 # Controllers
 
+![The Controllers page](images/controllers.png)
+
 A replacement for sc-controller / DS4Windows-style tools for PlayStation
 controllers: the **DualShock 4** (both models and the USB adapter) and the
 **DualSense** (and DualSense Edge), over USB or Bluetooth. Turn on "Use XControl

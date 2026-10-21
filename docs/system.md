@@ -1,5 +1,7 @@
 # System
 
+![The System page, Overview tab](images/system.png)
+
 The **System** page shows the distribution, kernel, uptime, package count, window manager,
 X server and X driver (from the server's log), OpenGL, Mesa and Vulkan versions, the
 processor (cores, cache, clock, frequency driver and policy, microcode), memory and swap,

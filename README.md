@@ -5,6 +5,8 @@ drivers, displays, input devices and PlayStation controllers, and the parts of a
 window manager like i3 leaves to you: theme, wallpaper, screen lock, bar, compositor,
 notifications, sound, power and users.
 
+![XControl's Gaming page with the live 3D preview](docs/images/gaming.png)
+
 | Setting | OpenGL | Vulkan | Wine / Proton (DXVK / VKD3D-Proton) |
 |---|---|---|---|
 | Anisotropic filtering Off, 2–16× | yes (shim) | yes (layer) | yes (layer + DXVK config) |

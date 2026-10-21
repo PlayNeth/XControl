@@ -1,5 +1,7 @@
 # Bar & Compositor
 
+![The Bar & Compositor page](images/bar-and-compositor.png)
+
 XControl can run polybar and picom for you, so their config files don't have to be written by
 hand. It generates its own (`~/.config/xcontrol/polybar.ini` and `picom.conf`) from what you pick;
 your own polybar and picom configs are neither used nor changed. Changes apply right away.

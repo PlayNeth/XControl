@@ -1,5 +1,7 @@
 # Window Manager (i3)
 
+![The Window Manager (i3) page, Look tab](images/window-manager.png)
+
 When **Use XControl's i3 config** is on, XControl writes `~/.config/i3/config` itself and reloads
 i3 after every change. The config you had is moved aside as `config.before-xcontrol` (and
 `~/.i3/config`, which i3 would otherwise read first, as `~/.i3/config.before-xcontrol`); switching

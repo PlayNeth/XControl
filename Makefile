@@ -88,6 +88,7 @@ install: all
 	done
 	install -Dm644 -t $(DESTDIR)$(DOCDIR) README.md CHANGELOG.md
 	install -Dm644 -t $(DESTDIR)$(DOCDIR)/docs docs/*.md
+	install -Dm644 -t $(DESTDIR)$(DOCDIR)/docs/images docs/images/*.png
 
 check:
 	$(PYTHON) tests/check_gettext.py

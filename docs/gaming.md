@@ -1,5 +1,7 @@
 # Gaming
 
+![The Gaming page with the 3D preview](images/gaming.png)
+
 The Gaming page sets graphics overrides globally and per game. Profiles match a game by Steam
 AppID (`steam:220`) or by the file name of the program or one of its arguments
 (`ioquake3.x86_64`, `game.exe`). Anything without a profile gets the global settings. The table

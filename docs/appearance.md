@@ -1,5 +1,7 @@
 # Appearance
 
+![The Appearance page](images/appearance.png)
+
 One place to pick the GTK theme, icon theme, cursor (theme and size), interface font
 (antialiasing, hinting, subpixel order), the dark preference, and **sounds and effects**:
 event sounds (the alert/error "bell" sounds apps play), click and key feedback sounds, and
