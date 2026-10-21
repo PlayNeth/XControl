@@ -799,7 +799,9 @@ applies to whichever X driver runs that GPU without touching your own Device sec
 server-wide ones in a `ServerFlags` section. `AutoAddDevices` and `AutoEnableDevices` aren't
 offered (they can leave X without a keyboard and mouse).
 
-**Choosing the video driver**: for each GPU, Automatic (what X picks by itself: a vendor
+**Choosing the video driver** (turned off on XLibre for now: XLibre 25.1.9 crashed in its bus
+probe at start with XControl's Device section, with or without a BusID; there the tab only
+lists the drivers it would load and offers going back to Automatic): for each GPU, Automatic (what X picks by itself: a vendor
 driver's package adds a rule for its GPUs, otherwise modesetting) or any installed X driver
 that suits it (modesetting always; amdgpu, ati, intel, nouveau or nvidia for their own GPUs).
 The tab lists the drivers the running server would find, in its own search order (XLibre:

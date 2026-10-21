@@ -2,6 +2,15 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.4 (2026-10-20)
+
+**Turn off choosing the X video driver on XLibre**
+
+- Stop offering X driver choices on XLibre, which still crashed at start with XControl's Device
+  section; only going back to Automatic is offered there
+- Explain on the X server tab how to pick the driver with the Driver line of your own Device
+  section instead, with the drivers XLibre would load listed below
+
 ## 0.28.3 (2026-10-20)
 
 **Leave out the bus ID when switching the X driver on a single GPU**

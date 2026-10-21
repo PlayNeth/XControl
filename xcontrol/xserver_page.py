@@ -368,6 +368,9 @@ class XServerTab(Gtk.Box):
         grid = Gtk.Grid(column_spacing=10, row_spacing=6)
         in_use = {self.kdrivers.get(c): m.name for m in X.video_drivers(self.info)
                   for c in self.info.cards.get(m.name, ())}
+        # XLibre 25 crashes in its bus probe with XControl's Device section (seen on 25.1.9, with and
+        # without a BusID): there only going back to automatic is offered, until that's understood
+        blocked = self.info.server == "XLibre"
         for r, kd in enumerate(gpus):
             lbl = Gtk.Label(label=_("GPU with {driver}").format(driver=kd), xalign=0)
             combo = Gtk.ComboBoxText(hexpand=True)
@@ -375,7 +378,8 @@ class XServerTab(Gtk.Box):
             auto = in_use.get(kd) if not self.picks.get(kd) and in_use.get(kd) else self._auto(kd, installed)
             combo.append("", _("Automatic ({driver})").format(driver=auto))
             for d in X.choices(kd, installed):
-                combo.append(d, d)
+                if not blocked or d == self.picks.get(kd):
+                    combo.append(d, d)
             combo.set_active_id(self.picks.get(kd, ""))
             if combo.get_active() < 0:
                 combo.set_active_id("")
@@ -392,6 +396,11 @@ class XServerTab(Gtk.Box):
             if now:
                 grid.attach(_dim(_("now: {driver}").format(driver=now)), 3, r, 1, 1)
         self.details.pack_start(grid, False, False, 0)
+        if blocked:
+            self.details.pack_start(_dim("⚠ " + _(
+                "Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed at start with "
+                "XControl's Device section. To pick one, set the Driver line in your own Device section "
+                "instead (the drivers it would load are listed below).")), False, False, 0)
         self._driver_notes()
         rows = []
         for name, (path, mabi) in sorted(found.items()):
