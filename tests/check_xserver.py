@@ -212,11 +212,15 @@ os.symlink(os.path.join(gsys, "bus", "amdgpu"), os.path.join(pci, "driver"))
 os.makedirs(os.path.join(gsys, "class", "drm"))
 os.symlink(os.path.join(pci, "drm", "card1"), os.path.join(gsys, "class", "drm", "card1"))
 os.symlink(pci, os.path.join(pci, "drm", "card1", "device"))
-gl = X.gpus(gsys)
-expect("GPU with its BusID (decimal)", gl, [("/dev/dri/card1", "amdgpu", "PCI:48:0:0")])
+expect("one GPU: no BusID needed", X.gpus(gsys), [("/dev/dri/card1", "amdgpu", "")])
+expect("its BusID (decimal), for when there are more", X.busid("/dev/dri/card1", gsys), "PCI:48:0:0")
+expect("a firmware framebuffer isn't a GPU for X", X.FIRMWARE_FB[0], "simpledrm")
+gl = [("/dev/dri/card1", "amdgpu", "PCI:48:0:0"), ("/dev/dri/card2", "nouveau", "PCI:1:0:0")]
 dtext = X.driver_file_text({"amdgpu": "modesetting"}, gl)
 expect("Device section", 'Section "Device"\n    Identifier "XControl: amdgpu"\n    Driver "modesetting"\n'
        '    BusID "PCI:48:0:0"\nEndSection' in dtext, True)
+single = X.driver_file_text({"amdgpu": "modesetting"}, [("/dev/dri/card1", "amdgpu", "")])
+expect("one GPU: no BusID line", ("BusID" in single, 'Driver "modesetting"' in single), (False, True))
 expect("no Driver line among the options",
        '\n    Driver "' in X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu"), False)
 expect("the Device X used", X.parse_log('(**) |   |-->Device "XControl: amdgpu"\n').device, "XControl: amdgpu")

@@ -287,9 +287,16 @@ def busid(card, sysroot="/sys"):
     return f"PCI:{bus}{'@' + str(dom) if dom else ''}:{slot}:{fn}"
 
 
+FIRMWARE_FB = ("simpledrm", "efifb", "vgem", "vkms")
+
+
 def gpus(sysroot="/sys"):
-    """[(card, kernel driver, BusID)] for every GPU."""
-    return [(card, kd, busid(card, sysroot)) for card, kd in kernel_drivers(sysroot).items()]
+    """[(card, kernel driver, BusID)] for every GPU X could drive. The BusID is only given when there's
+    more than one to tell apart: with one GPU a Device section needs none (and XLibre 25 has been
+    seen crashing in its bus probe with one)."""
+    found = [(card, kd) for card, kd in kernel_drivers(sysroot).items() if kd not in FIRMWARE_FB]
+    many = len(found) > 1
+    return [(card, kd, busid(card, sysroot) if many else "") for card, kd in found]
 
 
 def driver_path(conf_dir=CONF_DIR):

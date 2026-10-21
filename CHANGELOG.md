@@ -2,6 +2,14 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.3 (2026-10-20)
+
+**Leave out the bus ID when switching the X driver on a single GPU**
+
+- Write the GPU's bus ID in XControl's Device section only when there is more than one GPU, an
+  attempt to stop XLibre 25.1 crashing at start after switching the X driver
+- Stop counting firmware framebuffers (simpledrm, efifb) as GPUs on the X server tab
+
 ## 0.28.2 (2026-10-20)
 
 **Fix the chosen X video driver being ignored**
