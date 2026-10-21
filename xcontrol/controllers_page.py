@@ -116,7 +116,7 @@ class LayoutDialog(Gtk.Dialog):
             if n and n.lower() not in skip and not n.lower().startswith("python") \
                     and n.lower() not in [u.lower() for u in useful]:
                 useful.append(n)
-        keep = useful[:1] + [n for n in useful[1:] if n.lower().endswith(".exe")][:1] or useful[:2]
+        keep = useful[:1] + [n for n in useful[1:] if n.lower().endswith(".exe")][:1]
         if len(keep) == 1 and len(useful) > 1:
             keep.append(useful[1])
         self.match.set_text(", ".join(keep))
@@ -148,6 +148,7 @@ class ControllersPage(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
         self.window = window
         self.c = S.load()
+        self.restart_keys = S.restart_keys(self.c)   # what the running service was started with
         self.loading = True
         self._timer = None
         self.editing = None      # None: every game; else the index of the game's layout being edited
@@ -661,7 +662,10 @@ class ControllersPage(Gtk.Box):
             self.c = S.normalize(self.c)
             S.save(self.c)
             D.notify_daemon(D.load())    # starts, restarts or stops the controller service
-            S.reload_running()           # the light bar and report rate apply in place
+            keys = S.restart_keys(self.c)
+            if keys == self.restart_keys or not D.state().get("daemon"):
+                S.reload_running()       # the light bar and report rate apply in place
+            self.restart_keys = keys     # (otherwise the desktop service restarts it with the new ones)
         except Exception as e:  # noqa: BLE001
             self.window.message(_("Could not save the settings"), str(e))
             return False

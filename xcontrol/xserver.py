@@ -562,7 +562,8 @@ def remember(xdriver, drivers):
     data = config.load()
     xs = data.get("xserver") if isinstance(data.get("xserver"), dict) else {}
     by = xs.get("by_driver") if isinstance(xs.get("by_driver"), dict) else {}
-    by[xdriver] = drivers
+    kept = by.get(xdriver) if isinstance(by.get(xdriver), dict) else {}
+    by[xdriver] = {**kept, **drivers}       # (other GPUs' options for that X driver stay)
     xs["by_driver"] = by
     data["xserver"] = xs
     config.save(data)

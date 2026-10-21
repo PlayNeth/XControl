@@ -363,14 +363,15 @@ class PointerTab(Gtk.Box):
             d = by_name.get(name)
             if not d:
                 continue
-            changes = self.pending.get(name, {})
-            for key, value in changes.items():
+            changes = dict(self.pending.get(name, {}))
+            for key, value in list(changes.items()):
                 if value == d.get(key):
                     continue
                 try:
                     D.apply(d, key, value)
                 except Exception as e:  # noqa: BLE001
                     errors.append(f"{name}: {key}: {e}")
+                    del changes[key]   # not saved: it would fail again at every login and replug
             if name in self.resetting:
                 # keep only what differs from the defaults (changes made after Reset)
                 D.forget_device(name)
@@ -396,6 +397,7 @@ class KeyboardTab(Gtk.Box):
         self.loading = False
         self.lists = K.load_lists()
         self.state = {"layout": "", "variant": "", "options": [], "repeat_delay": 660, "repeat_rate": 25}
+        self.extra = []   # a third layout and beyond (set elsewhere): kept as they are
 
         self.warning = _hint("")
         self.warning.set_no_show_all(True)
@@ -508,6 +510,7 @@ class KeyboardTab(Gtk.Box):
         try:
             pairs = K.split_layouts(self.state["layout"], self.state["variant"]) or [("us", "")]
             (l1, v1), (l2, v2) = pairs[0], (pairs[1] if len(pairs) > 1 else ("", ""))
+            self.extra = pairs[2:]
             for combo, code in ((self.layout1, l1), (self.layout2, l2)):
                 if not combo.set_active_id(code):
                     combo.append(code, code)
@@ -549,6 +552,7 @@ class KeyboardTab(Gtk.Box):
         pairs = [(self.layout1.get_active_id() or "us", self.variant1.get_active_id() or "")]
         if self.layout2.get_active_id():
             pairs.append((self.layout2.get_active_id(), self.variant2.get_active_id() or ""))
+            pairs += self.extra
         layout, variant = K.join_layouts(pairs)
         options = list(self.state["options"])
         for combo, group in ((self.switch, "grp"), (self.caps, "caps"), (self.compose, "compose")):
@@ -754,6 +758,7 @@ class GamingMouseTab(Gtk.Box):
         self.dev = None
         self.combo.set_active(names.index(keep) if keep in names else (0 if names else -1))
         if not self.devices:
+            self.profile = None
             for c in self.body.get_children():
                 self.body.remove(c)
 

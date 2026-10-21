@@ -34,6 +34,7 @@ expect("append", H([f"FILES+=({F})\n"], F), True)
 expect("multi line", H([f"FILES=(\n  /etc/foo\n  {F}\n)\n"], F), True)
 expect("commented", H([f"#FILES=({F})\nFILES=()\n"], F), False)
 expect("missing", H(["FILES=()\n"], F), False)
+expect("through the /lib symlink", H(["FILES=(/lib/firmware/edid/xcontrol-DP-1.bin)\n"], F), True)
 
 with tempfile.TemporaryDirectory() as fw:
     good, old = b"\x00\xff\xff\xff\xff\xff\xff\x00" + b"\x01" * 120, b"\x00\xff\xff\xff\xff\xff\xff\x00" + b"\x02" * 120

@@ -115,7 +115,9 @@ class NightPanel(Gtk.Frame):
         self.n = D.load()["night"]
         self._fill()
         self.loading = False
-        GLib.timeout_add_seconds(3, self._poll)
+        poll = GLib.timeout_add_seconds(3, lambda: self._poll() if self.get_mapped() else True)
+        self.connect("destroy", lambda *_a: GLib.source_remove(poll))
+        self.connect("map", lambda *_a: self._poll())   # (not polled while another page is shown)
 
     def label_widgets(self):
         return self.labels

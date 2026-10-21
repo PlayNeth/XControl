@@ -1,13 +1,14 @@
 """Sound beyond the volume: PipeWire and WirePlumber.
 
-Live changes go through pactl (default devices, profiles, ports) and PipeWire's "settings"
-metadata (sample rate, buffer size). What has to last is written to drop-in files that only
+Devices are listed with pactl; sample rate and buffer size change live through PipeWire's
+"settings" metadata. What has to last is written to drop-in files that only
 XControl writes:
   ~/.config/pipewire/pipewire.conf.d/50-xcontrol.conf          sample rate, buffer size
   ~/.config/pipewire/pipewire-pulse.conf.d/50-xcontrol.conf    the same for PulseAudio programs
   ~/.config/wireplumber/wireplumber.conf.d/50-xcontrol.conf    names, hidden devices, no sleeping
       (WirePlumber 0.5; 0.4 gets main.lua.d/51-xcontrol.lua instead)
 """
+import functools
 import json
 import os
 import re
@@ -89,7 +90,21 @@ def server():
 
 
 def wireplumber_version():
-    out = _run(["wireplumber", "--version"]) or ""
+    """(major, minor), or None. Asked on every refresh of the Sound page, so it is run again only
+    when the installed program changes (an upgrade from 0.4 to 0.5 changes the config format)."""
+    path = shutil.which("wireplumber")
+    try:
+        stamp = os.stat(path).st_mtime if path else None
+    except OSError:
+        stamp = None
+    return _wireplumber_version(path, stamp)
+
+
+@functools.lru_cache(maxsize=4)
+def _wireplumber_version(path, _stamp):
+    if not path:
+        return None
+    out = _run([path, "--version"]) or ""
     m = re.search(r"libwireplumber (\d+)\.(\d+)", out)
     return (int(m.group(1)), int(m.group(2))) if m else None
 
@@ -103,7 +118,7 @@ def _json(kind):
 
 
 def outputs():
-    return [d for d in _json("sinks")]
+    return _json("sinks")
 
 
 def inputs():
@@ -112,35 +127,6 @@ def inputs():
 
 def cards():
     return _json("cards")
-
-
-def default(kind):
-    return (_run(["pactl", f"get-default-{kind}"]) or "").strip()
-
-
-def set_default(kind, name):
-    return _run(["pactl", f"set-default-{kind}", name]) is not None
-
-
-def set_profile(card, profile):
-    return _run(["pactl", "set-card-profile", card, profile]) is not None
-
-
-def set_port(kind, name, port):
-    return _run(["pactl", f"set-{kind}-port", name, port]) is not None
-
-
-def test_sound(sink):
-    """Play a short sound on one output."""
-    sounds = ["/usr/share/sounds/freedesktop/stereo/audio-test-signal.oga",
-              "/usr/share/sounds/freedesktop/stereo/bell.oga", "/usr/share/sounds/alsa/Front_Center.wav"]
-    snd = next((s for s in sounds if os.path.exists(s)), None)
-    if snd and shutil.which("paplay"):
-        subprocess.Popen(["paplay", f"--device={sink}", snd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
-    if shutil.which("pactl"):   # no sound file: a short beep through a sine source isn't available everywhere
-        return False
-    return False
 
 
 def clock():

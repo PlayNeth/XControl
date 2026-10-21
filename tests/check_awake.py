@@ -70,6 +70,9 @@ g.rescan(force=True)
 t.join(2)
 expect("found the gamepad only", g.names(), ["Xbox Wireless Controller"])
 fd = g.fds()[0]
+details = g.details()
+expect("details", [(d["name"], d["virtual"]) for d in details], [("Xbox Wireless Controller", False)])
+expect("details reused while the devices stay", g.details() is details, True)
 
 
 def send(*events):

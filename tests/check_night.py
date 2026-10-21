@@ -52,6 +52,10 @@ def at(hm):
 
 expect("hours", [at(t) for t in ("22:00", "22:45", "23:00", "03:00", "06:15", "06:30", "12:00")],
        [0.0, 0.5, 1.0, 1.0, 0.5, 0.0, 0.0])
+short = N.normalize({"enabled": True, "mode": "times", "start": "22:00", "end": "22:10", "fade_minutes": 30})
+expect("night shorter than the fade: no jump at the end",
+       [round(N.night_amount(short, datetime.datetime(2026, 10, 19, 22, m, tzinfo=tz)), 3) for m in (9, 10, 11, 40)],
+       [0.3, 0.333, 0.3, 0.0])
 expect("temperature halfway", N.temperature(hours, 0.5), 5050)
 expect("bad times fixed", N.normalize({"start": "25:00", "end": "7"})["start"], "20:00")
 

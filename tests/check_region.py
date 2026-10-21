@@ -64,6 +64,21 @@ R.write_user_locale({"LANG": "pt_BR.UTF-8"})
 R.write_user_locale({})
 expect("an xprofile only we wrote goes away", os.path.exists(R.xprofile_path()), False)
 expect("removed", os.path.exists(R.user_conf_path()), False)
+# dotfiles kept elsewhere and linked in (GNU stow): the link stays, the file keeps its mode and bytes
+dots = os.path.join(tmp, "dotfiles")
+os.makedirs(dots)
+with open(os.path.join(dots, "xprofile"), "wb") as f:
+    f.write(b"# caf\xe9 (Latin-1)\nxrdb -merge ~/.Xresources\n")
+os.chmod(os.path.join(dots, "xprofile"), 0o755)
+os.symlink(os.path.join(dots, "xprofile"), R.xprofile_path())
+R.write_user_locale({"LANG": "pt_BR.UTF-8"})
+with open(os.path.join(dots, "xprofile"), "rb") as f:
+    linked = f.read()
+expect("xprofile symlink kept", (os.path.islink(R.xprofile_path()), R.XPROFILE_BEGIN.encode() in linked,
+                                 linked.startswith(b"# caf\xe9 (Latin-1)\n"),
+                                 oct(os.stat(R.xprofile_path()).st_mode & 0o777)), (True, True, True, "0o755"))
+R.write_user_locale({})
+os.remove(R.xprofile_path())
 
 # the helper
 prefix = []

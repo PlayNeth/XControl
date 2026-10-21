@@ -7,7 +7,7 @@ Sources, merged by identical EDID:
 import os
 from dataclasses import dataclass, field
 
-from . import edid, i18n, vrr, xrandr
+from . import edid, i18n, output_names, vrr, xrandr
 
 TIMES = " × "  # 2560 × 1440
 
@@ -41,25 +41,27 @@ def collect():
             xmons = {m.name: m for m in xrandr.query()}
         except Exception:  # noqa: BLE001 - fall back to sysfs only
             xinfo, xmons = {}, {}
-    sysfs_full = edid.read_sysfs_full()
-    sysfs = [(conn, data) for _card, conn, data in sysfs_full]
-    cards = {conn: card for card, conn, _data in sysfs_full}
+    sysfs = edid.read_sysfs_full()  # [(card, connector, edid)]
 
     for name, data in xinfo.items():
         mon = xmons.get(name)
         if not (mon and mon.connected):
             continue
-        rec = MonitorRecord(x_name=name, raw=data["edid"] or b"", props=data["props"], xmon=mon)
-        for drm_name, raw in sysfs:
-            if rec.raw and raw == rec.raw:
-                rec.drm_name = drm_name
-        records.append(rec)
-    matched = {r.drm_name for r in records}
-    for drm_name, raw in sysfs:
-        if drm_name not in matched:
-            records.append(MonitorRecord(drm_name=drm_name, raw=raw))
+        records.append(MonitorRecord(x_name=name, raw=data["edid"] or b"", props=data["props"], xmon=mon))
+    # Match X outputs to kernel connectors by EDID. Two identical monitors have the same EDID,
+    # so a connector whose name fits the X name goes first, and each connector is used once.
+    free = list(sysfs)
+    for by_name in (True, False):
+        for rec in records:
+            if rec.drm_name or not rec.raw:
+                continue
+            names = output_names.kernel_candidates(rec.x_name) if by_name else None
+            hit = next((s for s in free if s[2] == rec.raw and (names is None or s[1] in names)), None)
+            if hit:
+                free.remove(hit)
+                rec.card, rec.drm_name = hit[0], hit[1]
+    records += [MonitorRecord(drm_name=conn, raw=raw, card=card) for card, conn, raw in free]
     for r in records:
-        r.card = cards.get(r.drm_name, "")
         r.info = edid.parse(r.raw) if r.raw else None
     return records
 

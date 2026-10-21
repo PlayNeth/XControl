@@ -23,7 +23,7 @@
 
 static int g_af, g_fps, g_debug;
 
-/* XCONTROL_<name>, or MESAPANEL_<name> from before the rename */
+/* XCONTROL_<name> */
 static int env_int(const char *name)
 {
     char key[64];
@@ -31,10 +31,6 @@ static int env_int(const char *name)
 
     snprintf(key, sizeof key, "XCONTROL_%s", name);
     v = getenv(key);
-    if (!v) {
-        snprintf(key, sizeof key, "MESAPANEL_%s", name);
-        v = getenv(key);
-    }
     return v ? atoi(v) : 0;
 }
 
@@ -153,6 +149,34 @@ static VKAPI_ATTR void VKAPI_CALL mp_DestroyInstance(VkInstance instance, const 
 }
 
 /* ---- device ------------------------------------------------------------- */
+#define MAX_LINKS 8
+
+/* Point info's pNext chain at a copy of the game's VkPhysicalDeviceFeatures2
+ * with samplerAnisotropy on. The game's struct may be read-only (static
+ * const), so it is never written; the loader link structs in front of it get
+ * copied to relink the chain. Returns 0 if something else precedes it. */
+static int enable_aniso2(VkDeviceCreateInfo *info, VkLayerDeviceCreateInfo *links,
+                         VkPhysicalDeviceFeatures2 *f2)
+{
+    const void **prev = &info->pNext;
+    int n = 0;
+    for (const VkBaseInStructure *s = info->pNext; s; s = s->pNext) {
+        if (s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2) {
+            *f2 = *(const VkPhysicalDeviceFeatures2 *)s;
+            f2->features.samplerAnisotropy = VK_TRUE;
+            *prev = f2;
+            return 1;
+        }
+        if (s->sType != VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO || n == MAX_LINKS)
+            return 0;
+        links[n] = *(const VkLayerDeviceCreateInfo *)s;
+        *prev = &links[n];
+        prev = &links[n].pNext;
+        n++;
+    }
+    return 0;
+}
+
 static VKAPI_ATTR VkResult VKAPI_CALL mp_CreateDevice(VkPhysicalDevice phys,
                                                       const VkDeviceCreateInfo *ci,
                                                       const VkAllocationCallbacks *alloc,
@@ -172,8 +196,9 @@ static VKAPI_ATTR VkResult VKAPI_CALL mp_CreateDevice(VkPhysicalDevice phys,
     struct inst_data *inst = find_inst(dkey(phys));
     VkDeviceCreateInfo info = *ci;
     VkPhysicalDeviceFeatures feats_copy;
-    VkPhysicalDeviceFeatures2 *feats2 = NULL;
-    VkBool32 feats2_saved = VK_FALSE;
+    const VkPhysicalDeviceFeatures2 *feats2 = NULL;
+    VkPhysicalDeviceFeatures2 feats2_copy;
+    VkLayerDeviceCreateInfo links[MAX_LINKS];
     int aniso_ok = 0;
     float max_aniso = 16.0f;
 
@@ -189,14 +214,16 @@ static VKAPI_ATTR VkResult VKAPI_CALL mp_CreateDevice(VkPhysicalDevice phys,
             aniso_ok = 1;
             for (const VkBaseInStructure *s = ci->pNext; s; s = s->pNext)
                 if (s->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
-                    feats2 = (VkPhysicalDeviceFeatures2 *)s;
+                    feats2 = (const VkPhysicalDeviceFeatures2 *)s;
             if (ci->pEnabledFeatures) {
                 feats_copy = *ci->pEnabledFeatures;
                 feats_copy.samplerAnisotropy = VK_TRUE;
                 info.pEnabledFeatures = &feats_copy;
             } else if (feats2) {
-                feats2_saved = feats2->features.samplerAnisotropy;
-                feats2->features.samplerAnisotropy = VK_TRUE;
+                if (!feats2->features.samplerAnisotropy && !enable_aniso2(&info, links, &feats2_copy)) {
+                    aniso_ok = 0;
+                    LOG("vkCreateDevice: can't enable samplerAnisotropy");
+                }
             } else {
                 memset(&feats_copy, 0, sizeof(feats_copy));
                 feats_copy.samplerAnisotropy = VK_TRUE;
@@ -206,9 +233,9 @@ static VKAPI_ATTR VkResult VKAPI_CALL mp_CreateDevice(VkPhysicalDevice phys,
     }
 
     PFN_vkCreateDevice create = (PFN_vkCreateDevice)gipa(inst ? inst->instance : VK_NULL_HANDLE, "vkCreateDevice");
+    if (!create)
+        return VK_ERROR_INITIALIZATION_FAILED;
     VkResult res = create(phys, &info, alloc, out);
-    if (feats2)
-        feats2->features.samplerAnisotropy = feats2_saved; /* leave the app's struct as it was */
     if (res != VK_SUCCESS)
         return res;
 
@@ -287,7 +314,7 @@ static VKAPI_ATTR VkResult VKAPI_CALL mp_CreateSampler(VkDevice device, const Vk
     if (g_af > 1 && d->aniso_ok && sampler_eligible(ci)) {
         VkSamplerCreateInfo info = *ci;
         float af = (float)g_af;
-        info.anisotropyEnable = g_af > 1 ? VK_TRUE : VK_FALSE;
+        info.anisotropyEnable = VK_TRUE;
         info.maxAnisotropy = af > d->max_aniso ? d->max_aniso : af;
         static int logged;
         if (!logged) {

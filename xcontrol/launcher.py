@@ -55,7 +55,7 @@ def write_support_files(settings, base=None):
             with open(path) as f:
                 if f.read() == text:
                     return
-        except OSError:
+        except (OSError, ValueError):  # missing, or not text: rewrite it
             pass
         tmp = f"{path}.{os.getpid()}"
         with open(tmp, "w") as f:

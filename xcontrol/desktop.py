@@ -31,6 +31,13 @@ BLANK_DEFAULT = {"managed": False, "screen_off_minutes": 15}
 AWAKE_DEFAULT = {"gamepads": False, "apps": False, "fullscreen": False}
 
 
+def _minutes(v, default):
+    try:
+        return max(0, int(v or 0))
+    except (TypeError, ValueError):   # a hand-edited config must not stop the service and the pages
+        return default
+
+
 def normalize(d):
     d = d if isinstance(d, dict) else {}
     wp = wallpaper.normalize(d.get("wallpaper"))
@@ -41,14 +48,15 @@ def normalize(d):
         lock["locker"] = "i3lock"
     if lock["image"] not in ("wallpaper", "color"):
         lock["image"] = "wallpaper"
-    for k in ("idle_minutes",):
-        lock[k] = max(0, int(lock[k] or 0))
+    if not isinstance(lock["color"], str):
+        lock["color"] = LOCK_DEFAULT["color"]
+    lock["idle_minutes"] = _minutes(lock["idle_minutes"], LOCK_DEFAULT["idle_minutes"])
     blank = dict(BLANK_DEFAULT)
     blank.update({k: v for k, v in (d.get("blanking") or {}).items() if k in BLANK_DEFAULT})
-    blank["screen_off_minutes"] = max(0, int(blank["screen_off_minutes"] or 0))
+    blank["screen_off_minutes"] = _minutes(blank["screen_off_minutes"], BLANK_DEFAULT["screen_off_minutes"])
     awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
-    return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake, "notify": notify.normalize(d.get("notify")),
-            "night": night.normalize(d.get("night")),
+    return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake,
+            "notify": notify.normalize(d.get("notify")), "night": night.normalize(d.get("night")),
             "power": power.normalize(d.get("power")), "power_alerts": poweralerts.normalize(d.get("power_alerts")),
             "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
 
@@ -156,15 +164,18 @@ def _write_state(st):
     os.replace(tmp, _runtime("json"))
 
 
-def _user_procs(name):
+def _user_procs(names):
+    """This user's processes named one of `names` (one pass over /proc): {pid: command line}."""
+    names = {names} if isinstance(names, str) else set(names)
+    uid = os.getuid()
     out = {}
     for d in glob.glob("/proc/[0-9]*"):
         try:
-            if os.stat(d).st_uid != os.getuid():
-                continue
             with open(os.path.join(d, "comm")) as f:
-                if f.read().strip() != name:
+                if f.read().strip() not in names:
                     continue
+            if os.stat(d).st_uid != uid:
+                continue
             with open(os.path.join(d, "cmdline"), "rb") as f:
                 out[int(os.path.basename(d))] = " ".join(a.decode(errors="replace")
                                                          for a in f.read().split(b"\0") if a)
@@ -217,10 +228,7 @@ def session_conflicts():
 def foreign(names):
     """Running programs (by name) that XControl's service didn't start: {pid: command line}."""
     ours = set((state().get("children") or {}).values())
-    out = {}
-    for name in names:
-        out.update({pid: cmd for pid, cmd in _user_procs(name).items() if pid not in ours})
-    return out
+    return {pid: cmd for pid, cmd in _user_procs(names).items() if pid not in ours}
 
 
 def stop_foreign(names):
@@ -360,14 +368,19 @@ class _RandR:
 
 
 class _Child:
-    """A program the service keeps running: restarted when it dies (not faster than every
-    5 s), its stderr kept so the page can say why it stopped."""
+    """A program the service keeps running: restarted when it dies (5 s after it started, and
+    up to a minute when it keeps failing right away), its stderr kept so the page can say why
+    it stopped."""
+
+    LOG_MAX = 1 << 20   # the log is in XDG_RUNTIME_DIR (RAM); a chatty program must not fill it over days
 
     def __init__(self, key, cmd, env=None):
         self.key, self.cmd, self.env = key, cmd, env or {}
         self.proc = None
         self.started = 0.0
         self.error = ""
+        self.failures = 0        # quick exits in a row
+        self.log_checked = 0.0
 
     def log_path(self):
         return _runtime(re.sub(r"[^A-Za-z0-9_.-]", "_", self.key) + ".log")
@@ -376,16 +389,23 @@ class _Child:
         return self.proc is not None and self.proc.poll() is None
 
     def ensure(self):
+        now = time.time()
         if self.alive():
+            if now - self.started > 30:
+                self.error, self.failures = "", 0   # running fine (again)
+                if now - self.log_checked >= 60:
+                    self.log_checked = now
+                    self._trim_log()
             return
-        if self.proc is not None:  # it exited: keep the reason
-            self.error = self._last_error()
-            if time.time() - self.started > 30:
-                self.error = ""  # ran fine for a while; just restart it
-        if time.time() - self.started < 5:
+        if self.proc is not None:  # it exited (poll() reaped it): keep the reason, once
+            quick = now - self.started <= 30
+            self.error = self._last_error() if quick else ""  # ran fine for a while: just restart it
+            self.failures = self.failures + 1 if quick else 0
+            self.proc = None
+        if now - self.started < min(60, 5 << max(0, self.failures - 1)):
             return
-        try:
-            log = open(self.log_path(), "w")
+        try:   # O_APPEND, so the log can be emptied while the program runs
+            log = os.open(self.log_path(), os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_APPEND, 0o600)
         except OSError:
             log = subprocess.DEVNULL
         env = dict(os.environ, **self.env)
@@ -394,9 +414,17 @@ class _Child:
                                          start_new_session=True, preexec_fn=_die_with_parent)
         except OSError as e:
             self.proc, self.error = None, str(e)
+            self.failures += 1
         self.started = time.time()
-        if log is not subprocess.DEVNULL:
-            log.close()
+        if log != subprocess.DEVNULL:
+            os.close(log)
+
+    def _trim_log(self):
+        try:
+            if os.path.getsize(self.log_path()) > self.LOG_MAX:
+                os.truncate(self.log_path(), 0)
+        except OSError:
+            pass
 
     def _last_error(self):
         try:
@@ -642,6 +670,7 @@ def daemon():
             changed.add("dunst")      # dunst reads its config when it starts
         return changed
 
+    tick = 0.0   # when the once-a-second work last ran (time.monotonic())
     try:
         while not flags["quit"]:
             if flags["reload"]:
@@ -656,36 +685,40 @@ def daemon():
                 awake_setup()
                 nl["gammas"] = night.saved_gamma(config.load()["display"]["command"])
                 night_step(force_apply=True)
-            for c in children.values():
-                c.ensure()
-            if inhibit:
-                inhibit.pump()
-            if pads:
-                pads.rescan()
-            night_step()
-            reasons = keep_awake()
-            if desk["power"]["sleep_minutes"] and time.time() - aw.get("sleep_check", 0) >= 5:
-                aw["sleep_check"] = time.time()
-                if sleeper.check(desk["power"], xidle.idle_ms(), bool(reasons), time.time()):
-                    log("idle: suspending")
-                    power.suspend()
-            xidle.suspend(bool(reasons))
-            st = {"daemon": os.getpid(),
-                  "children": {k: c.proc.pid for k, c in children.items() if c.alive()},
-                  "errors": {k: c.error for k, c in children.items() if c.error},
-                  "awake": {"reasons": reasons, "gamepads": pads.details() if pads else [],
-                            "denied": sorted(set(pads.denied.values())) if pads else [],
-                            "last_gamepad": pads.last if pads else 0,
-                            "service": ("" if inhibit is None else "ok" if inhibit.owned else
-                                        inhibit.error or "starting")},
-                  "night": {"shown": nl["shown"], "forced": night.forced(_runtime, desk["night"])}}
-            st["xss_lock"] = st["children"].get("xss-lock")
-            if st != aw.get("written"):
-                _write_state(st)
-                aw["written"] = st
+                tick = 0.0
+            # gamepad events can wake the loop hundreds of times a second: the rest waits for its second
+            if time.monotonic() - tick >= 1.0:
+                tick = time.monotonic()
+                for c in children.values():
+                    c.ensure()
+                if inhibit:
+                    inhibit.pump()
+                if pads:
+                    pads.rescan()
+                night_step()
+                reasons = keep_awake()
+                if desk["power"]["sleep_minutes"] and time.time() - aw.get("sleep_check", 0) >= 5:
+                    aw["sleep_check"] = time.time()
+                    # monotonic: it stops while the computer sleeps, so the grace after waking up holds
+                    if sleeper.check(desk["power"], xidle.idle_ms(), bool(reasons), time.monotonic()):
+                        log("idle: suspending")
+                        power.suspend()
+                xidle.suspend(bool(reasons))
+                st = {"daemon": os.getpid(),
+                      "children": {k: c.proc.pid for k, c in children.items() if c.alive()},
+                      "errors": {k: c.error for k, c in children.items() if c.error},
+                      "awake": {"reasons": reasons, "gamepads": pads.details() if pads else [],
+                                "denied": sorted(set(pads.denied.values())) if pads else [],
+                                "service": ("" if inhibit is None else "ok" if inhibit.owned else
+                                            inhibit.error or "starting")},
+                      "night": {"shown": nl["shown"], "forced": night.forced(_runtime, desk["night"])}}
+                st["xss_lock"] = st["children"].get("xss-lock")
+                if st != aw.get("written"):
+                    _write_state(st)
+                    aw["written"] = st
             pad_fds = pads.fds() if pads else []
             try:
-                ready, _w, _x = select.select([rr.fd] + pad_fds, [], [], 1.0)
+                ready, _w, _x = select.select([rr.fd] + pad_fds, [], [], max(0.0, tick + 1.0 - time.monotonic()))
             except InterruptedError:
                 ready = []
             moved = False

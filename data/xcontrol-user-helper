@@ -17,8 +17,17 @@
 # account that's running XControl, and accounts with running processes can't be
 # deleted or renamed.
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-user-helper: $*" >&2; exit 1; }
+read_as_caller() {   # FILE MAX OUT: up to MAX bytes of FILE, opened with the caller's own rights
+    if [ "$(id -u)" = 0 ] && [ -n "${PKEXEC_UID:-}" ] && [ "$PKEXEC_UID" != 0 ] && command -v setpriv >/dev/null; then
+        g=$(id -g -- "$PKEXEC_UID") || die "unknown caller"
+        setpriv --reuid="$PKEXEC_UID" --regid="$g" --init-groups head -c "$2" -- "$1" > "$3"
+    else
+        head -c "$2" < "$1" > "$3"
+    fi
+}
 
 PASSWD=/etc/passwd
 GROUP=/etc/group
@@ -126,6 +135,7 @@ case $cmd in
             *) die "expected keep or remove" ;;
         esac
         [ ! -e "$ICONDIR/icons/$1" ] || run rm -f "$ICONDIR/icons/$1"
+        [ ! -e "$ICONDIR/users/$1" ] || run rm -f "$ICONDIR/users/$1"   # (or a new $1 would get its settings)
         echo "user $1 deleted"
         ;;
     admin)
@@ -179,6 +189,10 @@ case $cmd in
         fi
         if group_exists "$1" && ! group_exists "$2"; then run groupmod -n "$2" "$1"; fi
         [ ! -e "$ICONDIR/icons/$1" ] || run mv -f "$ICONDIR/icons/$1" "$ICONDIR/icons/$2"
+        if [ -e "$ICONDIR/users/$1" ]; then   # AccountsService's settings for the account, its picture's path too
+            run mv -f "$ICONDIR/users/$1" "$ICONDIR/users/$2"
+            run sed -i "s|^Icon=$ICONDIR/icons/$1\$|Icon=$ICONDIR/icons/$2|" "$ICONDIR/users/$2"
+        fi
         echo "user $1 renamed to $2"
         ;;
     icon)
@@ -188,11 +202,15 @@ case $cmd in
             run rm -f "$ICONDIR/icons/$1"
         else
             [ -f "$2" ] && [ ! -L "$2" ] || die "not a regular file: $2"
-            size=$(wc -c < "$2")
+            # (a private copy, read once: the file can't be swapped for another after the checks)
+            pic=$(mktemp)
+            trap 'rm -f "$pic"' EXIT
+            read_as_caller "$2" 1048577 "$pic" || die "can't read $2"
+            size=$(wc -c < "$pic")
             [ "$size" -le 1048576 ] || die "picture too large (over 1 MB)"
-            magic=$(od -An -tx1 -N4 "$2" | tr -d ' \n')
+            magic=$(od -An -tx1 -N4 "$pic" | tr -d ' \n')
             case $magic in 89504e47|ffd8ff*) ;; *) die "the picture must be PNG or JPEG";; esac
-            run install -Dm644 "$2" "$ICONDIR/icons/$1"
+            run install -Dm644 "$pic" "$ICONDIR/icons/$1"
             conf="$ICONDIR/users/$1"
             if [ $DRY = 1 ]; then echo "would set Icon=$ICONDIR/icons/$1 in $conf"
             else

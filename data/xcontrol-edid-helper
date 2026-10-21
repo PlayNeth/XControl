@@ -9,6 +9,7 @@
 #
 # Arguments are validated strictly; FILE must be a real EDID.
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-edid-helper: $*" >&2; exit 1; }
 
@@ -29,13 +30,24 @@ check_name() {
     case $1 in xcontrol-*.bin) ;; *) die "invalid file name: $1";; esac
     case ${1%.bin} in *[!A-Za-z0-9-]*) die "invalid file name: $1";; esac
 }
-check_edid() {
+read_as_caller() {   # FILE MAX OUT: up to MAX bytes of FILE, opened with the caller's own rights
+    if [ "$(id -u)" = 0 ] && [ -n "${PKEXEC_UID:-}" ] && [ "$PKEXEC_UID" != 0 ] && command -v setpriv >/dev/null; then
+        g=$(id -g -- "$PKEXEC_UID") || die "unknown caller"
+        setpriv --reuid="$PKEXEC_UID" --regid="$g" --init-groups head -c "$2" -- "$1" > "$3"
+    else
+        head -c "$2" < "$1" > "$3"
+    fi
+}
+load_edid() {   # sets $edid: a private copy of FILE, read once, so it can't be swapped after the checks
     if [ ! -f "$1" ] || [ -L "$1" ]; then die "not a regular file: $1"; fi
-    size=$(wc -c < "$1")
+    edid=$(mktemp)
+    trap 'rm -f "$edid"' EXIT
+    read_as_caller "$1" 32769 "$edid" || die "can't read $1"
+    size=$(wc -c < "$edid")
     if [ "$size" -lt 128 ] || [ "$size" -gt 32768 ] || [ $((size % 128)) -ne 0 ]; then
         die "not an EDID (size $size)"
     fi
-    header=$(od -An -tx1 -N8 "$1" | tr -d ' \n')
+    header=$(od -An -tx1 -N8 "$edid" | tr -d ' \n')
     [ "$header" = "00ffffffffffff00" ] || die "not an EDID (bad header)"
 }
 connector_dir() {
@@ -53,9 +65,9 @@ cmd=$1; shift
 case $cmd in
     test)
         [ $# -eq 3 ] || die "usage: test CARD CONNECTOR FILE"
-        check_card "$1"; check_conn "$2"; check_edid "$3"
+        check_card "$1"; check_conn "$2"; load_edid "$3"
         dir=$(connector_dir "$1" "$2")
-        cat "$3" > "$dir/edid_override"
+        cat "$edid" > "$dir/edid_override"
         hotplug "$dir"
         echo "EDID override loaded for $2 (until reboot)"
         ;;
@@ -69,8 +81,8 @@ case $cmd in
         ;;
     install)
         [ $# -eq 2 ] || die "usage: install NAME FILE"
-        check_name "$1"; check_edid "$2"
-        install -Dm644 "$2" "$FIRMWARE/edid/$1"
+        check_name "$1"; load_edid "$2"
+        install -Dm644 "$edid" "$FIRMWARE/edid/$1"
         echo "installed $FIRMWARE/edid/$1"
         ;;
     remove)

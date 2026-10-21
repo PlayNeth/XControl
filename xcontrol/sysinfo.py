@@ -573,10 +573,14 @@ def slow(info):
 
 
 def _cpu_times():
-    line = read("/proc/stat").splitlines()[:1]
-    if not line or not line[0].startswith("cpu "):
+    try:  # just the first line: the rest (per-CPU and interrupt counters) can be large
+        with open(p("/proc/stat")) as f:
+            line = f.readline()
+    except OSError:
         return None
-    v = [int(x) for x in line[0].split()[1:]]
+    if not line.startswith("cpu "):
+        return None
+    v = [int(x) for x in line.split()[1:]]
     idle = v[3] + (v[4] if len(v) > 4 else 0)
     return sum(v[:8]), idle
 
@@ -620,7 +624,8 @@ def mounts():
         parts = line.split()
         if len(parts) < 3:
             continue
-        dev, target, fstype = parts[0], parts[1].replace("\\040", " "), parts[2]
+        # the kernel escapes space, tab, newline and backslash in paths as \ooo
+        dev, target, fstype = parts[0], re.sub(r"\\([0-7]{3})", lambda m: chr(int(m.group(1), 8)), parts[1]), parts[2]
         if fstype not in DISK_FS or not dev.startswith("/"):
             continue
         if dev in seen:  # btrfs subvolumes, bind mounts: keep the shortest path

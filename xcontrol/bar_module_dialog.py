@@ -95,8 +95,6 @@ class ColorChoice(Gtk.Box):
         self.custom.connect("toggled", lambda w: self.button.set_sensitive(w.get_active()))
         self.pack_start(self.custom, False, False, 0)
         self.pack_start(self.button, False, False, 0)
-        self.auto = Gtk.Label(label=_("Automatic"))
-        self.auto.get_style_context().add_class("dim-label")
 
     def value(self):
         if not self.custom.get_active():
@@ -134,11 +132,9 @@ class ModuleDialog(Gtk.Dialog):
                     grid.attach(Gtk.Label(label=label, xalign=0), 0, r, 1, 1)
                     if isinstance(kind, list):
                         w = Gtk.ComboBoxText()
+                        renamed = {("network", "name"): "name_if", ("xworkspaces", "name"): "name_ws"}
                         for choice in kind:
-                            renamed = {("network", "name"): "name_if", ("xworkspaces", "name"): "name_ws"}
-                            key = renamed.get((mid, choice), choice)
-                            name = CHOICES.get(key, choice)
-                            w.append(choice, _(name))
+                            w.append(choice, _(CHOICES.get(renamed.get((mid, choice), choice), choice)))
                         w.set_active_id(value)
                     elif kind == "int":
                         w = Gtk.SpinButton.new_with_range(0, 999, 1)

@@ -110,7 +110,7 @@ class OptionsDialog(Gtk.Dialog):
             parts = line.split()
             if not parts:
                 continue
-            out[parts[0]] = parts[1] if len(parts) > 1 else "true"
+            out[parts[0]] = " ".join(parts[1:]) or "true"     # (a value with spaces is refused below)
         bad = [f"{k} {v}" for k, v in out.items() if not X.NAME.match(k) or not X.VALUE.match(v)]
         if bad:
             self.error.set_markup("⚠ " + GLib.markup_escape_text(
@@ -365,7 +365,7 @@ class XServerTab(Gtk.Box):
 
     def _gpus(self):
         """The GPUs' kernel drivers X could drive (not firmware framebuffers)."""
-        return sorted({kd for kd in self.kdrivers.values() if kd not in ("simpledrm", "efifb", "vgem", "vkms")})
+        return sorted({kd for kd in self.kdrivers.values() if kd not in X.FIRMWARE_FB})
 
     def _auto(self, kd, installed):
         """What X picks by itself: a vendor driver's package adds a rule for its GPUs; else modesetting."""
@@ -387,7 +387,7 @@ class XServerTab(Gtk.Box):
         # A second Device section becomes a second GPU device of the screen (xf86Config.c), so when
         # the config already has a Device section, XControl doesn't add its own: that one's Driver
         # line decides.
-        others, _screens = X.device_sections()
+        others, screens = X.device_sections()
         blocked = bool(others)
         for r, kd in enumerate(gpus):
             lbl = Gtk.Label(label=_("GPU with {driver}").format(driver=kd), xalign=0)
@@ -423,7 +423,7 @@ class XServerTab(Gtk.Box):
                 "listed below, then log out and back in.").format(name=ident, file=path,
                                                                   driver=drv or _("none: X picks"))),
                 False, False, 0)
-        self._driver_notes()
+        self._driver_notes(others, screens)
         rows = []
         for name, (path, mabi) in sorted(found.items()):
             if not any(name == "modesetting" or kd in X.SUITS.get(name, ()) for kd in gpus):
@@ -445,8 +445,9 @@ class XServerTab(Gtk.Box):
         for n in notes:
             self.details.pack_start(_dim(n), False, False, 0)
 
-    def _driver_notes(self):
-        """Whether XControl's choice is the one X used, and what in other files could win over it."""
+    def _driver_notes(self, devices, screens):
+        """Whether XControl's choice is the one X used, and what in other files (X.device_sections())
+        could win over it."""
         notes = []
         ours = {f"XControl: {kd}" for kd in self.picks}
         used = self.info.device
@@ -455,7 +456,6 @@ class XServerTab(Gtk.Box):
                                   "picked the driver after that, log out and back in.").format(name=used))
         elif self.picks and used in ours:
             notes.append(_("X used XControl's choice at its last start."))
-        devices, screens = X.device_sections()
         for path, screen, dev in screens:
             notes.append("⚠ " + _("{file} has a Screen section that names its own Device (\"{device}\"); X uses "
                                   "that one, so XControl's choice can't apply.").format(file=path, device=dev))

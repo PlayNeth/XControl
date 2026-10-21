@@ -128,7 +128,7 @@ class PanelPage(Gtk.Box):
         box.pack_start(_hint(_("XControl writes its own polybar setup from scratch and starts one bar per display. "
                                "Your own polybar config isn't used or changed.")), False, False, 0)
         self.bar_status, self.bar_warn = self._status_area(box)
-        self.bar_stop = self.bar_warn.add_button(_("Stop them"), 1)
+        self.bar_warn.add_button(_("Stop them"), 1)
         self.bar_warn.connect("response", lambda *_a: self._stop_foreign(["polybar"]))
 
         g = _section(box, _("Layout"))
@@ -225,8 +225,8 @@ class PanelPage(Gtk.Box):
         for row in self.mod_list.get_children():
             row.destroy()
         b = self.desk["bar"]
-        can = B.available(b)
         ver = B.version()
+        can = B.available(b, ver)
         for i, (mid, pos, enabled) in enumerate(b["modules"]):
             row = Gtk.ListBoxRow(activatable=False)
             box = Gtk.Box(spacing=8, border_width=4)

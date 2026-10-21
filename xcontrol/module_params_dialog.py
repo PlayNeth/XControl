@@ -20,6 +20,7 @@ class ModuleParamsDialog(Gtk.Dialog):
         self.d = details
         self.name = details.name
         self.changed = False
+        self.busy = False
         self.entries = {}
         self.ours = kmods.our_values(self.name)
         self.others = kmods.other_values(self.name)
@@ -150,7 +151,9 @@ class ModuleParamsDialog(Gtk.Dialog):
         return ok
 
     def _response(self, _dlg, response):
-        if response == Gtk.ResponseType.OK:
+        if self.busy:       # (the helper still runs: closing now would lose its answer)
+            self.stop_emission_by_name("response")
+        elif response == Gtk.ResponseType.OK:
             if self._validate():
                 self._run(self._values())
             self.stop_emission_by_name("response")
@@ -159,10 +162,12 @@ class ModuleParamsDialog(Gtk.Dialog):
             self.stop_emission_by_name("response")
 
     def _run(self, values):
+        values = {k: v for k, v in values.items() if v}     # (all empty: the file is removed)
         live = self.live.get_active() and bool(values)
         args = kmods.helper_args(self.name, values, live=live, initramfs=self.initramfs.get_active())
         for w in (self.save_btn, self.remove_btn):
             w.set_sensitive(False)
+        self.busy = True
         self.spinner.start()
         self.result.set_text(_("Rebuilding the initramfs, this takes a minute…") if self.initramfs.get_active()
                              else _("Saving…"))
@@ -180,6 +185,7 @@ class ModuleParamsDialog(Gtk.Dialog):
         threading.Thread(target=work, daemon=True).start()
 
     def _done(self, ok, text, saved):
+        self.busy = False
         self.spinner.stop()
         self._validate()
         self.remove_btn.set_sensitive(True)

@@ -7,6 +7,7 @@
 #     removes the file) and tells systemd-logind to re-read its configuration (SIGHUP; logind
 #     is never restarted, that could end sessions). Only these keys and actions are accepted.
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-power-helper: $*" >&2; exit 1; }
 

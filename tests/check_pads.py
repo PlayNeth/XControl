@@ -284,8 +284,8 @@ try:
 finally:
     P.set_hidden, S.VirtualPad = real_set_hidden, real_vpad
 expect("light bar and rate changes don't reopen it",
-       (S._restart_keys(S.normalize({"lightbar": "#ff0000", "bt_poll_ms": 2})) == S._restart_keys(S.normalize({})),
-        S._restart_keys(S.normalize({"hide_real": False})) == S._restart_keys(S.normalize({}))), (True, False))
+       (S.restart_keys(S.normalize({"lightbar": "#ff0000", "bt_poll_ms": 2})) == S.restart_keys(S.normalize({})),
+        S.restart_keys(S.normalize({"hide_real": False})) == S.restart_keys(S.normalize({}))), (True, False))
 
 print("check_pads:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

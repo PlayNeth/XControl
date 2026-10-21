@@ -24,11 +24,14 @@ def pick_window():
     """Let the user click a window (xprop's crosshair); returns (pid, name) or (None, reason)."""
     if not shutil.which("xprop"):
         return None, "no-xprop"
-    try:
+    try:   # errors="replace": WM_CLASS is Latin-1 text by the X rules; an exception here would leave
+        # the page's button waiting forever (this runs in a thread)
         out = subprocess.run(["xprop", "_NET_WM_PID", "WM_CLASS"], capture_output=True, text=True,
-                             timeout=120).stdout
+                             errors="replace", timeout=120).stdout
     except subprocess.TimeoutExpired:
         return None, "timeout"
+    except OSError as e:
+        return None, str(e)
     pid = re.search(r"_NET_WM_PID\(CARDINAL\) = (\d+)", out)
     cls = re.search(r'WM_CLASS\(STRING\) = "([^"]*)", "([^"]*)"', out)
     if not pid:
@@ -211,11 +214,14 @@ def flatpak_fix(look):
     target = os.path.join(data, "themes", look.gtk_theme)
     copied = False
     if not os.path.isdir(target) or os.path.islink(target):
-        src = _theme_source(look.gtk_theme, T.theme_dirs())
-        if src and os.path.realpath(src) != os.path.realpath(target):
+        # not the target itself: a link there (from link_into_home) points outside the sandbox's reach
+        src = _theme_source(look.gtk_theme, [d for d in T.theme_dirs()
+                                             if os.path.join(d, look.gtk_theme) != target])
+        if src:
+            src = os.path.realpath(src)
             if os.path.islink(target):
                 os.remove(target)
-            shutil.copytree(src, target, symlinks=False)
+            shutil.copytree(src, target, symlinks=False, ignore_dangling_symlinks=True)
             copied = True
     if shutil.which("flatpak"):
         subprocess.run(["flatpak", "override", "--user",

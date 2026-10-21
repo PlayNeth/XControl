@@ -1,5 +1,6 @@
 """The Date & Language page: time zone, clock, language and formats."""
 import datetime
+import threading
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -205,6 +206,8 @@ class RegionPage(Gtk.Box):
         self._preview()
 
     def _preview(self, *_a):
+        if self.loading:   # (each preview starts a Python; _fill_language previews once when done)
+            return
         loc = self.formats.get_active_id() or self.lang.get_active_id()
         if not loc:
             self.example.set_text("")
@@ -237,7 +240,7 @@ class RegionPage(Gtk.Box):
         else:
             R.set_system_locale(values, self._done(_("Saved; log in again to use it")))
 
-    def _more(self, *_a):
+    def _more(self, btn):
         if not R.can_enable():
             self.window.message(_("Can't add languages here"),
                                 _("This needs pkexec (polkit) and /usr/share/i18n/SUPPORTED (glibc)."))
@@ -287,14 +290,20 @@ class RegionPage(Gtk.Box):
         if not picked:
             return
         self.window.set_status(_("Adding languages…"))
-        while Gtk.events_pending():
-            Gtk.main_iteration()
-        ok, msg = R.enable(picked)
-        if ok:
-            self.window.set_status(_("Languages added"))
-        elif msg:
-            self.window.message(_("Could not add the languages"), msg)
-        self._fill_language()
+        btn.set_sensitive(False)
+
+        def work():   # (locale-gen can take minutes: not in the window's thread)
+            GLib.idle_add(done, *R.enable(picked))
+
+        def done(ok, msg):
+            btn.set_sensitive(True)
+            if ok:
+                self.window.set_status(_("Languages added"))
+            elif msg:
+                self.window.message(_("Could not add the languages"), msg)
+            self._fill_language()
+            return False
+        threading.Thread(target=work, daemon=True).start()
 
     # ---------------------------------------------------------------- refresh
     def _refresh(self):

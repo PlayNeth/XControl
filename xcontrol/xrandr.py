@@ -151,7 +151,8 @@ def parse_verbose(text):
     edid_hex = []
     mode = None
     for line in text.splitlines():
-        m = re.match(r"^(\S+) (connected|disconnected)", line)
+        # (an "unknown connection" output too, so its properties aren't taken for the previous one's)
+        m = re.match(r"^(\S+) (connected|disconnected|unknown connection)", line)
         if m:
             if cur is not None and edid_hex:
                 out[cur]["edid"] = bytes.fromhex("".join(edid_hex))

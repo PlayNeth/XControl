@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.25.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 11:47-0300\n"
+"POT-Creation-Date: 2026-10-21 12:12-0300\n"
 "PO-Revision-Date: 2026-10-20 20:15-0300\n"
 "Last-Translator: XControl translators\n"
 "Language-Team: French\n"
@@ -37,7 +37,7 @@ msgstr "Saisie"
 msgid "Appearance"
 msgstr "Apparence"
 
-#: xcontrol/app.py:76 xcontrol/notify_page.py:289
+#: xcontrol/app.py:76 xcontrol/notify_page.py:290
 msgid "Sound"
 msgstr "Son"
 
@@ -74,7 +74,7 @@ msgstr "Alimentation"
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: xcontrol/app.py:103 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:757
+#: xcontrol/app.py:103 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:762
 msgid "System"
 msgstr "Système"
 
@@ -82,15 +82,15 @@ msgstr "Système"
 msgid "Display details"
 msgstr "Détails de l'écran"
 
-#: xcontrol/app.py:143 xcontrol/appearance_page.py:412
+#: xcontrol/app.py:143 xcontrol/appearance_page.py:416
 #: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:872
-#: xcontrol/module_params_dialog.py:119 xcontrol/resolutions_dialog.py:68
+#: xcontrol/module_params_dialog.py:120 xcontrol/resolutions_dialog.py:68
 msgid "Close"
 msgstr "Fermer"
 
 #: xcontrol/appearance_page.py:17 xcontrol/i3_page.py:17
-#: xcontrol/input_page.py:411 xcontrol/input_page.py:464
-#: xcontrol/sysinfo.py:822 xcontrol/sysinfo.py:830
+#: xcontrol/input_page.py:413 xcontrol/input_page.py:466
+#: xcontrol/sysinfo.py:827 xcontrol/sysinfo.py:835
 msgid "None"
 msgstr "Aucun"
 
@@ -139,20 +139,20 @@ msgid ""
 "It runs as another user (user id {detail}), for example through sudo, so it "
 "reads that user's theme settings, not yours. Run graphical apps as yourself."
 msgstr ""
-"Elle s'exécute sous un autre utilisateur (identifiant {detail}), par exemple"
-" via sudo : elle lit donc les réglages de thème de cet utilisateur, pas les "
+"Elle s'exécute sous un autre utilisateur (identifiant {detail}), par exemple "
+"via sudo : elle lit donc les réglages de thème de cet utilisateur, pas les "
 "vôtres. Lancez les applications graphiques sous votre propre compte."
 
 #: xcontrol/appearance_page.py:28
 #, python-brace-format
 msgid ""
 "Its environment sets GTK_THEME={detail}, which overrides every theme "
-"setting. Remove GTK_THEME from wherever it's set (~/.profile, ~/.xprofile, "
-"/etc/environment or the app's launcher)."
+"setting. Remove GTK_THEME from wherever it's set (~/.profile, ~/.xprofile, /"
+"etc/environment or the app's launcher)."
 msgstr ""
 "Son environnement définit GTK_THEME={detail}, ce qui remplace tous les "
-"réglages de thème. Supprimez GTK_THEME de l'endroit où il est défini "
-"(~/.profile, ~/.xprofile, /etc/environment ou le lanceur de l'application)."
+"réglages de thème. Supprimez GTK_THEME de l'endroit où il est défini (~/."
+"profile, ~/.xprofile, /etc/environment ou le lanceur de l'application)."
 
 #: xcontrol/appearance_page.py:31
 msgid ""
@@ -175,11 +175,11 @@ msgstr ""
 
 #: xcontrol/appearance_page.py:35
 msgid ""
-"It's an AppImage. AppImages bring their own GTK, which often doesn't look in"
-" /usr/share/themes, but always looks in your home folder."
+"It's an AppImage. AppImages bring their own GTK, which often doesn't look "
+"in /usr/share/themes, but always looks in your home folder."
 msgstr ""
-"C'est une AppImage. Les AppImages embarquent leur propre GTK, qui ne regarde"
-" souvent pas dans /usr/share/themes, mais toujours dans votre dossier "
+"C'est une AppImage. Les AppImages embarquent leur propre GTK, qui ne regarde "
+"souvent pas dans /usr/share/themes, mais toujours dans votre dossier "
 "personnel."
 
 #: xcontrol/appearance_page.py:37
@@ -188,8 +188,8 @@ msgid ""
 "purpose and only follows the dark preference."
 msgstr ""
 "Elle utilise libadwaita (la plupart des nouvelles applications GNOME). "
-"libadwaita ignore volontairement les thèmes GTK et ne suit que la préférence"
-" pour le mode sombre."
+"libadwaita ignore volontairement les thèmes GTK et ne suit que la préférence "
+"pour le mode sombre."
 
 #: xcontrol/appearance_page.py:39
 #, python-brace-format
@@ -211,9 +211,9 @@ msgstr ""
 
 #: xcontrol/appearance_page.py:42
 msgid ""
-"It's a Qt app. Qt apps only follow these settings through qt5ct/qt6ct, which"
-" needs QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) in your session environment, "
-"e.g. in ~/.xprofile, and a new login."
+"It's a Qt app. Qt apps only follow these settings through qt5ct/qt6ct, which "
+"needs QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) in your session environment, e."
+"g. in ~/.xprofile, and a new login."
 msgstr ""
 "C'est une application Qt. Les applications Qt ne suivent ces réglages qu'à "
 "travers qt5ct/qt6ct, ce qui nécessite QT_QPA_PLATFORMTHEME=qt5ct (ou qt6ct) "
@@ -242,21 +242,20 @@ msgstr ""
 
 #: xcontrol/appearance_page.py:49
 msgid ""
-"Nothing tells running apps about theme changes (no XSETTINGS manager). Apply"
-" once here so XControl starts one; until then, restart the app after a "
-"change."
+"Nothing tells running apps about theme changes (no XSETTINGS manager). Apply "
+"once here so XControl starts one; until then, restart the app after a change."
 msgstr ""
 "Rien n'informe les applications ouvertes des changements de thème (pas de "
-"gestionnaire XSETTINGS). Appliquez une fois ici pour que XControl en démarre"
-" un ; d'ici là, redémarrez l'application après un changement."
+"gestionnaire XSETTINGS). Appliquez une fois ici pour que XControl en démarre "
+"un ; d'ici là, redémarrez l'application après un changement."
 
 #: xcontrol/appearance_page.py:51
 msgid ""
 "Nothing blocks the theme. If it still looks wrong, restart the app once: it "
 "may have been started before live updates were set up."
 msgstr ""
-"Rien ne bloque le thème. S'il s'affiche encore mal, redémarrez l'application"
-" une fois : elle a peut-être été lancée avant la mise en place des mises à "
+"Rien ne bloque le thème. S'il s'affiche encore mal, redémarrez l'application "
+"une fois : elle a peut-être été lancée avant la mise en place des mises à "
 "jour en direct."
 
 #: xcontrol/appearance_page.py:55
@@ -314,7 +313,7 @@ msgstr "Curseur"
 msgid "{px} px"
 msgstr "{px} px"
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:212
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:213
 msgid "Size"
 msgstr "Taille"
 
@@ -374,15 +373,15 @@ msgid ""
 "For GTK and libadwaita apps. Windows fading in and out as they open and "
 "close is the compositor's (Bar & Compositor → \"Fade windows in and out\")."
 msgstr ""
-"Pour les applications GTK et libadwaita. Le fondu des fenêtres à l'ouverture"
-" et à la fermeture relève du compositeur (Barre et compositeur → « Fondu à "
+"Pour les applications GTK et libadwaita. Le fondu des fenêtres à l'ouverture "
+"et à la fermeture relève du compositeur (Barre et compositeur → « Fondu à "
 "l'ouverture et à la fermeture des fenêtres »)."
 
 #: xcontrol/appearance_page.py:178
 msgid "Also set the icon theme and font for Qt apps (qt5ct/qt6ct)"
 msgstr ""
-"Définir aussi le thème d'icônes et la police des applications Qt "
-"(qt5ct/qt6ct)"
+"Définir aussi le thème d'icônes et la police des applications Qt (qt5ct/"
+"qt6ct)"
 
 #: xcontrol/appearance_page.py:182 xcontrol/appearance_page.py:188
 msgid "Qt applications"
@@ -395,8 +394,8 @@ msgid ""
 "because QT_QPA_PLATFORMTHEME={value}. Nothing else is needed."
 msgstr ""
 "Les applications Qt prennent leurs couleurs, icônes et police dans les "
-"réglages GTK ci-dessus, car QT_QPA_PLATFORMTHEME={value}. Rien d'autre n'est"
-" nécessaire."
+"réglages GTK ci-dessus, car QT_QPA_PLATFORMTHEME={value}. Rien d'autre n'est "
+"nécessaire."
 
 #: xcontrol/appearance_page.py:189
 #, python-brace-format
@@ -410,17 +409,17 @@ msgid ""
 "is set in your session, e.g. in ~/.xprofile. It isn't set now."
 msgstr ""
 "Les applications Qt n'utilisent ces réglages que si "
-"QT_QPA_PLATFORMTHEME=qt5ct (ou qt6ct) est défini dans votre session, par ex."
-" dans ~/.xprofile. Ce n'est pas le cas actuellement."
+"QT_QPA_PLATFORMTHEME=qt5ct (ou qt6ct) est défini dans votre session, par ex. "
+"dans ~/.xprofile. Ce n'est pas le cas actuellement."
 
-#: xcontrol/appearance_page.py:200 xcontrol/display_page.py:618
+#: xcontrol/appearance_page.py:200 xcontrol/display_page.py:619
 msgid "Revert"
 msgstr "Rétablir"
 
 #: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
-#: xcontrol/bar_module_dialog.py:115 xcontrol/controllers_page.py:363
+#: xcontrol/bar_module_dialog.py:113 xcontrol/controllers_page.py:364
 #: xcontrol/display_page.py:266 xcontrol/input_page.py:212
-#: xcontrol/power_page.py:114 xcontrol/region_page.py:168
+#: xcontrol/power_page.py:116 xcontrol/region_page.py:169
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -429,22 +428,22 @@ msgid ""
 "Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
 "cursors, libadwaita's dark preference and Qt, and updates open apps."
 msgstr ""
-"Les changements sont prévisualisés dans cette fenêtre. Appliquer les définit"
-" pour GTK 2, 3 et 4, les curseurs X, la préférence sombre de libadwaita et "
+"Les changements sont prévisualisés dans cette fenêtre. Appliquer les définit "
+"pour GTK 2, 3 et 4, les curseurs X, la préférence sombre de libadwaita et "
 "Qt, et met à jour les applications ouvertes."
 
 #: xcontrol/appearance_page.py:213
 msgid "An app ignores the theme?"
 msgstr "Une application ignore le thème ?"
 
-#: xcontrol/appearance_page.py:214 xcontrol/appearance_page.py:403
+#: xcontrol/appearance_page.py:214 xcontrol/appearance_page.py:407
 msgid "Check an app…"
 msgstr "Vérifier une application…"
 
 #: xcontrol/appearance_page.py:217
 msgid ""
-"Click the button, then click the app's window. XControl looks at how the app"
-" runs and tells you why it doesn't follow the theme."
+"Click the button, then click the app's window. XControl looks at how the app "
+"runs and tells you why it doesn't follow the theme."
 msgstr ""
 "Cliquez sur le bouton, puis sur la fenêtre de l'application. XControl "
 "examine comment l'application s'exécute et vous explique pourquoi elle ne "
@@ -455,9 +454,9 @@ msgid ""
 "This theme isn't in any theme folder (it may be built into a program), so "
 "other apps probably can't find it. Pick one from the list."
 msgstr ""
-"Ce thème ne se trouve dans aucun dossier de thèmes (il est peut-être intégré"
-" à un programme), les autres applications ne le trouveront donc probablement"
-" pas. Choisissez-en un dans la liste."
+"Ce thème ne se trouve dans aucun dossier de thèmes (il est peut-être intégré "
+"à un programme), les autres applications ne le trouveront donc probablement "
+"pas. Choisissez-en un dans la liste."
 
 #: xcontrol/appearance_page.py:280
 #, python-brace-format
@@ -465,14 +464,14 @@ msgid ""
 "This theme has no version for {kits}; apps using those keep their default "
 "look."
 msgstr ""
-"Ce thème n'a pas de version pour {kits} ; les applications qui les utilisent"
-" gardent leur apparence par défaut."
+"Ce thème n'a pas de version pour {kits} ; les applications qui les utilisent "
+"gardent leur apparence par défaut."
 
 #: xcontrol/appearance_page.py:288
 msgid "Open apps update right away (xsettingsd is running)."
 msgstr ""
-"Les applications ouvertes se mettent à jour immédiatement (xsettingsd est en"
-" cours d'exécution)."
+"Les applications ouvertes se mettent à jour immédiatement (xsettingsd est en "
+"cours d'exécution)."
 
 #: xcontrol/appearance_page.py:290
 msgid "Open apps update right away through your desktop's settings service."
@@ -516,24 +515,24 @@ msgstr "Revenir aux réglages actuels"
 #: xcontrol/appearance_page.py:352
 #, python-brace-format
 msgid ""
-"{files} overrides the theme you pick here, in every app of that GTK version."
-" nwg-look's GTK 4 export and some theme installers create it."
+"{files} overrides the theme you pick here, in every app of that GTK version. "
+"nwg-look's GTK 4 export and some theme installers create it."
 msgstr ""
 "{files} remplace le thème que vous choisissez ici, dans toutes les "
-"applications de cette version de GTK. L'export GTK 4 de nwg-look et certains"
-" installateurs de thèmes le créent."
+"applications de cette version de GTK. L'export GTK 4 de nwg-look et certains "
+"installateurs de thèmes le créent."
 
-#: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:454
-#: xcontrol/system_page.py:512 xcontrol/users_page.py:335
+#: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:458
+#: xcontrol/system_page.py:513 xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr "Cela n'a pas fonctionné"
 
-#: xcontrol/appearance_page.py:369 xcontrol/appearance_page.py:440
+#: xcontrol/appearance_page.py:369 xcontrol/appearance_page.py:444
 #, python-brace-format
 msgid "Renamed: {items}. Restart the app."
 msgstr "Renommé : {items}. Redémarrez l'application."
 
-#: xcontrol/appearance_page.py:370 xcontrol/appearance_page.py:441
+#: xcontrol/appearance_page.py:370 xcontrol/appearance_page.py:445
 msgid "There was nothing to turn off."
 msgstr "Il n'y avait rien à désactiver."
 
@@ -554,47 +553,46 @@ msgstr ""
 msgid "Click the app's window…"
 msgstr "Cliquez sur la fenêtre de l'application…"
 
-#: xcontrol/appearance_page.py:405 xcontrol/controllers_page.py:133
+#: xcontrol/appearance_page.py:409 xcontrol/controllers_page.py:133
 msgid "xprop is needed for this (package xorg-xprop)."
 msgstr "xprop est nécessaire pour cela (paquet xorg-xprop)."
 
-#: xcontrol/appearance_page.py:406
+#: xcontrol/appearance_page.py:410
 msgid "That window doesn't say which program it belongs to."
 msgstr "Cette fenêtre n'indique pas à quel programme elle appartient."
 
-#: xcontrol/appearance_page.py:407
+#: xcontrol/appearance_page.py:411
 msgid "No window was clicked."
 msgstr "Aucune fenêtre n'a été cliquée."
 
-#: xcontrol/appearance_page.py:408
+#: xcontrol/appearance_page.py:412
 msgid "Couldn't check the app"
 msgstr "Impossible de vérifier l'application"
 
-#: xcontrol/appearance_page.py:410
+#: xcontrol/appearance_page.py:414
 #, python-brace-format
 msgid "Why {app} looks different"
 msgstr "Pourquoi {app} a une apparence différente"
 
-#: xcontrol/appearance_page.py:416
+#: xcontrol/appearance_page.py:420
 msgid "none found"
 msgstr "aucun trouvé"
 
-#: xcontrol/appearance_page.py:420
+#: xcontrol/appearance_page.py:424
 #, python-brace-format
 msgid "Toolkit: {kits}"
 msgstr "Boîte à outils : {kits}"
 
-#: xcontrol/appearance_page.py:444
+#: xcontrol/appearance_page.py:448
 #, python-brace-format
 msgid "Linked into your home folder: {items}. Restart the app."
-msgstr ""
-"Liés dans votre dossier personnel : {items}. Redémarrez l'application."
+msgstr "Liés dans votre dossier personnel : {items}. Redémarrez l'application."
 
-#: xcontrol/appearance_page.py:445
+#: xcontrol/appearance_page.py:449
 msgid "The themes are already in your home folder."
 msgstr "Les thèmes sont déjà dans votre dossier personnel."
 
-#: xcontrol/appearance_page.py:448
+#: xcontrol/appearance_page.py:452
 msgid "Done. Restart the app."
 msgstr "Terminé. Redémarrez l'application."
 
@@ -619,15 +617,14 @@ msgid "Smallest: for recording and live music (may crackle)"
 msgstr ""
 "Le plus petit : pour l'enregistrement et la musique live (peut craquer)"
 
-#: xcontrol/audio_page.py:22 xcontrol/bar_module_dialog.py:114
+#: xcontrol/audio_page.py:22 xcontrol/bar_module_dialog.py:112
 #: xcontrol/controllers_page.py:68 xcontrol/edid_override_dialog.py:253
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:81 xcontrol/i3_page.py:805
-#: xcontrol/monitors_page.py:138 xcontrol/region_page.py:248
-#: xcontrol/system_page.py:520 xcontrol/system_page.py:540
-#: xcontrol/users_page.py:358 xcontrol/users_page.py:380
-#: xcontrol/users_page.py:444 xcontrol/users_page.py:456
-#: xcontrol/xserver_page.py:38
+#: xcontrol/i3_page.py:81 xcontrol/i3_page.py:805 xcontrol/monitors_page.py:138
+#: xcontrol/region_page.py:251 xcontrol/system_page.py:521
+#: xcontrol/system_page.py:541 xcontrol/users_page.py:358
+#: xcontrol/users_page.py:380 xcontrol/users_page.py:444
+#: xcontrol/users_page.py:456 xcontrol/xserver_page.py:38
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -656,8 +653,8 @@ msgstr "Ne pas utiliser cette entrée"
 #: xcontrol/audio_page.py:38
 msgid "Never let it sleep (no pop, and no lost first second of sound)"
 msgstr ""
-"Ne jamais le laisser se mettre en veille (pas de « pop », et pas de première"
-" seconde de son perdue)"
+"Ne jamais le laisser se mettre en veille (pas de « pop », et pas de première "
+"seconde de son perdue)"
 
 #: xcontrol/audio_page.py:40
 msgid "Prefer it whenever it's connected"
@@ -679,7 +676,7 @@ msgstr "Ouvrir le mélangeur"
 msgid "Volumes, the default output and input, ports and card profiles"
 msgstr "Volumes, sortie et entrée par défaut, ports et profils des cartes"
 
-#: xcontrol/audio_page.py:69 xcontrol/kmods.py:248
+#: xcontrol/audio_page.py:69 xcontrol/kmods.py:246
 msgid "Devices"
 msgstr "Périphériques"
 
@@ -705,8 +702,8 @@ msgstr "Taille du tampon"
 msgid ""
 "Keep all outputs awake (no pops, no cut-off first second; HDMI and USB DACs)"
 msgstr ""
-"Garder toutes les sorties éveillées (pas de « pop », pas de première seconde"
-" coupée ; HDMI et DAC USB)"
+"Garder toutes les sorties éveillées (pas de « pop », pas de première seconde "
+"coupée ; HDMI et DAC USB)"
 
 #: xcontrol/audio_page.py:111
 msgid ""
@@ -714,17 +711,17 @@ msgid ""
 "WirePlumber. Saved in ~/.config/pipewire and ~/.config/wireplumber."
 msgstr ""
 "La fréquence d'échantillonnage et la taille du tampon changent "
-"immédiatement ; le reste redémarre WirePlumber. Enregistré dans "
-"~/.config/pipewire et ~/.config/wireplumber."
+"immédiatement ; le reste redémarre WirePlumber. Enregistré dans ~/.config/"
+"pipewire et ~/.config/wireplumber."
 
-#: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:666
-#: xcontrol/night_page.py:202 xcontrol/notify_page.py:581
-#: xcontrol/panel_page.py:483 xcontrol/power_page.py:97
+#: xcontrol/audio_page.py:137 xcontrol/controllers_page.py:670
+#: xcontrol/night_page.py:204 xcontrol/notify_page.py:582
+#: xcontrol/panel_page.py:483 xcontrol/power_page.py:99
 msgid "Could not save the settings"
 msgstr "Impossible d'enregistrer les réglages"
 
 #: xcontrol/audio_page.py:142 xcontrol/gaming_page.py:470
-#: xcontrol/power_page.py:127
+#: xcontrol/power_page.py:136
 msgid "Saved"
 msgstr "Enregistré"
 
@@ -733,20 +730,19 @@ msgid ""
 "Restart WirePlumber (or log in again) to use it: systemctl --user restart "
 "wireplumber"
 msgstr ""
-"Redémarrez WirePlumber (ou reconnectez-vous) pour l'utiliser : systemctl "
-"--user restart wireplumber"
+"Redémarrez WirePlumber (ou reconnectez-vous) pour l'utiliser : systemctl --"
+"user restart wireplumber"
 
-#: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:668
-#: xcontrol/notify_page.py:583 xcontrol/panel_page.py:485
-#: xcontrol/power_page.py:99
+#: xcontrol/audio_page.py:144 xcontrol/controllers_page.py:672
+#: xcontrol/notify_page.py:584 xcontrol/panel_page.py:485
+#: xcontrol/power_page.py:101
 msgid "Applied"
 msgstr "Appliqué"
 
 #: xcontrol/audio_page.py:169
 msgid "No sound server answers (PipeWire with pipewire-pulse, or PulseAudio)."
 msgstr ""
-"Aucun serveur de son ne répond (PipeWire avec pipewire-pulse, ou "
-"PulseAudio)."
+"Aucun serveur de son ne répond (PipeWire avec pipewire-pulse, ou PulseAudio)."
 
 #: xcontrol/audio_page.py:180
 #, python-brace-format
@@ -991,7 +987,7 @@ msgstr "Celle en cours d'utilisation"
 msgid "Wired"
 msgstr "Filaire"
 
-#: xcontrol/bar_module_dialog.py:70 xcontrol/sysinfo.py:901
+#: xcontrol/bar_module_dialog.py:70 xcontrol/sysinfo.py:906
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
@@ -1012,14 +1008,14 @@ msgid ""
 "%H hours, %M minutes, %S seconds, %a weekday, %d day, %b month, %Y year "
 "(like the date command). Spaces at the start or end are kept."
 msgstr ""
-"%H heures, %M minutes, %S secondes, %a jour de la semaine, %d jour, %b mois,"
-" %Y année (comme la commande date). Les espaces au début ou à la fin sont "
+"%H heures, %M minutes, %S secondes, %a jour de la semaine, %d jour, %b mois, "
+"%Y année (comme la commande date). Les espaces au début ou à la fin sont "
 "conservés."
 
 #: xcontrol/bar_module_dialog.py:76
 msgid ""
-"Empty: pavucontrol when it's installed. Any command works, e.g. alacritty -e"
-" wiremix."
+"Empty: pavucontrol when it's installed. Any command works, e.g. alacritty -e "
+"wiremix."
 msgstr ""
 "Vide : pavucontrol s'il est installé. N'importe quelle commande fonctionne, "
 "par ex. alacritty -e wiremix."
@@ -1033,19 +1029,15 @@ msgstr ""
 msgid "Custom"
 msgstr "Personnalisé"
 
-#: xcontrol/bar_module_dialog.py:98 xcontrol/display_color.py:23
-msgid "Automatic"
-msgstr "Automatique"
-
-#: xcontrol/bar_module_dialog.py:172
+#: xcontrol/bar_module_dialog.py:168
 msgid "Extra polybar settings"
 msgstr "Réglages polybar supplémentaires"
 
-#: xcontrol/bar_module_dialog.py:179
+#: xcontrol/bar_module_dialog.py:175
 #, python-brace-format
 msgid ""
-"Any other setting from polybar's documentation, one per line as in a polybar"
-" config (key = value). They go into the [{section}] section and replace "
+"Any other setting from polybar's documentation, one per line as in a polybar "
+"config (key = value). They go into the [{section}] section and replace "
 "XControl's own line with the same key."
 msgstr ""
 "Tout autre réglage de la documentation de polybar, un par ligne comme dans "
@@ -1161,7 +1153,7 @@ msgid "Guide (Xbox)"
 msgstr "Guide (Xbox)"
 
 #: xcontrol/controllers_page.py:26 xcontrol/notify_page.py:29
-#: xcontrol/power_page.py:14
+#: xcontrol/power_page.py:16
 msgid "Nothing"
 msgstr "Rien"
 
@@ -1178,7 +1170,7 @@ msgstr "Résistance"
 msgid "Click (like a gun)"
 msgstr "Clic (comme une arme)"
 
-#: xcontrol/controllers_page.py:28 xcontrol/controllers_page.py:322
+#: xcontrol/controllers_page.py:28 xcontrol/controllers_page.py:323
 msgid "Shaking"
 msgstr "Tremblement"
 
@@ -1227,11 +1219,11 @@ msgid "Swipe right"
 msgstr "Balayer vers la droite"
 
 #. TRANSLATORS: slider position meaning the feature is forced off
-#: xcontrol/controllers_page.py:34 xcontrol/controllers_page.py:298
-#: xcontrol/controllers_page.py:307 xcontrol/display_color.py:21
+#: xcontrol/controllers_page.py:34 xcontrol/controllers_page.py:299
+#: xcontrol/controllers_page.py:308 xcontrol/display_color.py:21
 #: xcontrol/gaming_page.py:18 xcontrol/gaming_page.py:39
-#: xcontrol/gaming_page.py:44 xcontrol/gaming_page.py:49
-#: xcontrol/i3_page.py:21 xcontrol/input_page.py:26 xcontrol/input_page.py:31
+#: xcontrol/gaming_page.py:44 xcontrol/gaming_page.py:49 xcontrol/i3_page.py:21
+#: xcontrol/input_page.py:26 xcontrol/input_page.py:31
 #: xcontrol/input_page.py:42 xcontrol/notify_page.py:36
 #: xcontrol/panel_page.py:33 xcontrol/xserver_page.py:60
 msgid "Off"
@@ -1264,8 +1256,7 @@ msgstr "Désactivé pendant l'appui"
 #: xcontrol/controllers_page.py:38
 msgid "Around the way you face, however you hold it"
 msgstr ""
-"Autour de la direction où vous regardez, quelle que soit la façon de la "
-"tenir"
+"Autour de la direction où vous regardez, quelle que soit la façon de la tenir"
 
 #: xcontrol/controllers_page.py:38
 msgid "Turning it flat (yaw)"
@@ -1321,9 +1312,9 @@ msgid ""
 "A window class (steam_app_1245620) or program name (eldenring.exe); * "
 "matches anything, as in steam_app_*. Case doesn't matter."
 msgstr ""
-"Une classe de fenêtre (steam_app_1245620) ou un nom de programme "
-"(eldenring.exe) ; * correspond à n'importe quoi, comme dans steam_app_*. La "
-"casse n'a pas d'importance."
+"Une classe de fenêtre (steam_app_1245620) ou un nom de programme (eldenring."
+"exe) ; * correspond à n'importe quoi, comme dans steam_app_*. La casse n'a "
+"pas d'importance."
 
 #: xcontrol/controllers_page.py:86 xcontrol/i3_page.py:556
 msgid "Pick a window…"
@@ -1337,11 +1328,11 @@ msgstr "Récemment au premier plan"
 msgid "Use these"
 msgstr "Utiliser celles-ci"
 
-#: xcontrol/controllers_page.py:158
+#: xcontrol/controllers_page.py:159
 msgid "Use XControl for controllers"
 msgstr "Utiliser XControl pour les manettes"
 
-#: xcontrol/controllers_page.py:164
+#: xcontrol/controllers_page.py:165
 msgid ""
 "For PlayStation controllers (DualShock 4 and DualSense), over USB or "
 "Bluetooth: light bar, report rate, adaptive triggers, gyro aiming, and an "
@@ -1350,38 +1341,38 @@ msgid ""
 "tools first, or both will drive the controller."
 msgstr ""
 "Pour les manettes PlayStation (DualShock 4 et DualSense), en USB ou en "
-"Bluetooth : barre lumineuse, fréquence d'envoi, gâchettes adaptatives, visée"
-" gyroscopique et une manette Xbox 360 pour les jeux, avec votre propre "
+"Bluetooth : barre lumineuse, fréquence d'envoi, gâchettes adaptatives, visée "
+"gyroscopique et une manette Xbox 360 pour les jeux, avec votre propre "
 "disposition des boutons. Fonctionne en arrière-plan avec le service du "
 "bureau ; arrêtez d'abord sc-controller ou les outils du type DS4Windows, "
 "sinon les deux piloteront la manette."
 
-#: xcontrol/controllers_page.py:190 xcontrol/desktop_page.py:154
-#: xcontrol/input_page.py:404 xcontrol/panel_page.py:134
+#: xcontrol/controllers_page.py:191 xcontrol/desktop_page.py:154
+#: xcontrol/input_page.py:406 xcontrol/panel_page.py:134
 msgid "Layout"
 msgstr "Disposition"
 
-#: xcontrol/controllers_page.py:195
+#: xcontrol/controllers_page.py:196
 msgid "New for a game…"
 msgstr "Nouvelle pour un jeu…"
 
-#: xcontrol/controllers_page.py:195
+#: xcontrol/controllers_page.py:196
 msgid "Edit…"
 msgstr "Modifier…"
 
-#: xcontrol/controllers_page.py:196 xcontrol/gaming_page.py:194
+#: xcontrol/controllers_page.py:197 xcontrol/gaming_page.py:194
 msgid "Delete"
 msgstr "Supprimer"
 
-#: xcontrol/controllers_page.py:202
+#: xcontrol/controllers_page.py:203
 msgid "Settings for"
 msgstr "Réglages pour"
 
-#: xcontrol/controllers_page.py:211 xcontrol/controllers_page.py:773
+#: xcontrol/controllers_page.py:212 xcontrol/controllers_page.py:777
 msgid "Every game"
 msgstr "Tous les jeux"
 
-#: xcontrol/controllers_page.py:219
+#: xcontrol/controllers_page.py:220
 msgid ""
 "A game can have a layout of its own: its buttons, gyro, light bar and "
 "triggers take over while it's in front. Everything else is the same for "
@@ -1391,7 +1382,7 @@ msgstr ""
 "barre lumineuse et ses gâchettes prennent le relais tant qu'il est au "
 "premier plan. Tout le reste est identique pour tous les jeux."
 
-#: xcontrol/controllers_page.py:224
+#: xcontrol/controllers_page.py:225
 #, python-brace-format
 msgid ""
 "Used while one of these is in front: {names}. The light bar, triggers, gyro "
@@ -1402,69 +1393,69 @@ msgstr ""
 "lumineuse, les gâchettes, le gyroscope et les boutons ci-dessous sont ceux "
 "de ce jeu ; les réglages grisés sont identiques pour tous les jeux."
 
-#: xcontrol/controllers_page.py:226
+#: xcontrol/controllers_page.py:227
 msgid "(none yet)"
 msgstr "(aucune pour l'instant)"
 
-#: xcontrol/controllers_page.py:243
+#: xcontrol/controllers_page.py:244
 msgid "New layout for a game"
 msgstr "Nouvelle disposition pour un jeu"
 
-#: xcontrol/controllers_page.py:257
+#: xcontrol/controllers_page.py:258
 msgid "Layout for a game"
 msgstr "Disposition pour un jeu"
 
-#: xcontrol/controllers_page.py:290
+#: xcontrol/controllers_page.py:291
 msgid "Light bar"
 msgstr "Barre lumineuse"
 
-#: xcontrol/controllers_page.py:294
+#: xcontrol/controllers_page.py:295
 msgid "Color"
 msgstr "Couleur"
 
-#: xcontrol/controllers_page.py:300 xcontrol/input_page.py:1014
+#: xcontrol/controllers_page.py:301 xcontrol/input_page.py:1019
 msgid "Brightness"
 msgstr "Luminosité"
 
-#: xcontrol/controllers_page.py:301
+#: xcontrol/controllers_page.py:302
 msgid "A dimmer light bar makes a Bluetooth controller's battery last longer."
 msgstr ""
 "Une barre lumineuse moins vive fait durer plus longtemps la batterie d'une "
 "manette Bluetooth."
 
-#: xcontrol/controllers_page.py:304
+#: xcontrol/controllers_page.py:305
 msgid "DualSense"
 msgstr "DualSense"
 
-#: xcontrol/controllers_page.py:306
+#: xcontrol/controllers_page.py:307
 msgid "Show the player number"
 msgstr "Afficher le numéro du joueur"
 
-#: xcontrol/controllers_page.py:309
+#: xcontrol/controllers_page.py:310
 msgid "Player lights"
 msgstr "Voyants du joueur"
 
-#: xcontrol/controllers_page.py:311
+#: xcontrol/controllers_page.py:312
 msgid "L2 trigger"
 msgstr "Gâchette L2"
 
-#: xcontrol/controllers_page.py:311
+#: xcontrol/controllers_page.py:312
 msgid "R2 trigger"
 msgstr "Gâchette R2"
 
-#: xcontrol/controllers_page.py:320
+#: xcontrol/controllers_page.py:321
 msgid "From"
 msgstr "De"
 
-#: xcontrol/controllers_page.py:320
+#: xcontrol/controllers_page.py:321
 msgid "To"
 msgstr "À"
 
-#: xcontrol/controllers_page.py:321 xcontrol/controllers_page.py:614
+#: xcontrol/controllers_page.py:322 xcontrol/controllers_page.py:615
 msgid "Strength"
 msgstr "Force"
 
-#: xcontrol/controllers_page.py:341
+#: xcontrol/controllers_page.py:342
 msgid ""
 "How the triggers push back, as in PS5 games: resistance from a point of the "
 "pull on, a click like a gun's trigger between two points, or shaking. The "
@@ -1477,21 +1468,21 @@ msgstr ""
 "jusqu'où la gâchette est enfoncée. Ils restent actifs tant que XControl "
 "fonctionne."
 
-#: xcontrol/controllers_page.py:346
+#: xcontrol/controllers_page.py:347
 msgid "Report rate"
 msgstr "Fréquence d'envoi"
 
-#: xcontrol/controllers_page.py:352
+#: xcontrol/controllers_page.py:353
 msgid "Over Bluetooth (DualShock 4)"
 msgstr "En Bluetooth (DualShock 4)"
 
-#: xcontrol/controllers_page.py:353
+#: xcontrol/controllers_page.py:354
 msgid ""
 "How often the controller sends its state; it applies right away, and the "
-"rate it really reaches shows above. Bluetooth itself usually tops out around"
-" 500–800 Hz, depending on the adapter (Wi-Fi + Bluetooth cards share the "
-"radio). It's still faster than the cable: over USB most DualShock 4s stay at"
-" 250 Hz whatever the rate. The DualSense picks its own Bluetooth rate."
+"rate it really reaches shows above. Bluetooth itself usually tops out around "
+"500–800 Hz, depending on the adapter (Wi-Fi + Bluetooth cards share the "
+"radio). It's still faster than the cable: over USB most DualShock 4s stay at "
+"250 Hz whatever the rate. The DualSense picks its own Bluetooth rate."
 msgstr ""
 "La fréquence à laquelle la manette envoie son état ; elle s'applique "
 "immédiatement, et la fréquence réellement atteinte s'affiche ci-dessus. Le "
@@ -1501,11 +1492,11 @@ msgstr ""
 "quelle que soit la fréquence. La DualSense choisit elle-même sa fréquence "
 "Bluetooth."
 
-#: xcontrol/controllers_page.py:366
+#: xcontrol/controllers_page.py:367
 msgid "Over USB"
 msgstr "En USB"
 
-#: xcontrol/controllers_page.py:367
+#: xcontrol/controllers_page.py:368
 msgid ""
 "Over USB the rate is set by Linux for every USB gamepad (usbhid's jspoll). "
 "Asks for your password, kept for the next boots; a connected controller "
@@ -1515,51 +1506,51 @@ msgstr ""
 "(jspoll de usbhid). Demande votre mot de passe, conservé pour les prochains "
 "démarrages ; une manette connectée se reconnecte pour l'utiliser."
 
-#: xcontrol/controllers_page.py:372
+#: xcontrol/controllers_page.py:373
 msgid "For games"
 msgstr "Pour les jeux"
 
-#: xcontrol/controllers_page.py:375
+#: xcontrol/controllers_page.py:376
 msgid "Show it as an Xbox 360 controller (works in almost every game)"
 msgstr ""
 "La présenter comme une manette Xbox 360 (fonctionne dans presque tous les "
 "jeux)"
 
-#: xcontrol/controllers_page.py:376
+#: xcontrol/controllers_page.py:377
 msgid "Leave it as it is (DualShock 4 or DualSense)"
 msgstr "La laisser telle quelle (DualShock 4 ou DualSense)"
 
-#: xcontrol/controllers_page.py:378
+#: xcontrol/controllers_page.py:379
 msgid "Games see"
 msgstr "Les jeux voient"
 
-#: xcontrol/controllers_page.py:379
+#: xcontrol/controllers_page.py:380
 msgid "Hide the real controller, so games don't see two"
 msgstr "Masquer la vraie manette, pour que les jeux n'en voient pas deux"
 
-#: xcontrol/controllers_page.py:382
+#: xcontrol/controllers_page.py:383
 msgid "The touchpad moves the mouse pointer"
 msgstr "Le pavé tactile déplace le pointeur de la souris"
 
-#: xcontrol/controllers_page.py:385
+#: xcontrol/controllers_page.py:386
 msgid ""
 "Rumble from games reaches the controller. Steam reads controllers its own "
-"way: in Steam, turn off PlayStation Configuration Support, or Steam sees the"
-" real controller as well."
+"way: in Steam, turn off PlayStation Configuration Support, or Steam sees the "
+"real controller as well."
 msgstr ""
 "Les vibrations des jeux parviennent à la manette. Steam lit les manettes à "
 "sa façon : dans Steam, désactivez la prise en charge de la configuration "
 "PlayStation, sinon Steam verra aussi la vraie manette."
 
-#: xcontrol/controllers_page.py:390
+#: xcontrol/controllers_page.py:391
 msgid "Gyro aiming"
 msgstr "Visée gyroscopique"
 
-#: xcontrol/controllers_page.py:395
+#: xcontrol/controllers_page.py:396
 msgid "Aim with it"
 msgstr "Viser avec"
 
-#: xcontrol/controllers_page.py:396
+#: xcontrol/controllers_page.py:397
 msgid ""
 "Turn the controller to aim. As a mouse is the most precise, and most games "
 "take the mouse and the controller together; as the right stick works in "
@@ -1567,160 +1558,159 @@ msgid ""
 "exact."
 msgstr ""
 "Tournez la manette pour viser. Comme une souris est le plus précis, et la "
-"plupart des jeux acceptent la souris et la manette ensemble ; comme le stick"
-" droit fonctionne dans tous les jeux, mais la zone morte et l'accélération "
-"du stick propres au jeu le rendent moins exact."
+"plupart des jeux acceptent la souris et la manette ensemble ; comme le stick "
+"droit fonctionne dans tous les jeux, mais la zone morte et l'accélération du "
+"stick propres au jeu le rendent moins exact."
 
-#: xcontrol/controllers_page.py:421 xcontrol/night_page.py:54
+#: xcontrol/controllers_page.py:422 xcontrol/night_page.py:54
 msgid "When"
 msgstr "Quand"
 
-#: xcontrol/controllers_page.py:426
+#: xcontrol/controllers_page.py:427
 msgid "Turning"
 msgstr "Rotation"
 
-#: xcontrol/controllers_page.py:427
+#: xcontrol/controllers_page.py:428
 #, python-brace-format
 msgid "{n} dots per degree"
 msgstr "{n} points par degré"
 
-#: xcontrol/controllers_page.py:428
+#: xcontrol/controllers_page.py:429
 msgid "Speed"
 msgstr "Vitesse"
 
-#: xcontrol/controllers_page.py:429
+#: xcontrol/controllers_page.py:430
 msgid ""
 "Mouse movement per degree you turn the controller; set it together with the "
 "game's mouse sensitivity."
 msgstr ""
-"Déplacement de la souris par degré de rotation de la manette ; à régler avec"
-" la sensibilité de la souris dans le jeu."
+"Déplacement de la souris par degré de rotation de la manette ; à régler avec "
+"la sensibilité de la souris dans le jeu."
 
-#: xcontrol/controllers_page.py:431
+#: xcontrol/controllers_page.py:432
 #, python-brace-format
 msgid "full stick at {n} °/s"
 msgstr "stick à fond à {n} °/s"
 
-#: xcontrol/controllers_page.py:432
+#: xcontrol/controllers_page.py:433
 msgid "Stick speed"
 msgstr "Vitesse du stick"
 
-#: xcontrol/controllers_page.py:434
+#: xcontrol/controllers_page.py:435
 msgid "Game's deadzone"
 msgstr "Zone morte du jeu"
 
-#: xcontrol/controllers_page.py:435
+#: xcontrol/controllers_page.py:436
 msgid ""
-"Set it to the game's own right-stick deadzone, so small turns aren't lost in"
-" it."
+"Set it to the game's own right-stick deadzone, so small turns aren't lost in "
+"it."
 msgstr ""
 "Réglez-la sur la zone morte du stick droit du jeu, pour que les petites "
 "rotations ne s'y perdent pas."
 
-#: xcontrol/controllers_page.py:438
+#: xcontrol/controllers_page.py:439
 msgid "Invert left/right"
 msgstr "Inverser gauche/droite"
 
-#: xcontrol/controllers_page.py:439
+#: xcontrol/controllers_page.py:440
 msgid "Invert up/down"
 msgstr "Inverser haut/bas"
 
-#: xcontrol/controllers_page.py:446
+#: xcontrol/controllers_page.py:447
 msgid "Correct its drift whenever it lies still"
 msgstr "Corriger sa dérive chaque fois qu'elle est immobile"
 
-#: xcontrol/controllers_page.py:449
+#: xcontrol/controllers_page.py:450
 msgid "Calibrate now"
 msgstr "Calibrer maintenant"
 
-#: xcontrol/controllers_page.py:454
+#: xcontrol/controllers_page.py:455
 msgid ""
 "Every gyro reads a little turning when there's none, which makes the aim "
 "creep. Put the controller down on a flat surface and press Calibrate now (2 "
 "seconds), or let it learn that whenever it lies still."
 msgstr ""
 "Tout gyroscope mesure une légère rotation alors qu'il n'y en a aucune, ce "
-"qui fait dériver la visée. Posez la manette sur une surface plane et appuyez"
-" sur Calibrer maintenant (2 secondes), ou laissez-la l'apprendre chaque fois"
-" qu'elle est immobile."
+"qui fait dériver la visée. Posez la manette sur une surface plane et appuyez "
+"sur Calibrer maintenant (2 secondes), ou laissez-la l'apprendre chaque fois "
+"qu'elle est immobile."
 
-#: xcontrol/controllers_page.py:459
+#: xcontrol/controllers_page.py:460
 msgid "The right stick needs games to see the Xbox 360 controller (above)."
 msgstr ""
-"Le stick droit nécessite que les jeux voient la manette Xbox 360 (ci-"
-"dessus)."
+"Le stick droit nécessite que les jeux voient la manette Xbox 360 (ci-dessus)."
 
-#: xcontrol/controllers_page.py:463 xcontrol/input_page.py:188
+#: xcontrol/controllers_page.py:464 xcontrol/input_page.py:188
 msgid "Touchpad"
 msgstr "Pavé tactile"
 
-#: xcontrol/controllers_page.py:466
+#: xcontrol/controllers_page.py:467
 msgid "One button (Touchpad click, above)"
 msgstr "Un seul bouton (Clic du pavé tactile, ci-dessus)"
 
-#: xcontrol/controllers_page.py:466
+#: xcontrol/controllers_page.py:467
 msgid "Left and right halves"
 msgstr "Moitiés gauche et droite"
 
-#: xcontrol/controllers_page.py:467
+#: xcontrol/controllers_page.py:468
 msgid "Four corners"
 msgstr "Quatre coins"
 
-#: xcontrol/controllers_page.py:470
+#: xcontrol/controllers_page.py:471
 msgid "Clicking it"
 msgstr "Clic dessus"
 
-#: xcontrol/controllers_page.py:472 xcontrol/monitor_info.py:234
+#: xcontrol/controllers_page.py:473 xcontrol/monitor_info.py:236
 msgid "No"
 msgstr "Non"
 
-#: xcontrol/controllers_page.py:472
+#: xcontrol/controllers_page.py:473
 msgid "As the right stick"
 msgstr "Comme le stick droit"
 
-#: xcontrol/controllers_page.py:472
+#: xcontrol/controllers_page.py:473
 msgid "As the left stick"
 msgstr "Comme le stick gauche"
 
-#: xcontrol/controllers_page.py:475
+#: xcontrol/controllers_page.py:476
 msgid "Sliding a finger"
 msgstr "Glissement du doigt"
 
-#: xcontrol/controllers_page.py:476
+#: xcontrol/controllers_page.py:477
 msgid "Swipes are buttons too (a quick slide up, down, left or right)"
 msgstr ""
 "Les balayages sont aussi des boutons (un glissement rapide vers le haut, le "
 "bas, la gauche ou la droite)"
 
-#: xcontrol/controllers_page.py:494
+#: xcontrol/controllers_page.py:495
 msgid ""
 "Sliding moves the stick from where the finger lands, as far as a fifth of "
 "the touchpad for a full push; it's added to the real stick. Swipes don't "
 "count while it's a stick."
 msgstr ""
 "Le glissement déplace le stick à partir de l'endroit où le doigt se pose, "
-"jusqu'à un cinquième du pavé tactile pour une poussée complète ; il s'ajoute"
-" au vrai stick. Les balayages ne comptent pas tant qu'il sert de stick."
+"jusqu'à un cinquième du pavé tactile pour une poussée complète ; il s'ajoute "
+"au vrai stick. Les balayages ne comptent pas tant qu'il sert de stick."
 
-#: xcontrol/controllers_page.py:509
+#: xcontrol/controllers_page.py:510
 msgid "Calibrating the gyro: leave the controller still for 2 seconds"
 msgstr ""
 "Calibration du gyroscope : laissez la manette immobile pendant 2 secondes"
 
-#: xcontrol/controllers_page.py:512
+#: xcontrol/controllers_page.py:513
 msgid "The controller service isn't running"
 msgstr "Le service des manettes n'est pas en cours d'exécution"
 
-#: xcontrol/controllers_page.py:515 xcontrol/input_page.py:930
-#: xcontrol/power_page.py:103
+#: xcontrol/controllers_page.py:516 xcontrol/input_page.py:935
+#: xcontrol/power_page.py:105
 msgid "Buttons"
 msgstr "Boutons"
 
-#: xcontrol/controllers_page.py:530
+#: xcontrol/controllers_page.py:531
 msgid "Default layout"
 msgstr "Disposition par défaut"
 
-#: xcontrol/controllers_page.py:533
+#: xcontrol/controllers_page.py:534
 msgid ""
 "Each button can be any Xbox button, or nothing. L2 and R2 stay analog while "
 "they're the triggers. The back paddles and Fn buttons are the DualSense "
@@ -1730,91 +1720,91 @@ msgstr ""
 "restent analogiques tant qu'ils servent de gâchettes. Les palettes arrière "
 "et les boutons Fn sont ceux de la DualSense Edge."
 
-#: xcontrol/controllers_page.py:599
+#: xcontrol/controllers_page.py:600
 msgid "Needs games to see the Xbox 360 controller (above)."
 msgstr "Nécessite que les jeux voient la manette Xbox 360 (ci-dessus)."
 
-#: xcontrol/controllers_page.py:600
+#: xcontrol/controllers_page.py:601
 msgid "Untick \"The touchpad moves the mouse pointer\" (above) to use these."
 msgstr ""
 "Décochez « Le pavé tactile déplace le pointeur de la souris » (ci-dessus) "
 "pour les utiliser."
 
-#: xcontrol/controllers_page.py:614
+#: xcontrol/controllers_page.py:615
 msgid "How strong"
 msgstr "Intensité"
 
-#: xcontrol/controllers_page.py:694
+#: xcontrol/controllers_page.py:698
 msgid "USB polling changed"
 msgstr "Fréquence d'interrogation USB modifiée"
 
-#: xcontrol/controllers_page.py:696
+#: xcontrol/controllers_page.py:700
 msgid "Could not change the USB polling"
 msgstr "Impossible de modifier la fréquence d'interrogation USB"
 
-#: xcontrol/controllers_page.py:713
+#: xcontrol/controllers_page.py:717
 msgid ""
-"No DualShock 4 or DualSense connected. Plug it in, or pair it over Bluetooth"
-" (hold Share or Create and PS until the light bar flashes)."
+"No DualShock 4 or DualSense connected. Plug it in, or pair it over Bluetooth "
+"(hold Share or Create and PS until the light bar flashes)."
 msgstr ""
 "Aucune DualShock 4 ou DualSense connectée. Branchez-la, ou appairez-la en "
-"Bluetooth (maintenez Share ou Create et PS jusqu'à ce que la barre lumineuse"
-" clignote)."
+"Bluetooth (maintenez Share ou Create et PS jusqu'à ce que la barre lumineuse "
+"clignote)."
 
-#: xcontrol/controllers_page.py:720
+#: xcontrol/controllers_page.py:724
 msgid "USB"
 msgstr "USB"
 
-#: xcontrol/controllers_page.py:720
+#: xcontrol/controllers_page.py:724
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-#: xcontrol/controllers_page.py:722
+#: xcontrol/controllers_page.py:726
 #, python-brace-format
 msgid "battery {pct} %"
 msgstr "batterie {pct} %"
 
-#: xcontrol/controllers_page.py:724
+#: xcontrol/controllers_page.py:728
 #, python-brace-format
 msgid "reporting at {hz} Hz"
 msgstr "envoi à {hz} Hz"
 
-#: xcontrol/controllers_page.py:726
+#: xcontrol/controllers_page.py:730
 msgid "games see an Xbox 360 controller"
 msgstr "les jeux voient une manette Xbox 360"
 
-#: xcontrol/controllers_page.py:728
+#: xcontrol/controllers_page.py:732
 msgid "hidden from games"
 msgstr "masquée aux jeux"
 
-#: xcontrol/controllers_page.py:730
+#: xcontrol/controllers_page.py:734
 msgid "calibrating the gyro…"
 msgstr "calibration du gyroscope…"
 
-#: xcontrol/controllers_page.py:730
+#: xcontrol/controllers_page.py:734
 msgid "gyro calibrated"
 msgstr "gyroscope calibré"
 
-#: xcontrol/controllers_page.py:731
+#: xcontrol/controllers_page.py:735
 msgid "gyro not calibrated yet"
 msgstr "gyroscope pas encore calibré"
 
-#: xcontrol/controllers_page.py:733
+#: xcontrol/controllers_page.py:737
 #, python-brace-format
 msgid "The gyro mouse couldn't be made: {error}"
 msgstr "Impossible de créer la souris gyroscopique : {error}"
 
-#: xcontrol/controllers_page.py:739
+#: xcontrol/controllers_page.py:743
 #, python-brace-format
 msgid "The controller service: {error}"
 msgstr "Le service des manettes : {error}"
 
-#: xcontrol/controllers_page.py:741
+#: xcontrol/controllers_page.py:745
 #, python-brace-format
 msgid "Couldn't hide the controller from games: {error}"
 msgstr "Impossible de masquer la manette aux jeux : {error}"
 
-#: xcontrol/controllers_page.py:743
+#: xcontrol/controllers_page.py:747
 msgid ""
 "You're in the \"input\" group, which lets every program read every input "
 "device, so games can still find the controller. Leave the group (gpasswd -d "
@@ -1825,17 +1815,17 @@ msgstr ""
 "trouver la manette. Quittez ce groupe (gpasswd -d $USER input, puis "
 "reconnectez-vous) pour la masquer."
 
-#: xcontrol/controllers_page.py:747
+#: xcontrol/controllers_page.py:751
 msgid ""
 "The light bar can't be changed yet: XControl's device permissions apply "
 "after the controller is reconnected (or after a reboot, right after "
 "installing)."
 msgstr ""
 "La barre lumineuse ne peut pas encore être modifiée : les permissions de "
-"périphérique de XControl s'appliquent après la reconnexion de la manette (ou"
-" après un redémarrage, juste après l'installation)."
+"périphérique de XControl s'appliquent après la reconnexion de la manette (ou "
+"après un redémarrage, juste après l'installation)."
 
-#: xcontrol/controllers_page.py:752
+#: xcontrol/controllers_page.py:756
 msgid ""
 "The touchpad and motion sensors can't be read yet: reconnect the controller "
 "so XControl's device permissions apply."
@@ -1844,38 +1834,36 @@ msgstr ""
 "lus : reconnectez la manette pour que les permissions de périphérique de "
 "XControl s'appliquent."
 
-#: xcontrol/controllers_page.py:755
+#: xcontrol/controllers_page.py:759
 msgid ""
 "The Bluetooth report rate can't be set yet: reconnect the controller so "
 "XControl's device permissions apply."
 msgstr ""
 "La fréquence d'envoi Bluetooth ne peut pas encore être réglée : reconnectez "
-"la manette pour que les permissions de périphérique de XControl "
-"s'appliquent."
+"la manette pour que les permissions de périphérique de XControl s'appliquent."
 
-#: xcontrol/controllers_page.py:758
+#: xcontrol/controllers_page.py:762
 msgid ""
 "The adaptive triggers can't be set yet: reconnect the controller so "
 "XControl's device permissions apply."
 msgstr ""
 "Les gâchettes adaptatives ne peuvent pas encore être réglées : reconnectez "
-"la manette pour que les permissions de périphérique de XControl "
-"s'appliquent."
+"la manette pour que les permissions de périphérique de XControl s'appliquent."
 
-#: xcontrol/controllers_page.py:766
+#: xcontrol/controllers_page.py:770
 msgid "The controller service is running."
 msgstr "Le service des manettes est en cours d'exécution."
 
-#: xcontrol/controllers_page.py:769
+#: xcontrol/controllers_page.py:773
 #, python-brace-format
 msgid "The controller service isn't running: {why}"
 msgstr "Le service des manettes n'est pas en cours d'exécution : {why}"
 
-#: xcontrol/controllers_page.py:770
+#: xcontrol/controllers_page.py:774
 msgid "The controller service is starting…"
 msgstr "Le service des manettes démarre…"
 
-#: xcontrol/controllers_page.py:773
+#: xcontrol/controllers_page.py:777
 #, python-brace-format
 msgid "In use now: {name}"
 msgstr "Utilisé actuellement : {name}"
@@ -1978,7 +1966,7 @@ msgstr "Nettoyer"
 msgid "Opens with"
 msgstr "Ouvert avec"
 
-#: xcontrol/defaults_page.py:57 xcontrol/defaults_page.py:195
+#: xcontrol/defaults_page.py:57 xcontrol/defaults_page.py:193
 #, python-brace-format
 msgid "Open {what} with"
 msgstr "Ouvrir {what} avec"
@@ -2012,16 +2000,16 @@ msgstr "Type"
 msgid "Double-click a type to choose its program."
 msgstr "Double-cliquez sur un type pour choisir son programme."
 
-#: xcontrol/defaults_page.py:117
+#: xcontrol/defaults_page.py:115
 msgid "Automatic (i3-sensible-terminal)"
 msgstr "Automatique (i3-sensible-terminal)"
 
-#: xcontrol/defaults_page.py:121 xcontrol/desktop_page.py:369
-#: xcontrol/region_page.py:193
+#: xcontrol/defaults_page.py:119 xcontrol/desktop_page.py:370
+#: xcontrol/region_page.py:194
 msgid "(not installed)"
 msgstr "(non installé)"
 
-#: xcontrol/defaults_page.py:125
+#: xcontrol/defaults_page.py:123
 #, python-brace-format
 msgid ""
 "$BROWSER is set to \"{value}\" in your session; xdg-open and many programs "
@@ -2029,36 +2017,36 @@ msgid ""
 "~/.bashrc or wherever it's set."
 msgstr ""
 "$BROWSER vaut « {value} » dans votre session ; xdg-open et de nombreux "
-"programmes l'utilisent au lieu du navigateur web choisi ici. Supprimez-le de"
-" ~/.xprofile, ~/.bashrc ou de l'endroit où il est défini."
+"programmes l'utilisent au lieu du navigateur web choisi ici. Supprimez-le de "
+"~/.xprofile, ~/.bashrc ou de l'endroit où il est défini."
 
-#: xcontrol/defaults_page.py:130
+#: xcontrol/defaults_page.py:128
 #, python-brace-format
 msgid ""
-"{n} file types are set to open with programs that are no longer installed "
-"(e.g. {example})."
+"{n} file types are set to open with programs that are no longer installed (e."
+"g. {example})."
 msgstr ""
 "{n} types de fichiers sont configurés pour s'ouvrir avec des programmes qui "
 "ne sont plus installés (par ex. {example})."
 
-#: xcontrol/defaults_page.py:168
+#: xcontrol/defaults_page.py:166 xcontrol/defaults_page.py:201
 msgid "Could not set it"
 msgstr "Impossible de le définir"
 
-#: xcontrol/defaults_page.py:170 xcontrol/defaults_page.py:201
+#: xcontrol/defaults_page.py:168 xcontrol/defaults_page.py:204
 #, python-brace-format
 msgid "{app} opens {what} now"
 msgstr "{app} ouvre désormais {what}"
 
-#: xcontrol/defaults_page.py:189 xcontrol/panel_page.py:481
+#: xcontrol/defaults_page.py:187 xcontrol/panel_page.py:481
 msgid "The i3 config wasn't updated"
 msgstr "La configuration d'i3 n'a pas été mise à jour"
 
-#: xcontrol/defaults_page.py:190
+#: xcontrol/defaults_page.py:188
 msgid "Terminal set"
 msgstr "Terminal défini"
 
-#: xcontrol/defaults_page.py:207
+#: xcontrol/defaults_page.py:208
 #, python-brace-format
 msgid "Removed {n} broken entries"
 msgstr "{n} entrées cassées supprimées"
@@ -2120,7 +2108,7 @@ msgid "For 4 hours"
 msgstr "Pendant 4 heures"
 
 #: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:871
-#: xcontrol/system_page.py:72 xcontrol/system_page.py:315
+#: xcontrol/system_page.py:72 xcontrol/system_page.py:316
 msgid "Copy"
 msgstr "Copier"
 
@@ -2140,7 +2128,7 @@ msgid "{name} (virtual, made by a system service)"
 msgstr "{name} (virtuel, créé par un service système)"
 
 #: xcontrol/desktop_page.py:85 xcontrol/i3_page.py:51
-#: xcontrol/notify_page.py:34 xcontrol/power_page.py:26
+#: xcontrol/notify_page.py:34 xcontrol/power_page.py:28
 msgid "Never"
 msgstr "Jamais"
 
@@ -2164,8 +2152,8 @@ msgstr ""
 "i3 n'exécute pas ~/.config/autostart de lui-même : après la prochaine "
 "connexion, rien ne définirait le fond d'écran ni ne lancerait le "
 "verrouillage de l'écran. Ajoutez cette ligne à votre configuration i3 (elle "
-"rétablit aussi la disposition de vos écrans, les réglages de la souris et du"
-" clavier et les mises à jour du thème en direct) :"
+"rétablit aussi la disposition de vos écrans, les réglages de la souris et du "
+"clavier et les mises à jour du thème en direct) :"
 
 #: xcontrol/desktop_page.py:141
 msgid "Let XControl set the desktop background (instead of feh or nitrogen)"
@@ -2177,7 +2165,7 @@ msgid "Wallpaper"
 msgstr "Fond d'écran"
 
 #: xcontrol/desktop_page.py:158 xcontrol/display_page.py:234
-#: xcontrol/i3_page.py:486 xcontrol/notify_page.py:172
+#: xcontrol/i3_page.py:486 xcontrol/notify_page.py:173
 msgid "Display"
 msgstr "Écran"
 
@@ -2304,28 +2292,28 @@ msgstr ""
 msgid "Until {time}."
 msgstr "Jusqu'à {time}."
 
-#: xcontrol/desktop_page.py:317
+#: xcontrol/desktop_page.py:318
 #, python-brace-format
 msgid "Watching: {names}."
 msgstr "Surveillés : {names}."
 
-#: xcontrol/desktop_page.py:318
+#: xcontrol/desktop_page.py:319
 msgid "No gamepad connected right now; they're picked up when plugged in."
 msgstr ""
 "Aucune manette connectée pour le moment ; elles sont prises en compte dès "
 "qu'elles sont branchées."
 
-#: xcontrol/desktop_page.py:320
+#: xcontrol/desktop_page.py:321
 #, python-brace-format
 msgid ""
-"No permission to read: {names}. Your user needs read access to its "
-"/dev/input device (normally given to the logged-in user automatically)."
+"No permission to read: {names}. Your user needs read access to its /dev/"
+"input device (normally given to the logged-in user automatically)."
 msgstr ""
 "Pas de permission de lecture : {names}. Votre utilisateur doit avoir accès "
 "en lecture à son périphérique /dev/input (normalement accordé "
 "automatiquement à l'utilisateur connecté)."
 
-#: xcontrol/desktop_page.py:328
+#: xcontrol/desktop_page.py:329
 msgid ""
 "Another program (probably a power manager) already answers these requests, "
 "so it decides instead of XControl."
@@ -2333,25 +2321,25 @@ msgstr ""
 "Un autre programme (probablement un gestionnaire d'énergie) répond déjà à "
 "ces demandes : c'est donc lui qui décide, pas XControl."
 
-#: xcontrol/desktop_page.py:335
+#: xcontrol/desktop_page.py:336
 msgid "you turned it on"
 msgstr "vous l'avez activé"
 
-#: xcontrol/desktop_page.py:337
+#: xcontrol/desktop_page.py:338
 #, python-brace-format
 msgid "{app} asked"
 msgstr "{app} l'a demandé"
 
-#: xcontrol/desktop_page.py:339
+#: xcontrol/desktop_page.py:340
 msgid "a full-screen window"
 msgstr "une fenêtre en plein écran"
 
-#: xcontrol/desktop_page.py:340
+#: xcontrol/desktop_page.py:341
 #, python-brace-format
 msgid "Kept on now: {why}."
 msgstr "Maintenu allumé actuellement : {why}."
 
-#: xcontrol/desktop_page.py:426
+#: xcontrol/desktop_page.py:427
 msgid ""
 "Install xss-lock: it starts the locker when you're idle and before the "
 "computer sleeps."
@@ -2359,18 +2347,18 @@ msgstr ""
 "Installez xss-lock : il lance le verrouilleur quand vous êtes inactif et "
 "avant la mise en veille de l'ordinateur."
 
-#: xcontrol/desktop_page.py:429
+#: xcontrol/desktop_page.py:430
 msgid "Install a locker: i3lock, xsecurelock or slock."
 msgstr "Installez un verrouilleur : i3lock, xsecurelock ou slock."
 
-#: xcontrol/desktop_page.py:431
+#: xcontrol/desktop_page.py:432
 msgid ""
 "slock is set up when it's compiled (config.h); XControl can only start it."
 msgstr ""
 "slock se configure à sa compilation (config.h) ; XControl peut seulement le "
 "lancer."
 
-#: xcontrol/desktop_page.py:433
+#: xcontrol/desktop_page.py:434
 msgid ""
 "xsecurelock is set up with XSECURELOCK_* environment variables; it doesn't "
 "show the wallpaper."
@@ -2378,47 +2366,47 @@ msgstr ""
 "xsecurelock se configure avec les variables d'environnement XSECURELOCK_* ; "
 "il n'affiche pas le fond d'écran."
 
-#: xcontrol/desktop_page.py:444
+#: xcontrol/desktop_page.py:445
 msgid "Active: xss-lock is running."
 msgstr "Actif : xss-lock est en cours d'exécution."
 
-#: xcontrol/desktop_page.py:446
+#: xcontrol/desktop_page.py:447
 msgid "Not running yet."
 msgstr "Pas encore en cours d'exécution."
 
-#: xcontrol/desktop_page.py:454
+#: xcontrol/desktop_page.py:455
 msgid ""
 "Your i3 config also sets the wallpaper; remove these lines or they'll "
 "replace XControl's at login:"
 msgstr ""
-"Votre configuration i3 définit aussi le fond d'écran ; supprimez ces lignes,"
-" sinon elles remplaceront celui de XControl à la connexion :"
+"Votre configuration i3 définit aussi le fond d'écran ; supprimez ces lignes, "
+"sinon elles remplaceront celui de XControl à la connexion :"
 
-#: xcontrol/desktop_page.py:457
+#: xcontrol/desktop_page.py:458
 msgid ""
-"Another screen lock is set up; remove it from your i3 config, or two lockers"
-" will start:"
+"Another screen lock is set up; remove it from your i3 config, or two lockers "
+"will start:"
 msgstr ""
 "Un autre verrouillage de l'écran est configuré ; supprimez-le de votre "
 "configuration i3, sinon deux verrouilleurs démarreront :"
 
-#: xcontrol/desktop_page.py:555
+#: xcontrol/desktop_page.py:556
 msgid "Could not save the desktop settings"
 msgstr "Impossible d'enregistrer les réglages du bureau"
 
-#: xcontrol/desktop_page.py:557
+#: xcontrol/desktop_page.py:558
 msgid "Desktop settings applied"
 msgstr "Réglages du bureau appliqués"
 
-#: xcontrol/desktop_page.py:558
+#: xcontrol/desktop_page.py:559
 msgid "XControl no longer manages the desktop"
 msgstr "XControl ne gère plus le bureau"
 
-#: xcontrol/desktop_page.py:564
+#: xcontrol/desktop_page.py:565
 msgid "Could not lock the screen"
 msgstr "Impossible de verrouiller l'écran"
 
-#: xcontrol/desktop_page.py:564
+#: xcontrol/desktop_page.py:565
 msgid "Install i3lock, xsecurelock or slock."
 msgstr "Installez i3lock, xsecurelock ou slock."
 
@@ -2446,6 +2434,10 @@ msgstr "Activé"
 #: xcontrol/display_color.py:21
 msgid "Automatic (HDMI TVs)"
 msgstr "Automatique (téléviseurs HDMI)"
+
+#: xcontrol/display_color.py:23
+msgid "Automatic"
+msgstr "Automatique"
 
 #: xcontrol/display_color.py:24
 msgid "Full (0–255, for PC monitors)"
@@ -2494,17 +2486,17 @@ msgid ""
 "If blacks look gray or dark details are crushed, the display and the GPU "
 "disagree on the range."
 msgstr ""
-"Si les noirs paraissent gris ou si les détails sombres sont écrasés, l'écran"
-" et le GPU ne s'accordent pas sur la plage."
+"Si les noirs paraissent gris ou si les détails sombres sont écrasés, l'écran "
+"et le GPU ne s'accordent pas sur la plage."
 
-#: xcontrol/display_color.py:124 xcontrol/monitor_info.py:136
+#: xcontrol/display_color.py:124 xcontrol/monitor_info.py:138
 msgid "Color depth"
 msgstr "Profondeur de couleur"
 
 #: xcontrol/display_color.py:125
 msgid ""
-"The highest depth the link may use; the driver lowers it when bandwidth runs"
-" out."
+"The highest depth the link may use; the driver lowers it when bandwidth runs "
+"out."
 msgstr ""
 "La profondeur la plus élevée que la liaison peut utiliser ; le pilote la "
 "réduit quand la bande passante manque."
@@ -2525,10 +2517,10 @@ msgid ""
 "keeps it."
 msgstr ""
 "Réalisée par le moteur d'affichage : elle s'applique donc à tout ce qui est "
-"à l'écran, jeux compris. À 100, les couleurs ne sont pas modifiées. Affichée"
-" en direct pendant que vous faites glisser ; Appliquer la conserve."
+"à l'écran, jeux compris. À 100, les couleurs ne sont pas modifiées. Affichée "
+"en direct pendant que vous faites glisser ; Appliquer la conserve."
 
-#: xcontrol/display_color.py:142 xcontrol/monitor_info.py:138
+#: xcontrol/display_color.py:142 xcontrol/monitor_info.py:140
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -2538,8 +2530,8 @@ msgid ""
 "gamma and may override this."
 msgstr ""
 "Des valeurs plus élevées éclaircissent les tons sombres et moyens. Les "
-"outils d'éclairage nocturne modifient aussi le gamma et peuvent remplacer ce"
-" réglage."
+"outils d'éclairage nocturne modifient aussi le gamma et peuvent remplacer ce "
+"réglage."
 
 #: xcontrol/display_color.py:146 xcontrol/input_page.py:207
 msgid "Reset to defaults"
@@ -2560,8 +2552,8 @@ msgstr "{bits} bits par couleur"
 msgid ""
 "Another program set a custom color matrix; moving the slider replaces it."
 msgstr ""
-"Un autre programme a défini une matrice de couleurs personnalisée ; déplacer"
-" le curseur la remplace."
+"Un autre programme a défini une matrice de couleurs personnalisée ; déplacer "
+"le curseur la remplace."
 
 #: xcontrol/display_page.py:18
 msgid "Rotated left"
@@ -2613,8 +2605,8 @@ msgstr ""
 "Ajouter des définitions personnalisées, ou ignorer les modes indiqués par "
 "l'écran"
 
-#: xcontrol/display_page.py:234 xcontrol/input_page.py:883
-#: xcontrol/monitor_info.py:178
+#: xcontrol/display_page.py:234 xcontrol/input_page.py:888
+#: xcontrol/monitor_info.py:180
 msgid "Enabled"
 msgstr "Activé"
 
@@ -2673,47 +2665,47 @@ msgstr "Aperçu : appuyez sur Appliquer pour conserver ces couleurs"
 msgid "Preview failed: {error}"
 msgstr "Échec de l'aperçu : {error}"
 
-#: xcontrol/display_page.py:450
+#: xcontrol/display_page.py:451
 msgid ""
-"None of your custom resolutions are active on this display, so all modes are"
-" shown."
+"None of your custom resolutions are active on this display, so all modes are "
+"shown."
 msgstr ""
 "Aucune de vos définitions personnalisées n'est active sur cet écran, tous "
 "les modes sont donc affichés."
 
-#: xcontrol/display_page.py:583
+#: xcontrol/display_page.py:584
 msgid "At least one display must stay on"
 msgstr "Au moins un écran doit rester allumé"
 
-#: xcontrol/display_page.py:583
+#: xcontrol/display_page.py:584
 msgid "Turn on a display before applying."
 msgstr "Allumez un écran avant d'appliquer."
 
-#: xcontrol/display_page.py:591 xcontrol/display_page.py:596
+#: xcontrol/display_page.py:592 xcontrol/display_page.py:597
 msgid "xrandr could not apply this layout"
 msgstr "xrandr n'a pas pu appliquer cette disposition"
 
-#: xcontrol/display_page.py:603
+#: xcontrol/display_page.py:604
 msgid "Display settings applied"
 msgstr "Réglages des écrans appliqués"
 
-#: xcontrol/display_page.py:610
+#: xcontrol/display_page.py:611
 msgid "Could not restore the previous layout"
 msgstr "Impossible de restaurer la disposition précédente"
 
-#: xcontrol/display_page.py:612
+#: xcontrol/display_page.py:613
 msgid "Display settings reverted"
 msgstr "Réglages des écrans rétablis"
 
-#: xcontrol/display_page.py:617
+#: xcontrol/display_page.py:618
 msgid "Keep these display settings?"
 msgstr "Conserver ces réglages d'écran ?"
 
-#: xcontrol/display_page.py:618
+#: xcontrol/display_page.py:619
 msgid "Keep changes"
 msgstr "Conserver les changements"
 
-#: xcontrol/display_page.py:622
+#: xcontrol/display_page.py:623
 #, python-brace-format
 msgid "The previous settings will be restored in {n} second."
 msgid_plural "The previous settings will be restored in {n} seconds."
@@ -2727,8 +2719,8 @@ msgstr "Liste des modes pour tout le système pour {output}"
 
 #: xcontrol/edid_override_dialog.py:44
 msgid ""
-"Builds a corrected EDID for this display that lists only the modes you tick."
-" The kernel then reports exactly these modes to X, games and every other "
+"Builds a corrected EDID for this display that lists only the modes you tick. "
+"The kernel then reports exactly these modes to X, games and every other "
 "program. The display's name, serial number and colour data are kept."
 msgstr ""
 "Crée un EDID corrigé pour cet écran qui ne liste que les modes que vous "
@@ -2764,8 +2756,8 @@ msgstr "Tester maintenant"
 #: xcontrol/edid_override_dialog.py:97
 msgid "Load it into the kernel until the next reboot (asks for your password)"
 msgstr ""
-"Le charger dans le noyau jusqu'au prochain redémarrage (demande votre mot de"
-" passe)"
+"Le charger dans le noyau jusqu'au prochain redémarrage (demande votre mot de "
+"passe)"
 
 #: xcontrol/edid_override_dialog.py:99
 msgid "Undo test"
@@ -2781,8 +2773,8 @@ msgid ""
 "Could not match {output} to a kernel connector, so the override can only be "
 "saved as a file."
 msgstr ""
-"Impossible d'associer {output} à un connecteur du noyau : le remplacement ne"
-" peut donc être enregistré que sous forme de fichier."
+"Impossible d'associer {output} à un connecteur du noyau : le remplacement ne "
+"peut donc être enregistré que sous forme de fichier."
 
 #: xcontrol/edid_override_dialog.py:121
 msgid ""
@@ -2796,12 +2788,11 @@ msgstr ""
 #, python-brace-format
 msgid "{count} modes · {blocks} EDID blocks · refresh range {low}–{high} Hz"
 msgstr ""
-"{count} modes · {blocks} blocs EDID · plage de rafraîchissement {low}–{high}"
-" Hz"
+"{count} modes · {blocks} blocs EDID · plage de rafraîchissement {low}–{high} "
+"Hz"
 
 #: xcontrol/edid_override_dialog.py:207
-msgid ""
-"The kernel is using the installed override, and it loads at every boot."
+msgid "The kernel is using the installed override, and it loads at every boot."
 msgstr ""
 "Le noyau utilise le remplacement installé, et il est chargé à chaque "
 "démarrage."
@@ -2850,8 +2841,8 @@ msgid ""
 "FILES=({file}) to /etc/mkinitcpio.conf, run “sudo mkinitcpio -P” and reboot."
 msgstr ""
 "Le remplacement est installé et le paramètre du noyau est défini, mais le "
-"fichier n'est pas dans l'initramfs : le pilote graphique ne peut donc pas le"
-" lire au démarrage. Ajoutez FILES=({file}) à /etc/mkinitcpio.conf, lancez "
+"fichier n'est pas dans l'initramfs : le pilote graphique ne peut donc pas le "
+"lire au démarrage. Ajoutez FILES=({file}) à /etc/mkinitcpio.conf, lancez "
 "« sudo mkinitcpio -P » et redémarrez."
 
 #: xcontrol/edid_override_dialog.py:219
@@ -2860,8 +2851,8 @@ msgid ""
 "still loaded at boot. Run “sudo mkinitcpio -P” and reboot."
 msgstr ""
 "Le fichier de remplacement a changé après la création de l'initramfs : "
-"l'ancien est donc toujours chargé au démarrage. Lancez « sudo mkinitcpio "
-"-P » et redémarrez."
+"l'ancien est donc toujours chargé au démarrage. Lancez « sudo mkinitcpio -"
+"P » et redémarrez."
 
 #: xcontrol/edid_override_dialog.py:221
 msgid ""
@@ -2870,10 +2861,10 @@ msgid ""
 "why."
 msgstr ""
 "Le remplacement est installé et configuré, mais le noyau ne l'utilise pas. "
-"Si vous n'avez pas redémarré depuis, redémarrez. Sinon, « sudo dmesg | grep "
-"-i edid » indique pourquoi."
+"Si vous n'avez pas redémarré depuis, redémarrez. Sinon, « sudo dmesg | grep -"
+"i edid » indique pourquoi."
 
-#: xcontrol/edid_override_dialog.py:248 xcontrol/module_params_dialog.py:174
+#: xcontrol/edid_override_dialog.py:248 xcontrol/module_params_dialog.py:179
 msgid "Authorization was cancelled."
 msgstr "L'autorisation a été annulée."
 
@@ -2881,8 +2872,8 @@ msgstr "L'autorisation a été annulée."
 msgid "Save EDID"
 msgstr "Enregistrer l'EDID"
 
-#: xcontrol/edid_override_dialog.py:253 xcontrol/module_params_dialog.py:120
-#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:520
+#: xcontrol/edid_override_dialog.py:253 xcontrol/module_params_dialog.py:121
+#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:521
 #: xcontrol/users_page.py:234 xcontrol/xserver_page.py:39
 msgid "Save"
 msgstr "Enregistrer"
@@ -2894,8 +2885,8 @@ msgstr "{path} enregistré"
 
 #: xcontrol/edid_override_dialog.py:279
 msgid ""
-"Loaded until reboot. The display was re-detected; check the Displays page or"
-" run xrandr. Use “Undo test” to go back."
+"Loaded until reboot. The display was re-detected; check the Displays page or "
+"run xrandr. Use “Undo test” to go back."
 msgstr ""
 "Chargé jusqu'au redémarrage. L'écran a été redétecté ; vérifiez la page "
 "Écrans ou lancez xrandr. Utilisez « Annuler le test » pour revenir en "
@@ -2915,14 +2906,17 @@ msgid ""
 "\n"
 "GRUB: add it to GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub, then run\n"
 "    sudo grub-mkconfig -o /boot/grub/grub.cfg\n"
-"systemd-boot: add it to the “options” line of your entry in /boot/loader/entries/.\n"
+"systemd-boot: add it to the “options” line of your entry in /boot/loader/"
+"entries/.\n"
 "\n"
-"Arch loads the graphics driver early (the kms hook), so also put the file in the initramfs: add\n"
+"Arch loads the graphics driver early (the kms hook), so also put the file in "
+"the initramfs: add\n"
 "    FILES=({file})\n"
 "to /etc/mkinitcpio.conf, then run\n"
 "    sudo mkinitcpio -P\n"
 "\n"
-"Reboot afterwards. If you had already set this up, the initramfs still holds the old file: run “sudo mkinitcpio -P” and reboot.\n"
+"Reboot afterwards. If you had already set this up, the initramfs still holds "
+"the old file: run “sudo mkinitcpio -P” and reboot.\n"
 "\n"
 "To undo, remove the parameter and the FILES entry, rebuild, and reboot."
 msgstr ""
@@ -2931,18 +2925,24 @@ msgstr ""
 "Pour le charger à chaque démarrage, ajoutez ce paramètre du noyau :\n"
 "    {param}\n"
 "\n"
-"GRUB : ajoutez-le à GRUB_CMDLINE_LINUX_DEFAULT dans /etc/default/grub, puis lancez\n"
+"GRUB : ajoutez-le à GRUB_CMDLINE_LINUX_DEFAULT dans /etc/default/grub, puis "
+"lancez\n"
 "    sudo grub-mkconfig -o /boot/grub/grub.cfg\n"
-"systemd-boot : ajoutez-le à la ligne « options » de votre entrée dans /boot/loader/entries/.\n"
+"systemd-boot : ajoutez-le à la ligne « options » de votre entrée dans /boot/"
+"loader/entries/.\n"
 "\n"
-"Arch charge le pilote graphique tôt (le hook kms) : placez donc aussi le fichier dans l'initramfs en ajoutant\n"
+"Arch charge le pilote graphique tôt (le hook kms) : placez donc aussi le "
+"fichier dans l'initramfs en ajoutant\n"
 "    FILES=({file})\n"
 "à /etc/mkinitcpio.conf, puis lancez\n"
 "    sudo mkinitcpio -P\n"
 "\n"
-"Redémarrez ensuite. Si vous aviez déjà fait cette configuration, l'initramfs contient encore l'ancien fichier : lancez « sudo mkinitcpio -P » et redémarrez.\n"
+"Redémarrez ensuite. Si vous aviez déjà fait cette configuration, l'initramfs "
+"contient encore l'ancien fichier : lancez « sudo mkinitcpio -P » et "
+"redémarrez.\n"
 "\n"
-"Pour annuler, supprimez le paramètre et l'entrée FILES, reconstruisez et redémarrez."
+"Pour annuler, supprimez le paramètre et l'entrée FILES, reconstruisez et "
+"redémarrez."
 
 #: xcontrol/edid_override_dialog.py:323
 msgid "Kernel parameter copied"
@@ -3019,8 +3019,8 @@ msgid "Add Steam game"
 msgstr "Ajouter un jeu Steam"
 
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
-#: xcontrol/i3_page.py:588 xcontrol/notify_page.py:316
-#: xcontrol/region_page.py:249 xcontrol/resolutions_dialog.py:153
+#: xcontrol/i3_page.py:588 xcontrol/notify_page.py:317
+#: xcontrol/region_page.py:252 xcontrol/resolutions_dialog.py:154
 #: xcontrol/users_page.py:381
 msgid "Add"
 msgstr "Ajouter"
@@ -3029,7 +3029,7 @@ msgstr "Ajouter"
 msgid "Search installed games"
 msgstr "Rechercher parmi les jeux installés"
 
-#: xcontrol/gaming_page.py:180 xcontrol/input_page.py:619
+#: xcontrol/gaming_page.py:180 xcontrol/input_page.py:623
 msgid "Profile:"
 msgstr "Profil :"
 
@@ -3067,8 +3067,8 @@ msgstr "Jeu"
 #: xcontrol/gaming_page.py:219
 msgid ""
 "Comma-separated. steam:APPID matches a Steam game; any other entry matches "
-"the file name of the program or of one of its arguments (e.g. game.exe under"
-" Proton)."
+"the file name of the program or of one of its arguments (e.g. game.exe under "
+"Proton)."
 msgstr ""
 "Séparés par des virgules. steam:APPID correspond à un jeu Steam ; toute "
 "autre entrée correspond au nom de fichier du programme ou de l'un de ses "
@@ -3102,8 +3102,7 @@ msgstr "Multiéchantillonnage"
 msgid "Transparency"
 msgstr "Transparence"
 
-#. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9)
-#. games
+#. TRANSLATORS: which Direct3D implementation Wine uses for old (DirectX 8/9) games
 #: xcontrol/gaming_page.py:249
 msgid "Direct3D 8/9 games"
 msgstr "Jeux Direct3D 8/9"
@@ -3114,8 +3113,8 @@ msgid ""
 "Direct3D 8/9 games that draw straight to the screen (mostly older titles). "
 "DXVK cannot force it. Games with post-processing or deferred rendering "
 "ignore it; use their own AA options. Off also disables MSAA in Direct3D 11 "
-"games running through DXVK. Transparency AA smooths alpha-tested foliage and"
-" fences while multisampling is active; in shader-based games, including "
+"games running through DXVK. Transparency AA smooths alpha-tested foliage and "
+"fences while multisampling is active; in shader-based games, including "
 "WineD3D, both modes supersample just those surfaces."
 msgstr ""
 "Le multiéchantillonnage forcé fonctionne dans les jeux OpenGL et, avec "
@@ -3125,8 +3124,8 @@ msgstr ""
 "options d'anticrénelage. Désactivé désactive aussi le MSAA dans les jeux "
 "Direct3D 11 qui passent par DXVK. L'anticrénelage de la transparence lisse "
 "le feuillage et les clôtures à test alpha tant que le multiéchantillonnage "
-"est actif ; dans les jeux à base de shaders, WineD3D compris, les deux modes"
-" suréchantillonnent seulement ces surfaces."
+"est actif ; dans les jeux à base de shaders, WineD3D compris, les deux modes "
+"suréchantillonnent seulement ces surfaces."
 
 #: xcontrol/gaming_page.py:265
 msgid "Texture Filtering"
@@ -3162,8 +3161,7 @@ msgstr "IPS"
 msgid "Frame limiter"
 msgstr "Limiteur d'images"
 
-#. TRANSLATORS: AMD's name for variable refresh rate; keep it if your language
-#. uses it
+#. TRANSLATORS: AMD's name for variable refresh rate; keep it if your language uses it
 #: xcontrol/gaming_page.py:291
 msgid "FreeSync"
 msgstr "FreeSync"
@@ -3205,8 +3203,8 @@ msgid ""
 "Settings apply to games started through the panel's launcher. For Steam "
 "games, use these launch options:"
 msgstr ""
-"Les réglages s'appliquent aux jeux lancés depuis le lanceur du panneau. Pour"
-" les jeux Steam, utilisez ces options de lancement :"
+"Les réglages s'appliquent aux jeux lancés depuis le lanceur du panneau. Pour "
+"les jeux Steam, utilisez ces options de lancement :"
 
 #: xcontrol/gaming_page.py:344
 msgid "Copy launch options"
@@ -3414,8 +3412,8 @@ msgstr "Le service propre à poweralertd est aussi activé"
 msgid ""
 "It starts a second poweralertd at login, so every power alert shows twice."
 msgstr ""
-"Il lance un second poweralertd à la connexion : chaque alerte d'alimentation"
-" s'affiche donc deux fois."
+"Il lance un second poweralertd à la connexion : chaque alerte d'alimentation "
+"s'affiche donc deux fois."
 
 #: xcontrol/health.py:155
 msgid "Another night-light program is running"
@@ -3438,8 +3436,8 @@ msgid ""
 msgstr ""
 "xsettingsd est installé mais n'est pas en cours d'exécution : les "
 "applications ouvertes gardent donc leur ancien thème, leur police et leur "
-"curseur jusqu'à leur redémarrage. Démarrez-le maintenant ; xcontrol "
-"--session le lance à chaque connexion."
+"curseur jusqu'à leur redémarrage. Démarrez-le maintenant ; xcontrol --"
+"session le lance à chaque connexion."
 
 #: xcontrol/health.py:166
 msgid "Start xsettingsd"
@@ -3505,8 +3503,8 @@ msgstr "X a ignoré certaines options X de XControl"
 #: xcontrol/health.py:206
 #, python-brace-format
 msgid ""
-"At its last start X didn't use: {names}. The driver in use may not have them"
-" (System > X server)."
+"At its last start X didn't use: {names}. The driver in use may not have them "
+"(System > X server)."
 msgstr ""
 "Lors de son dernier démarrage, X n'a pas utilisé : {names}. Le pilote "
 "utilisé ne les a peut-être pas (Système > Serveur X)."
@@ -3519,18 +3517,18 @@ msgstr "Avec barre de titre"
 msgid "Border only"
 msgstr "Bordure seulement"
 
-#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22
-#: xcontrol/notify_page.py:23 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Left"
 msgstr "Gauche"
 
-#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:17
-#: xcontrol/notify_page.py:23 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:17 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Center"
 msgstr "Centre"
 
-#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22
-#: xcontrol/notify_page.py:23 xcontrol/panel_page.py:30
+#: xcontrol/i3_page.py:18 xcontrol/notify_page.py:22 xcontrol/notify_page.py:23
+#: xcontrol/panel_page.py:30
 msgid "Right"
 msgstr "Droite"
 
@@ -3698,11 +3696,11 @@ msgstr "Action"
 
 #: xcontrol/i3_page.py:112
 msgid ""
-"Any i3 command. \"exec\" runs a program, e.g. exec --no-startup-id flameshot"
-" gui."
+"Any i3 command. \"exec\" runs a program, e.g. exec --no-startup-id flameshot "
+"gui."
 msgstr ""
-"N'importe quelle commande i3. « exec » lance un programme, par ex. exec "
-"--no-startup-id flameshot gui."
+"N'importe quelle commande i3. « exec » lance un programme, par ex. exec --no-"
+"startup-id flameshot gui."
 
 #: xcontrol/i3_page.py:115 xcontrol/i3_page.py:371
 msgid "Mode"
@@ -3735,9 +3733,9 @@ msgstr "Importer ma configuration précédente…"
 
 #: xcontrol/i3_page.py:209
 msgid ""
-"XControl writes ~/.config/i3/config from this page and reloads i3 after each"
-" change. Your current config is kept as config.before-xcontrol and can be "
-"put back by switching this off. Every change is checked with i3 first, so a "
+"XControl writes ~/.config/i3/config from this page and reloads i3 after each "
+"change. Your current config is kept as config.before-xcontrol and can be put "
+"back by switching this off. Every change is checked with i3 first, so a "
 "mistake never replaces a working config."
 msgstr ""
 "XControl écrit ~/.config/i3/config à partir de cette page et recharge i3 "
@@ -3746,7 +3744,7 @@ msgstr ""
 "option. Chaque changement est d'abord vérifié par i3 : une erreur ne "
 "remplace donc jamais une configuration qui fonctionne."
 
-#: xcontrol/i3_page.py:227 xcontrol/notify_page.py:185
+#: xcontrol/i3_page.py:227 xcontrol/notify_page.py:186
 msgid "Look"
 msgstr "Apparence"
 
@@ -3856,13 +3854,13 @@ msgstr "Rechercher des touches ou des actions"
 msgid "Add…"
 msgstr "Ajouter…"
 
-#: xcontrol/i3_page.py:357 xcontrol/system_page.py:344
+#: xcontrol/i3_page.py:357 xcontrol/system_page.py:345
 #: xcontrol/xserver_page.py:350 xcontrol/xserver_page.py:550
 msgid "Change…"
 msgstr "Modifier…"
 
-#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:588 xcontrol/notify_page.py:318
-#: xcontrol/resolutions_dialog.py:242
+#: xcontrol/i3_page.py:358 xcontrol/i3_page.py:588 xcontrol/notify_page.py:319
+#: xcontrol/resolutions_dialog.py:247
 msgid "Remove"
 msgstr "Retirer"
 
@@ -3939,8 +3937,8 @@ msgstr "N'importe lequel"
 
 #: xcontrol/i3_page.py:508
 msgid ""
-"A name like \"2:web\" shows \"web\" in the bar when the bar hides numbers. A"
-" workspace with a display opens there."
+"A name like \"2:web\" shows \"web\" in the bar when the bar hides numbers. A "
+"workspace with a display opens there."
 msgstr ""
 "Un nom comme « 2:web » affiche « web » dans la barre quand la barre masque "
 "les numéros. Un espace de travail associé à un écran s'ouvre sur celui-ci."
@@ -3955,8 +3953,8 @@ msgid ""
 "Always first: {line} (wallpaper, bar, compositor, screen lock, input "
 "settings)."
 msgstr ""
-"Toujours en premier : {line} (fond d'écran, barre, compositeur, verrouillage"
-" de l'écran, réglages de saisie)."
+"Toujours en premier : {line} (fond d'écran, barre, compositeur, verrouillage "
+"de l'écran, réglages de saisie)."
 
 #: xcontrol/i3_page.py:527
 msgid "Also on reload"
@@ -4005,9 +4003,9 @@ msgid ""
 "workspace number 3. \"Open on\" puts them on a workspace, e.g. number 2."
 msgstr ""
 "Des critères comme class=\"Steam\" ou title=\"Picture-in-Picture\". "
-"« Faire » exécute des commandes i3 sur les fenêtres correspondantes, par ex."
-" floating enable, border none, move to workspace number 3. « Ouvrir sur » "
-"les place sur un espace de travail, par ex. number 2."
+"« Faire » exécute des commandes i3 sur les fenêtres correspondantes, par ex. "
+"floating enable, border none, move to workspace number 3. « Ouvrir sur » les "
+"place sur un espace de travail, par ex. number 2."
 
 #: xcontrol/i3_page.py:566
 msgid "i3's bar"
@@ -4025,8 +4023,8 @@ msgstr "Configuration i3 supplémentaire"
 
 #: xcontrol/i3_page.py:572
 msgid ""
-"Anything else from i3's user guide, as in an i3 config file. Checked with i3"
-" like everything else."
+"Anything else from i3's user guide, as in an i3 config file. Checked with i3 "
+"like everything else."
 msgstr ""
 "Tout le reste du guide de l'utilisateur d'i3, comme dans un fichier de "
 "configuration i3. Vérifié par i3 comme tout le reste."
@@ -4062,8 +4060,8 @@ msgid ""
 "kept as a backup."
 msgstr ""
 "Ses touches, programmes de démarrage, règles des fenêtres et son apparence "
-"sont repris sur cette page. Sinon, la page part des valeurs par défaut d'i3."
-" Dans les deux cas, votre fichier est conservé comme sauvegarde."
+"sont repris sur cette page. Sinon, la page part des valeurs par défaut d'i3. "
+"Dans les deux cas, votre fichier est conservé comme sauvegarde."
 
 #: xcontrol/i3_page.py:826
 msgid "Import it"
@@ -4241,16 +4239,16 @@ msgstr "Second mode"
 msgid "Battery level"
 msgstr "Niveau de batterie"
 
-#: xcontrol/input_page.py:41 xcontrol/notify_page.py:268
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:269
 msgid "Left click"
 msgstr "Clic gauche"
 
 #: xcontrol/input_page.py:41 xcontrol/input_page.py:200
-#: xcontrol/notify_page.py:269
+#: xcontrol/notify_page.py:270
 msgid "Right click"
 msgstr "Clic droit"
 
-#: xcontrol/input_page.py:41 xcontrol/notify_page.py:268
+#: xcontrol/input_page.py:41 xcontrol/notify_page.py:269
 msgid "Middle click"
 msgstr "Clic du milieu"
 
@@ -4270,8 +4268,8 @@ msgstr "Respiration"
 msgid "Device:"
 msgstr "Périphérique :"
 
-#: xcontrol/input_page.py:155 xcontrol/input_page.py:623
-#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:201
+#: xcontrol/input_page.py:155 xcontrol/input_page.py:627
+#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:202
 #: xcontrol/xserver_page.py:172
 msgid "Refresh"
 msgstr "Actualiser"
@@ -4285,7 +4283,7 @@ msgid "Slow"
 msgstr "Lent"
 
 #: xcontrol/input_page.py:169 xcontrol/input_page.py:171
-#: xcontrol/input_page.py:478 xcontrol/xserver_page.py:58
+#: xcontrol/input_page.py:480 xcontrol/xserver_page.py:58
 msgid "Default"
 msgstr "Par défaut"
 
@@ -4353,8 +4351,8 @@ msgid ""
 "XControl puts them back at login and whenever the device is plugged in. "
 "Refresh discards changes you haven't applied."
 msgstr ""
-"Les changements sont utilisés quand vous appuyez sur Appliquer, et conservés"
-" pour chaque périphérique selon son nom : XControl les rétablit à la "
+"Les changements sont utilisés quand vous appuyez sur Appliquer, et conservés "
+"pour chaque périphérique selon son nom : XControl les rétablit à la "
 "connexion et chaque fois que le périphérique est branché. Actualiser "
 "abandonne les changements que vous n'avez pas appliqués."
 
@@ -4378,142 +4376,141 @@ msgstr ""
 
 #: xcontrol/input_page.py:357
 msgid "Defaults shown; press Apply to use them"
-msgstr ""
-"Valeurs par défaut affichées ; appuyez sur Appliquer pour les utiliser"
+msgstr "Valeurs par défaut affichées ; appuyez sur Appliquer pour les utiliser"
 
-#: xcontrol/input_page.py:386
+#: xcontrol/input_page.py:387
 msgid "Could not change this setting"
 msgstr "Impossible de modifier ce réglage"
 
-#: xcontrol/input_page.py:388
+#: xcontrol/input_page.py:389
 msgid "Settings applied"
 msgstr "Réglages appliqués"
 
-#: xcontrol/input_page.py:409
+#: xcontrol/input_page.py:411
 msgid "Not set"
 msgstr "Non défini"
 
-#: xcontrol/input_page.py:410
+#: xcontrol/input_page.py:412
 msgid "Default (Caps Lock)"
 msgstr "Par défaut (Verr. Maj)"
 
-#: xcontrol/input_page.py:416 xcontrol/panel_page.py:26
+#: xcontrol/input_page.py:418 xcontrol/panel_page.py:26
 msgid "Keyboard layout"
 msgstr "Disposition du clavier"
 
-#: xcontrol/input_page.py:416 xcontrol/input_page.py:417
+#: xcontrol/input_page.py:418 xcontrol/input_page.py:419
 msgid "Variant"
 msgstr "Variante"
 
-#: xcontrol/input_page.py:417
+#: xcontrol/input_page.py:419
 msgid "Second layout"
 msgstr "Deuxième disposition"
 
-#: xcontrol/input_page.py:418
+#: xcontrol/input_page.py:420
 msgid "Switch layouts with"
 msgstr "Changer de disposition avec"
 
-#: xcontrol/input_page.py:418
+#: xcontrol/input_page.py:420
 msgid "Caps Lock key"
 msgstr "Touche Verr. Maj"
 
-#: xcontrol/input_page.py:419
+#: xcontrol/input_page.py:421
 msgid "Compose key"
 msgstr "Touche Compose"
 
-#: xcontrol/input_page.py:434
+#: xcontrol/input_page.py:436
 msgid "Key repeat"
 msgstr "Répétition des touches"
 
-#: xcontrol/input_page.py:435 xcontrol/input_page.py:905
+#: xcontrol/input_page.py:437 xcontrol/input_page.py:910
 #, python-brace-format
 msgid "{ms} ms"
 msgstr "{ms} ms"
 
-#: xcontrol/input_page.py:436
+#: xcontrol/input_page.py:438
 #, python-brace-format
 msgid "{n} per second"
 msgstr "{n} par seconde"
 
-#: xcontrol/input_page.py:441
+#: xcontrol/input_page.py:443
 msgid "Delay before repeating"
 msgstr "Délai avant répétition"
 
-#: xcontrol/input_page.py:441
+#: xcontrol/input_page.py:443
 msgid "Repeat speed"
 msgstr "Vitesse de répétition"
 
-#: xcontrol/input_page.py:447
+#: xcontrol/input_page.py:449
 msgid "Type here to test"
 msgstr "Tapez ici pour tester"
 
-#: xcontrol/input_page.py:451
+#: xcontrol/input_page.py:453
 msgid "Stop managing the keyboard"
 msgstr "Ne plus gérer le clavier"
 
-#: xcontrol/input_page.py:452
+#: xcontrol/input_page.py:454
 msgid ""
-"Forget XControl's keyboard settings; your own setup (xorg.conf.d, i3 config)"
-" takes over again from the next login"
+"Forget XControl's keyboard settings; your own setup (xorg.conf.d, i3 config) "
+"takes over again from the next login"
 msgstr ""
 "Oublier les réglages du clavier de XControl ; votre propre configuration "
 "(xorg.conf.d, configuration i3) reprend la main dès la prochaine connexion"
 
-#: xcontrol/input_page.py:457
+#: xcontrol/input_page.py:459
 msgid ""
-"Changes apply right away. XControl only re-applies the keyboard settings you"
-" change here, at login and when a keyboard is plugged in."
+"Changes apply right away. XControl only re-applies the keyboard settings you "
+"change here, at login and when a keyboard is plugged in."
 msgstr ""
 "Les changements s'appliquent immédiatement. XControl ne réapplique que les "
 "réglages du clavier que vous modifiez ici, à la connexion et quand un "
 "clavier est branché."
 
-#: xcontrol/input_page.py:497
+#: xcontrol/input_page.py:499
 msgid "setxkbmap was not found, or this isn't an X11 session."
 msgstr "setxkbmap est introuvable, ou ce n'est pas une session X11."
 
-#: xcontrol/input_page.py:564
+#: xcontrol/input_page.py:568
 msgid "Keyboard settings saved"
 msgstr "Réglages du clavier enregistrés"
 
-#: xcontrol/input_page.py:566
+#: xcontrol/input_page.py:570
 msgid "Could not change the keyboard settings"
 msgstr "Impossible de modifier les réglages du clavier"
 
-#: xcontrol/input_page.py:571
+#: xcontrol/input_page.py:575
 msgid "XControl no longer changes the keyboard"
 msgstr "XControl ne modifie plus le clavier"
 
-#: xcontrol/input_page.py:615
+#: xcontrol/input_page.py:619
 msgid "Mouse:"
 msgstr "Souris :"
 
-#: xcontrol/input_page.py:636
+#: xcontrol/input_page.py:640
 msgid "Use this profile"
 msgstr "Utiliser ce profil"
 
-#: xcontrol/input_page.py:640
+#: xcontrol/input_page.py:644
 msgid "Talking to the mouse…"
 msgstr "Communication avec la souris…"
 
-#: xcontrol/input_page.py:645
+#: xcontrol/input_page.py:649
 msgid "Save to mouse"
 msgstr "Enregistrer dans la souris"
 
-#: xcontrol/input_page.py:652
+#: xcontrol/input_page.py:656
 msgid ""
 "Saving makes the mouse reload its settings and switch to this DPI stage. "
 "XControl can't see presses of the mouse's own DPI button."
 msgstr ""
-"L'enregistrement fait recharger ses réglages à la souris et la fait passer à"
-" ce palier de DPI. XControl ne voit pas les appuis sur le bouton DPI propre "
-"à la souris."
+"L'enregistrement fait recharger ses réglages à la souris et la fait passer à "
+"ce palier de DPI. XControl ne voit pas les appuis sur le bouton DPI propre à "
+"la souris."
 
-#: xcontrol/input_page.py:656
+#: xcontrol/input_page.py:660
 msgid "After saving, use"
 msgstr "Après l'enregistrement, utiliser"
 
-#: xcontrol/input_page.py:659
+#: xcontrol/input_page.py:663
 msgid ""
 "Settings are stored in the mouse itself, so they also work on other "
 "computers. Changes take effect when you press “Save to mouse”; the mouse "
@@ -4521,23 +4518,22 @@ msgid ""
 msgstr ""
 "Les réglages sont stockés dans la souris elle-même : ils fonctionnent donc "
 "aussi sur d'autres ordinateurs. Les changements prennent effet quand vous "
-"appuyez sur « Enregistrer dans la souris » ; la souris passe alors au palier"
-" de DPI choisi à côté du bouton."
+"appuyez sur « Enregistrer dans la souris » ; la souris passe alors au palier "
+"de DPI choisi à côté du bouton."
 
-#: xcontrol/input_page.py:675
+#: xcontrol/input_page.py:679
 msgid "The mouse didn't accept this setting"
 msgstr "La souris n'a pas accepté ce réglage"
 
-#: xcontrol/input_page.py:703
+#: xcontrol/input_page.py:707
 msgid "Changed; press “Save to mouse” to keep it"
-msgstr ""
-"Modifié ; appuyez sur « Enregistrer dans la souris » pour le conserver"
+msgstr "Modifié ; appuyez sur « Enregistrer dans la souris » pour le conserver"
 
-#: xcontrol/input_page.py:713
+#: xcontrol/input_page.py:717
 msgid "Looking for gaming mice…"
 msgstr "Recherche de souris de jeu…"
 
-#: xcontrol/input_page.py:742
+#: xcontrol/input_page.py:746
 msgid ""
 "Install libratbag (the ratbagd service) to set DPI, polling rate, buttons "
 "and lighting on supported gaming mice from Logitech, SteelSeries, Razer, "
@@ -4547,12 +4543,12 @@ msgstr ""
 "d'interrogation, les boutons et l'éclairage des souris de jeu prises en "
 "charge de Logitech, SteelSeries, Razer, Roccat, G.Skill et d'autres."
 
-#: xcontrol/input_page.py:745
+#: xcontrol/input_page.py:749
 #, python-brace-format
 msgid "Could not reach ratbagd: {error}"
 msgstr "Impossible de joindre ratbagd : {error}"
 
-#: xcontrol/input_page.py:747
+#: xcontrol/input_page.py:751
 msgid ""
 "No supported gaming mouse found. libratbag lists supported models on its "
 "website."
@@ -4560,160 +4556,160 @@ msgstr ""
 "Aucune souris de jeu prise en charge trouvée. libratbag liste les modèles "
 "pris en charge sur son site web."
 
-#: xcontrol/input_page.py:767
+#: xcontrol/input_page.py:772
 #, python-brace-format
 msgid "Profile {n}"
 msgstr "Profil {n}"
 
-#: xcontrol/input_page.py:769
+#: xcontrol/input_page.py:774
 msgid "(in use)"
 msgstr "(utilisé)"
 
-#: xcontrol/input_page.py:813
+#: xcontrol/input_page.py:818
 #, python-brace-format
 msgid "Stage {n} ({dpi} DPI)"
 msgstr "Palier {n} ({dpi} DPI)"
 
-#: xcontrol/input_page.py:844
+#: xcontrol/input_page.py:849
 msgid "Sensitivity (DPI)"
 msgstr "Sensibilité (DPI)"
 
-#: xcontrol/input_page.py:845 xcontrol/sysinfo.py:813
+#: xcontrol/input_page.py:850 xcontrol/sysinfo.py:818
 msgid "In use"
 msgstr "Utilisé"
 
-#: xcontrol/input_page.py:846
+#: xcontrol/input_page.py:851
 msgid "At power-on"
 msgstr "À la mise sous tension"
 
-#: xcontrol/input_page.py:847
+#: xcontrol/input_page.py:852
 msgid "DPI"
 msgstr "DPI"
 
-#: xcontrol/input_page.py:850
+#: xcontrol/input_page.py:855
 #, python-brace-format
 msgid "Stage {n}"
 msgstr "Palier {n}"
 
-#: xcontrol/input_page.py:897
+#: xcontrol/input_page.py:902
 #, python-brace-format
 msgid "{hz} Hz ({ms} ms)"
 msgstr "{hz} Hz ({ms} ms)"
 
-#: xcontrol/input_page.py:900
+#: xcontrol/input_page.py:905
 msgid "Polling rate"
 msgstr "Fréquence d'interrogation"
 
-#: xcontrol/input_page.py:908
+#: xcontrol/input_page.py:913
 msgid "Button debounce"
 msgstr "Anti-rebond des boutons"
 
-#: xcontrol/input_page.py:911
+#: xcontrol/input_page.py:916
 msgid "Straighten nearly straight lines"
 msgstr "Redresser les lignes presque droites"
 
-#: xcontrol/input_page.py:914
+#: xcontrol/input_page.py:919
 msgid "Angle snapping"
 msgstr "Correction d'angle"
 
-#: xcontrol/input_page.py:918
+#: xcontrol/input_page.py:923
 msgid "Sensor"
 msgstr "Capteur"
 
-#: xcontrol/input_page.py:923
+#: xcontrol/input_page.py:928
 msgid "Angle snapping helps drawing straight lines but hurts aiming in games."
 msgstr ""
 "La correction d'angle aide à tracer des lignes droites mais nuit à la visée "
 "dans les jeux."
 
-#: xcontrol/input_page.py:932 xcontrol/input_page.py:937
+#: xcontrol/input_page.py:937 xcontrol/input_page.py:942
 #, python-brace-format
 msgid "Button {n}"
 msgstr "Bouton {n}"
 
-#: xcontrol/input_page.py:938
+#: xcontrol/input_page.py:943
 #, python-brace-format
 msgid "{action} (button {n})"
 msgstr "{action} (bouton {n})"
 
-#: xcontrol/input_page.py:944
+#: xcontrol/input_page.py:949
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: xcontrol/input_page.py:948
+#: xcontrol/input_page.py:953
 msgid "Keyboard key (set in Piper)"
 msgstr "Touche du clavier (définie dans Piper)"
 
-#: xcontrol/input_page.py:948
+#: xcontrol/input_page.py:953
 msgid "Macro (set in Piper)"
 msgstr "Macro (définie dans Piper)"
 
-#: xcontrol/input_page.py:949
+#: xcontrol/input_page.py:954
 #, python-brace-format
 msgid "Other ({kind})"
 msgstr "Autre ({kind})"
 
-#: xcontrol/input_page.py:970
+#: xcontrol/input_page.py:975
 msgid "Lighting"
 msgstr "Éclairage"
 
-#: xcontrol/input_page.py:973
+#: xcontrol/input_page.py:978
 #, python-brace-format
 msgid "LED {n}"
 msgstr "LED {n}"
 
-#: xcontrol/input_page.py:1006
+#: xcontrol/input_page.py:1011
 msgid ""
-"This mouse has no brightness setting for a steady light; pick a darker color"
-" to dim it."
+"This mouse has no brightness setting for a steady light; pick a darker color "
+"to dim it."
 msgstr ""
 "Cette souris n'a pas de réglage de luminosité pour un éclairage fixe ; "
 "choisissez une couleur plus sombre pour l'atténuer."
 
-#: xcontrol/input_page.py:1019
+#: xcontrol/input_page.py:1024
 #, python-brace-format
 msgid "{s} s"
 msgstr "{s} s"
 
-#: xcontrol/input_page.py:1023
+#: xcontrol/input_page.py:1028
 msgid "Effect length"
 msgstr "Durée de l'effet"
 
-#: xcontrol/input_page.py:1038
+#: xcontrol/input_page.py:1043
 msgid "Profile switched"
 msgstr "Profil changé"
 
-#: xcontrol/input_page.py:1043
+#: xcontrol/input_page.py:1048
 msgid "Saved to the mouse"
 msgstr "Enregistré dans la souris"
 
-#: xcontrol/input_page.py:1054
+#: xcontrol/input_page.py:1059
 msgid "Mouse & Touchpad"
 msgstr "Souris et pavé tactile"
 
-#: xcontrol/input_page.py:1055
+#: xcontrol/input_page.py:1060
 msgid "Keyboard"
 msgstr "Clavier"
 
-#: xcontrol/input_page.py:1056
+#: xcontrol/input_page.py:1061
 msgid "Gaming Mouse"
 msgstr "Souris de jeu"
 
-#: xcontrol/input_page.py:1061
+#: xcontrol/input_page.py:1066
 #, python-brace-format
 msgid "This section could not be loaded: {error}"
 msgstr "Cette section n'a pas pu être chargée : {error}"
 
-#: xcontrol/kmods.py:250 xcontrol/system_page.py:342
+#: xcontrol/kmods.py:248 xcontrol/system_page.py:343
 msgid "Parameters"
 msgstr "Paramètres"
 
-#: xcontrol/kmods.py:253 xcontrol/module_params_dialog.py:58
-#: xcontrol/system_page.py:360
+#: xcontrol/kmods.py:251 xcontrol/module_params_dialog.py:59
+#: xcontrol/system_page.py:361
 msgid "(only readable by root)"
 msgstr "(lisible uniquement par root)"
 
-#: xcontrol/kmods.py:256 xcontrol/system_page.py:380
+#: xcontrol/kmods.py:254 xcontrol/system_page.py:381
 msgid "Set in modprobe.d"
 msgstr "Défini dans modprobe.d"
 
@@ -4722,7 +4718,7 @@ msgstr "Défini dans modprobe.d"
 msgid "Parameters for {module}"
 msgstr "Paramètres de {module}"
 
-#: xcontrol/module_params_dialog.py:36
+#: xcontrol/module_params_dialog.py:37
 #, python-brace-format
 msgid ""
 "Values are saved in <tt>{file}</tt> and used every time the module loads. "
@@ -4732,7 +4728,7 @@ msgstr ""
 "chargement du module. Laissez un champ vide pour utiliser la valeur par "
 "défaut du module."
 
-#: xcontrol/module_params_dialog.py:45
+#: xcontrol/module_params_dialog.py:46
 #, python-brace-format
 msgid ""
 "The kernel command line sets {items}. Those win over anything saved here."
@@ -4740,382 +4736,382 @@ msgstr ""
 "La ligne de commande du noyau définit {items}. Elle l'emporte sur tout ce "
 "qui est enregistré ici."
 
-#: xcontrol/module_params_dialog.py:53 xcontrol/xserver_page.py:65
+#: xcontrol/module_params_dialog.py:54 xcontrol/xserver_page.py:65
 #: xcontrol/xserver_page.py:282
 msgid "default"
 msgstr "par défaut"
 
-#: xcontrol/module_params_dialog.py:59 xcontrol/xserver_page.py:68
+#: xcontrol/module_params_dialog.py:60 xcontrol/xserver_page.py:68
 #, python-brace-format
 msgid "now: {value}"
 msgstr "actuellement : {value}"
 
-#: xcontrol/module_params_dialog.py:71
+#: xcontrol/module_params_dialog.py:72
 #, python-brace-format
 msgid "Also set to {value} in {file}."
 msgstr "Également défini à {value} dans {file}."
 
-#: xcontrol/module_params_dialog.py:73
+#: xcontrol/module_params_dialog.py:74
 #, python-brace-format
 msgid "Set to {value} on the kernel command line, which wins."
 msgstr "Défini à {value} sur la ligne de commande du noyau, qui l'emporte."
 
-#: xcontrol/module_params_dialog.py:76
+#: xcontrol/module_params_dialog.py:77
 msgid "Takes effect when the module loads (reboot)."
 msgstr "Prend effet au chargement du module (redémarrage)."
 
-#: xcontrol/module_params_dialog.py:89
+#: xcontrol/module_params_dialog.py:90
 msgid "Also change it now, where the kernel allows it while running"
 msgstr ""
 "Le modifier aussi maintenant, là où le noyau le permet en cours de "
 "fonctionnement"
 
-#: xcontrol/module_params_dialog.py:95
+#: xcontrol/module_params_dialog.py:96
 #, python-brace-format
 msgid "Rebuild the boot image (initramfs) with {tool}"
 msgstr "Reconstruire l'image de démarrage (initramfs) avec {tool}"
 
-#: xcontrol/module_params_dialog.py:101
+#: xcontrol/module_params_dialog.py:102
 #, python-brace-format
 msgid ""
 "{module} loads early in boot, from the initramfs, which holds its own copy "
-"of modprobe.d: rebuild it or the change won't reach the module. That takes a"
-" minute."
+"of modprobe.d: rebuild it or the change won't reach the module. That takes a "
+"minute."
 msgstr ""
 "{module} est chargé tôt au démarrage, depuis l'initramfs, qui contient sa "
 "propre copie de modprobe.d : reconstruisez-le, sinon le changement "
 "n'atteindra pas le module. Cela prend une minute."
 
-#: xcontrol/module_params_dialog.py:117
+#: xcontrol/module_params_dialog.py:118
 msgid "Remove XControl's settings"
 msgstr "Supprimer les réglages de XControl"
 
-#: xcontrol/module_params_dialog.py:126
+#: xcontrol/module_params_dialog.py:127
 msgid "pkexec (polkit) is needed to change module parameters."
 msgstr ""
 "pkexec (polkit) est nécessaire pour modifier les paramètres des modules."
 
-#: xcontrol/module_params_dialog.py:142
+#: xcontrol/module_params_dialog.py:143
 msgid "Only letters, digits and . , : + / - _ are allowed, without spaces."
 msgstr ""
 "Seuls les lettres, les chiffres et . , : + / - _ sont autorisés, sans "
 "espaces."
 
-#: xcontrol/module_params_dialog.py:144
+#: xcontrol/module_params_dialog.py:145
 #, python-brace-format
 msgid "Not a valid {type} value."
 msgstr "Ce n'est pas une valeur {type} valide."
 
-#: xcontrol/module_params_dialog.py:167
+#: xcontrol/module_params_dialog.py:172
 msgid "Rebuilding the initramfs, this takes a minute…"
 msgstr "Reconstruction de l'initramfs, cela prend une minute…"
 
-#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:618
+#: xcontrol/module_params_dialog.py:173 xcontrol/xserver_page.py:618
 msgid "Saving…"
 msgstr "Enregistrement…"
 
-#: xcontrol/module_params_dialog.py:191
+#: xcontrol/module_params_dialog.py:197
 msgid ""
 "Saved. It applies the next time the module loads (usually: after a reboot)."
 msgstr ""
 "Enregistré. Cela s'applique au prochain chargement du module (en général : "
 "après un redémarrage)."
 
-#: xcontrol/module_params_dialog.py:192
+#: xcontrol/module_params_dialog.py:198
 msgid "XControl's settings for this module were removed."
 msgstr "Les réglages de XControl pour ce module ont été supprimés."
 
-#: xcontrol/module_params_dialog.py:196
+#: xcontrol/module_params_dialog.py:202
 #, python-brace-format
 msgid "That didn't work: {error}"
 msgstr "Cela n'a pas fonctionné : {error}"
 
-#. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1
-#. (kernel)"
-#: xcontrol/monitor_info.py:82
+#. TRANSLATORS: the Linux kernel's name for the connector, e.g. "DP-1 (kernel)"
+#: xcontrol/monitor_info.py:84
 #, python-brace-format
 msgid "{output} (kernel)"
 msgstr "{output} (noyau)"
 
-#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:240
+#: xcontrol/monitor_info.py:87 xcontrol/monitor_info.py:242
 msgid "Connection"
 msgstr "Connexion"
 
-#: xcontrol/monitor_info.py:85 xcontrol/monitor_info.py:212
+#: xcontrol/monitor_info.py:87 xcontrol/monitor_info.py:214
 msgid "Output"
 msgstr "Sortie"
 
-#: xcontrol/monitor_info.py:86
+#: xcontrol/monitor_info.py:88
 msgid "This display did not report any information."
 msgstr "Cet écran n'a fourni aucune information."
 
-#: xcontrol/monitor_info.py:87
+#: xcontrol/monitor_info.py:89
 msgid "Not reported"
 msgstr "Non indiqué"
 
-#: xcontrol/monitor_info.py:91
+#: xcontrol/monitor_info.py:93
 #, python-brace-format
 msgid "Model year {year}"
 msgstr "Année du modèle {year}"
 
-#: xcontrol/monitor_info.py:93
+#: xcontrol/monitor_info.py:95
 #, python-brace-format
 msgid "Week {week}, {year}"
 msgstr "Semaine {week}, {year}"
 
-#: xcontrol/monitor_info.py:96
+#: xcontrol/monitor_info.py:98
 #, python-brace-format
 msgid "version {version}"
 msgstr "version {version}"
 
-#: xcontrol/monitor_info.py:98
+#: xcontrol/monitor_info.py:100
 #, python-brace-format
 msgid "{list} extension"
 msgid_plural "{list} extensions"
 msgstr[0] "extension {list}"
 msgstr[1] "extensions {list}"
 
-#: xcontrol/monitor_info.py:101
+#: xcontrol/monitor_info.py:103
 msgid "(bad checksum)"
 msgstr "(somme de contrôle incorrecte)"
 
-#: xcontrol/monitor_info.py:103 xcontrol/sysinfo.py:784
-#: xcontrol/sysinfo.py:827
+#: xcontrol/monitor_info.py:105 xcontrol/sysinfo.py:789 xcontrol/sysinfo.py:832
 msgid "Model"
 msgstr "Modèle"
 
-#: xcontrol/monitor_info.py:104
+#: xcontrol/monitor_info.py:106
 msgid "Manufacturer"
 msgstr "Fabricant"
 
-#: xcontrol/monitor_info.py:105
+#: xcontrol/monitor_info.py:107
 msgid "Product code"
 msgstr "Code produit"
 
-#: xcontrol/monitor_info.py:106
+#: xcontrol/monitor_info.py:108
 msgid "Serial number"
 msgstr "Numéro de série"
 
-#: xcontrol/monitor_info.py:107
+#: xcontrol/monitor_info.py:109
 msgid "Manufactured"
 msgstr "Fabriqué"
 
-#: xcontrol/monitor_info.py:110
+#: xcontrol/monitor_info.py:112
 msgid "Identity"
 msgstr "Identité"
 
-#: xcontrol/monitor_info.py:120
+#: xcontrol/monitor_info.py:122
 msgid "interlaced"
 msgstr "entrelacé"
 
-#: xcontrol/monitor_info.py:121
+#: xcontrol/monitor_info.py:123
 msgid "Native resolution"
 msgstr "Définition native"
 
-#: xcontrol/monitor_info.py:124
+#: xcontrol/monitor_info.py:126
 msgid "Screen size"
 msgstr "Taille de l'écran"
 
-#: xcontrol/monitor_info.py:124
+#: xcontrol/monitor_info.py:126
 #, python-brace-format
 msgid "{inches}″ ({width} × {height} mm)"
 msgstr "{inches}″ ({width} × {height} mm)"
 
-#: xcontrol/monitor_info.py:127
+#: xcontrol/monitor_info.py:129
 msgid "Pixel density"
 msgstr "Densité de pixels"
 
-#: xcontrol/monitor_info.py:127
+#: xcontrol/monitor_info.py:129
 #, python-brace-format
 msgid "{ppi} PPI"
 msgstr "{ppi} PPP"
 
-#: xcontrol/monitor_info.py:128
+#: xcontrol/monitor_info.py:130
 #, python-brace-format
 msgid "{n} bit per color"
 msgid_plural "{n} bits per color"
 msgstr[0] "{n} bit par couleur"
 msgstr[1] "{n} bits par couleur"
 
-#: xcontrol/monitor_info.py:133
+#: xcontrol/monitor_info.py:135
 #, python-brace-format
 msgid "(driver limit: {limit}, adjustable {range})"
 msgstr "(limite du pilote : {limit}, réglable {range})"
 
-#: xcontrol/monitor_info.py:135
+#: xcontrol/monitor_info.py:137
 #, python-brace-format
 msgid "(driver limit: {limit})"
 msgstr "(limite du pilote : {limit})"
 
-#: xcontrol/monitor_info.py:139
+#: xcontrol/monitor_info.py:141
 msgid "Panel"
 msgstr "Dalle"
 
-#: xcontrol/monitor_info.py:147 xcontrol/monitor_info.py:154
+#: xcontrol/monitor_info.py:149 xcontrol/monitor_info.py:156
 msgid "Highest refresh rate"
 msgstr "Fréquence de rafraîchissement maximale"
 
-#: xcontrol/monitor_info.py:149 xcontrol/monitor_info.py:157
+#: xcontrol/monitor_info.py:151 xcontrol/monitor_info.py:159
 msgid "Highest resolution"
 msgstr "Définition maximale"
 
-#: xcontrol/monitor_info.py:159
+#: xcontrol/monitor_info.py:161
 msgid "Supported refresh range"
 msgstr "Plage de rafraîchissement prise en charge"
 
-#: xcontrol/monitor_info.py:161
+#: xcontrol/monitor_info.py:163
 msgid "Horizontal scan range"
 msgstr "Plage de balayage horizontal"
 
-#: xcontrol/monitor_info.py:164
+#: xcontrol/monitor_info.py:166
 msgid "Supported"
 msgstr "Pris en charge"
 
-#: xcontrol/monitor_info.py:166
+#: xcontrol/monitor_info.py:168
 msgid "Not available on this connection"
 msgstr "Non disponible sur cette connexion"
 
-#: xcontrol/monitor_info.py:171
+#: xcontrol/monitor_info.py:173
 #, python-brace-format
 msgid "(FreeSync {low}–{high} Hz)"
 msgstr "(FreeSync {low}–{high} Hz)"
 
-#: xcontrol/monitor_info.py:172
+#: xcontrol/monitor_info.py:174
 #, python-brace-format
 msgid "(FreeSync up to {high} Hz)"
 msgstr "(FreeSync jusqu'à {high} Hz)"
 
-#: xcontrol/monitor_info.py:173
+#: xcontrol/monitor_info.py:175
 msgid "Variable refresh rate"
 msgstr "Fréquence de rafraîchissement variable"
 
-#: xcontrol/monitor_info.py:177
+#: xcontrol/monitor_info.py:179
 msgid "Variable refresh in X"
 msgstr "Rafraîchissement variable dans X"
 
-#: xcontrol/monitor_info.py:179
-msgid "Disabled (add Option \"VariableRefresh\" \"true\" to the Device section)"
-msgstr "Désactivé (ajoutez Option \"VariableRefresh\" \"true\" à la section Device)"
-
 #: xcontrol/monitor_info.py:181
+msgid ""
+"Disabled (add Option \"VariableRefresh\" \"true\" to the Device section)"
+msgstr ""
+"Désactivé (ajoutez Option \"VariableRefresh\" \"true\" à la section Device)"
+
+#: xcontrol/monitor_info.py:183
 msgid "Max pixel clock"
 msgstr "Horloge pixel maximale"
 
-#: xcontrol/monitor_info.py:182
+#: xcontrol/monitor_info.py:184
 msgid "Refresh & Sync"
 msgstr "Rafraîchissement et synchro"
 
-#: xcontrol/monitor_info.py:191
+#: xcontrol/monitor_info.py:193
 msgid "Not supported"
 msgstr "Non pris en charge"
 
-#: xcontrol/monitor_info.py:193
+#: xcontrol/monitor_info.py:195
 #, python-brace-format
 msgid "{nits} cd/m² peak"
 msgstr "{nits} cd/m² en crête"
 
-#: xcontrol/monitor_info.py:195
+#: xcontrol/monitor_info.py:197
 #, python-brace-format
 msgid "{nits} full-frame"
 msgstr "{nits} plein écran"
 
-#: xcontrol/monitor_info.py:197
+#: xcontrol/monitor_info.py:199
 #, python-brace-format
 msgid "{nits} minimum"
 msgstr "{nits} minimum"
 
-#: xcontrol/monitor_info.py:198
+#: xcontrol/monitor_info.py:200
 msgid "Brightness (HDR metadata)"
 msgstr "Luminosité (métadonnées HDR)"
 
-#: xcontrol/monitor_info.py:201
+#: xcontrol/monitor_info.py:203
 msgid "Gamut (EDID primaries)"
 msgstr "Gamut (primaires EDID)"
 
-#: xcontrol/monitor_info.py:204
+#: xcontrol/monitor_info.py:206
 msgid "White point"
 msgstr "Point blanc"
 
-#: xcontrol/monitor_info.py:206
+#: xcontrol/monitor_info.py:208
 msgid "Wide color signaling"
 msgstr "Signalisation des couleurs étendues"
 
-#: xcontrol/monitor_info.py:208
+#: xcontrol/monitor_info.py:210
 msgid "Driver colorspace"
 msgstr "Espace colorimétrique du pilote"
 
-#: xcontrol/monitor_info.py:209
+#: xcontrol/monitor_info.py:211
 msgid "Color & HDR"
 msgstr "Couleur et HDR"
 
-#: xcontrol/monitor_info.py:214
+#: xcontrol/monitor_info.py:216
 msgid "Current mode"
 msgstr "Mode actuel"
 
-#: xcontrol/monitor_info.py:216
+#: xcontrol/monitor_info.py:218
 msgid "Input type"
 msgstr "Type d'entrée"
 
-#: xcontrol/monitor_info.py:217
+#: xcontrol/monitor_info.py:219
 msgid "Digital"
 msgstr "Numérique"
 
-#: xcontrol/monitor_info.py:217
+#: xcontrol/monitor_info.py:219
 msgid "Analog (VGA)"
 msgstr "Analogique (VGA)"
 
-#: xcontrol/monitor_info.py:220
+#: xcontrol/monitor_info.py:222
 msgid "HDMI 2.1 capable"
 msgstr "Compatible HDMI 2.1"
 
-#: xcontrol/monitor_info.py:222
+#: xcontrol/monitor_info.py:224
 msgid "HDMI 2.0 capable"
 msgstr "Compatible HDMI 2.0"
 
-#: xcontrol/monitor_info.py:225
+#: xcontrol/monitor_info.py:227
 msgid "HDMI support"
 msgstr "Prise en charge HDMI"
 
-#: xcontrol/monitor_info.py:227
+#: xcontrol/monitor_info.py:229
 msgid "Max TMDS clock"
 msgstr "Horloge TMDS maximale"
 
-#: xcontrol/monitor_info.py:230
+#: xcontrol/monitor_info.py:232
 msgid "HDMI FRL bandwidth"
 msgstr "Bande passante HDMI FRL"
 
-#: xcontrol/monitor_info.py:231
+#: xcontrol/monitor_info.py:233
 #, python-brace-format
 msgid "{rate} Gbps × {lanes} lane ({total} Gbps)"
 msgid_plural "{rate} Gbps × {lanes} lanes ({total} Gbps)"
 msgstr[0] "{rate} Gbit/s × {lanes} voie ({total} Gbit/s)"
 msgstr[1] "{rate} Gbit/s × {lanes} voies ({total} Gbit/s)"
 
-#: xcontrol/monitor_info.py:234 xcontrol/sysinfo.py:916
+#: xcontrol/monitor_info.py:236 xcontrol/sysinfo.py:921
 msgid "Audio"
 msgstr "Audio"
 
-#: xcontrol/monitor_info.py:234
+#: xcontrol/monitor_info.py:236
 msgid "Yes"
 msgstr "Oui"
 
-#: xcontrol/monitor_info.py:236
+#: xcontrol/monitor_info.py:238
 msgid "RGB only"
 msgstr "RVB uniquement"
 
-#: xcontrol/monitor_info.py:238
+#: xcontrol/monitor_info.py:240
 msgid "standby"
 msgstr "attente"
 
-#: xcontrol/monitor_info.py:238
+#: xcontrol/monitor_info.py:240
 msgid "suspend"
 msgstr "suspension"
 
-#: xcontrol/monitor_info.py:238
+#: xcontrol/monitor_info.py:240
 msgid "off"
 msgstr "éteint"
 
-#: xcontrol/monitor_info.py:239
+#: xcontrol/monitor_info.py:241
 msgid "Power saving"
 msgstr "Économie d'énergie"
 
@@ -5263,42 +5259,42 @@ msgid "Switch it from a key (until the schedule next changes):"
 msgstr ""
 "L'activer avec une touche (jusqu'au prochain changement du programme) :"
 
-#: xcontrol/night_page.py:223
+#: xcontrol/night_page.py:225
 #, python-brace-format
 msgid "Now {k} K."
 msgstr "Actuellement {k} K."
 
-#: xcontrol/night_page.py:225
+#: xcontrol/night_page.py:227
 msgid "On by hand until the schedule next changes."
 msgstr "Activé manuellement jusqu'au prochain changement du programme."
 
-#: xcontrol/night_page.py:227
+#: xcontrol/night_page.py:229
 msgid "Off by hand until the schedule next changes."
 msgstr "Désactivé manuellement jusqu'au prochain changement du programme."
 
-#: xcontrol/night_page.py:233
+#: xcontrol/night_page.py:235
 #, python-brace-format
 msgid "Night light until {time}."
 msgstr "Éclairage nocturne jusqu'à {time}."
 
-#: xcontrol/night_page.py:233
+#: xcontrol/night_page.py:235
 #, python-brace-format
 msgid "Next on at {time}."
 msgstr "Prochaine activation à {time}."
 
-#: xcontrol/night_page.py:235
+#: xcontrol/night_page.py:237
 msgid "The time zone doesn't give a location; set it by hand."
 msgstr ""
 "Le fuseau horaire ne donne pas d'emplacement ; définissez-le manuellement."
 
-#: xcontrol/night_page.py:239
+#: xcontrol/night_page.py:241
 #, python-brace-format
 msgid ""
 "{programs} is also changing the colors; stop it (and remove it from your i3 "
 "config), or the two will fight."
 msgstr ""
-"{programs} modifie aussi les couleurs ; arrêtez-le (et supprimez-le de votre"
-" configuration i3), sinon les deux vont se contrarier."
+"{programs} modifie aussi les couleurs ; arrêtez-le (et supprimez-le de votre "
+"configuration i3), sinon les deux vont se contrarier."
 
 #: xcontrol/notify_page.py:16
 msgid "Top center"
@@ -5400,7 +5396,7 @@ msgstr "Traiter comme faible"
 msgid "Treat as critical"
 msgstr "Traiter comme critique"
 
-#: xcontrol/notify_page.py:33 xcontrol/notify_page.py:286
+#: xcontrol/notify_page.py:33 xcontrol/notify_page.py:287
 msgid "No sound"
 msgstr "Pas de son"
 
@@ -5420,124 +5416,124 @@ msgstr "Après 5 minutes"
 msgid "After 2 minutes"
 msgstr "Après 2 minutes"
 
-#: xcontrol/notify_page.py:66
+#: xcontrol/notify_page.py:67
 msgid "Use XControl's notifications (dunst)"
 msgstr "Utiliser les notifications de XControl (dunst)"
 
-#: xcontrol/notify_page.py:72
+#: xcontrol/notify_page.py:73
 msgid ""
-"XControl writes its own dunst setup and runs dunst for the session. Your own"
-" ~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
+"XControl writes its own dunst setup and runs dunst for the session. Your own "
+"~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
 "notification."
 msgstr ""
 "XControl écrit sa propre configuration de dunst et lance dunst pour la "
 "session. Votre propre ~/.config/dunst/dunstrc n'est ni utilisé ni modifié. "
 "Les changements apparaissent à la prochaine notification."
 
-#: xcontrol/notify_page.py:81 xcontrol/notify_page.py:344
+#: xcontrol/notify_page.py:82 xcontrol/notify_page.py:345
 msgid "Stop it"
 msgstr "L'arrêter"
 
-#: xcontrol/notify_page.py:147
+#: xcontrol/notify_page.py:148
 msgid "Try it"
 msgstr "Essayer"
 
-#: xcontrol/notify_page.py:153
+#: xcontrol/notify_page.py:154
 msgid "Send a test notification"
 msgstr "Envoyer une notification de test"
 
-#: xcontrol/notify_page.py:158
+#: xcontrol/notify_page.py:159
 msgid "Do not disturb"
 msgstr "Ne pas déranger"
 
-#: xcontrol/notify_page.py:159
+#: xcontrol/notify_page.py:160
 msgid "Notifications wait while it's on and show when you turn it off."
 msgstr ""
 "Les notifications attendent tant que c'est activé et s'affichent quand vous "
 "le désactivez."
 
-#: xcontrol/notify_page.py:162
+#: xcontrol/notify_page.py:163
 msgid "Where they show"
 msgstr "Où elles s'affichent"
 
-#: xcontrol/notify_page.py:164
+#: xcontrol/notify_page.py:165
 msgid "Corner"
 msgstr "Coin"
 
-#: xcontrol/notify_page.py:167
+#: xcontrol/notify_page.py:168
 msgid "sideways"
 msgstr "horizontalement"
 
-#: xcontrol/notify_page.py:167
+#: xcontrol/notify_page.py:168
 msgid "up/down"
 msgstr "verticalement"
 
-#: xcontrol/notify_page.py:169
+#: xcontrol/notify_page.py:170
 #, python-brace-format
 msgid "px {direction}"
 msgstr "px {direction}"
 
-#: xcontrol/notify_page.py:170
+#: xcontrol/notify_page.py:171
 msgid "Distance from the edge"
 msgstr "Distance par rapport au bord"
 
-#: xcontrol/notify_page.py:174
+#: xcontrol/notify_page.py:175
 msgid "Width (px)"
 msgstr "Largeur (px)"
 
-#: xcontrol/notify_page.py:176
+#: xcontrol/notify_page.py:177
 msgid "Tallest (px)"
 msgstr "Hauteur maximale (px)"
 
-#: xcontrol/notify_page.py:178
+#: xcontrol/notify_page.py:179
 msgid "Most at once"
 msgstr "Nombre maximal à la fois"
 
-#: xcontrol/notify_page.py:178
+#: xcontrol/notify_page.py:179
 msgid "0 shows them all; the rest wait their turn."
 msgstr "0 les affiche toutes ; les autres attendent leur tour."
 
-#: xcontrol/notify_page.py:180
+#: xcontrol/notify_page.py:181
 msgid "Space between them (px)"
 msgstr "Espace entre elles (px)"
 
-#: xcontrol/notify_page.py:187
+#: xcontrol/notify_page.py:188
 msgid "The interface font"
 msgstr "La police de l'interface"
 
-#: xcontrol/notify_page.py:191 xcontrol/panel_page.py:162
+#: xcontrol/notify_page.py:192 xcontrol/panel_page.py:162
 msgid "Font"
 msgstr "Police"
 
-#: xcontrol/notify_page.py:193
+#: xcontrol/notify_page.py:194
 msgid "Rounded corners (px)"
 msgstr "Coins arrondis (px)"
 
-#: xcontrol/notify_page.py:195
+#: xcontrol/notify_page.py:196
 msgid "Border (px)"
 msgstr "Bordure (px)"
 
-#: xcontrol/notify_page.py:197
+#: xcontrol/notify_page.py:198
 msgid "Space inside (px)"
 msgstr "Marge intérieure (px)"
 
-#: xcontrol/notify_page.py:199
+#: xcontrol/notify_page.py:200
 msgid "Icon"
 msgstr "Icône"
 
-#: xcontrol/notify_page.py:201
+#: xcontrol/notify_page.py:202
 msgid "Largest icon (px)"
 msgstr "Icône la plus grande (px)"
 
-#: xcontrol/notify_page.py:203
+#: xcontrol/notify_page.py:204
 msgid "Text alignment"
 msgstr "Alignement du texte"
 
-#: xcontrol/notify_page.py:205
+#: xcontrol/notify_page.py:206
 msgid "Shows"
 msgstr "Affiche"
 
-#: xcontrol/notify_page.py:208
+#: xcontrol/notify_page.py:209
 msgid ""
 "%a app, %s title, %b text, %p progress, \\n a new line; Pango markup like "
 "<b>, <i>."
@@ -5545,39 +5541,39 @@ msgstr ""
 "%a application, %s titre, %b texte, %p progression, \\n un retour à la "
 "ligne ; balisage Pango comme <b>, <i>."
 
-#: xcontrol/notify_page.py:210
+#: xcontrol/notify_page.py:211
 msgid "See-through (%)"
 msgstr "Transparence (%)"
 
-#: xcontrol/notify_page.py:210
+#: xcontrol/notify_page.py:211
 msgid "Needs the compositor."
 msgstr "Nécessite le compositeur."
 
-#: xcontrol/notify_page.py:211
+#: xcontrol/notify_page.py:212
 msgid "A line between notifications shown together"
 msgstr "Une ligne entre les notifications affichées ensemble"
 
-#: xcontrol/notify_page.py:217
+#: xcontrol/notify_page.py:218
 msgid "Colors and timing"
 msgstr "Couleurs et durées"
 
-#: xcontrol/notify_page.py:218 xcontrol/panel_page.py:193
+#: xcontrol/notify_page.py:219 xcontrol/panel_page.py:193
 msgid "Background"
 msgstr "Fond"
 
-#: xcontrol/notify_page.py:218 xcontrol/panel_page.py:193
+#: xcontrol/notify_page.py:219 xcontrol/panel_page.py:193
 msgid "Text"
 msgstr "Texte"
 
-#: xcontrol/notify_page.py:218
+#: xcontrol/notify_page.py:219
 msgid "Border"
 msgstr "Bordure"
 
-#: xcontrol/notify_page.py:218
+#: xcontrol/notify_page.py:219
 msgid "Disappears after (s)"
 msgstr "Disparaît après (s)"
 
-#: xcontrol/notify_page.py:237
+#: xcontrol/notify_page.py:238
 msgid ""
 "0 seconds: it stays until you click it. Programs choose how urgent a "
 "notification is (a finished download is low, a low battery critical)."
@@ -5586,27 +5582,27 @@ msgstr ""
 "choisissent l'urgence d'une notification (un téléchargement terminé est "
 "faible, une batterie faible est critique)."
 
-#: xcontrol/notify_page.py:239
+#: xcontrol/notify_page.py:240
 msgid "Critical ones show even with \"Do not disturb\" on"
 msgstr "Les critiques s'affichent même avec « Ne pas déranger » activé"
 
-#: xcontrol/notify_page.py:242
+#: xcontrol/notify_page.py:243
 msgid "Default colors"
 msgstr "Couleurs par défaut"
 
-#: xcontrol/notify_page.py:247
+#: xcontrol/notify_page.py:248
 msgid "Behavior"
 msgstr "Comportement"
 
-#: xcontrol/notify_page.py:249
+#: xcontrol/notify_page.py:250
 msgid "Show how old it is"
 msgstr "Afficher depuis combien de temps elle existe"
 
-#: xcontrol/notify_page.py:251
+#: xcontrol/notify_page.py:252
 msgid "Keep them while you're away"
 msgstr "Les conserver pendant votre absence"
 
-#: xcontrol/notify_page.py:252
+#: xcontrol/notify_page.py:253
 msgid ""
 "When you haven't touched the mouse or keyboard for this long, notifications "
 "don't disappear until you're back."
@@ -5614,56 +5610,55 @@ msgstr ""
 "Si vous n'avez pas touché la souris ou le clavier depuis ce délai, les "
 "notifications ne disparaissent pas avant votre retour."
 
-#: xcontrol/notify_page.py:255
+#: xcontrol/notify_page.py:256
 msgid "History keeps"
 msgstr "L'historique conserve"
 
-#: xcontrol/notify_page.py:257
+#: xcontrol/notify_page.py:258
 msgid "Show repeated notifications once, with a count"
 msgstr "Afficher une seule fois les notifications répétées, avec un compteur"
 
-#: xcontrol/notify_page.py:258
+#: xcontrol/notify_page.py:259
 msgid "Ones brought back from the history stay until clicked"
 msgstr "Celles rappelées depuis l'historique restent jusqu'au clic"
 
-#: xcontrol/notify_page.py:259
+#: xcontrol/notify_page.py:260
 msgid "Show how many are waiting"
 msgstr "Afficher combien sont en attente"
 
-#: xcontrol/notify_page.py:260
+#: xcontrol/notify_page.py:261
 msgid "Mark ones that have actions (A) or links (U)"
 msgstr "Signaler celles qui ont des actions (A) ou des liens (U)"
 
-#: xcontrol/notify_page.py:261
+#: xcontrol/notify_page.py:262
 msgid "Show progress bars (e.g. volume, downloads)"
 msgstr "Afficher les barres de progression (par ex. volume, téléchargements)"
 
-#: xcontrol/notify_page.py:275
+#: xcontrol/notify_page.py:276
 msgid "Notification sound"
 msgstr "Son de notification"
 
-#: xcontrol/notify_page.py:277
+#: xcontrol/notify_page.py:278
 msgid "Sounds"
 msgstr "Sons"
 
-#: xcontrol/notify_page.py:289
+#: xcontrol/notify_page.py:290
 msgid "Played for normal and critical notifications (pw-play or paplay)."
-msgstr ""
-"Joué pour les notifications normales et critiques (pw-play ou paplay)."
+msgstr "Joué pour les notifications normales et critiques (pw-play ou paplay)."
 
-#: xcontrol/notify_page.py:292
+#: xcontrol/notify_page.py:293
 msgid "Per app"
 msgstr "Par application"
 
-#: xcontrol/notify_page.py:297
+#: xcontrol/notify_page.py:298
 msgid "App"
 msgstr "Application"
 
-#: xcontrol/notify_page.py:305
+#: xcontrol/notify_page.py:306
 msgid "What happens"
 msgstr "Ce qui se passe"
 
-#: xcontrol/notify_page.py:327
+#: xcontrol/notify_page.py:328
 msgid ""
 "The app name is the one the program gives (as shown with \"App name, title "
 "and text\"); * matches anything, e.g. Steam*."
@@ -5672,15 +5667,15 @@ msgstr ""
 "avec « Nom de l'application, titre et texte ») ; * correspond à n'importe "
 "quoi, par ex. Steam*."
 
-#: xcontrol/notify_page.py:331
+#: xcontrol/notify_page.py:332
 msgid "Power alerts"
 msgstr "Alertes d'alimentation"
 
-#: xcontrol/notify_page.py:332
+#: xcontrol/notify_page.py:333
 msgid "Alert about batteries and power (poweralertd)"
 msgstr "Alerter au sujet des batteries et de l'alimentation (poweralertd)"
 
-#: xcontrol/notify_page.py:334
+#: xcontrol/notify_page.py:335
 msgid ""
 "A notification when the battery starts or stops charging, gets low or "
 "critical, or the charger is plugged in or out, also for wireless devices "
@@ -5689,75 +5684,75 @@ msgid ""
 "\"poweralertd\" works in the Per app rules above."
 msgstr ""
 "Une notification quand la batterie commence ou cesse de se charger, devient "
-"faible ou critique, ou quand le chargeur est branché ou débranché, y compris"
-" pour les appareils sans fil ayant leur propre batterie. XControl lance "
+"faible ou critique, ou quand le chargeur est branché ou débranché, y compris "
+"pour les appareils sans fil ayant leur propre batterie. XControl lance "
 "poweralertd pour la session ; n'importe quel programme de notifications "
 "affiche ses alertes (elles sont en anglais), et « poweralertd » fonctionne "
 "dans les règles Par application ci-dessus."
 
-#: xcontrol/notify_page.py:348
+#: xcontrol/notify_page.py:349
 msgid "Only for changes, not for how things are when the session starts"
 msgstr ""
 "Seulement pour les changements, pas pour l'état au démarrage de la session"
 
-#: xcontrol/notify_page.py:350
+#: xcontrol/notify_page.py:351
 msgid "Devices with their own battery too, besides the computer's:"
 msgstr ""
 "Les appareils ayant leur propre batterie aussi, en plus de celle de "
 "l'ordinateur :"
 
-#: xcontrol/notify_page.py:354
+#: xcontrol/notify_page.py:355
 msgid "Mice"
 msgstr "Souris"
 
-#: xcontrol/notify_page.py:354
+#: xcontrol/notify_page.py:355
 msgid "Keyboards"
 msgstr "Claviers"
 
-#: xcontrol/notify_page.py:354
+#: xcontrol/notify_page.py:355
 msgid "Game controllers"
 msgstr "Manettes de jeu"
 
-#: xcontrol/notify_page.py:355
+#: xcontrol/notify_page.py:356
 msgid "Headsets, headphones and speakers"
 msgstr "Casques, écouteurs et haut-parleurs"
 
-#: xcontrol/notify_page.py:355
+#: xcontrol/notify_page.py:356
 msgid "Phones, tablets and watches"
 msgstr "Téléphones, tablettes et montres"
 
-#: xcontrol/notify_page.py:356
+#: xcontrol/notify_page.py:357
 msgid "Pens and touchpads"
 msgstr "Stylets et pavés tactiles"
 
-#: xcontrol/notify_page.py:356
+#: xcontrol/notify_page.py:357
 msgid "Everything else"
 msgstr "Tout le reste"
 
-#: xcontrol/notify_page.py:392
+#: xcontrol/notify_page.py:393
 msgid "Could not turn off poweralertd's service"
 msgstr "Impossible de désactiver le service de poweralertd"
 
-#: xcontrol/notify_page.py:404
+#: xcontrol/notify_page.py:405
 msgid "poweralertd isn't installed (pacman -S poweralertd)."
 msgstr "poweralertd n'est pas installé (pacman -S poweralertd)."
 
-#: xcontrol/notify_page.py:408
+#: xcontrol/notify_page.py:409
 msgid "Running."
 msgstr "En cours d'exécution."
 
-#: xcontrol/notify_page.py:410 xcontrol/notify_page.py:691
+#: xcontrol/notify_page.py:411 xcontrol/notify_page.py:694
 #: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
 #, python-brace-format
 msgid "Not running: {why}"
 msgstr "Pas en cours d'exécution : {why}"
 
-#: xcontrol/notify_page.py:410 xcontrol/notify_page.py:691
+#: xcontrol/notify_page.py:411 xcontrol/notify_page.py:694
 #: xcontrol/panel_page.py:515 xcontrol/panel_page.py:535
 msgid "Starting…"
 msgstr "Démarrage…"
 
-#: xcontrol/notify_page.py:420
+#: xcontrol/notify_page.py:421
 msgid ""
 "poweralertd's own service is also enabled, so every alert would show twice. "
 "\"Stop it\" turns that service off (systemctl --user disable --now "
@@ -5767,7 +5762,7 @@ msgstr ""
 "s'afficherait donc deux fois. « L'arrêter » désactive ce service (systemctl "
 "--user disable --now poweralertd)."
 
-#: xcontrol/notify_page.py:423
+#: xcontrol/notify_page.py:424
 #, python-brace-format
 msgid ""
 "Another poweralertd (process {pid}) is running besides XControl's, so every "
@@ -5777,7 +5772,7 @@ msgstr ""
 "XControl : chaque alerte s'affiche donc deux fois. Arrêtez-le, et supprimez-"
 "le de votre configuration i3 ou du démarrage automatique."
 
-#: xcontrol/notify_page.py:433
+#: xcontrol/notify_page.py:434
 msgid ""
 "Remove these from your i3 config, or a second poweralertd starts after the "
 "next login:"
@@ -5785,11 +5780,11 @@ msgstr ""
 "Supprimez ceci de votre configuration i3, sinon un second poweralertd "
 "démarrera après la prochaine connexion :"
 
-#: xcontrol/notify_page.py:438
+#: xcontrol/notify_page.py:439
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
-#: xcontrol/notify_page.py:439
+#: xcontrol/notify_page.py:440
 msgid ""
 "These commands control the notifications. Bind them to keys in your i3 "
 "config (or on the Window Manager page):"
@@ -5797,31 +5792,31 @@ msgstr ""
 "Ces commandes contrôlent les notifications. Associez-les à des touches dans "
 "votre configuration i3 (ou sur la page Gestionnaire de fenêtres) :"
 
-#: xcontrol/notify_page.py:441
+#: xcontrol/notify_page.py:442
 msgid "Close the newest notification:"
 msgstr "Fermer la notification la plus récente :"
 
-#: xcontrol/notify_page.py:442
+#: xcontrol/notify_page.py:443
 msgid "Close all of them:"
 msgstr "Toutes les fermer :"
 
-#: xcontrol/notify_page.py:443
+#: xcontrol/notify_page.py:444
 msgid "Bring back the last closed one:"
 msgstr "Rappeler la dernière fermée :"
 
-#: xcontrol/notify_page.py:444
+#: xcontrol/notify_page.py:445
 msgid "Choose one of its actions from a menu:"
 msgstr "Choisir l'une de ses actions dans un menu :"
 
-#: xcontrol/notify_page.py:445
+#: xcontrol/notify_page.py:446
 msgid "Do not disturb on/off:"
 msgstr "Activer/désactiver Ne pas déranger :"
 
-#: xcontrol/notify_page.py:449
+#: xcontrol/notify_page.py:450
 msgid "Extra dunst settings"
 msgstr "Réglages dunst supplémentaires"
 
-#: xcontrol/notify_page.py:450
+#: xcontrol/notify_page.py:451
 msgid ""
 "Anything else from dunst's documentation, as in a dunstrc. Lines before any "
 "[section] go into [global] and replace XControl's line with the same key; "
@@ -5832,80 +5827,80 @@ msgstr ""
 "ligne de XControl ayant la même clé ; les [sections] sont ajoutées telles "
 "quelles."
 
-#: xcontrol/notify_page.py:488 xcontrol/notify_page.py:491
+#: xcontrol/notify_page.py:489 xcontrol/notify_page.py:492
 #, python-brace-format
 msgid "After {n} seconds"
 msgstr "Après {n} secondes"
 
-#: xcontrol/notify_page.py:643
+#: xcontrol/notify_page.py:644
 msgid "Add a recent app…"
 msgstr "Ajouter une application récente…"
 
-#: xcontrol/notify_page.py:651
+#: xcontrol/notify_page.py:652
 msgid "A low notification"
 msgstr "Une notification faible"
 
-#: xcontrol/notify_page.py:651
+#: xcontrol/notify_page.py:652
 msgid "Like a finished download."
 msgstr "Comme un téléchargement terminé."
 
-#: xcontrol/notify_page.py:652
+#: xcontrol/notify_page.py:653
 msgid "A normal notification"
 msgstr "Une notification normale"
 
-#: xcontrol/notify_page.py:652
+#: xcontrol/notify_page.py:653
 msgid "Like a new message. <i>Formatting</i> works too."
 msgstr "Comme un nouveau message. La <i>mise en forme</i> fonctionne aussi."
 
-#: xcontrol/notify_page.py:653
+#: xcontrol/notify_page.py:654
 msgid "A critical notification"
 msgstr "Une notification critique"
 
-#: xcontrol/notify_page.py:653
+#: xcontrol/notify_page.py:654
 msgid "Like a low battery. It stays until clicked."
 msgstr "Comme une batterie faible. Elle reste jusqu'au clic."
 
-#: xcontrol/notify_page.py:657
+#: xcontrol/notify_page.py:658
 msgid "Nothing shows notifications right now"
 msgstr "Rien n'affiche les notifications pour le moment"
 
-#: xcontrol/notify_page.py:663 xcontrol/region_page.py:106
+#: xcontrol/notify_page.py:664 xcontrol/region_page.py:107
 msgid "Could not change it"
 msgstr "Impossible de le modifier"
 
-#: xcontrol/notify_page.py:663
+#: xcontrol/notify_page.py:664
 msgid "dunst isn't running."
 msgstr "dunst n'est pas en cours d'exécution."
 
-#: xcontrol/notify_page.py:684
+#: xcontrol/notify_page.py:687
 msgid "dunst isn't installed."
 msgstr "dunst n'est pas installé."
 
-#: xcontrol/notify_page.py:686
+#: xcontrol/notify_page.py:689
 #, python-brace-format
 msgid "Notifications are shown by {name} now."
 msgstr "Les notifications sont désormais affichées par {name}."
 
-#: xcontrol/notify_page.py:687
+#: xcontrol/notify_page.py:690
 msgid "Nothing shows notifications right now."
 msgstr "Rien n'affiche les notifications pour le moment."
 
-#: xcontrol/notify_page.py:689
+#: xcontrol/notify_page.py:692
 #, python-brace-format
 msgid "Running (dunst {v})."
 msgstr "En cours d'exécution (dunst {v})."
 
-#: xcontrol/notify_page.py:694
+#: xcontrol/notify_page.py:697
 #, python-brace-format
 msgid ""
 "{name} (process {pid}) is showing notifications, so XControl's dunst can't "
 "start. Stop it, and remove it from your i3 config or autostart."
 msgstr ""
-"{name} (processus {pid}) affiche les notifications : le dunst de XControl ne"
-" peut donc pas démarrer. Arrêtez-le, et supprimez-le de votre configuration "
+"{name} (processus {pid}) affiche les notifications : le dunst de XControl ne "
+"peut donc pas démarrer. Arrêtez-le, et supprimez-le de votre configuration "
 "i3 ou du démarrage automatique."
 
-#: xcontrol/notify_page.py:702
+#: xcontrol/notify_page.py:705
 msgid ""
 "Remove these from your i3 config, or another notification program starts "
 "first after the next login:"
@@ -5934,8 +5929,8 @@ msgid ""
 "polybar's generic module for bspwm, Openbox, Xfwm and others; on i3, \"i3 "
 "workspaces\" is recommended"
 msgstr ""
-"module générique de polybar pour bspwm, Openbox, Xfwm et d'autres ; sous i3,"
-" « Espaces de travail i3 » est recommandé"
+"module générique de polybar pour bspwm, Openbox, Xfwm et d'autres ; sous i3, "
+"« Espaces de travail i3 » est recommandé"
 
 #: xcontrol/panel_page.py:18
 msgid "Window title"
@@ -5945,7 +5940,7 @@ msgstr "Titre de la fenêtre"
 msgid "title of the focused window"
 msgstr "titre de la fenêtre active"
 
-#: xcontrol/panel_page.py:19 xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:842
+#: xcontrol/panel_page.py:19 xcontrol/sysinfo.py:798 xcontrol/sysinfo.py:847
 msgid "Clock"
 msgstr "Horloge"
 
@@ -5961,7 +5956,7 @@ msgstr "Processeur"
 msgid "processor usage"
 msgstr "utilisation du processeur"
 
-#: xcontrol/panel_page.py:21 xcontrol/sysinfo.py:823
+#: xcontrol/panel_page.py:21 xcontrol/sysinfo.py:828
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -5969,7 +5964,7 @@ msgstr "Mémoire"
 msgid "RAM in use"
 msgstr "mémoire vive utilisée"
 
-#: xcontrol/panel_page.py:22 xcontrol/sysinfo.py:795 xcontrol/sysinfo.py:844
+#: xcontrol/panel_page.py:22 xcontrol/sysinfo.py:800 xcontrol/sysinfo.py:849
 msgid "Temperature"
 msgstr "Température"
 
@@ -5987,7 +5982,7 @@ msgstr ""
 "faire défiler pour modifier, cliquer pour couper le son (PipeWire ou "
 "PulseAudio)"
 
-#: xcontrol/panel_page.py:24 xcontrol/sysinfo.py:909
+#: xcontrol/panel_page.py:24 xcontrol/sysinfo.py:914
 msgid "Network"
 msgstr "Réseau"
 
@@ -6060,8 +6055,8 @@ msgid ""
 "XControl writes its own polybar setup from scratch and starts one bar per "
 "display. Your own polybar config isn't used or changed."
 msgstr ""
-"XControl écrit sa propre configuration de polybar de zéro et lance une barre"
-" par écran. Votre propre configuration de polybar n'est ni utilisée ni "
+"XControl écrit sa propre configuration de polybar de zéro et lance une barre "
+"par écran. Votre propre configuration de polybar n'est ni utilisée ni "
 "modifiée."
 
 #: xcontrol/panel_page.py:131 xcontrol/panel_page.py:322
@@ -6123,8 +6118,7 @@ msgstr "Les icônes utilisent {font}."
 
 #: xcontrol/panel_page.py:170
 msgid ""
-"No Nerd Font is installed (e.g. ttf-nerd-fonts-symbols), so labels are "
-"words."
+"No Nerd Font is installed (e.g. ttf-nerd-fonts-symbols), so labels are words."
 msgstr ""
 "Aucune Nerd Font n'est installée (par ex. ttf-nerd-fonts-symbols) : les "
 "étiquettes sont donc des mots."
@@ -6179,8 +6173,8 @@ msgstr "Opacité du fond"
 msgid ""
 "Below 100 the bar is see-through when a compositor runs (see the other tab)."
 msgstr ""
-"En dessous de 100, la barre est transparente quand un compositeur fonctionne"
-" (voir l'autre onglet)."
+"En dessous de 100, la barre est transparente quand un compositeur fonctionne "
+"(voir l'autre onglet)."
 
 #: xcontrol/panel_page.py:211
 msgid "Modules"
@@ -6342,147 +6336,147 @@ msgstr ""
 
 #: xcontrol/panel_page.py:544
 msgid ""
-"Remove these from your i3 config, or the other compositor starts first after"
-" the next login:"
+"Remove these from your i3 config, or the other compositor starts first after "
+"the next login:"
 msgstr ""
 "Supprimez ceci de votre configuration i3, sinon l'autre compositeur "
 "démarrera en premier après la prochaine connexion :"
 
-#: xcontrol/power_page.py:12
+#: xcontrol/power_page.py:14
 msgid "Shut down"
 msgstr "Éteindre"
 
-#: xcontrol/power_page.py:12
+#: xcontrol/power_page.py:14
 msgid "Sleep (suspend)"
 msgstr "Mettre en veille"
 
-#: xcontrol/power_page.py:12
+#: xcontrol/power_page.py:14
 msgid "Hibernate"
 msgstr "Hiberner"
 
-#: xcontrol/power_page.py:13
+#: xcontrol/power_page.py:15
 msgid "Hybrid sleep"
 msgstr "Veille hybride"
 
-#: xcontrol/power_page.py:13
+#: xcontrol/power_page.py:15
 msgid "Sleep, then hibernate"
 msgstr "Mettre en veille, puis hiberner"
 
-#: xcontrol/power_page.py:14
+#: xcontrol/power_page.py:16
 msgid "Lock the screen"
 msgstr "Verrouiller l'écran"
 
-#: xcontrol/power_page.py:14
+#: xcontrol/power_page.py:16
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: xcontrol/power_page.py:15
+#: xcontrol/power_page.py:17
 msgid "Power button"
 msgstr "Bouton d'alimentation"
 
-#: xcontrol/power_page.py:15
+#: xcontrol/power_page.py:17
 msgid "Sleep key"
 msgstr "Touche de mise en veille"
 
-#: xcontrol/power_page.py:16
+#: xcontrol/power_page.py:18
 msgid "Hibernate key"
 msgstr "Touche d'hibernation"
 
-#: xcontrol/power_page.py:16
+#: xcontrol/power_page.py:18
 msgid "Closing the lid"
 msgstr "Fermeture du couvercle"
 
-#: xcontrol/power_page.py:17
+#: xcontrol/power_page.py:19
 msgid "Closing the lid, plugged in"
 msgstr "Fermeture du couvercle, sur secteur"
 
-#: xcontrol/power_page.py:18
+#: xcontrol/power_page.py:20
 msgid "Closing the lid, with a monitor connected"
 msgstr "Fermeture du couvercle, avec un moniteur connecté"
 
-#: xcontrol/power_page.py:19
+#: xcontrol/power_page.py:21
 msgid "Power saver"
 msgstr "Économie d'énergie"
 
-#: xcontrol/power_page.py:19
+#: xcontrol/power_page.py:21
 msgid "Quieter and cooler, slower"
 msgstr "Plus silencieux et plus frais, plus lent"
 
-#: xcontrol/power_page.py:20
+#: xcontrol/power_page.py:22
 msgid "Balanced"
 msgstr "Équilibré"
 
-#: xcontrol/power_page.py:20
+#: xcontrol/power_page.py:22
 msgid "The usual"
 msgstr "L'habituel"
 
-#: xcontrol/power_page.py:21
+#: xcontrol/power_page.py:23
 msgid "Performance"
 msgstr "Performances"
 
-#: xcontrol/power_page.py:21
+#: xcontrol/power_page.py:23
 msgid "Fastest, louder and warmer"
 msgstr "Le plus rapide, plus bruyant et plus chaud"
 
-#: xcontrol/power_page.py:29
+#: xcontrol/power_page.py:31
 #, python-brace-format
 msgid "After {n} hour"
 msgstr "Après {n} heure"
 
-#: xcontrol/power_page.py:29
+#: xcontrol/power_page.py:31
 #, python-brace-format
 msgid "After {n} hours"
 msgstr "Après {n} heures"
 
-#: xcontrol/power_page.py:30
+#: xcontrol/power_page.py:32
 #, python-brace-format
 msgid "After {n} minutes"
 msgstr "Après {n} minutes"
 
-#: xcontrol/power_page.py:66
+#: xcontrol/power_page.py:68
 msgid "Sleep"
 msgstr "Veille"
 
-#: xcontrol/power_page.py:71
+#: xcontrol/power_page.py:73
 msgid "Sleep when idle"
 msgstr "Mettre en veille en cas d'inactivité"
 
-#: xcontrol/power_page.py:72
+#: xcontrol/power_page.py:74
 msgid "Not while sound is playing (music, a video call)"
 msgstr "Pas pendant la lecture de son (musique, appel vidéo)"
 
-#: xcontrol/power_page.py:75
+#: xcontrol/power_page.py:77
 msgid ""
 "Counted from the last time you used the mouse, keyboard or a gamepad. "
 "Nothing sleeps while the screen is kept on (Desktop page, Keep the screen "
 "on). The screen lock, if it's on, locks first."
 msgstr ""
 "Compté depuis la dernière utilisation de la souris, du clavier ou d'une "
-"manette. Rien ne se met en veille tant que l'écran est maintenu allumé (page"
-" Bureau, Garder l'écran allumé). Le verrouillage de l'écran, s'il est "
-"activé, verrouille d'abord."
+"manette. Rien ne se met en veille tant que l'écran est maintenu allumé (page "
+"Bureau, Garder l'écran allumé). Le verrouillage de l'écran, s'il est activé, "
+"verrouille d'abord."
 
-#: xcontrol/power_page.py:80
+#: xcontrol/power_page.py:82
 msgid "Sleep now"
 msgstr "Mettre en veille maintenant"
 
-#: xcontrol/power_page.py:82
+#: xcontrol/power_page.py:84
 msgid "Could not sleep"
 msgstr "Impossible de mettre en veille"
 
-#: xcontrol/power_page.py:82
+#: xcontrol/power_page.py:84
 msgid "systemd-logind refused, or something is holding sleep off."
 msgstr "systemd-logind a refusé, ou quelque chose empêche la mise en veille."
 
-#: xcontrol/power_page.py:129
+#: xcontrol/power_page.py:138
 msgid "Could not change the buttons"
 msgstr "Impossible de modifier les boutons"
 
-#: xcontrol/power_page.py:134
+#: xcontrol/power_page.py:144
 msgid "Power profile"
 msgstr "Profil d'énergie"
 
-#: xcontrol/power_page.py:143
+#: xcontrol/power_page.py:153
 msgid ""
 "Install power-profiles-daemon (or tuned-ppd) to switch between power saver, "
 "balanced and performance."
@@ -6490,37 +6484,36 @@ msgstr ""
 "Installez power-profiles-daemon (ou tuned-ppd) pour basculer entre économie "
 "d'énergie, équilibré et performances."
 
-#: xcontrol/power_page.py:160
+#: xcontrol/power_page.py:170
 #, python-brace-format
 msgid "Performance is held back right now ({why})."
 msgstr "Les performances sont actuellement bridées ({why})."
 
-#: xcontrol/power_page.py:170
-msgid "Could not change the profile"
-msgstr "Impossible de modifier le profil"
-
-#: xcontrol/power_page.py:172
+#: xcontrol/power_page.py:182
 msgid "Power profile changed"
 msgstr "Profil d'énergie modifié"
 
-#: xcontrol/power_page.py:184
+#: xcontrol/power_page.py:189
+msgid "Could not change the profile"
+msgstr "Impossible de modifier le profil"
+
+#: xcontrol/power_page.py:201
 msgid "This computer can't sleep (systemd-logind says no)."
 msgstr ""
 "Cet ordinateur ne peut pas se mettre en veille (systemd-logind refuse)."
 
-#: xcontrol/power_page.py:198
+#: xcontrol/power_page.py:215
 msgid ""
-"systemd-logind isn't reachable, so the buttons can't be read or changed "
-"here."
+"systemd-logind isn't reachable, so the buttons can't be read or changed here."
 msgstr ""
-"systemd-logind est injoignable : les boutons ne peuvent donc pas être lus ou"
-" modifiés ici."
+"systemd-logind est injoignable : les boutons ne peuvent donc pas être lus ou "
+"modifiés ici."
 
-#: xcontrol/power_page.py:200
+#: xcontrol/power_page.py:217
 msgid "Changing them needs pkexec (polkit)."
 msgstr "Les modifier nécessite pkexec (polkit)."
 
-#: xcontrol/power_page.py:202
+#: xcontrol/power_page.py:219
 msgid ""
 "Saved for the whole computer (/etc/systemd/logind.conf.d), asks for your "
 "password."
@@ -6581,156 +6574,156 @@ msgstr "limite {n} IPS"
 msgid "3D preview unavailable: {error}"
 msgstr "Aperçu 3D indisponible : {error}"
 
-#: xcontrol/region_page.py:45
+#: xcontrol/region_page.py:46
 msgid "Date and time"
 msgstr "Date et heure"
 
-#: xcontrol/region_page.py:47
+#: xcontrol/region_page.py:48
 msgid "Now"
 msgstr "Maintenant"
 
-#: xcontrol/region_page.py:59
+#: xcontrol/region_page.py:60
 msgid "Type a city, e.g. Sao_Paulo"
 msgstr "Saisissez une ville, par ex. Sao_Paulo"
 
-#: xcontrol/region_page.py:61 xcontrol/region_page.py:90
+#: xcontrol/region_page.py:62 xcontrol/region_page.py:91
 msgid "Set"
 msgstr "Définir"
 
-#: xcontrol/region_page.py:64
+#: xcontrol/region_page.py:65
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: xcontrol/region_page.py:66
+#: xcontrol/region_page.py:67
 msgid "Set the time automatically from the internet"
 msgstr "Régler l'heure automatiquement depuis Internet"
 
-#: xcontrol/region_page.py:94
+#: xcontrol/region_page.py:95
 msgid "Set by hand"
 msgstr "Régler manuellement"
 
-#: xcontrol/region_page.py:95
+#: xcontrol/region_page.py:96
 msgid "The computer's clock keeps local time (for dual boot with Windows)"
 msgstr ""
 "L'horloge de l'ordinateur est à l'heure locale (pour un double démarrage "
 "avec Windows)"
 
-#: xcontrol/region_page.py:98
+#: xcontrol/region_page.py:99
 msgid ""
-"Linux keeps the hardware clock in UTC; Windows uses local time, so with both"
-" installed one of them shows the wrong time. Either tick this, or set "
-"Windows to UTC."
+"Linux keeps the hardware clock in UTC; Windows uses local time, so with both "
+"installed one of them shows the wrong time. Either tick this, or set Windows "
+"to UTC."
 msgstr ""
 "Linux garde l'horloge matérielle en UTC ; Windows utilise l'heure locale : "
 "avec les deux installés, l'un d'eux affiche donc une heure fausse. Cochez "
 "ceci, ou réglez Windows en UTC."
 
-#: xcontrol/region_page.py:115
+#: xcontrol/region_page.py:116
 msgid "Unknown time zone"
 msgstr "Fuseau horaire inconnu"
 
-#: xcontrol/region_page.py:115
+#: xcontrol/region_page.py:116
 msgid "Pick one from the list, e.g. America/Sao_Paulo."
 msgstr "Choisissez-en un dans la liste, par ex. America/Sao_Paulo."
 
-#: xcontrol/region_page.py:117
+#: xcontrol/region_page.py:118
 #, python-brace-format
 msgid "Time zone set to {tz}"
 msgstr "Fuseau horaire défini sur {tz}"
 
-#: xcontrol/region_page.py:122
+#: xcontrol/region_page.py:123
 msgid "Network time on"
 msgstr "Heure réseau activée"
 
-#: xcontrol/region_page.py:123
+#: xcontrol/region_page.py:124
 msgid "Network time off"
 msgstr "Heure réseau désactivée"
 
-#: xcontrol/region_page.py:128
+#: xcontrol/region_page.py:129
 msgid "Hardware clock setting changed"
 msgstr "Réglage de l'horloge matérielle modifié"
 
-#: xcontrol/region_page.py:137
+#: xcontrol/region_page.py:138
 msgid "Time set"
 msgstr "Heure réglée"
 
-#: xcontrol/region_page.py:147
+#: xcontrol/region_page.py:148
 msgid "Language and formats"
 msgstr "Langue et formats"
 
-#: xcontrol/region_page.py:149
+#: xcontrol/region_page.py:150
 msgid "Just for me"
 msgstr "Seulement pour moi"
 
-#: xcontrol/region_page.py:150
+#: xcontrol/region_page.py:151
 msgid "Everyone on this computer"
 msgstr "Tous les utilisateurs de cet ordinateur"
 
-#: xcontrol/region_page.py:153
+#: xcontrol/region_page.py:154
 msgid "Change it for"
 msgstr "Le modifier pour"
 
-#: xcontrol/region_page.py:156 xcontrol/region_page.py:275
+#: xcontrol/region_page.py:157 xcontrol/region_page.py:278
 msgid "Language"
 msgstr "Langue"
 
-#: xcontrol/region_page.py:157
+#: xcontrol/region_page.py:158
 msgid "Menus and messages of programs that are translated."
 msgstr "Menus et messages des programmes traduits."
 
-#: xcontrol/region_page.py:160
+#: xcontrol/region_page.py:161
 msgid "Formats"
 msgstr "Formats"
 
-#: xcontrol/region_page.py:165
+#: xcontrol/region_page.py:166
 msgid "More languages…"
 msgstr "Plus de langues…"
 
-#: xcontrol/region_page.py:185
+#: xcontrol/region_page.py:186
 msgid "Same as the language"
 msgstr "Comme la langue"
 
-#: xcontrol/region_page.py:199
+#: xcontrol/region_page.py:200
 msgid "Takes effect when you log in again."
 msgstr "Prend effet à la prochaine connexion."
 
-#: xcontrol/region_page.py:201
+#: xcontrol/region_page.py:202
 #, python-brace-format
 msgid "This session runs in {loc}."
 msgstr "Cette session fonctionne en {loc}."
 
-#: xcontrol/region_page.py:203
+#: xcontrol/region_page.py:204
 msgid "Your own settings (~/.config/locale.conf) win over these for you."
 msgstr ""
 "Vos propres réglages (~/.config/locale.conf) l'emportent sur ceux-ci pour "
 "vous."
 
-#: xcontrol/region_page.py:218
+#: xcontrol/region_page.py:221
 #, python-brace-format
 msgid "Looks like: {examples}"
 msgstr "Aperçu : {examples}"
 
-#: xcontrol/region_page.py:233
+#: xcontrol/region_page.py:236
 msgid "Could not save it"
 msgstr "Impossible de l'enregistrer"
 
-#: xcontrol/region_page.py:235 xcontrol/region_page.py:238
+#: xcontrol/region_page.py:238 xcontrol/region_page.py:241
 msgid "Saved; log in again to use it"
 msgstr "Enregistré ; reconnectez-vous pour l'utiliser"
 
-#: xcontrol/region_page.py:242
+#: xcontrol/region_page.py:245
 msgid "Can't add languages here"
 msgstr "Impossible d'ajouter des langues ici"
 
-#: xcontrol/region_page.py:243
+#: xcontrol/region_page.py:246
 msgid "This needs pkexec (polkit) and /usr/share/i18n/SUPPORTED (glibc)."
 msgstr "Cela nécessite pkexec (polkit) et /usr/share/i18n/SUPPORTED (glibc)."
 
-#: xcontrol/region_page.py:247
+#: xcontrol/region_page.py:250
 msgid "More languages"
 msgstr "Plus de langues"
 
-#: xcontrol/region_page.py:255
+#: xcontrol/region_page.py:258
 msgid ""
 "Tick the languages to make available. They're generated for the whole "
 "computer (locale-gen), which takes a moment."
@@ -6738,43 +6731,42 @@ msgstr ""
 "Cochez les langues à rendre disponibles. Elles sont générées pour tout "
 "l'ordinateur (locale-gen), ce qui prend un moment."
 
-#: xcontrol/region_page.py:257
+#: xcontrol/region_page.py:260
 msgid "Search"
 msgstr "Rechercher"
 
-#: xcontrol/region_page.py:278
+#: xcontrol/region_page.py:281
 msgid "Code"
 msgstr "Code"
 
-#: xcontrol/region_page.py:289
+#: xcontrol/region_page.py:292
 msgid "Adding languages…"
 msgstr "Ajout des langues…"
 
-#: xcontrol/region_page.py:294
+#: xcontrol/region_page.py:301
 msgid "Languages added"
 msgstr "Langues ajoutées"
 
-#: xcontrol/region_page.py:296
+#: xcontrol/region_page.py:303
 msgid "Could not add the languages"
 msgstr "Impossible d'ajouter les langues"
 
-#: xcontrol/region_page.py:311
+#: xcontrol/region_page.py:320
 msgid "No time sync service is installed (systemd-timesyncd, chrony or ntpd)."
 msgstr ""
 "Aucun service de synchronisation de l'heure n'est installé (systemd-"
 "timesyncd, chrony ou ntpd)."
 
-#: xcontrol/region_page.py:313
+#: xcontrol/region_page.py:322
 msgid "Synchronized."
 msgstr "Synchronisé."
 
-#: xcontrol/region_page.py:313
+#: xcontrol/region_page.py:322
 msgid "Not synchronized yet."
 msgstr "Pas encore synchronisé."
 
-#: xcontrol/region_page.py:321
-msgid ""
-"systemd's timedated isn't available, so the time can't be changed here."
+#: xcontrol/region_page.py:330
+msgid "systemd's timedated isn't available, so the time can't be changed here."
 msgstr ""
 "timedated de systemd n'est pas disponible : l'heure ne peut donc pas être "
 "modifiée ici."
@@ -6807,8 +6799,7 @@ msgstr "Modeline manuelle"
 msgid "manual"
 msgstr "manuel"
 
-#. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz
-#. (custom, DMT)"
+#. TRANSLATORS: a resolution the user created, e.g. "640x480 @ 59.94 Hz (custom, DMT)"
 #: xcontrol/resolutions_dialog.py:41
 #, python-brace-format
 msgid "{w}x{h} @ {hz} (custom, {standard})"
@@ -6841,11 +6832,11 @@ msgid ""
 "support scaling). Custom resolutions are re-created automatically when you "
 "log in or open this panel."
 msgstr ""
-"Masque tous les autres modes : ceux que l'écran indique dans son EDID et les"
-" modes mis à l'échelle que certains pilotes ajoutent (modesetting le fait "
-"sur les connecteurs qui prennent en charge la mise à l'échelle). Les "
-"définitions personnalisées sont recréées automatiquement quand vous vous "
-"connectez ou ouvrez ce panneau."
+"Masque tous les autres modes : ceux que l'écran indique dans son EDID et les "
+"modes mis à l'échelle que certains pilotes ajoutent (modesetting le fait sur "
+"les connecteurs qui prennent en charge la mise à l'échelle). Les définitions "
+"personnalisées sont recréées automatiquement quand vous vous connectez ou "
+"ouvrez ce panneau."
 
 #: xcontrol/resolutions_dialog.py:93
 msgid "My resolutions"
@@ -6863,52 +6854,51 @@ msgstr "Modes classiques"
 msgid "Timing"
 msgstr "Synchronisation"
 
-#: xcontrol/resolutions_dialog.py:140
+#: xcontrol/resolutions_dialog.py:141
 msgid "Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"
 msgstr ""
-"Collez une modeline, par ex. issue des outils cvt ou gtf ou d'un ancien "
-"xorg.conf"
+"Collez une modeline, par ex. issue des outils cvt ou gtf ou d'un ancien xorg."
+"conf"
 
-#: xcontrol/resolutions_dialog.py:141
+#: xcontrol/resolutions_dialog.py:142
 msgid "Modeline"
 msgstr "Modeline"
 
-#: xcontrol/resolutions_dialog.py:160
+#: xcontrol/resolutions_dialog.py:161
 msgid "For all programs"
 msgstr "Pour tous les programmes"
 
-#: xcontrol/resolutions_dialog.py:163
+#: xcontrol/resolutions_dialog.py:164
 msgid ""
-"The options above only change what this panel offers. To hide unwanted modes"
-" from games and every other program, give the kernel a corrected EDID."
+"The options above only change what this panel offers. To hide unwanted modes "
+"from games and every other program, give the kernel a corrected EDID."
 msgstr ""
 "Les options ci-dessus ne modifient que ce que propose ce panneau. Pour "
 "masquer les modes indésirables aux jeux et à tous les autres programmes, "
 "fournissez au noyau un EDID corrigé."
 
-#: xcontrol/resolutions_dialog.py:165
+#: xcontrol/resolutions_dialog.py:166
 msgid "System-wide mode list…"
 msgstr "Liste des modes pour tout le système…"
 
-#: xcontrol/resolutions_dialog.py:225
+#: xcontrol/resolutions_dialog.py:230
 msgid "No custom resolutions yet."
 msgstr "Aucune définition personnalisée pour l'instant."
 
-#: xcontrol/resolutions_dialog.py:260
+#: xcontrol/resolutions_dialog.py:268
 #, python-brace-format
 msgid "VESA DMT has no timing for {w} × {h}. Pick another timing standard."
 msgstr ""
 "VESA DMT n'a pas de synchronisation pour {w} × {h}. Choisissez une autre "
 "norme de synchronisation."
 
-#: xcontrol/resolutions_dialog.py:277
+#: xcontrol/resolutions_dialog.py:285
 #, python-brace-format
 msgid "Pixel clock {clock} MHz · horizontal {hfreq} kHz · refresh {hz} Hz"
 msgstr ""
-"Horloge pixel {clock} MHz · horizontal {hfreq} kHz · rafraîchissement {hz} "
-"Hz"
+"Horloge pixel {clock} MHz · horizontal {hfreq} kHz · rafraîchissement {hz} Hz"
 
-#: xcontrol/resolutions_dialog.py:281
+#: xcontrol/resolutions_dialog.py:289
 msgid ""
 "Below 25 MHz: HDMI links usually refuse this. Use DMT or a higher refresh "
 "rate."
@@ -6916,34 +6906,34 @@ msgstr ""
 "En dessous de 25 MHz : les liaisons HDMI refusent généralement ceci. "
 "Utilisez DMT ou une fréquence de rafraîchissement plus élevée."
 
-#: xcontrol/resolutions_dialog.py:284
+#: xcontrol/resolutions_dialog.py:292
 #, python-brace-format
 msgid ""
 "Outside the {low}–{high} Hz range the display reports; it may show no "
 "picture."
 msgstr ""
-"En dehors de la plage {low}–{high} Hz indiquée par l'écran ; il risque de ne"
-" rien afficher."
+"En dehors de la plage {low}–{high} Hz indiquée par l'écran ; il risque de ne "
+"rien afficher."
 
-#: xcontrol/resolutions_dialog.py:287
+#: xcontrol/resolutions_dialog.py:295
 #, python-brace-format
 msgid "Above the display's reported maximum pixel clock ({clock} MHz)."
 msgstr ""
 "Au-dessus de l'horloge pixel maximale indiquée par l'écran ({clock} MHz)."
 
-#: xcontrol/resolutions_dialog.py:303
+#: xcontrol/resolutions_dialog.py:311
 msgid "That resolution is already in the list"
 msgstr "Cette définition est déjà dans la liste"
 
-#: xcontrol/resolutions_dialog.py:309
+#: xcontrol/resolutions_dialog.py:317
 msgid "xrandr could not add this resolution"
 msgstr "xrandr n'a pas pu ajouter cette définition"
 
-#: xcontrol/resolutions_dialog.py:313
+#: xcontrol/resolutions_dialog.py:321
 msgid "The X server did not keep this resolution"
 msgstr "Le serveur X n'a pas conservé cette définition"
 
-#: xcontrol/resolutions_dialog.py:314
+#: xcontrol/resolutions_dialog.py:322
 #, python-brace-format
 msgid ""
 "xrandr accepted {mode}, but it is not in the mode list of {output}. The "
@@ -6952,17 +6942,17 @@ msgstr ""
 "xrandr a accepté {mode}, mais il ne figure pas dans la liste des modes de "
 "{output}. Le pilote d'affichage l'a peut-être rejeté."
 
-#: xcontrol/resolutions_dialog.py:320
+#: xcontrol/resolutions_dialog.py:328
 msgid "Resolution added. Pick it on the Displays page and press Apply."
 msgstr ""
 "Définition ajoutée. Choisissez-la sur la page Écrans et appuyez sur "
 "Appliquer."
 
-#: xcontrol/resolutions_dialog.py:324
+#: xcontrol/resolutions_dialog.py:332
 msgid "This resolution is in use"
 msgstr "Cette définition est utilisée"
 
-#: xcontrol/resolutions_dialog.py:325
+#: xcontrol/resolutions_dialog.py:333
 msgid "Switch the display to another resolution before removing it."
 msgstr "Passez l'écran à une autre définition avant de la supprimer."
 
@@ -6970,272 +6960,272 @@ msgstr "Passez l'écran à une autre définition avant de la supprimer."
 msgid "Gaming & Hardware"
 msgstr "Jeux et matériel"
 
-#: xcontrol/sysinfo.py:721
+#: xcontrol/sysinfo.py:726
 #, python-brace-format
 msgid "{h} h {m} min"
 msgstr "{h} h {m} min"
 
-#: xcontrol/sysinfo.py:721
+#: xcontrol/sysinfo.py:726
 #, python-brace-format
 msgid "{m} min"
 msgstr "{m} min"
 
-#: xcontrol/sysinfo.py:723
+#: xcontrol/sysinfo.py:728
 #, python-brace-format
 msgid "{n} day"
 msgid_plural "{n} days"
 msgstr[0] "{n} jour"
 msgstr[1] "{n} jours"
 
-#: xcontrol/sysinfo.py:733
+#: xcontrol/sysinfo.py:738
 msgid "Checking…"
 msgstr "Vérification…"
 
-#: xcontrol/sysinfo.py:739 xcontrol/sysinfo.py:784
+#: xcontrol/sysinfo.py:744 xcontrol/sysinfo.py:789
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: xcontrol/sysinfo.py:742
+#: xcontrol/sysinfo.py:747
 msgid "Distribution"
 msgstr "Distribution"
 
-#: xcontrol/sysinfo.py:743
+#: xcontrol/sysinfo.py:748
 msgid "Kernel"
 msgstr "Noyau"
 
-#: xcontrol/sysinfo.py:745
+#: xcontrol/sysinfo.py:750
 msgid "Running for"
 msgstr "En fonctionnement depuis"
 
-#: xcontrol/sysinfo.py:747
+#: xcontrol/sysinfo.py:752
 msgid "Init system"
 msgstr "Système d'initialisation"
 
-#: xcontrol/sysinfo.py:749 xcontrol/sysinfo.py:751
+#: xcontrol/sysinfo.py:754 xcontrol/sysinfo.py:756
 msgid "Packages"
 msgstr "Paquets"
 
-#: xcontrol/sysinfo.py:753
+#: xcontrol/sysinfo.py:758
 msgid "Computer name"
 msgstr "Nom de l'ordinateur"
 
-#: xcontrol/sysinfo.py:754
+#: xcontrol/sysinfo.py:759
 msgid "User"
 msgstr "Utilisateur"
 
-#: xcontrol/sysinfo.py:756
+#: xcontrol/sysinfo.py:761
 msgid "Shell"
 msgstr "Shell"
 
-#: xcontrol/sysinfo.py:762
+#: xcontrol/sysinfo.py:767
 msgid "Window manager"
 msgstr "Gestionnaire de fenêtres"
 
-#: xcontrol/sysinfo.py:764
+#: xcontrol/sysinfo.py:769
 msgid "Display server"
 msgstr "Serveur d'affichage"
 
-#: xcontrol/sysinfo.py:766
+#: xcontrol/sysinfo.py:771
 msgid "X driver"
 msgstr "Pilote X"
 
-#: xcontrol/sysinfo.py:772
+#: xcontrol/sysinfo.py:777
 msgid "Install mesa-utils (glxinfo) to show this"
 msgstr "Installez mesa-utils (glxinfo) pour afficher ceci"
 
-#: xcontrol/sysinfo.py:779
+#: xcontrol/sysinfo.py:784
 msgid "Install vulkan-tools (vulkaninfo) to show this"
 msgstr "Installez vulkan-tools (vulkaninfo) pour afficher ceci"
 
-#: xcontrol/sysinfo.py:781
+#: xcontrol/sysinfo.py:786
 msgid "Graphics stack"
 msgstr "Pile graphique"
 
-#: xcontrol/sysinfo.py:785
+#: xcontrol/sysinfo.py:790
 msgid "Cores"
 msgstr "Cœurs"
 
-#: xcontrol/sysinfo.py:785
+#: xcontrol/sysinfo.py:790
 #, python-brace-format
 msgid "{cores} cores, {threads} threads"
 msgstr "{cores} cœurs, {threads} threads"
 
-#: xcontrol/sysinfo.py:788 xcontrol/sysinfo.py:839
+#: xcontrol/sysinfo.py:793 xcontrol/sysinfo.py:844
 msgid "Usage"
 msgstr "Utilisation"
 
-#: xcontrol/sysinfo.py:792
+#: xcontrol/sysinfo.py:797
 #, python-brace-format
 msgid "(max. {mhz} MHz)"
 msgstr "(max. {mhz} MHz)"
 
-#: xcontrol/sysinfo.py:797
+#: xcontrol/sysinfo.py:802
 msgid "Cache"
 msgstr "Cache"
 
-#: xcontrol/sysinfo.py:801
+#: xcontrol/sysinfo.py:806
 msgid "Frequency driver"
 msgstr "Pilote de fréquence"
 
-#: xcontrol/sysinfo.py:803
+#: xcontrol/sysinfo.py:808
 msgid "Microcode"
 msgstr "Microcode"
 
-#: xcontrol/sysinfo.py:804
+#: xcontrol/sysinfo.py:809
 msgid "Processor"
 msgstr "Processeur"
 
-#: xcontrol/sysinfo.py:812
+#: xcontrol/sysinfo.py:817
 msgid "Installed"
 msgstr "Installée"
 
-#: xcontrol/sysinfo.py:813
+#: xcontrol/sysinfo.py:818
 #, python-brace-format
 msgid "{used} ({percent} %)"
 msgstr "{used} ({percent} %)"
 
-#: xcontrol/sysinfo.py:815
+#: xcontrol/sysinfo.py:820
 msgid "Available"
 msgstr "Disponible"
 
-#: xcontrol/sysinfo.py:819 xcontrol/sysinfo.py:822
+#: xcontrol/sysinfo.py:824 xcontrol/sysinfo.py:827
 msgid "Swap"
 msgstr "Swap"
 
-#: xcontrol/sysinfo.py:819 xcontrol/sysinfo.py:836
+#: xcontrol/sysinfo.py:824 xcontrol/sysinfo.py:841
 #, python-brace-format
 msgid "{used} of {total}"
 msgstr "{used} sur {total}"
 
-#: xcontrol/sysinfo.py:829
+#: xcontrol/sysinfo.py:834
 msgid "Card maker"
 msgstr "Fabricant de la carte"
 
-#: xcontrol/sysinfo.py:830
+#: xcontrol/sysinfo.py:835
 msgid "Kernel driver"
 msgstr "Pilote du noyau"
 
-#: xcontrol/sysinfo.py:833
+#: xcontrol/sysinfo.py:838
 msgid "Video memory (taken from RAM)"
 msgstr "Mémoire vidéo (prise sur la RAM)"
 
-#: xcontrol/sysinfo.py:833
+#: xcontrol/sysinfo.py:838
 msgid "Video memory"
 msgstr "Mémoire vidéo"
 
-#: xcontrol/sysinfo.py:840
+#: xcontrol/sysinfo.py:845
 #, python-brace-format
 msgid "memory {clock}"
 msgstr "mémoire {clock}"
 
-#: xcontrol/sysinfo.py:846
+#: xcontrol/sysinfo.py:851
 msgid "Power"
 msgstr "Consommation"
 
-#: xcontrol/sysinfo.py:848
+#: xcontrol/sysinfo.py:853
 msgid "Fan"
 msgstr "Ventilateur"
 
-#: xcontrol/sysinfo.py:850
+#: xcontrol/sysinfo.py:855
 msgid "Connected displays"
 msgstr "Écrans connectés"
 
-#: xcontrol/sysinfo.py:854
+#: xcontrol/sysinfo.py:859
 msgid "PCI slot"
 msgstr "Emplacement PCI"
 
-#: xcontrol/sysinfo.py:855
+#: xcontrol/sysinfo.py:860
 msgid "Graphics"
 msgstr "Carte graphique"
 
-#: xcontrol/sysinfo.py:855
+#: xcontrol/sysinfo.py:860
 #, python-brace-format
 msgid "Graphics {n}"
 msgstr "Carte graphique {n}"
 
-#: xcontrol/sysinfo.py:866
+#: xcontrol/sysinfo.py:871
 msgid "Computer"
 msgstr "Ordinateur"
 
-#: xcontrol/sysinfo.py:868 xcontrol/sysinfo.py:878
+#: xcontrol/sysinfo.py:873 xcontrol/sysinfo.py:883
 msgid "Motherboard"
 msgstr "Carte mère"
 
-#: xcontrol/sysinfo.py:870
+#: xcontrol/sysinfo.py:875
 #, python-brace-format
 msgid "from {date}"
 msgstr "du {date}"
 
-#: xcontrol/sysinfo.py:873
+#: xcontrol/sysinfo.py:878
 msgid "Legacy BIOS"
 msgstr "BIOS hérité"
 
-#: xcontrol/sysinfo.py:875
+#: xcontrol/sysinfo.py:880
 msgid "Secure Boot on"
 msgstr "Secure Boot activé"
 
-#: xcontrol/sysinfo.py:875
+#: xcontrol/sysinfo.py:880
 msgid "Secure Boot off"
 msgstr "Secure Boot désactivé"
 
-#: xcontrol/sysinfo.py:876
+#: xcontrol/sysinfo.py:881
 msgid "Boot mode"
 msgstr "Mode de démarrage"
 
-#: xcontrol/sysinfo.py:881
+#: xcontrol/sysinfo.py:886
 msgid "SATA SSD"
 msgstr "SSD SATA"
 
-#: xcontrol/sysinfo.py:881
+#: xcontrol/sysinfo.py:886
 msgid "Hard disk"
 msgstr "Disque dur"
 
-#: xcontrol/sysinfo.py:882
+#: xcontrol/sysinfo.py:887
 msgid "SD card / eMMC"
 msgstr "Carte SD / eMMC"
 
-#: xcontrol/sysinfo.py:882
+#: xcontrol/sysinfo.py:887
 msgid "Virtual disk"
 msgstr "Disque virtuel"
 
-#: xcontrol/sysinfo.py:887
+#: xcontrol/sysinfo.py:892
 msgid "removable"
 msgstr "amovible"
 
-#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:531
+#: xcontrol/sysinfo.py:895 xcontrol/xserver_page.py:531
 msgid "Drives"
 msgstr "Disques"
 
-#: xcontrol/sysinfo.py:893
+#: xcontrol/sysinfo.py:898
 #, python-brace-format
 msgid "{used} of {total} used ({percent} %), {fs}"
 msgstr "{used} utilisés sur {total} ({percent} %), {fs}"
 
-#: xcontrol/sysinfo.py:896
+#: xcontrol/sysinfo.py:901
 msgid "Disk space"
 msgstr "Espace disque"
 
-#: xcontrol/sysinfo.py:901
+#: xcontrol/sysinfo.py:906
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: xcontrol/sysinfo.py:904
+#: xcontrol/sysinfo.py:909
 msgid "connected"
 msgstr "connecté"
 
-#: xcontrol/sysinfo.py:904
+#: xcontrol/sysinfo.py:909
 msgid "not connected"
 msgstr "non connecté"
 
-#: xcontrol/sysinfo.py:912
+#: xcontrol/sysinfo.py:917
 msgid "Device"
 msgstr "Périphérique"
 
-#: xcontrol/sysinfo.py:914
+#: xcontrol/sysinfo.py:919
 msgid "Sound server"
 msgstr "Serveur de son"
 
-#: xcontrol/sysinfo.py:924
+#: xcontrol/sysinfo.py:929
 msgid "Sensors"
 msgstr "Capteurs"
 
@@ -7261,81 +7251,81 @@ msgstr ""
 "Copier ces informations (sans les noms de votre ordinateur et de votre "
 "utilisateur)"
 
-#: xcontrol/system_page.py:167
+#: xcontrol/system_page.py:168
 msgid "System information copied"
 msgstr "Informations système copiées"
 
-#: xcontrol/system_page.py:194
+#: xcontrol/system_page.py:195
 msgid "Search modules, devices or parameters"
 msgstr "Rechercher des modules, des périphériques ou des paramètres"
 
-#: xcontrol/system_page.py:197
+#: xcontrol/system_page.py:198
 msgid "Include parts built into the kernel"
 msgstr "Inclure les parties intégrées au noyau"
 
-#: xcontrol/system_page.py:198
+#: xcontrol/system_page.py:199
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 "Parties du noyau qui ne peuvent pas être déchargées mais qui ont tout de "
 "même des paramètres"
 
-#: xcontrol/system_page.py:212 xcontrol/xserver_page.py:14
+#: xcontrol/system_page.py:213 xcontrol/xserver_page.py:14
 #: xcontrol/xserver_page.py:149
 msgid "Module"
 msgstr "Module"
 
-#: xcontrol/system_page.py:213 xcontrol/system_page.py:328
+#: xcontrol/system_page.py:214 xcontrol/system_page.py:329
 msgid "Used by"
 msgstr "Utilisé par"
 
-#: xcontrol/system_page.py:251
+#: xcontrol/system_page.py:252
 msgid "built into the kernel"
 msgstr "intégré au noyau"
 
-#: xcontrol/system_page.py:259
+#: xcontrol/system_page.py:260
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr "{n} modules chargés"
 
-#: xcontrol/system_page.py:260
+#: xcontrol/system_page.py:261
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr "Aucun module chargeable n'est utilisé (le noyau a été démarré sans)."
 
-#: xcontrol/system_page.py:302
+#: xcontrol/system_page.py:303
 msgid "Select a module to see what it drives and its parameters."
 msgstr "Sélectionnez un module pour voir ce qu'il pilote et ses paramètres."
 
-#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:522
+#: xcontrol/system_page.py:323 xcontrol/xserver_page.py:522
 msgid "File"
 msgstr "Fichier"
 
-#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:524
+#: xcontrol/system_page.py:325 xcontrol/xserver_page.py:524
 msgid "Version"
 msgstr "Version"
 
-#: xcontrol/system_page.py:326
+#: xcontrol/system_page.py:327
 msgid "License"
 msgstr "Licence"
 
-#: xcontrol/system_page.py:330
+#: xcontrol/system_page.py:331
 msgid "Needs"
 msgstr "Nécessite"
 
-#: xcontrol/system_page.py:332
+#: xcontrol/system_page.py:333
 msgid "Firmware files"
 msgstr "Fichiers de micrologiciel"
 
-#: xcontrol/system_page.py:337
+#: xcontrol/system_page.py:338
 msgid "Devices it drives"
 msgstr "Périphériques qu'il pilote"
 
-#: xcontrol/system_page.py:345
+#: xcontrol/system_page.py:346
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
-"Définir des paramètres pour chaque chargement du module (nécessite votre mot"
-" de passe)"
+"Définir des paramètres pour chaque chargement du module (nécessite votre mot "
+"de passe)"
 
-#: xcontrol/system_page.py:350
+#: xcontrol/system_page.py:351
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
@@ -7344,105 +7334,105 @@ msgstr ""
 "Cette partie est intégrée au noyau : modprobe.d ne l'atteint donc pas. "
 "Définissez-la sur la ligne de commande du noyau sous la forme {example}."
 
-#: xcontrol/system_page.py:378
+#: xcontrol/system_page.py:379
 msgid "This module has no parameters."
 msgstr "Ce module n'a pas de paramètres."
 
-#: xcontrol/system_page.py:389
+#: xcontrol/system_page.py:390
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
-"Rien ; le module fonctionne avec ses valeurs par défaut et ce qui figure sur"
-" la ligne de commande du noyau."
+"Rien ; le module fonctionne avec ses valeurs par défaut et ce qui figure sur "
+"la ligne de commande du noyau."
 
-#: xcontrol/system_page.py:426
+#: xcontrol/system_page.py:427
 msgid "Module details copied"
 msgstr "Détails du module copiés"
 
-#: xcontrol/system_page.py:439
+#: xcontrol/system_page.py:440
 msgid "Session check"
 msgstr "Vérification de la session"
 
-#: xcontrol/system_page.py:441
+#: xcontrol/system_page.py:442
 msgid "Check again"
 msgstr "Vérifier à nouveau"
 
-#: xcontrol/system_page.py:452
+#: xcontrol/system_page.py:453
 msgid "Back up settings"
 msgstr "Sauvegarder les réglages"
 
-#: xcontrol/system_page.py:454
+#: xcontrol/system_page.py:455
 msgid ""
 "One file with everything set in XControl, plus the theme, default apps, "
-"terminal, language and your picture. Restoring keeps the current files as "
-"*.before-restore."
+"terminal, language and your picture. Restoring keeps the current files as *."
+"before-restore."
 msgstr ""
 "Un seul fichier avec tout ce qui est défini dans XControl, plus le thème, "
 "les applications par défaut, le terminal, la langue et votre image. La "
 "restauration conserve les fichiers actuels sous la forme *.before-restore."
 
-#: xcontrol/system_page.py:460
+#: xcontrol/system_page.py:461
 msgid "Save a backup…"
 msgstr "Enregistrer une sauvegarde…"
 
-#: xcontrol/system_page.py:462
+#: xcontrol/system_page.py:463
 msgid "Restore a backup…"
 msgstr "Restaurer une sauvegarde…"
 
-#: xcontrol/system_page.py:477
+#: xcontrol/system_page.py:478
 msgid "The check failed"
 msgstr "La vérification a échoué"
 
-#: xcontrol/system_page.py:479
+#: xcontrol/system_page.py:480
 msgid "Everything looks right."
 msgstr "Tout semble correct."
 
-#: xcontrol/system_page.py:480
+#: xcontrol/system_page.py:481
 #, python-brace-format
 msgid "{n} thing needs a look."
 msgstr "{n} élément mérite votre attention."
 
-#: xcontrol/system_page.py:481
+#: xcontrol/system_page.py:482
 #, python-brace-format
 msgid "{n} things need a look."
 msgstr "{n} éléments méritent votre attention."
 
-#: xcontrol/system_page.py:518
+#: xcontrol/system_page.py:519
 msgid "Save a backup"
 msgstr "Enregistrer une sauvegarde"
 
-#: xcontrol/system_page.py:530
+#: xcontrol/system_page.py:531
 msgid "Could not save the backup"
 msgstr "Impossible d'enregistrer la sauvegarde"
 
-#: xcontrol/system_page.py:532
+#: xcontrol/system_page.py:533
 #, python-brace-format
 msgid "Backup saved ({n} files and the settings)"
 msgstr "Sauvegarde enregistrée ({n} fichiers et les réglages)"
 
-#: xcontrol/system_page.py:538
+#: xcontrol/system_page.py:539
 msgid "Restore a backup"
 msgstr "Restaurer une sauvegarde"
 
-#: xcontrol/system_page.py:540 xcontrol/users_page.py:456
+#: xcontrol/system_page.py:541 xcontrol/users_page.py:456
 msgid "Open"
 msgstr "Ouvrir"
 
-#: xcontrol/system_page.py:542
+#: xcontrol/system_page.py:543
 msgid "XControl backups"
 msgstr "Sauvegardes XControl"
 
-#: xcontrol/system_page.py:552
+#: xcontrol/system_page.py:553
 msgid "That isn't an XControl backup"
 msgstr "Ce n'est pas une sauvegarde XControl"
 
-#: xcontrol/system_page.py:556
+#: xcontrol/system_page.py:557
 #, python-brace-format
 msgid "Restore the backup from {date}?"
 msgstr "Restaurer la sauvegarde du {date} ?"
 
-#: xcontrol/system_page.py:557
+#: xcontrol/system_page.py:558
 msgid ""
 "Your current settings are replaced (and kept as *.before-restore). XControl "
 "restarts afterwards."
@@ -7450,11 +7440,11 @@ msgstr ""
 "Vos réglages actuels sont remplacés (et conservés sous la forme *.before-"
 "restore). XControl redémarre ensuite."
 
-#: xcontrol/system_page.py:567
+#: xcontrol/system_page.py:568
 msgid "Could not restore the backup"
 msgstr "Impossible de restaurer la sauvegarde"
 
-#: xcontrol/system_page.py:570
+#: xcontrol/system_page.py:571
 msgid "Restored, with problems"
 msgstr "Restaurée, avec des problèmes"
 
@@ -7651,8 +7641,8 @@ msgid ""
 "Administrators (the wheel group) can use sudo and approve system changes "
 "like these."
 msgstr ""
-"Les administrateurs (le groupe wheel) peuvent utiliser sudo et approuver des"
-" modifications du système comme celles-ci."
+"Les administrateurs (le groupe wheel) peuvent utiliser sudo et approuver des "
+"modifications du système comme celles-ci."
 
 #: xcontrol/users_page.py:268
 msgid "You can't remove this from your own account."
@@ -7696,8 +7686,7 @@ msgid "The home folder moves to /home/{new}. "
 msgstr "Le dossier personnel est déplacé vers /home/{new}. "
 
 #: xcontrol/users_page.py:349
-msgid ""
-"Programs that saved the old path (some games, scripts) may need fixing."
+msgid "Programs that saved the old path (some games, scripts) may need fixing."
 msgstr ""
 "Les programmes qui ont enregistré l'ancien chemin (certains jeux, scripts) "
 "devront peut-être être corrigés."
@@ -7773,8 +7762,7 @@ msgstr "Impossible d'utiliser cette image"
 msgid "Picture changed"
 msgstr "Image modifiée"
 
-#. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0
-#. (off)"
+#. TRANSLATORS: a display that is connected but turned off, e.g. "HDMI-A-0 (off)"
 #: xcontrol/xrandr.py:57
 #, python-brace-format
 msgid "{output} (off)"
@@ -7789,8 +7777,8 @@ msgid ""
 "You are in a Wayland session. xrandr only controls X11 outputs, so use your "
 "desktop's display settings here."
 msgstr ""
-"Vous êtes dans une session Wayland. xrandr ne contrôle que les sorties X11 :"
-" utilisez donc ici les paramètres d'affichage de votre bureau."
+"Vous êtes dans une session Wayland. xrandr ne contrôle que les sorties X11 : "
+"utilisez donc ici les paramètres d'affichage de votre bureau."
 
 #: xcontrol/xrandr.py:75
 msgid "No X11 display found (DISPLAY is not set)."
@@ -7853,8 +7841,8 @@ msgid ""
 "No X server log found for this display, so XControl can't tell what X "
 "loaded. (Is this an X session?)"
 msgstr ""
-"Aucun journal du serveur X trouvé pour cet affichage : XControl ne peut donc"
-" pas savoir ce que X a chargé. (Est-ce une session X ?)"
+"Aucun journal du serveur X trouvé pour cet affichage : XControl ne peut donc "
+"pas savoir ce que X a chargé. (Est-ce une session X ?)"
 
 #: xcontrol/xserver_page.py:217
 #, python-brace-format
@@ -7875,8 +7863,8 @@ msgstr ""
 #: xcontrol/xserver_page.py:225
 #, python-brace-format
 msgid ""
-"They were chosen for the {old} X driver, but X now runs {new}; options {new}"
-" doesn't know are ignored."
+"They were chosen for the {old} X driver, but X now runs {new}; options {new} "
+"doesn't know are ignored."
 msgstr ""
 "Elles ont été choisies pour le pilote X {old}, mais X utilise désormais "
 "{new} ; les options que {new} ne connaît pas sont ignorées."
@@ -7922,8 +7910,8 @@ msgstr ""
 
 #: xcontrol/xserver_page.py:360
 msgid ""
-"xorg.conf's manual isn't installed, so the options can't be listed (it comes"
-" with the X server's package)."
+"xorg.conf's manual isn't installed, so the options can't be listed (it comes "
+"with the X server's package)."
 msgstr ""
 "Le manuel de xorg.conf n'est pas installé : les options ne peuvent donc pas "
 "être listées (il est fourni avec le paquet du serveur X)."
@@ -7950,17 +7938,17 @@ msgstr "actuellement : {driver}"
 #: xcontrol/xserver_page.py:420
 #, python-brace-format
 msgid ""
-"Your config already has a Device section (\"{name}\" in {file}), so XControl"
-" doesn't add one: with two Device sections X takes the second for another "
+"Your config already has a Device section (\"{name}\" in {file}), so XControl "
+"doesn't add one: with two Device sections X takes the second for another "
 "GPU. Its Driver line decides: now {driver}. To switch, change that line "
 "(sudoedit {file}) to one of the drivers listed below, then log out and back "
 "in."
 msgstr ""
-"Votre configuration a déjà une section Device (« {name} » dans {file}), donc"
-" XControl n’en ajoute pas : avec deux sections Device, X prend la seconde "
+"Votre configuration a déjà une section Device (« {name} » dans {file}), donc "
+"XControl n’en ajoute pas : avec deux sections Device, X prend la seconde "
 "pour un autre GPU. Sa ligne Driver décide : actuellement {driver}. Pour "
-"changer, modifiez cette ligne (sudoedit {file}) avec l’un des pilotes listés"
-" ci-dessous, puis déconnectez-vous et reconnectez-vous."
+"changer, modifiez cette ligne (sudoedit {file}) avec l’un des pilotes listés "
+"ci-dessous, puis déconnectez-vous et reconnectez-vous."
 
 #: xcontrol/xserver_page.py:424
 msgid "none: X picks"
@@ -7979,44 +7967,44 @@ msgstr "non chargeable"
 #, python-brace-format
 msgid ""
 "These are the X drivers {server} finds (it looks in {folders}, in that "
-"order), with the driver interface version each was built for; it takes video"
-" ABI {abi}."
+"order), with the driver interface version each was built for; it takes video "
+"ABI {abi}."
 msgstr ""
-"Voici les pilotes X que {server} trouve (il cherche dans {folders}, dans cet"
-" ordre), avec la version de l’interface des pilotes pour laquelle chacun a "
+"Voici les pilotes X que {server} trouve (il cherche dans {folders}, dans cet "
+"ordre), avec la version de l’interface des pilotes pour laquelle chacun a "
 "été compilé ; il accepte l’ABI vidéo {abi}."
 
 #: xcontrol/xserver_page.py:442
 #, python-brace-format
 msgid ""
-"{driver} was built for video ABI {built}, so {server} won't load it; install"
-" its build for {server}."
+"{driver} was built for video ABI {built}, so {server} won't load it; install "
+"its build for {server}."
 msgstr ""
 "{driver} a été compilé pour l’ABI vidéo {built}, donc {server} ne le "
 "chargera pas ; installez sa version pour {server}."
 
-#: xcontrol/xserver_page.py:454
+#: xcontrol/xserver_page.py:455
 #, python-brace-format
 msgid ""
 "At its last start X used the Device section \"{name}\", not XControl's. If "
 "you picked the driver after that, log out and back in."
 msgstr ""
-"À son dernier démarrage, X a utilisé la section Device « {name} », pas celle"
-" de XControl. Si vous avez choisi le pilote après, déconnectez-vous puis "
+"À son dernier démarrage, X a utilisé la section Device « {name} », pas celle "
+"de XControl. Si vous avez choisi le pilote après, déconnectez-vous puis "
 "reconnectez-vous."
 
-#: xcontrol/xserver_page.py:457
+#: xcontrol/xserver_page.py:458
 msgid "X used XControl's choice at its last start."
 msgstr "À son dernier démarrage, X a utilisé le choix de XControl."
 
 #: xcontrol/xserver_page.py:460
 #, python-brace-format
 msgid ""
-"{file} has a Screen section that names its own Device (\"{device}\"); X uses"
-" that one, so XControl's choice can't apply."
+"{file} has a Screen section that names its own Device (\"{device}\"); X uses "
+"that one, so XControl's choice can't apply."
 msgstr ""
-"{file} a une section Screen qui désigne son propre Device (« {device} ») ; X"
-" utilise celui-là, donc le choix de XControl ne peut pas s’appliquer."
+"{file} a une section Screen qui désigne son propre Device (« {device} ») ; X "
+"utilise celui-là, donc le choix de XControl ne peut pas s’appliquer."
 
 #: xcontrol/xserver_page.py:466
 #, python-brace-format
@@ -8066,8 +8054,8 @@ msgstr ""
 "Cela prend effet au prochain démarrage de X (déconnectez-vous puis "
 "reconnectez-vous). Les sorties changent de nom (DP-1 avec modesetting "
 "devient DisplayPort-0 avec amdgpu) ; XControl reporte vos réglages d'écran "
-"enregistrés. Les options définies pour {old} sont conservées pour le jour où"
-" vous reviendrez en arrière. Si X ne démarre plus, annulez le changement "
+"enregistrés. Les options définies pour {old} sont conservées pour le jour où "
+"vous reviendrez en arrière. Si X ne démarre plus, annulez le changement "
 "depuis une console texte (Ctrl+Alt+F3) : sudo rm {file}"
 
 #: xcontrol/xserver_page.py:526
@@ -8132,8 +8120,8 @@ msgid ""
 "next time X starts (log out and back in, or restart your login screen)."
 msgstr ""
 "Pour le pilote X {driver} sur {gpus}. Enregistrées dans {file} ; elles "
-"prennent effet au prochain démarrage de X (déconnectez-vous puis "
-"reconnectez-vous, ou redémarrez votre écran de connexion)."
+"prennent effet au prochain démarrage de X (déconnectez-vous puis reconnectez-"
+"vous, ou redémarrez votre écran de connexion)."
 
 #: xcontrol/xserver_page.py:584
 #, python-brace-format
@@ -8174,26 +8162,28 @@ msgstr ""
 
 #: data/xcontrol.desktop.in:11
 msgid ""
-"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;"
+"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;"
+"xrandr;mouse;keyboard;touchpad;input;"
 msgstr ""
-"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;graphisme;anisotrope;anticrénelage;ips;moniteur;écran;souris;clavier;pavé"
-" tactile;saisie;"
+"graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;"
+"xrandr;mouse;keyboard;touchpad;input;graphisme;anisotrope;anticrénelage;ips;"
+"moniteur;écran;souris;clavier;pavé tactile;saisie;"
 
 #~ msgid ""
-#~ "Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed "
-#~ "at start with XControl's Device section. To pick one, set the Driver line in"
-#~ " your own Device section instead (the drivers it would load are listed "
-#~ "below)."
+#~ "Choosing the driver here is turned off on XLibre for now: XLibre 25 "
+#~ "crashed at start with XControl's Device section. To pick one, set the "
+#~ "Driver line in your own Device section instead (the drivers it would load "
+#~ "are listed below)."
 #~ msgstr ""
-#~ "Le choix du pilote ici est désactivé sous XLibre pour l’instant : XLibre 25 "
-#~ "a planté au démarrage avec la section Device de XControl. Pour en choisir "
-#~ "un, modifiez la ligne Driver de votre propre section Device (les pilotes "
-#~ "qu’il chargerait sont listés ci-dessous)."
+#~ "Le choix du pilote ici est désactivé sous XLibre pour l’instant : XLibre "
+#~ "25 a planté au démarrage avec la section Device de XControl. Pour en "
+#~ "choisir un, modifiez la ligne Driver de votre propre section Device (les "
+#~ "pilotes qu’il chargerait sont listés ci-dessous)."
 
 #, python-brace-format
 #~ msgid ""
-#~ "Only drivers built for this X server (in {folder}) are offered; modesetting "
-#~ "is part of the server and always there."
+#~ "Only drivers built for this X server (in {folder}) are offered; "
+#~ "modesetting is part of the server and always there."
 #~ msgstr ""
-#~ "Seuls les pilotes compilés pour ce serveur X (dans {folder}) sont proposés ;"
-#~ " modesetting fait partie du serveur et est toujours disponible."
+#~ "Seuls les pilotes compilés pour ce serveur X (dans {folder}) sont "
+#~ "proposés ; modesetting fait partie du serveur et est toujours disponible."

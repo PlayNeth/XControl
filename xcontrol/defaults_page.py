@@ -84,8 +84,6 @@ class DefaultsPage(Gtk.Box):
         sw.add(view)
         g.attach(sw, 0, 1, 1, 1)
         g.attach(_hint(_("Double-click a type to choose its program.")), 0, 2, 1, 1)
-        self.types_loaded = False
-        self.types_frame = frame
         self.pack_start(frame, True, True, 0)
 
         self.connect("map", lambda *_a: self._refresh())
@@ -190,17 +188,20 @@ class DefaultsPage(Gtk.Box):
         self.window.set_status(_("Terminal set"))
 
     def _type_activated(self, view, path, _col):
-        t = self.filter[path][1]
+        what, t = self.filter[path][0], self.filter[path][1]
         dlg = Gtk.AppChooserDialog.new_for_content_type(self.get_toplevel(), Gtk.DialogFlags.MODAL, t)
-        dlg.set_heading(_("Open {what} with").format(what=self.filter[path][0]))
-        if dlg.run() == Gtk.ResponseType.OK:
-            app = dlg.get_app_info()
-            if app is not None:
-                DF.set_default_type(t, app.get_id())
-                self._load_types()
-                self.window.set_status(_("{app} opens {what} now").format(app=app.get_display_name(),
-                                                                          what=self.filter[path][0]))
+        dlg.set_heading(_("Open {what} with").format(what=what))
+        app = dlg.get_app_info() if dlg.run() == Gtk.ResponseType.OK else None
         dlg.destroy()
+        if app is None:
+            return
+        try:
+            DF.set_default_type(t, app.get_id())
+        except Exception as e:  # noqa: BLE001
+            self.window.message(_("Could not set it"), str(e))
+            return
+        self._load_types()
+        self.window.set_status(_("{app} opens {what} now").format(app=app.get_display_name(), what=what))
 
     def _clean(self, *_a):
         n = DF.clean_broken()

@@ -12,6 +12,7 @@
 #
 # Names and values are validated strictly: no spaces, quotes or shell characters.
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-module-helper: $*" >&2; exit 1; }
 

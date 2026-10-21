@@ -13,8 +13,6 @@ import math
 import re
 from dataclasses import dataclass
 
-STANDARDS = ["cvt", "cvt-rb", "cvt-rb2", "gtf", "dmt", "manual"]
-
 
 @dataclass
 class Modeline:
@@ -277,21 +275,29 @@ def parse_modeline(text):
     if not (g["h"] < g["hss"] <= g["hse"] <= g["ht"] and g["v"] < g["vss"] <= g["vse"] <= g["vt"]):
         raise ValueError("timings must satisfy display < sync start <= sync end <= total")
     flags = m.group("flags").lower()
-    if "interlace" in flags or "dblscan" in flags:
+    if "interlace" in flags or "doublescan" in flags or "dblscan" in flags:
         raise ValueError("interlaced and doublescan modes are not supported")
+    # no polarity flag means negative (what X and the kernel do with such a modeline)
     return Modeline(g["h"], g["v"], round(float(m.group("clock")) * 1000), g["hss"], g["hse"], g["ht"],
-                    g["vss"], g["vse"], g["vt"], "+hsync" in flags, "-vsync" not in flags, "manual")
+                    g["vss"], g["vse"], g["vt"], "+hsync" in flags, "+vsync" in flags, "manual")
 
 
 def generate(standard, w, h, hz):
+    """The mode for this standard, None if DMT has no such mode. Raises ValueError when the
+    formula gives timings no display can use (GTF at low line counts: negative front porch)."""
     if standard == "cvt":
-        return cvt(w, h, hz, 0)
-    if standard == "cvt-rb":
-        return cvt(w, h, hz, 1)
-    if standard == "cvt-rb2":
-        return cvt(w, h, hz, 2)
-    if standard == "gtf":
-        return gtf(w, h, hz)
-    if standard == "dmt":
+        m = cvt(w, h, hz, 0)
+    elif standard == "cvt-rb":
+        m = cvt(w, h, hz, 1)
+    elif standard == "cvt-rb2":
+        m = cvt(w, h, hz, 2)
+    elif standard == "gtf":
+        m = gtf(w, h, hz)
+    elif standard == "dmt":
         return dmt(w, h, hz)
-    raise ValueError(standard)
+    else:
+        raise ValueError(standard)
+    if not (m.width <= m.hsync_start <= m.hsync_end <= m.htotal
+            and m.height <= m.vsync_start <= m.vsync_end <= m.vtotal):
+        raise ValueError("timings must satisfy display < sync start <= sync end <= total")
+    return m

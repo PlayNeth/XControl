@@ -1,4 +1,6 @@
 """The Power page: sleeping when idle, the power and sleep buttons, power profiles."""
+import threading
+
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
@@ -122,12 +124,20 @@ class PowerPage(Gtk.Box):
     def _apply_buttons(self, *_a):
         values = {k: c.get_active_id() for k, c in self.combos.items()
                   if c.get_active_id() and c.get_active_id() != P.LOGIND_DEFAULTS.get(k)}
-        ok, msg = P.set_buttons(values)
+        self.apply.set_sensitive(False)
+
+        def work():   # pkexec waits for the password: not in the UI thread, which would freeze meanwhile
+            ok, msg = P.set_buttons(values)
+            GLib.idle_add(self._buttons_done, ok, msg)
+        threading.Thread(target=work, daemon=True).start()
+
+    def _buttons_done(self, ok, msg):
         if ok:
             self.window.set_status(_("Saved"))
         elif msg:
             self.window.message(_("Could not change the buttons"), msg)
-        GLib.timeout_add(800, lambda: self._refresh() and False)
+        GLib.timeout_add(800, lambda: self._refresh() and False)   # (_refresh makes Apply sensitive again)
+        return False
 
     # ---------------------------------------------------------------- profiles
     def _build_profiles(self):
@@ -166,11 +176,18 @@ class PowerPage(Gtk.Box):
             return
 
         def done(err):
-            if err:
-                GLib.idle_add(lambda: self.window.message(_("Could not change the profile"), err) and False)
+            if err:   # e.g. the password was refused: show the profile that is really active again
+                GLib.idle_add(lambda: self._profile_failed(err))
             else:
                 GLib.idle_add(lambda: self.window.set_status(_("Power profile changed")) and False)
         P.set_profile(name, done)
+
+    def _profile_failed(self, err):
+        self.loading = True
+        self._fill_profiles()
+        self.loading = False
+        self.window.message(_("Could not change the profile"), err)
+        return False
 
     # ---------------------------------------------------------------- refresh
     def _refresh(self):

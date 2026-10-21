@@ -133,16 +133,23 @@ def cursor_themes():
 
 # ---- small file helpers
 def _write(path, text):
+    # through a symlink (dotfiles kept in a repo, e.g. with stow): the link stays, its file changes
+    path = os.path.realpath(path)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = f"{path}.xcontrol-tmp"
-    with open(tmp, "w", encoding="utf-8") as f:
+    with open(tmp, "w", encoding="utf-8", errors="surrogateescape") as f:
         f.write(text)
+    try:
+        shutil.copymode(path, tmp)
+    except OSError:
+        pass   # a new file
     os.replace(tmp, path)
 
 
 def _read(path):
+    """The file's text; bytes that aren't UTF-8 come back unchanged when written with _write."""
     try:
-        with open(path, encoding="utf-8") as f:
+        with open(path, encoding="utf-8", errors="surrogateescape") as f:
             return f.read()
     except OSError:
         return ""
@@ -427,6 +434,14 @@ def xsettingsd_autostart():
     return os.path.join(config_home(), "autostart", "xcontrol-xsettingsd.desktop")
 
 
+def _exec_arg(arg):
+    """One argument of a .desktop Exec= line (a home folder with spaces stays one argument)."""
+    if not re.search(r'[\s"\'\\`$%]', arg):
+        return arg
+    quoted = '"' + re.sub(r'(["`$\\])', r"\\\1", arg) + '"'
+    return quoted.replace("\\", "\\\\").replace("%", "%%")   # the string-level escaping of the whole line
+
+
 # ---- applying
 def _run(args, check=False):
     try:
@@ -547,7 +562,7 @@ def apply(look, qt=True, start_xsettingsd=True):
                                  stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 _write(xsettingsd_autostart(),
                        "[Desktop Entry]\nType=Application\nName=XSETTINGS for XControl's appearance settings\n"
-                       f"Exec=xsettingsd -c {conf}\nNoDisplay=true\nX-GNOME-Autostart-enabled=true\n")
+                       f"Exec=xsettingsd -c {_exec_arg(conf)}\nNoDisplay=true\nX-GNOME-Autostart-enabled=true\n")
                 notes.append("started")
             except OSError:
                 notes.append("no-xsettingsd")
@@ -588,9 +603,9 @@ def current(gtk_settings=None):
             path = os.path.join(base, "default", "index.theme")
             if os.path.exists(path):
                 try:
-                    cp.read(path)
+                    cp.read(path, encoding="utf-8")
                     look.cursor_theme = cp.get("Icon Theme", "Inherits", fallback="").split(",")[0].strip()
-                except configparser.Error:
+                except (configparser.Error, UnicodeDecodeError):
                     pass
                 if look.cursor_theme:
                     break

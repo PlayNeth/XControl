@@ -2,6 +2,52 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.29.0 (2026-10-21)
+
+**Fix about 70 bugs from a code review and drop mesa-panel compatibility**
+
+- Make the root helpers read a chosen EDID file or user picture with the user's own rights and
+  from a private copy, so they can't install a root-only file or one swapped after the checks
+- Make files written by the root helpers readable whatever the caller's umask, and check the
+  whole new user name instead of only its start
+- Remove or move a user's AccountsService settings when the account is deleted or renamed, so
+  a new account with the old name doesn't inherit them
+- Fix games crashing when forcing anisotropic filtering in Vulkan with a read-only feature
+  struct: the layer no longer writes to the game's own data
+- Fix a possible buffer overflow in the OpenGL shim when forcing MSAA with long attribute lists,
+  and a crash when eglGetProcAddress can't be found
+- Fix crashes on a hand-edited or damaged config, backup or saved state (wrong types, huge
+  numbers, bad custom resolutions) and on config files that aren't UTF-8
+- Fix the app check on the Appearance page getting stuck when xprop fails or sends odd text
+- Fix idle sleep putting the computer back to sleep right after it wakes up
+- Fix sound playback not keeping the computer awake on systems in other languages
+- Fix the controller layout switching back to the default when saving a game's layout, and
+  apply changes that need a restart only once
+- Keep a third keyboard layout and beyond, and stop saving input settings that failed to apply
+- Fix modelines without polarity flags being read as positive vsync, GTF producing unusable
+  timings, and EDIDs with no detailed timings or too much data being misread or overfilled
+- Match two identical monitors to the right connectors on the Displays page
+- Fix the night light fade-out jumping when the night was shorter than the fade, and the next
+  change time across daylight saving changes
+- Stop the window freezing while waiting for a password for power buttons or profiles, or while
+  locale-gen adds languages; show the real power profile again when a change fails
+- Keep symlinked dotfiles, file permissions and non-UTF-8 bytes when writing locale, theme and
+  xprofile files, and quote home folders with spaces in the xsettingsd login entry
+- Fix i3 config import and writing: backslashes in names, modes named by variables, X core fonts,
+  a full disk no longer moves your config aside, and a hung i3 no longer fails the save
+- Fix line breaks in bar module texts breaking the polybar config, the custom resolutions dialog
+  overwriting settings saved meanwhile, and sysinfo rows with repeated names not updating
+- Back off restarting desktop service programs that keep failing, and cap their logs at 1 MB
+- Run the ScreenSaver D-Bus service in its own thread, so apps and games (SDL) get an answer
+  right away instead of waiting for the service loop
+- Watch for new input devices through XInput hotplug events only, instead of streaming every
+  key press and mouse movement through xinput
+- Stop the desktop and controller services doing their periodic work and writing status on
+  every gamepad event, and cache picom, i3, WirePlumber and dunst version checks
+- Remove the mesa-panel and mesa-panel-run commands and the MESAPANEL_ environment variables
+- Remove the settings migration from ~/.config/mesa-panel and support for EDID overrides
+  installed under the old mesa-panel-*.bin name
+
 ## 0.28.7 (2026-10-21)
 
 **Show X options in use that the driver manual doesn't list**

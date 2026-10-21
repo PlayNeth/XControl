@@ -293,7 +293,7 @@ class DisplayPage(Gtk.Box):
             self.monitors = (xrandr.query(with_props=True)
                              if xrandr.available() and os.environ.get("DISPLAY") and not warn else [])
             if self.monitors:
-                renamed = output_names.migrate_saved()
+                renamed = output_names.migrate_saved([m.name for m in self.monitors if m.connected])
                 if renamed:
                     self.window.set_status(_("Saved settings moved to the new output names: {names}").format(
                         names=", ".join(f"{a} → {b}" for a, b in renamed.items())))
@@ -423,9 +423,10 @@ class DisplayPage(Gtk.Box):
             for d in modes:
                 try:
                     ml = modelines.Modeline.from_dict(d)
-                except TypeError:
+                    name = ml.name
+                except (TypeError, KeyError):  # a damaged entry in the config: the rest still works
                     continue
-                if ml.name in mon.modes:
+                if name in mon.modes:
                     continue
                 try:
                     xrandr.add_custom_mode(output, ml)
@@ -691,7 +692,11 @@ def apply_saved_layout():
     """CLI entry point used at login (xcontrol --apply-display)."""
     if xrandr.session_warning():
         return 0
-    output_names.migrate_saved()  # the X driver may have renamed the outputs
+    try:
+        connected = [m.name for m in xrandr.query() if m.connected]
+    except Exception:  # noqa: BLE001 - migrate_saved finds out by itself
+        connected = None
+    output_names.migrate_saved(connected)  # the X driver may have renamed the outputs
     data = config.load()
     for problem in restore_custom_modes(data):
         print(f"xcontrol: could not restore custom mode {problem}")
@@ -704,4 +709,3 @@ def apply_saved_layout():
         print(f"xcontrol: could not restore layout ({shlex.join(cmd)}): {e}")
         return 1
     return 0
-

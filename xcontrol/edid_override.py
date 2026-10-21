@@ -37,8 +37,6 @@ ESTABLISHED = [
     (37, 7, 100000, 1152, 1200, 1328, 1456, 870, 873, 876, 915, True, True),
 ]
 
-DTDS_PER_CTA_BLOCK = 6
-
 # standard timing aspect codes; 16:10 is 0 only from EDID 1.3 on
 _STD_ASPECTS = {(16, 10): 0, (4, 3): 1, (5, 4): 2, (16, 9): 3}
 
@@ -115,6 +113,8 @@ def _range_descriptor(modes, version_14):
     clock = math.ceil(max(m.clock_khz for m in modes) / 10000.0) * 10
     vmin, hmin = max(1, vmin), max(1, hmin)
     flags = 0
+    if not version_14:  # EDID 1.3 has no +255 offset flags: cap at what a byte holds
+        vmin, vmax, hmin, hmax = min(vmin, 255), min(vmax, 255), min(hmin, 255), min(hmax, 255)
     if vmax > 255:
         flags |= 0x02
         vmax -= 255
@@ -131,7 +131,7 @@ def _range_descriptor(modes, version_14):
         raise OverrideError("pixel clock above 2550 MHz")
     # 1.4: 0x01 = range limits only (no GTF/CVT); 1.3: 0x00 = no secondary GTF
     support = 0x01 if version_14 else 0x00
-    return bytes([0, 0, 0, 0xFD, flags if version_14 else 0, vmin, vmax, hmin, hmax, clock // 10, support,
+    return bytes([0, 0, 0, 0xFD, flags, vmin, vmax, hmin, hmax, clock // 10, support,
                   0x0A, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20])
 
 
@@ -157,7 +157,7 @@ def _cta_blocks(original_blocks, dtds):
             i += 1 + length
         kept_data = bytes(out)
         break
-    if not _has_vcdb(kept_data):
+    if not _has_vcdb(kept_data) and len(kept_data) <= 120:  # (only if it fits: the block holds 123 bytes)
         # Video Capability Data Block, RGB quantization range selectable (QS=1)
         kept_data += bytes([0xE2, 0x00, 0x40])
     if not dtds and not any(e[0] == 0x02 for e in original_blocks):
@@ -293,6 +293,8 @@ def modes_from_verbose(entry, names):
         if vm["name"] not in names or vm.get("interlaced") or "h" not in vm or "v" not in vm:
             continue
         h, v = vm["h"], vm["v"]
+        if not (h[3] and v[3] and vm["clock_khz"]):  # no real timing (Xvfb, VNC and other virtual outputs)
+            continue
         m = Modeline(h[0], v[0], vm["clock_khz"], h[1], h[2], h[3], v[1], v[2], v[3],
                      vm["hpos"], vm["vpos"], "manual")
         m.source_name = vm["name"]

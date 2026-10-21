@@ -53,8 +53,7 @@ def migrate(display, current):
         if kname:
             by_kernel.setdefault(kname, []).append(xname)
 
-    stored = set(display["custom_modes"]) | set(display["edid_ignored"]) | set(_command_outputs(display["command"]))
-    for old in sorted(stored):
+    for old in sorted(_stored(display)):
         if old in current:
             continue
         targets = {x for k in kernel_candidates(old) for x in by_kernel.get(k, [])}
@@ -80,15 +79,24 @@ def _command_outputs(cmd):
     return [cmd[i] for i in range(1, len(cmd)) if cmd[i - 1] == "--output"]
 
 
+def _stored(display):
+    """Output names the saved settings refer to."""
+    return set(display["custom_modes"]) | set(display["edid_ignored"]) | set(_command_outputs(display["command"]))
+
+
 def current_outputs():
     """{X output name: kernel connector name} for connected outputs, matched by EDID."""
     from . import monitor_info
     return {r.x_name: r.drm_name for r in monitor_info.collect() if r.x_name}
 
 
-def migrate_saved():
-    """Load, migrate and save the config. Returns the renames (may be empty)."""
+def migrate_saved(connected=None):
+    """Load, migrate and save the config. Returns the renames (may be empty).
+    `connected`: the connected X outputs, when known; if every saved name is among them
+    there is nothing to rename, which saves reading every monitor's EDID."""
     from . import config
+    if connected is not None and _stored(config.load()["display"]) <= set(connected):
+        return {}
     try:
         current = current_outputs()
     except Exception:  # noqa: BLE001 - no X, no sysfs: nothing to do

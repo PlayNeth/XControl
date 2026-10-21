@@ -73,16 +73,18 @@ def refresh_user_apps():
     """GIO only knows which file types your own apps (~/.local/share/applications: AppImages, Wine,
     Steam games, hand-made launchers) open from that folder's mimeinfo.cache, which nothing
     updates there. Rebuild it when it's missing or older than the launchers. True if rebuilt."""
+    def mtime(path):  # 0 for a dangling symlink (a launcher whose target was removed)
+        try:
+            return os.path.getmtime(path)
+        except OSError:
+            return 0
+
     d = user_apps_dir()
-    files = [f for f in glob.glob(os.path.join(d, "**", "*.desktop"), recursive=True)]
+    files = glob.glob(os.path.join(d, "**", "*.desktop"), recursive=True)
     if not files or not shutil.which("update-desktop-database"):
         return False
-    cache = os.path.join(d, "mimeinfo.cache")
-    try:
-        cache_t = os.path.getmtime(cache)
-    except OSError:
-        cache_t = 0
-    if cache_t and max(os.path.getmtime(f) for f in files) <= cache_t and os.path.getmtime(d) <= cache_t:
+    cache_t = mtime(os.path.join(d, "mimeinfo.cache"))
+    if cache_t and max(map(mtime, files)) <= cache_t and mtime(d) <= cache_t:
         return False
     try:
         subprocess.run(["update-desktop-database", d], capture_output=True, timeout=30)
@@ -155,8 +157,9 @@ def _read(path):
     cp = configparser.ConfigParser(interpolation=None, strict=False, delimiters=("=",))
     cp.optionxform = str
     try:
-        cp.read(path)
-    except configparser.Error:
+        with open(path, errors="replace") as f:  # a stray non-UTF-8 byte mustn't break the page
+            cp.read_file(f)
+    except (OSError, configparser.Error):
         pass
     return cp
 

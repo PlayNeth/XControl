@@ -59,6 +59,7 @@ class NotifyPage(Gtk.Box):
         self.pa = self.desk["power_alerts"]
         self.loading = True
         self._timer = None
+        self._version = None
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
         head = Gtk.Box(spacing=10)
@@ -679,7 +680,9 @@ class NotifyPage(Gtk.Box):
         err = (st.get("errors") or {}).get("dunst", "")
         owner = N.owner()
         ours = owner and kids.get("dunst") == owner[0]
-        v = N.version()
+        if ours and not self._version:   # (this runs every 3 s: ask dunst once)
+            self._version = N.version()
+        v = self._version
         if not shutil.which("dunst"):
             text = _("dunst isn't installed.")
         elif not n["enabled"]:

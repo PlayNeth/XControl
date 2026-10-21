@@ -88,10 +88,10 @@ def restore(bundle):
         if key not in where or not isinstance(entry, dict):
             continue   # only the known files, never a path from the backup itself
         dest, binary = where[key]
-        data = base64.b64decode(entry["base64"]) if binary and "base64" in entry else \
-            entry.get("text", "").encode() if not binary and "text" in entry else None
-        if data is None:
+        value = entry.get("base64" if binary else "text")
+        if not isinstance(value, str):
             continue
+        data = base64.b64decode(value) if binary else value.encode()
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         _keep(dest)
         with open(dest + ".tmp", "wb") as f:

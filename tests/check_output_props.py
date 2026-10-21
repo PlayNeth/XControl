@@ -145,6 +145,11 @@ expect("round trip through xrandr 1.5.3", round(P.saturation_of(got), 6), 0.0)
 mons = xrandr.parse(QUERY)
 P.attach(mons, xrandr.parse_verbose(VERBOSE.replace("\tCTM: 0 1", "\tCTM: garbage 1")))
 expect("unreadable CTM is left alone", "CTM" in mons[0].props, False)
+v = xrandr.parse_verbose("DP-2 connected 640x480+0+0 (0x4a) normal (normal) 0mm x 0mm\n\tscaling mode: None \n"
+                         "VIRTUAL1 unknown connection (normal left inverted right x axis y axis)\n"
+                         "\tscaling mode: Full \n\t\tsupported: Full\n")
+expect("an unknown-connection output keeps its own properties", (v["DP-2"]["props"], v["VIRTUAL1"]["props"]),
+       ({"scaling mode": "None"}, {"scaling mode": "Full", "scaling mode (range)": "Full"}))
 
 print("check_output_props:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

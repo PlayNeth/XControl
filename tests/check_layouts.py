@@ -40,6 +40,10 @@ expect("merged", (e["lightbar"], e["map"]["cross"], e["emulate"], e["bt_poll_ms"
 expect("default untouched", (S.effective(c, None)["lightbar"], c["lightbar"]), ("#0000ff", "#0000ff"))
 expect("XControl's own window doesn't switch layouts", (S._ours(["xcontrol", "Xcontrol", "python3"]),
                                                         S._ours(["steam_app_1", "game.exe"])), (True, False))
+expect("saving from XControl keeps the game's layout",
+       (S._layout(c, ["xcontrol", "Xcontrol"], "Elden Ring"), S._layout(c, ["xcontrol"], "gone"),
+        S._layout(c, ["firefox"], "Elden Ring")), (0, None, None))
+expect("a light bar that isn't a color", S.normalize({"lightbar": "#zzzzzz"})["lightbar"], "#0044ff")
 expect("layouts change without a restart", "profiles" in S.LIVE and "map" in S.LIVE, True)
 
 # a controller switches its button layout in place

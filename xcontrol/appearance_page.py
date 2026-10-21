@@ -390,11 +390,15 @@ class AppearancePage(Gtk.Box):
         self.check_btn.set_label(_("Click the app's window…"))
 
         def work():
-            pid, info = appcheck.pick_window()
-            report = None
-            if pid:
-                kind, _p = T.xsettings_manager()
-                report = appcheck.analyze(pid, info, self.applied, kind)
+            try:   # whatever happens, the button must come back
+                pid, info = appcheck.pick_window()
+                report = None
+                if pid:
+                    kind, _p = T.xsettings_manager()
+                    report = appcheck.analyze(pid, info, self.applied, kind)
+            except Exception as e:  # noqa: BLE001
+                traceback.print_exc()
+                pid, info, report = None, str(e), None
             GLib.idle_add(self._show_report, pid, info, report)
         threading.Thread(target=work, daemon=True).start()
 

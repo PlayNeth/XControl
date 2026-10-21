@@ -6,6 +6,7 @@
 #     Turns each locale on in /etc/locale.gen (uncommenting its line, or adding it) and runs
 #     locale-gen. Only names listed in /usr/share/i18n/SUPPORTED are accepted.
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-locale-helper: $*" >&2; exit 1; }
 

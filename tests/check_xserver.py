@@ -235,6 +235,9 @@ X.remember("modesetting", {"amdgpu": {"Atomic": "true"}})
 X.remember("amdgpu", {"amdgpu": {"TearFree": "true"}})
 expect("options remembered per X driver", X.remembered(),
        {"modesetting": {"amdgpu": {"Atomic": "true"}}, "amdgpu": {"amdgpu": {"TearFree": "true"}}})
+X.remember("modesetting", {"i915": {"PageFlip": "false"}})
+expect("another GPU's options for the same X driver are kept", X.remembered()["modesetting"],
+       {"amdgpu": {"Atomic": "true"}, "i915": {"PageFlip": "false"}})
 if prefix is not None:
     env["XCONTROL_XMODULES"] = mods
     os.chmod(os.path.dirname(mods), 0o755)

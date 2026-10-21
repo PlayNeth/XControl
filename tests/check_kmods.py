@@ -92,7 +92,9 @@ depends:        drm_exec,gpu-sched,drm_buddy
 parm:           ppfeaturemask:all power features enabled (default)) (uint)
 parm:           dc:Display Core driver (1 = enable, 0 = disable, -1 = auto (default)) (int)
 parm:           vramlimit:Restrict VRAM for testing, in megabytes (int)
+parm:           index:Index value for Intel HD audio interface. (array of int)
 """)
+expect("modinfo array parm", info["parm"]["index"], ("Index value for Intel HD audio interface.", "array of int"))
 expect("modinfo", (info["description"], info["depends"], len(info["firmware"])),
        ("AMD GPU", ["drm_exec", "gpu-sched", "drm_buddy"], 2))
 expect("modinfo parm", info["parm"]["dc"],

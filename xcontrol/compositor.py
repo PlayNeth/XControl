@@ -39,16 +39,29 @@ def config_path():
     return os.path.join(config_dir(), "picom.conf")
 
 
+_version = {}   # (path, mtime) -> version: the Bar page asks every 3 seconds while picom runs
+
+
 def version():
     """(major, minor) of the installed picom ('v12.5', 'v10.2-xx' ...), or None."""
-    if not shutil.which("picom"):
+    exe = shutil.which("picom")
+    if not exe:
         return None
     try:
-        out = subprocess.run(["picom", "--version"], capture_output=True, text=True, timeout=5).stdout
+        key = (exe, os.stat(exe).st_mtime)
+    except OSError:
+        return None
+    if key in _version:
+        return _version[key]
+    try:
+        out = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=5).stdout
     except (OSError, subprocess.SubprocessError):
         return None
-    m = re.search(r"v?(\d+)(?:\.(\d+))?", out)
-    return (int(m.group(1)), int(m.group(2) or 0)) if m else None
+    # at the start only: a git build's 'vgit-7e568d' has no version, and its hash digits aren't one
+    m = re.match(r"\s*v?(\d+)(?:\.(\d+))?", out)
+    _version.clear()
+    _version[key] = (int(m.group(1)), int(m.group(2) or 0)) if m else None
+    return _version[key]
 
 
 def _list(items):

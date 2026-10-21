@@ -9,6 +9,7 @@ It runs under the desktop service, which restarts it when the settings change.
 import fcntl
 import json
 import os
+import re
 import select
 import signal
 import struct
@@ -73,7 +74,7 @@ def normalize(c):
                          "settings": {k: norm[k] for k in sub}})
     out["profiles"] = profiles[:50]
     c = str(out["lightbar"] or "")
-    out["lightbar"] = c if len(c) == 7 and c.startswith("#") else DEFAULT["lightbar"]
+    out["lightbar"] = c if re.fullmatch(r"#[0-9A-Fa-f]{6}", c) else DEFAULT["lightbar"]
     for k, lo, hi in (("brightness", 0, 100), ("bt_poll_ms", 0, 16)):
         try:
             out[k] = max(lo, min(hi, int(out[k])))
@@ -97,6 +98,15 @@ def choose(settings, names):
         if p["match"] and focus.matches(p["match"], names):
             return i
     return None
+
+
+def _layout(settings, names, keep=None):
+    """choose(), except that with XControl's own window in front the layout named `keep` (the one
+    in use) stays: saving a game's layout from there shouldn't switch back to the default."""
+    pick = choose(settings, names)
+    if pick is None and keep is not None and _ours(names):
+        pick = next((i for i, p in enumerate(settings["profiles"]) if p["name"] == keep), None)
+    return pick
 
 
 def load():
@@ -540,7 +550,7 @@ class Controller:
 LIVE = ("lightbar", "brightness", "bt_poll_ms", "gyro", "player_lights", "triggers", "map", "profiles", "touchpad")
 
 
-def _restart_keys(settings):
+def restart_keys(settings):
     return {k: v for k, v in settings.items() if k not in LIVE}
 
 
@@ -583,7 +593,7 @@ def service():
     signal.signal(signal.SIGUSR1, lambda *_a: flags.update(calibrate=True))
     controllers = {}         # pad key -> Controller
     settings = load()
-    scanned = 0.0
+    scanned = reported = 0.0
     written = None
     front = focus.Focus()    # which program is in front, for the per-game layouts
     looked, names, active = 0.0, [], None
@@ -593,13 +603,15 @@ def service():
             if flags["reload"]:
                 flags["reload"] = False
                 new = load()
-                if _restart_keys(new) == _restart_keys(settings) and controllers:
-                    settings = new
-                    active = choose(settings, names)
+                in_place = restart_keys(new) == restart_keys(settings) and controllers
+                keep = settings["profiles"][active]["name"] if active is not None else None
+                settings = new
+                active = _layout(settings, names, keep)    # (the layouts may have changed, or gone)
+                reported = 0.0
+                if in_place:
                     for c in controllers.values():      # (light bar, rate, gyro, layouts...: in place)
                         c.apply(effective(settings, active))
                 else:
-                    settings = new
                     for c in controllers.values():
                         c.close()
                     controllers.clear()
@@ -617,7 +629,7 @@ def service():
                         recent = ([names] + [r for r in recent if r != names])[:8]
                     pick = choose(settings, names)
                     if pick != active and not (pick is None and _ours(names)):
-                        active = pick
+                        active, reported = pick, 0.0
                         log(f"layout: {settings['profiles'][active]['name'] if active is not None else 'default'}")
                         for c in controllers.values():
                             c.apply(effective(settings, active))
@@ -628,34 +640,41 @@ def service():
                     if key not in found:
                         controllers.pop(key).close()
                         log(f"gone: {key}")
+                        reported = 0.0
                 for key, pad in found.items():
                     if key not in controllers:
+                        reported = 0.0
                         taken = {c.player for c in controllers.values()}
                         player = next(n for n in range(1, len(controllers) + 2) if n not in taken)
                         controllers[key] = Controller(pad, effective(settings, active), log, player)
                         log(f"connected: {pad.name} ({pad.bus})")
-            st = {"pid": os.getpid(), "pads": [c.status() for c in controllers.values()],
-                  "profile": settings["profiles"][active]["name"] if active is not None else "", "recent": recent}
-            if st != written:
-                tmp = _runtime("pads.json.tmp")
-                with open(tmp, "w") as f:
-                    json.dump(st, f)
-                os.replace(tmp, _runtime("pads.json"))
-                written = st
+            # what the page shows (it looks every 2 s): not after every event, the sensors send hundreds a second
+            if time.monotonic() - reported >= 1.0:
+                reported = time.monotonic()
+                st = {"pid": os.getpid(), "pads": [c.status() for c in controllers.values()],
+                      "profile": settings["profiles"][active]["name"] if active is not None else "",
+                      "recent": recent}
+                if st != written:
+                    tmp = _runtime("pads.json.tmp")
+                    try:
+                        with open(tmp, "w") as f:
+                            json.dump(st, f)
+                        os.replace(tmp, _runtime("pads.json"))
+                        written = st
+                    except OSError as e:
+                        log(f"couldn't write the state: {e}")
             fds = [fd for c in controllers.values() for fd in c.fds]
             wait = 0.5
             for c in controllers.values():        # (swipe presses to let go of)
                 due = c.tick()
                 if due is not None:
                     wait = min(wait, due)
-            try:
-                ready, _w, _x = select.select(fds, [], [], wait)
-            except InterruptedError:
-                continue
+            ready, _w, _x = select.select(fds, [], [], wait)    # (signals: retried, then the flags are seen)
             for fd in ready:
                 for key, c in list(controllers.items()):
                     if fd in c.fds and not c.read(fd):
                         controllers.pop(key).close()
+                        reported = 0.0
                         break
     finally:
         for c in controllers.values():

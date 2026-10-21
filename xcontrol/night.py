@@ -95,11 +95,21 @@ def _dms(text, deg_digits):
     return sign * (deg + minutes / 60 + sec / 3600)
 
 
+_LOCATIONS = {}   # (tz, tabs) -> location: the schedule asks every second in the desktop service
+
+
 def location_from_timezone(tz=None, tabs=("/usr/share/zoneinfo/zone1970.tab", "/usr/share/zoneinfo/zone.tab")):
     """(latitude, longitude) of the time zone's main city, e.g. America/Sao_Paulo -> (-23.5, -46.6)."""
     tz = tz or timezone_name()
     if not tz:
         return None
+    key = (tz, tuple(tabs))
+    if key not in _LOCATIONS:
+        _LOCATIONS[key] = _read_location(tz, tabs)
+    return _LOCATIONS[key]
+
+
+def _read_location(tz, tabs):
     for tab in tabs:
         try:
             with open(tab, errors="replace") as f:
@@ -160,8 +170,8 @@ def night_amount(n, now=None, location=None):
     if s < night_len:                      # night (fading in during the first `fade` minutes)
         return min(1.0, s / fade) if n["fade_minutes"] else 1.0
     e = since(end)
-    if n["fade_minutes"] and e < fade:     # fading out after the end
-        return max(0.0, 1 - e / fade)
+    if n["fade_minutes"] and e < fade:     # fading out after the end (from where the fade-in got to)
+        return max(0.0, min(1.0, night_len / fade) - e / fade)
     return 0.0
 
 
@@ -173,10 +183,15 @@ def next_change(n, now=None, location=None):
     """When the schedule next goes day->night or night->day (None for 'always'); for the page."""
     if n["mode"] == "always":
         return None
+    local = now is None
     now = now or datetime.datetime.now().astimezone()
+    if n["mode"] == "sun" and location is None and (n["latitude"] is None or n["longitude"] is None):
+        location = location_from_timezone()   # once, not for each step
     was = night_amount(n, now, location) >= 0.5
     for step in range(1, 48 * 6):
         t = now + datetime.timedelta(minutes=5 * step)
+        if local:   # astimezone() gave a fixed UTC offset: take a daylight saving change into account
+            t = t.astimezone()
         if (night_amount(n, t, location) >= 0.5) != was:
             return t
     return None
@@ -193,6 +208,8 @@ def forced(runtime, n=None):
         with open(_force_path(runtime)) as f:
             st = json.load(f)
     except (OSError, ValueError):
+        return None
+    if not isinstance(st, dict):
         return None
     if st.get("until") and st["until"] <= time.time():
         try:

@@ -49,6 +49,33 @@ with tempfile.TemporaryDirectory() as home:
     L.write_support_files(smaa, b)  # idempotent
     expect("one file", os.listdir(os.path.dirname(p)), [os.path.basename(p)])
 
+# profiles.json damaged or hand-edited into the wrong shapes: defaults, never an exception
+# (xcontrol-run loads it before every game starts)
+with tempfile.TemporaryDirectory() as cfg:
+    old = os.environ.get("XDG_CONFIG_HOME")
+    os.environ["XDG_CONFIG_HOME"] = cfg
+    os.makedirs(os.path.join(cfg, "xcontrol"))
+    for text in ("[]", "7", "{bad", '{"games": 5, "display": [], "input": "x"}',
+                 '{"games": [{"name": "g", "match": "abc", "settings": {"fps_limit": 1e999}}],'
+                 ' "display": {"command": "xrandr", "custom_modes": [], "edid_ignored": 3},'
+                 ' "input": {"devices": [], "keyboard": 2}}'):
+        with open(os.path.join(cfg, "xcontrol", "profiles.json"), "w") as f:
+            f.write(text)
+        try:
+            d = config.load()
+            got = (d["display"]["command"], [g["match"] for g in d["games"]],
+                   [g["settings"]["fps_limit"] for g in d["games"]])
+            want = ([], [[]], [0]) if '"g"' in text else ([], [], [])
+            expect(f"damaged config {text[:20]!r}", got, want)
+        except Exception as e:  # noqa: BLE001
+            expect(f"damaged config {text[:20]!r}", repr(e), "no exception")
+    config.save({"global": {}, "games": []})
+    expect("save leaves no temporary file", os.listdir(os.path.join(cfg, "xcontrol")), ["profiles.json"])
+    if old is None:
+        del os.environ["XDG_CONFIG_HOME"]
+    else:
+        os.environ["XDG_CONFIG_HOME"] = old
+
 X = vrr.x_vrr_enabled
 expect("modesetting enabled", X("[  12.3] (**) modesetting(0): VariableRefresh: enabled\n"), True)
 expect("amdgpu default", X("[  12.3] (==) AMDGPU(0): VariableRefresh: disabled\n"), False)

@@ -156,7 +156,8 @@ def sound_playing():
     if not shutil.which("pactl"):
         return False
     try:
-        out = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True, text=True, timeout=5).stdout
+        out = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True, text=True, timeout=5,
+                             env=dict(os.environ, LC_ALL="C")).stdout
     except (OSError, subprocess.SubprocessError):
         return False
     return any(line.split("\t")[-1].strip() == "RUNNING" for line in out.splitlines() if line.strip())

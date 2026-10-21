@@ -69,14 +69,14 @@ typedef void (*fnptr)(void);
 #define EGL_SURFACE_TYPE    0x3033
 #define EGL_WINDOW_BIT      0x0004
 
-#define MAX_ATTRIBS 256
+#define MAX_ATTRIBS 256 /* copy loops keep room for one pair + 4 sample attribs + terminator */
 
 /* ---- configuration ----------------------------------------------------- */
 static int g_af, g_msaa, g_traa, g_fps, g_debug, g_active;
 
 #define LOG(...) do { if (g_debug) { fprintf(stderr, "[xcontrol/gl] " __VA_ARGS__); fputc('\n', stderr); } } while (0)
 
-/* XCONTROL_<name>, or MESAPANEL_<name> from before the rename */
+/* XCONTROL_<name> */
 static int env_int(const char *name)
 {
     char key[64];
@@ -84,10 +84,6 @@ static int env_int(const char *name)
 
     snprintf(key, sizeof key, "XCONTROL_%s", name);
     v = getenv(key);
-    if (!v) {
-        snprintf(key, sizeof key, "MESAPANEL_%s", name);
-        v = getenv(key);
-    }
     return v ? atoi(v) : 0;
 }
 
@@ -458,7 +454,7 @@ EXPORT void *glXChooseFBConfig(void *dpy, int screen, const int *attribs, int *n
     if (!g_msaa) return real(dpy, screen, attribs, nelements);
 
     for (int i = 0; attribs && attribs[i] != 0; i += 2) {
-        if (n > MAX_ATTRIBS - 6) return real(dpy, screen, attribs, nelements);
+        if (n + 7 > MAX_ATTRIBS) return real(dpy, screen, attribs, nelements);
         if (attribs[i] == GLX_SAMPLE_BUFFERS || attribs[i] == GLX_SAMPLES) continue;
         if (attribs[i] == GLX_DRAWABLE_TYPE) drawable = attribs[i + 1];
         buf[n++] = attribs[i];
@@ -500,7 +496,7 @@ EXPORT void *glXChooseVisual(void *dpy, int screen, int *attribs)
     for (int i = 0; attribs[i] != 0;) {
         int a = attribs[i];
         int is_bool = (a == GLX_USE_GL || a == GLX_RGBA || a == GLX_DOUBLEBUFFER || a == GLX_STEREO);
-        if (n > MAX_ATTRIBS - 6) return real(dpy, screen, attribs);
+        if (n + 7 > MAX_ATTRIBS) return real(dpy, screen, attribs);
         if (is_bool) {
             buf[n++] = a;
             i += 1;
@@ -545,7 +541,7 @@ EXPORT unsigned eglChooseConfig(void *dpy, const int32_t *attribs, void **config
     if (!g_msaa) return real(dpy, attribs, configs, size, num);
 
     for (int i = 0; attribs && attribs[i] != EGL_NONE; i += 2) {
-        if (n > MAX_ATTRIBS - 6) return real(dpy, attribs, configs, size, num);
+        if (n + 7 > MAX_ATTRIBS) return real(dpy, attribs, configs, size, num);
         if (attribs[i] == EGL_SAMPLE_BUFFERS || attribs[i] == EGL_SAMPLES) continue;
         if (attribs[i] == EGL_SURFACE_TYPE) surface = attribs[i + 1];
         buf[n++] = attribs[i];
@@ -679,6 +675,12 @@ static const struct hook hooks[] = {
     { NULL, NULL }
 };
 
+static PFN_eglswapdmg real_egl_proc(const char *name)
+{
+    gpa_fn gpa = (gpa_fn)real_winsys("eglGetProcAddress", "libEGL.so.1");
+    return gpa ? (PFN_eglswapdmg)gpa(name) : NULL;
+}
+
 static void *lookup_hook(const char *name)
 {
     if (!g_active || !name)
@@ -689,12 +691,12 @@ static void *lookup_hook(const char *name)
     /* Damage-swap variants are only reachable through eglGetProcAddress. */
     if (strcmp(name, "eglSwapBuffersWithDamageKHR") == 0) {
         if (!real_dmg_khr)
-            real_dmg_khr = (PFN_eglswapdmg)((gpa_fn)real_winsys("eglGetProcAddress", "libEGL.so.1"))(name);
+            real_dmg_khr = real_egl_proc(name);
         return real_dmg_khr ? (void *)swap_damage_khr : NULL;
     }
     if (strcmp(name, "eglSwapBuffersWithDamageEXT") == 0) {
         if (!real_dmg_ext)
-            real_dmg_ext = (PFN_eglswapdmg)((gpa_fn)real_winsys("eglGetProcAddress", "libEGL.so.1"))(name);
+            real_dmg_ext = real_egl_proc(name);
         return real_dmg_ext ? (void *)swap_damage_ext : NULL;
     }
     return NULL;

@@ -5,7 +5,8 @@ import sys
 import tempfile
 
 tmp = tempfile.mkdtemp()
-os.environ.update(HOME=tmp, XDG_CONFIG_HOME=os.path.join(tmp, ".config"), XDG_CACHE_HOME=os.path.join(tmp, ".cache"))
+os.environ.update(HOME=tmp, XDG_CONFIG_HOME=os.path.join(tmp, ".config"), XDG_CACHE_HOME=os.path.join(tmp, ".cache"),
+                  XDG_RUNTIME_DIR=tmp)
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import cairo  # noqa: E402
 from xcontrol import desktop as D, wallpaper as W  # noqa: E402
@@ -85,6 +86,39 @@ desk["blanking"]["screen_off_minutes"] = 0
 expect("never", D.xset_commands(desk), [["xset", "s", "off"], ["xset", "-dpms"]])
 expect("nothing managed: nothing touched", D.xset_commands(D.normalize({})), [])
 expect("service only when needed", (D.wanted(D.normalize({})), D.wanted(desk)), (False, True))
+
+expect("hand-edited junk", (D.normalize({"lock": {"idle_minutes": "ten", "color": 5}})["lock"]["idle_minutes"],
+                            D.normalize({"lock": {"color": 5}})["lock"]["color"],
+                            D.normalize({"blanking": {"screen_off_minutes": [1]}})["blanking"]["screen_off_minutes"]),
+       (10, "#000000", 15))
+
+# ---- a child that keeps failing: its error kept, restarts slow down, the error goes once it runs fine
+c = D._Child("t:1", ["sh", "-c", "echo 'error: no display' >&2; exit 1"])
+c.ensure()
+c.proc.wait()
+c.ensure()
+expect("error kept", (c.error, c.failures, c.proc), ("error: no display", 1, None))
+c.started -= 6
+c.ensure()
+c.proc.wait()
+c.ensure()
+expect("second failure", c.failures, 2)
+c.started -= 6
+c.ensure()
+expect("waits 10 s after two", c.proc, None)
+c.started -= 5
+c.cmd = ["sleep", "30"]
+c.ensure()
+expect("restarted", c.alive(), True)
+c.started -= 31
+c.ensure()
+expect("runs fine: error gone", (c.error, c.failures), ("", 0))
+with open(c.log_path(), "a") as f:
+    f.write("x" * (D._Child.LOG_MAX + 1))
+c.log_checked = 0
+c.ensure()
+expect("log trimmed", os.path.getsize(c.log_path()), 0)
+c.stop()
 
 # ---- the i3 config
 os.makedirs(os.path.join(tmp, ".config", "i3"))

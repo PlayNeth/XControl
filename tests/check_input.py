@@ -20,7 +20,7 @@ os.environ["PATH"] = bindir + os.pathsep + os.environ["PATH"]
 os.environ["FAKE_XINPUT_STATE"] = os.path.join(tmp, "xinput.json")
 os.environ["XDG_CONFIG_HOME"] = os.path.join(tmp, "config")
 os.environ["XDG_RUNTIME_DIR"] = tmp
-os.environ["DISPLAY"] = ":99"
+os.environ["DISPLAY"] = ":79"  # (no X server there: the watcher falls back to xinput test-xi2)
 
 from xcontrol import input_devices as D, keyboard as K  # noqa: E402
 

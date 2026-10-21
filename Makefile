@@ -80,9 +80,6 @@ install: all
 	sed 's|@DATADIR@|$(DATADIR)|g' bin/xcontrol.in > $(DESTDIR)$(BINDIR)/xcontrol
 	sed 's|@DATADIR@|$(DATADIR)|g' bin/xcontrol-run.in > $(DESTDIR)$(BINDIR)/xcontrol-run
 	chmod 755 $(DESTDIR)$(BINDIR)/xcontrol $(DESTDIR)$(BINDIR)/xcontrol-run
-	# old names (before the rename), so Steam launch options and login entries keep working
-	ln -sf xcontrol $(DESTDIR)$(BINDIR)/mesa-panel
-	ln -sf xcontrol-run $(DESTDIR)$(BINDIR)/mesa-panel-run
 	install -Dm644 $(BUILDDIR)/xcontrol.desktop $(DESTDIR)$(PREFIX)/share/applications/xcontrol.desktop
 	for l in $(LINGUAS); do \
 		install -Dm644 $(BUILDDIR)/locale/$$l/LC_MESSAGES/xcontrol.mo \

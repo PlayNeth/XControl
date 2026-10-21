@@ -114,9 +114,7 @@ def params(name):
         try:
             with open(os.path.join(base, n), errors="replace") as f:
                 value = f.read().strip()
-        except PermissionError:
-            value = UNREADABLE
-        except OSError:
+        except OSError:     # (mode 0200/0400: only root can read it)
             value = UNREADABLE
         out.append(Param(name=n, value=value))
     return out
@@ -131,7 +129,7 @@ def parse_modinfo(text):
             continue
         key, value = m.group(1), m.group(2).strip()
         if key == "parm":
-            pm = re.match(r"^(\w+):(.*?)(?:\s*\((\w+)\))?$", value)
+            pm = re.match(r"^(\w+):(.*?)(?:\s*\(((?:array of )?\w+)\))?$", value)
             if pm:
                 info["parm"][pm.group(1)] = (pm.group(2).strip(), pm.group(3) or "")
         elif key == "firmware":

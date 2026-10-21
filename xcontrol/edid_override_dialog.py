@@ -330,4 +330,3 @@ def _work_area_height(window):
         return mon.get_workarea().height
     except Exception:  # noqa: BLE001
         return 768
-

@@ -34,6 +34,23 @@ def listed(data):
     return keys
 
 
+# EDID 1.3 has no range offset flags: a mode above 255 Hz caps the range instead of wrapping it
+m300 = M.cvt(640, 480, 300, 1)
+if edid.parse(O.build(None, [M.dmt(640, 480, 60), m300], M.dmt(640, 480, 60))).vrange != (58, 255):
+    print("check_edid_override: FAILED range limits above 255 Hz in EDID 1.3")
+    sys.exit(1)
+# a CTA block already full of data blocks: no room for the added VCDB, and every block stays 128 bytes
+cta = bytearray(128)
+cta[0], cta[1] = 0x02, 3
+cta[4:127] = (bytes([0x60 | 30]) + bytes(30)) * 3 + bytes([0x60 | 29]) + bytes(29)
+cta[2] = 127
+base = bytearray(SAMPLES["HDMI monitor"][:128])
+base[19], base[126] = 4, 1  # EDID 1.4: the extra DTDs may take more extension blocks
+full = O.build(bytes(base) + bytes(cta), CHOSEN, CHOSEN[0])
+if len(full) % 128 or full[128 + 2] > 127 or any(sum(full[i:i + 128]) % 256 for i in range(0, len(full), 128)):
+    print("check_edid_override: FAILED full CTA block")
+    sys.exit(1)
+
 if not shutil.which("edid-decode"):
     print("check_edid_override: edid-decode not installed, skipped")
     sys.exit(0)

@@ -80,6 +80,17 @@ expect("shell", would("shell", "leo", "/usr/bin/fish"), (0, ["usermod -s /usr/bi
 expect("rename other", would("rename", "ana", "anas"),
        (0, ["usermod -l anas -d /home/anas -m ana", "groupmod -n anas ana"]))
 expect("icon", would("icon", "leo", png)[0], 0)
+os.symlink(png, os.path.join(tmp, "link.png"))
+expect("icon through a symlink refused", run("icon", "leo", os.path.join(tmp, "link.png"))[0] != 0, True)
+users_dir = os.path.join(tmp, "as", "users")
+os.makedirs(users_dir)
+write("as/users/ana", "[User]\nIcon=x\n")
+icons = os.path.join(tmp, "as", "icons")
+expect("rename takes AccountsService's settings along", would("rename", "ana", "anas")[1][2:],
+       [f"mv -f {users_dir}/ana {users_dir}/anas",
+        f"sed -i s|^Icon={icons}/ana$|Icon={icons}/anas| {users_dir}/anas"])
+expect("delete drops them", would("delete", "ana", "keep")[1], ["userdel ana", f"rm -f {users_dir}/ana"])
+os.remove(os.path.join(users_dir, "ana"))
 
 for args, why, stdin in (
         (["realname", "root", "x"], "root", ""),

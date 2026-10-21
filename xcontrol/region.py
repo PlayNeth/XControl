@@ -169,10 +169,23 @@ def _xprofile_block():
         XPROFILE_END, ""])
 
 
+def _write(path, text):
+    """Replace a file atomically. A symlink (dotfiles kept in a git repository) stays a symlink
+    and the file keeps its permissions; bytes that aren't UTF-8 come back as they were."""
+    path = os.path.realpath(path)
+    with open(path + ".tmp", "w", encoding="utf-8", errors="surrogateescape") as f:
+        f.write(text)
+    try:
+        shutil.copymode(path, path + ".tmp")
+    except OSError:
+        pass
+    os.replace(path + ".tmp", path)
+
+
 def _set_xprofile(on):
     path = xprofile_path()
     try:
-        with open(path, errors="replace") as f:
+        with open(path, encoding="utf-8", errors="surrogateescape") as f:
             text = f.read()
     except FileNotFoundError:
         text = None
@@ -194,9 +207,7 @@ def _set_xprofile(on):
         if text is not None:
             os.remove(path)
         return
-    with open(path + ".tmp", "w") as f:
-        f.write(new)
-    os.replace(path + ".tmp", path)
+    _write(path, new)
 
 
 def write_user_locale(values):
@@ -223,9 +234,7 @@ def write_user_locale(values):
     for p, head in ((path, "# Your language and formats (set by XControl). Read when you log in.\n"),
                     (envd, "# Your language and formats for programs systemd starts (set by XControl).\n")):
         os.makedirs(os.path.dirname(p), exist_ok=True)
-        with open(p + ".tmp", "w") as f:
-            f.write(head + body)
-        os.replace(p + ".tmp", p)
+        _write(p, head + body)
     _set_xprofile(True)
 
 

@@ -148,14 +148,18 @@ def parse_props(text):
     return props
 
 
+def _load_props(d):
+    try:
+        d.props = parse_props(_run(["xinput", "list-props", str(d.id)]))
+    except (RuntimeError, OSError, subprocess.SubprocessError):
+        d.props = {}
+
+
 def list_devices(with_props=True):
     devices = parse_list(_run(["xinput", "list"]))
     if with_props:
         for d in devices:
-            try:
-                d.props = parse_props(_run(["xinput", "list-props", str(d.id)]))
-            except (RuntimeError, OSError, subprocess.SubprocessError):
-                d.props = {}
+            _load_props(d)
     return devices
 
 
@@ -179,11 +183,11 @@ def set_args(device, key, value):
 def apply(device, key, value):
     """Change one setting on every connected device with this device's name
     (a mouse often shows up as several pointer devices)."""
-    for d in list_devices(with_props=True):
-        if d.name == device.name and d.kind == device.kind and d.has(key):
-            _run(set_args(d, key, value))
-            d.props[SETTINGS[key][0]] = encode(SETTINGS[key][1], value,
-                                               len(d.props.get(SETTINGS[key][0], [])) or 1)
+    for d in list_devices(with_props=False):
+        if d.name == device.name and d.kind == device.kind:
+            _load_props(d)   # (only these: one xinput call per device)
+            if d.has(key):
+                _run(set_args(d, key, value))
 
 
 def apply_saved(devices=None, log=None):
@@ -191,8 +195,12 @@ def apply_saved(devices=None, log=None):
     saved = config.load()["input"]["devices"]
     if not saved:
         return 0
+    if devices is None:
+        devices = [d for d in list_devices(with_props=False) if d.name in saved]
+        for d in devices:
+            _load_props(d)
     count = 0
-    for d in devices if devices is not None else list_devices():
+    for d in devices:
         for key, value in saved.get(d.name, {}).items():
             if key in SETTINGS and d.has(key) and d.get(key) != value:
                 try:
@@ -277,18 +285,110 @@ def watch(apply_keyboard=None):
                 log(f"keyboard: {e}")
 
     apply_all()
-    if not shutil.which("xinput"):
-        return 0
-    proc = subprocess.Popen(["xinput", "test-xi2", "--root"], stdout=subprocess.PIPE,
-                            stderr=subprocess.DEVNULL, text=True, bufsize=1)
-    try:
-        for line in proc.stdout:
-            # "    Changes happened:  [new slave] ... [device enabled]" (xinput test-xi2)
-            if line.lstrip().startswith("Changes happened:") and any(
-                    f in line for f in ("[new slave]", "[device enabled]", "[slave attached]")):
-                time.sleep(0.5)  # let the driver finish setting the device up
-                log("device added")
-                apply_all()
-    finally:
-        proc.kill()
+    events = _xi2_hotplug() or _xinput_hotplug()
+    for _added in events or ():
+        log("device added")
+        apply_all()
     return 0
+
+
+# XI2: XIAllDevices, XI_HierarchyChanged, GenericEvent; flags XISlaveAdded | XISlaveAttached | XIDeviceEnabled
+_XI_ALL_DEVICES, _XI_HIERARCHY_CHANGED, _GENERIC_EVENT = 0, 11, 35
+_XI_ADDED = (1 << 2) | (1 << 4) | (1 << 6)
+
+
+def _xi2_hotplug():
+    """Hotplug events straight from X (libX11 and libXi through ctypes), selecting only
+    HierarchyChanged on the root window: `xinput test-xi2 --root` also selects every key
+    press and mouse motion, which would wake this helper hundreds of times a second.
+    A generator yielding once per device added; None when X or libXi can't be used.
+    When the X server goes away, Xlib ends the process."""
+    import ctypes
+    import ctypes.util
+    try:
+        x11 = ctypes.CDLL(ctypes.util.find_library("X11") or "libX11.so.6")
+        xi = ctypes.CDLL(ctypes.util.find_library("Xi") or "libXi.so.6")
+    except OSError:
+        return None
+    vp, ci, cul = ctypes.c_void_p, ctypes.c_int, ctypes.c_ulong
+
+    class Cookie(ctypes.Structure):     # XGenericEventCookie
+        _fields_ = [("type", ci), ("serial", cul), ("send_event", ci), ("display", vp), ("extension", ci),
+                    ("evtype", ci), ("cookie", ctypes.c_uint), ("data", vp)]
+
+    class Event(ctypes.Union):          # XEvent
+        _fields_ = [("cookie", Cookie), ("pad", ctypes.c_long * 24)]
+
+    class Hierarchy(ctypes.Structure):  # XIHierarchyEvent (the start of it)
+        _fields_ = [("type", ci), ("serial", cul), ("send_event", ci), ("display", vp), ("extension", ci),
+                    ("evtype", ci), ("time", cul), ("flags", ci)]
+
+    class Mask(ctypes.Structure):       # XIEventMask
+        _fields_ = [("deviceid", ci), ("mask_len", ci), ("mask", ctypes.POINTER(ctypes.c_ubyte))]
+
+    x11.XOpenDisplay.restype = vp
+    x11.XOpenDisplay.argtypes = [ctypes.c_char_p]
+    x11.XDefaultRootWindow.restype = cul
+    x11.XDefaultRootWindow.argtypes = [vp]
+    x11.XQueryExtension.argtypes = [vp, ctypes.c_char_p] + [ctypes.POINTER(ci)] * 3
+    x11.XNextEvent.argtypes = [vp, ctypes.POINTER(Event)]
+    x11.XPending.argtypes = x11.XFlush.argtypes = x11.XCloseDisplay.argtypes = [vp]
+    x11.XGetEventData.argtypes = x11.XFreeEventData.argtypes = [vp, ctypes.POINTER(Cookie)]
+    xi.XIQueryVersion.argtypes = [vp, ctypes.POINTER(ci), ctypes.POINTER(ci)]
+    xi.XISelectEvents.argtypes = [vp, cul, ctypes.POINTER(Mask), ci]
+    dpy = x11.XOpenDisplay(None)
+    if not dpy:
+        return None
+    opcode, ev_base, err_base, major, minor = ci(), ci(), ci(), ci(2), ci(0)
+    if not x11.XQueryExtension(dpy, b"XInputExtension", ctypes.byref(opcode), ctypes.byref(ev_base),
+                               ctypes.byref(err_base)) \
+            or xi.XIQueryVersion(dpy, ctypes.byref(major), ctypes.byref(minor)) != 0:
+        x11.XCloseDisplay(dpy)
+        return None
+    bits = (ctypes.c_ubyte * 2)()
+    bits[_XI_HIERARCHY_CHANGED >> 3] = 1 << (_XI_HIERARCHY_CHANGED & 7)
+    mask = Mask(_XI_ALL_DEVICES, len(bits), ctypes.cast(bits, ctypes.POINTER(ctypes.c_ubyte)))
+    xi.XISelectEvents(dpy, x11.XDefaultRootWindow(dpy), ctypes.byref(mask), 1)
+    x11.XFlush(dpy)
+
+    def added(ev):
+        x11.XNextEvent(dpy, ctypes.byref(ev))
+        c = ev.cookie
+        if c.type != _GENERIC_EVENT or c.extension != opcode.value or not x11.XGetEventData(dpy, ctypes.byref(c)):
+            return False
+        try:
+            return c.evtype == _XI_HIERARCHY_CHANGED and bool(
+                ctypes.cast(c.data, ctypes.POINTER(Hierarchy)).contents.flags & _XI_ADDED)
+        finally:
+            x11.XFreeEventData(dpy, ctypes.byref(c))
+
+    def events():
+        ev = Event()
+        while True:
+            if added(ev):
+                time.sleep(0.5)          # let the driver finish setting the device up
+                while x11.XPending(dpy):  # one plug brings several events: apply once
+                    added(ev)
+                yield True
+    return events()
+
+
+def _xinput_hotplug():
+    """The same from `xinput test-xi2 --root` (no libXi); ends when the X server goes away."""
+    if not shutil.which("xinput"):
+        return None
+
+    def events():
+        proc = subprocess.Popen(["xinput", "test-xi2", "--root"], stdout=subprocess.PIPE,
+                                stderr=subprocess.DEVNULL, text=True, bufsize=1)
+        try:
+            for line in proc.stdout:
+                # "    Changes happened:  [new slave] ... [device enabled]" (xinput test-xi2)
+                if line.lstrip().startswith("Changes happened:") and any(
+                        f in line for f in ("[new slave]", "[device enabled]", "[slave attached]")):
+                    time.sleep(0.5)  # let the driver finish setting the device up
+                    yield True
+        finally:
+            proc.kill()
+            proc.wait()
+    return events()

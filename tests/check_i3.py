@@ -145,6 +145,22 @@ expect("unmanaged kept", [x["command"] for x in c2["startup"]],
 expect("own bar kept", ("bar {" in c2["extra"], "    position top" in c2["extra"], c2["i3bar"]), (True, True, False))
 valid("imported, nothing managed", c2)
 
+# quotes and backslashes in names survive a write and an import (i3 unescapes \" and \\ in quotes)
+for name in ('say "hi"', "back\\", "a\\b"):
+    t = I.generate(I.normalize({"workspaces": [{"name": name}]}))
+    expect(f"quoted {name!r}", I.import_config(t, managed=set())[0]["workspaces"][0]["name"], name)
+expect("trailing backslash escaped",
+       'set $ws1 "back\\\\"' in I.generate(I.normalize({"workspaces": [{"name": "back\\"}]})), True)
+# a mode named by a variable: its keys go into the mode its key enters; an X core font stays as is
+c3, _s = I.import_config('set $mode_system System (l) lock, (e) logout\nmode "$mode_system" {\n'
+                         '    bindsym l exec i3lock, mode "default"\n}\nbindsym Mod4+Pause mode "$mode_system"\n'
+                         "font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1\n", managed=set())
+expect("mode from a variable", sorted({b["mode"] for b in c3["bindings"]}),
+       ["System (l) lock, (e) logout", "default"])
+expect("X core font kept", (c3["font"], c3["extra"]),
+       (I.DEFAULT["font"], "font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1"))
+valid("mode from a variable", c3)
+
 if HAVE_I3:
     stock, _s = I.import_config(open("/etc/i3/config").read())
     valid("i3's stock config imported", stock)

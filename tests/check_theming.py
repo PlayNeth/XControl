@@ -95,6 +95,21 @@ expect("updated size", "Xcursor.size: 24" in xr, True)
 g3 = read(f"{tmp}/.config/gtk-3.0/settings.ini")
 expect("one theme line", g3.count("gtk-theme-name="), 1)
 
+# a symlinked dotfile stays a link; bytes that aren't UTF-8 survive
+dot = os.path.join(tmp, "dotfiles", "Xresources")
+mk(dot, "")
+with open(dot, "wb") as f:
+    f.write(b"! caf\xe9\nXTerm*faceName: Monospace\n")
+os.remove(f"{tmp}/.Xresources")
+os.symlink(dot, f"{tmp}/.Xresources")
+T.apply(look, qt=False, start_xsettingsd=False)
+with open(dot, "rb") as f:
+    raw = f.read()
+expect("symlinked dotfile kept", (os.path.islink(f"{tmp}/.Xresources"), raw.startswith(b"! caf\xe9\n"),
+                                  T.BLOCK_START.encode() in raw), (True, True, True))
+expect("desktop Exec quoting", (T._exec_arg("/home/a/x.conf"), T._exec_arg("/home/a b/$x.conf")),
+       ("/home/a/x.conf", '"/home/a b/\\\\$x.conf"'))
+
 real = T.gtk4_version
 T.gtk4_version = lambda: (4, 24)
 expect("gtk 4.20+ dark variant", T.gtk_ini_values(T.Look(prefer_dark=True), gtk4=True)
@@ -125,6 +140,14 @@ appcheck.disable_user_css()
 expect("user css renamed", sorted(os.listdir(f"{tmp}/.config/gtk-4.0")),
        ["assets.xcontrol-disabled", "gtk.css.xcontrol-disabled", "settings.ini"])
 expect("comment-only css kept", os.path.exists(f"{tmp}/.config/gtk-3.0/gtk.css"), True)
+
+# AppImage fix links the theme into home; the Flatpak fix then still copies it (a sandbox can't follow the link)
+linked = appcheck.link_into_home(T.Look(gtk_theme="Raleigh", icon_theme="", cursor_theme=""))
+os.environ["PATH"] = os.pathsep.join(p for p in os.environ.get("PATH", "").split(os.pathsep)
+                                     if not os.path.exists(os.path.join(p, "flatpak")))
+expect("flatpak copy replaces the link", (len(linked), appcheck.flatpak_fix(T.Look(gtk_theme="Raleigh")),
+                                          os.path.islink(linked[0]), os.path.isfile(linked[0] + "/gtk-2.0/gtkrc")),
+       (1, True, False, True))
 
 print("check_theming:", "FAILED" if bad else "ok")
 shutil.rmtree(tmp, ignore_errors=True)

@@ -43,7 +43,7 @@ class OverviewTab(Gtk.Box):
         self.window = window
         self.info = sysinfo.collect()
         sysinfo.live(self.info)
-        self.values = {}       # (section id, label) -> value Gtk.Label
+        self.values = {}       # (section id, row number) -> value Gtk.Label
         self.layout_key = None
 
         # ---- header: logo, distribution, kernel, copy buttons
@@ -118,8 +118,9 @@ class OverviewTab(Gtk.Box):
         key = [(sid, tuple(k for k, _v in rows)) for sid, _t, rows in sections]
         if key == self.layout_key:
             for sid, _title, rows in sections:
-                for label, value in rows:
-                    w = self.values.get((sid, label))
+                # by position: labels repeat (two NVMe drives' "nvme · Composite", sound cards' "Device")
+                for r, (_label, value) in enumerate(rows, 1):
+                    w = self.values.get((sid, r))
                     if w and w.get_text() != value:
                         w.set_text(value)
             return False
@@ -159,7 +160,7 @@ class OverviewTab(Gtk.Box):
             v.set_can_focus(False)  # selectable labels would otherwise grab focus and scroll the page
             grid.attach(k, 0, r, 1, 1)
             grid.attach(v, 1, r, 1, 1)
-            self.values[(sid, label)] = v
+            self.values[(sid, r)] = v
         return frame
 
     def _copy(self, english):

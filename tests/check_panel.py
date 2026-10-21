@@ -139,6 +139,10 @@ expect("memory as amount", cfg["module/memory"]["label"], "%gb_used%/%gb_total%"
 expect("tray spacing", (cfg["module/systray"]["tray-spacing"], cfg["module/systray"]["format-margin"]), ("8pt", "4pt"))
 expect("clock format keeps its trailing space (quoted)", cfg["module/date"]["date"], '"%H:%M "')
 expect("extras for unknown sections dropped", "nonsense" in full["extra"], False)
+pasted = ini(B.generate(B.normalize({"separator": " a\nb ", "options": {"clock": {"format": "%H\n%M"}}}),
+                        ver=(3, 7), nerd="", root=root, has_pavu=False))
+expect("pasted line breaks don't end the line", (pasted["module/date"]["date"], pasted["bar/xcontrol"]["separator"]),
+       ("%H %M", '" a b "'))
 legacy = B.normalize({"clock_format": "%H.%M", "temp_warn": 70, "disk_mount": "/home"})
 expect("pre-0.18 settings carried over", (B.module_options(legacy, "clock")["format"],
                                           B.module_options(legacy, "temperature")["warn"],

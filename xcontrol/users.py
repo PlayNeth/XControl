@@ -108,7 +108,7 @@ def check_username(name):
     """None, or 'chars' / 'long'."""
     if len(name) > 32:
         return "long"
-    return None if NAME_RE.match(name) else "chars"
+    return None if NAME_RE.fullmatch(name) else "chars"
 
 
 def check_full_name(name):

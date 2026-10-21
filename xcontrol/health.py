@@ -81,7 +81,7 @@ def checks():
 
     # ---- does XControl start at login?
     runs = D.autostart_runs()
-    if D.wanted(desk) or desk["bar"]["enabled"]:
+    if D.wanted(desk):
         if runs is False:
             out.append(("error", _("XControl doesn't start when you log in"),
                         _("Your i3 config doesn't run xcontrol --session, so after the next login the wallpaper, "

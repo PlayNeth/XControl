@@ -162,19 +162,26 @@ class Gamepads:
         self.denied = {}      # path -> name (no permission)
         self.scanned = 0.0
         self.last = 0.0       # time of the last real input
+        self._details = None  # (devices, details())
 
     def names(self):
         return sorted({n for _p, n, _a in self.open.values()})
 
     def details(self):
-        """[{"name", "path", "virtual", "makers"}] of the watched devices, for the page."""
-        out, makers = [], None
-        for p, n, _a in sorted(self.open.values()):
-            virtual = is_virtual(p, self.sysroot)
-            if virtual and makers is None:
-                makers = uinput_users()
-            out.append({"name": n, "path": p, "virtual": virtual, "makers": makers if virtual else []})
-        return out
+        """[{"name", "path", "virtual", "makers"}] of the watched devices, for the page. Worked out
+        again only when the devices change (uinput_users() reads every process's open files)."""
+        key = sorted((p, n) for p, n, _a in self.open.values())
+        stale = self._details is not None and time.monotonic() - self._details[2] > 10 and any(
+            d["virtual"] and not d["makers"] for d in self._details[1])   # (the maker may not have been found yet)
+        if self._details is None or self._details[0] != key or stale:
+            out, makers = [], None
+            for p, n in key:
+                virtual = is_virtual(p, self.sysroot)
+                if virtual and makers is None:
+                    makers = uinput_users()
+                out.append({"name": n, "path": p, "virtual": virtual, "makers": makers if virtual else []})
+            self._details = (key, out, time.monotonic())
+        return self._details[1]
 
     def rescan(self, force=False):
         if not force and time.time() - self.scanned < 3:
@@ -259,6 +266,11 @@ class Gamepads:
 
 
 # ---------------------------------------------------------------- X
+class _XssInfo(ctypes.Structure):   # XScreenSaverInfo
+    _fields_ = [("window", ctypes.c_ulong), ("state", ctypes.c_int), ("kind", ctypes.c_int),
+                ("til_or_since", ctypes.c_ulong), ("idle", ctypes.c_ulong), ("event_mask", ctypes.c_ulong)]
+
+
 class XIdle:
     """Screen saver / DPMS control on an X connection (ctypes; libXss and libXext)."""
 
@@ -296,13 +308,9 @@ class XIdle:
         """Milliseconds since the last input (mouse, keyboard, or a reset by a gamepad)."""
         if not self.xss:
             return 0
-
-        class Info(ctypes.Structure):
-            _fields_ = [("window", ctypes.c_ulong), ("state", ctypes.c_int), ("kind", ctypes.c_int),
-                        ("til_or_since", ctypes.c_ulong), ("idle", ctypes.c_ulong), ("event_mask", ctypes.c_ulong)]
         if not hasattr(self, "_info"):
-            self.xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(Info)
-            self.xss.XScreenSaverQueryInfo.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(Info)]
+            self.xss.XScreenSaverAllocInfo.restype = ctypes.POINTER(_XssInfo)
+            self.xss.XScreenSaverQueryInfo.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(_XssInfo)]
             self.x11.XDefaultRootWindow.restype = ctypes.c_ulong
             self.x11.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
             self._info = self.xss.XScreenSaverAllocInfo()
@@ -415,30 +423,62 @@ _XML = """
 
 
 class InhibitService:
-    """Answers org.freedesktop.ScreenSaver for apps that want the screen to stay on. Runs on
-    GLib's default context; the service loop calls pump() to let it work."""
+    """Answers org.freedesktop.ScreenSaver for apps that want the screen to stay on. It runs in its
+    own thread and GLib context, so callers get their answer right away (SDL waits for it while a
+    game starts) instead of at the service loop's next pass. The loop calls pump() to pass on
+    SimulateUserActivity, so Xlib is only used from the loop's thread."""
 
     def __init__(self, on_activity=None):
+        import threading
         from gi.repository import Gio, GLib
         self.Gio, self.GLib = Gio, GLib
+        self.lock = threading.Lock()
         self.cookies = {}         # cookie -> (sender, app, reason)
-        self.watches = {}         # sender -> watch id
+        self.watches = {}         # sender -> watch id (used in the service thread only)
         self.next = 1
         self.owned = False
         self.on_activity = on_activity
+        self.activity = False     # SimulateUserActivity came in; pump() passes it on
         self.error = ""
-        self.ctx = GLib.MainContext.default()
+        self.thread = None
         try:
             self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         except GLib.Error as e:
             self.bus, self.error = None, e.message
             return
-        info = Gio.DBusNodeInfo.new_for_xml(_XML).interfaces[0]
-        self.regs = [self.bus.register_object(path, info, self._call, None, None)
-                     for path in ("/org/freedesktop/ScreenSaver", "/ScreenSaver")]
-        self.owner = Gio.bus_own_name_on_connection(self.bus, "org.freedesktop.ScreenSaver",
-                                                    Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
-                                                    self._acquired, self._lost)
+        self.ctx = GLib.MainContext()
+        self.loop = GLib.MainLoop(self.ctx)
+        ready = threading.Event()
+        self.thread = threading.Thread(target=self._run, args=(ready,), name="screensaver", daemon=True)
+        self.thread.start()
+        ready.wait(5)
+
+    def _run(self, ready):
+        Gio = self.Gio
+        self.ctx.push_thread_default()    # (the bus calls below deliver to the context current here)
+        try:
+            info = Gio.DBusNodeInfo.new_for_xml(_XML).interfaces[0]
+            self.regs = [self.bus.register_object(path, info, self._call, None, None)
+                         for path in ("/org/freedesktop/ScreenSaver", "/ScreenSaver")]
+            self.owner = Gio.bus_own_name_on_connection(self.bus, "org.freedesktop.ScreenSaver",
+                                                        Gio.BusNameOwnerFlags.DO_NOT_QUEUE,
+                                                        self._acquired, self._lost)
+        except Exception as e:  # noqa: BLE001
+            self.regs, self.owner, self.error = [], 0, str(e)
+            ready.set()
+            return
+        ready.set()
+        self.loop.run()
+        # closing: let go of everything from this thread, where it was set up
+        Gio.bus_unown_name(self.owner)
+        for r in self.regs:
+            self.bus.unregister_object(r)
+        for wid in self.watches.values():   # the bus connection is shared and outlives this service
+            Gio.bus_unwatch_name(wid)
+        self.watches.clear()
+        while self.ctx.pending():
+            self.ctx.iteration(False)
+        self.ctx.pop_thread_default()
 
     def _acquired(self, *_a):
         self.owned = True
@@ -452,20 +492,21 @@ class InhibitService:
         GLib = self.GLib
         if method == "Inhibit":
             app, reason = params.unpack()
-            cookie = self.next
-            self.next += 1
-            self.cookies[cookie] = (sender, app or "?", reason or "")
+            with self.lock:
+                cookie = self.next
+                self.next += 1
+                self.cookies[cookie] = (sender, app or "?", reason or "")
             if sender not in self.watches:
                 self.watches[sender] = self.Gio.bus_watch_name_on_connection(
                     self.bus, sender, self.Gio.BusNameWatcherFlags.NONE, None, self._vanished)
             invocation.return_value(GLib.Variant("(u)", (cookie,)))
         elif method == "UnInhibit":
             (cookie,) = params.unpack()
-            self.cookies.pop(cookie, None)
+            with self.lock:
+                self.cookies.pop(cookie, None)
             invocation.return_value(None)
         elif method == "SimulateUserActivity":
-            if self.on_activity:
-                self.on_activity()
+            self.activity = True
             invocation.return_value(None)
         elif method in ("GetActive", "SetActive"):
             invocation.return_value(GLib.Variant("(b)", (False,)))
@@ -473,26 +514,32 @@ class InhibitService:
             invocation.return_value(GLib.Variant("(u)", (0,)))
 
     def _vanished(self, _conn, name):
-        for c in [c for c, (s, _a, _r) in self.cookies.items() if s == name]:
-            del self.cookies[c]
+        with self.lock:
+            for c in [c for c, (s, _a, _r) in self.cookies.items() if s == name]:
+                del self.cookies[c]
         wid = self.watches.pop(name, None)
         if wid:
             self.Gio.bus_unwatch_name(wid)
 
     def pump(self):
-        while self.ctx.pending():
-            self.ctx.iteration(False)
+        """Pass on SimulateUserActivity (called from the service loop's thread)."""
+        if self.activity:
+            self.activity = False
+            if self.on_activity:
+                self.on_activity()
 
     def apps(self):
-        return sorted({a for _s, a, _r in self.cookies.values()})
+        with self.lock:
+            return sorted({a for _s, a, _r in self.cookies.values()})
 
     def close(self):
-        if self.bus is None:
+        if self.thread is None:
             return
-        self.Gio.bus_unown_name(self.owner)
-        for r in self.regs:
-            self.bus.unregister_object(r)
-        self.pump()
+        self.ctx.invoke_full(self.GLib.PRIORITY_DEFAULT, lambda: self.loop.quit() or False)
+        self.thread.join(5)
+        self.thread = None
+        with self.lock:
+            self.cookies.clear()
 
 
 def status_text_parts(st):

@@ -136,7 +136,8 @@ class ResolutionsDialog(Gtk.Dialog):
         g.attach(Gtk.Label(label=_("Timing"), xalign=0), 0, 1, 1, 1)
         g.attach(self.std_combo, 1, 1, 1, 1)
 
-        self.manual_entry = Gtk.Entry(hexpand=True, placeholder_text='25.175 640 656 752 800 480 490 492 525 -hsync -vsync')
+        self.manual_entry = Gtk.Entry(hexpand=True,
+                                      placeholder_text="25.175 640 656 752 800 480 490 492 525 -hsync -vsync")
         self.manual_entry.set_tooltip_text(_("Paste a modeline, e.g. from the cvt or gtf tools or an old xorg.conf"))
         self.manual_label = Gtk.Label(label=_("Modeline"), xalign=0)
         g.attach(self.manual_label, 0, 2, 1, 1)
@@ -212,7 +213,11 @@ class ResolutionsDialog(Gtk.Dialog):
                 disp["custom_modes"][self.mon.name] = [m.to_dict() for m in modes]
             else:
                 disp["custom_modes"].pop(self.mon.name, None)
-        config.save(self.data)
+        fresh = config.load()      # (keep what other pages saved while this was open)
+        for key in ("custom_modes", "edid_ignored"):
+            fresh["display"][key] = disp[key]
+        config.save(fresh)
+        self.data = fresh
         from .display_page import sync_autostart
         sync_autostart(self.data)
         self.changed = True
@@ -255,7 +260,10 @@ class ResolutionsDialog(Gtk.Dialog):
             except ValueError as e:
                 return None, str(e) if self.manual_entry.get_text().strip() else ""
         w, h, hz = int(self.w_spin.get_value()), int(self.h_spin.get_value()), self.hz_spin.get_value()
-        m = modelines.generate(std, w, h, hz)
+        try:
+            m = modelines.generate(std, w, h, hz)
+        except ValueError as e:  # e.g. GTF at 320x240: a negative front porch
+            return None, str(e)
         if m is None:
             return None, _("VESA DMT has no timing for {w} × {h}. Pick another timing standard.").format(w=w, h=h)
         return m, None

@@ -309,8 +309,9 @@ class DesktopPage(Gtk.Box):
                                   _("Until {time}.").format(time=time.strftime("%H:%M", time.localtime(until))))
         self.awake_until.set_visible(bool(until))
         a = self.desk["awake"]
-        info = D.state().get("awake") or {}
-        running = bool(D.state())
+        st = D.state()
+        info = st.get("awake") or {}
+        running = bool(st)
         pads, denied = info.get("gamepads") or [], info.get("denied") or []
         notes = []
         if a["gamepads"] and running:

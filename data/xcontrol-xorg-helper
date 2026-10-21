@@ -19,6 +19,7 @@
 # Names and values are validated strictly: letters, digits and _ for names; values may also
 # have . , : + - and nothing else (no spaces, quotes or shell characters).
 set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-xorg-helper: $*" >&2; exit 1; }
 

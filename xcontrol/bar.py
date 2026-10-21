@@ -104,8 +104,13 @@ def module_options(b, mid):
             except (TypeError, ValueError):
                 pass
         else:
-            opts[k] = str(v)
+            opts[k] = _one_line(v)
     return opts
+
+
+def _one_line(v):
+    """A pasted line break would end the ini line, and polybar refuses the whole file."""
+    return " ".join(str(v).splitlines())
 
 
 def parse_extra(text):
@@ -506,6 +511,7 @@ def _q(value):
 
 def _separator(text):
     """Between modules: '|' as is, text with spaces quoted so polybar keeps them, '' for none."""
+    text = _one_line(text or "")
     if not text:
         return "separator ="
     return f'separator = "{text}"' if text != text.strip() else f"separator = {text}"
@@ -522,13 +528,13 @@ def write(b, **kw):
     text = generate(b, **kw)
     path = config_path()
     try:
-        with open(path) as f:
+        with open(path, encoding="utf-8", errors="replace") as f:
             if f.read() == text:
                 return False
     except OSError:
         pass
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path + ".tmp", "w") as f:
+    with open(path + ".tmp", "w", encoding="utf-8") as f:   # Nerd Font icons, whatever the locale
         f.write(text)
     os.replace(path + ".tmp", path)
     return True

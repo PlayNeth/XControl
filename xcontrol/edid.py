@@ -294,7 +294,8 @@ def _parse_cta(info, e):
     info.audio |= bool(e[3] & 0x40)
     info.ycbcr444 |= bool(e[3] & 0x20)
     info.ycbcr422 |= bool(e[3] & 0x10)
-    dtd_start = e[2] if 4 <= e[2] <= 127 else 4
+    # byte 2: where the DTDs start; 0 = no data blocks and no DTDs (the rest is padding)
+    dtd_start = e[2] if 4 <= e[2] <= 127 else 0
     i = 4
     while i < dtd_start:
         tag, length = e[i] >> 5, e[i] & 0x1F
@@ -352,7 +353,7 @@ def _parse_cta(info, e):
                     info.dolby_vision = True
             elif ext in (0x0E, 0x0F):
                 info.ycbcr420 = True
-    for j in range(dtd_start, 110, 18):
+    for j in range(dtd_start, 110, 18) if dtd_start else ():
         d = e[j:j + 18]
         if len(d) == 18 and (d[0] or d[1]):
             info.timings.append(_dtd(d))
@@ -449,15 +450,6 @@ def parse(data):
         else:
             info.extensions.append(f"0x{e[0]:02X}")
     return info
-
-
-def parse_hex(text):
-    return parse(bytes.fromhex("".join(text.split())))
-
-
-def read_sysfs():
-    """Connected DRM connectors with an EDID: [(connector name, edid bytes)]."""
-    return [(conn, data) for _card, conn, data in read_sysfs_full()]
 
 
 def read_sysfs_full():

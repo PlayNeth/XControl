@@ -36,6 +36,27 @@ def ours(m):
     return (m.width, m.height, m.clock_khz, m.hsync_start - m.width, m.hsync_end - m.hsync_start, m.htotal - m.hsync_end,
             m.hsync_positive, m.vsync_start - m.height, m.vsync_end - m.vsync_start, m.vtotal - m.vsync_end, m.vsync_positive)
 
+# pasted modelines: no polarity flag means negative; doublescan is refused like interlace
+plain = M.parse_modeline("25.175 640 656 752 800 480 490 492 525")
+for text in ('Modeline "320x240" 12.59 320 336 384 400 240 245 247 262 DoubleScan -HSync -VSync',
+             "74.25 1920 2008 2052 2200 540 542 547 562 +hsync +vsync Interlace"):
+    try:
+        M.parse_modeline(text)
+        print("FAIL accepted:", text)
+        sys.exit(1)
+    except ValueError:
+        pass
+# GTF gives a negative front porch at low line counts: refused instead of handed to xrandr
+try:
+    M.generate("gtf", 320, 240, 60)
+    print("FAIL accepted GTF 320x240@60 (hsync start before the end of the picture)")
+    sys.exit(1)
+except ValueError:
+    pass
+if (plain.hsync_positive, plain.vsync_positive) != (False, False) or M.generate("cvt", 320, 240, 60) is None:
+    print("FAIL modeline flags / CVT 320x240")
+    sys.exit(1)
+
 if not shutil.which("edid-decode"):
     print("check_modelines: edid-decode not installed, skipped")
     sys.exit(0)

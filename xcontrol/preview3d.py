@@ -681,7 +681,8 @@ class Preview3D(Gtk.Overlay):
             gl.BlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST)
         gl.BindFramebuffer(GL_FRAMEBUFFER, self.fbo[-1][0])
         stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, w)
-        if self._pixels is None or len(self._pixels) != stride * h:
+        # compare the size, not the byte count: w×h and a different w×h can need the same bytes
+        if self.image is None or (self.image.get_width(), self.image.get_height()) != (w, h):
             self._pixels = bytearray(stride * h)
             self.image = cairo.ImageSurface.create_for_data(self._pixels, cairo.FORMAT_RGB24, w, h, stride)
         buf = (ctypes.c_char * len(self._pixels)).from_buffer(self._pixels)

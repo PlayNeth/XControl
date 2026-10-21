@@ -34,11 +34,6 @@ def firmware_name(connector):
     return f"xcontrol-{connector}.bin"
 
 
-def legacy_firmware_name(connector):
-    """The name used before the rename to XControl (still loaded if the kernel parameter names it)."""
-    return f"mesa-panel-{connector}.bin"
-
-
 def parameter_entry(cmdline, connector):
     """The drm.edid_firmware entry that applies to `connector`: 'DP-1:edid/x.bin'
     or a bare 'edid/x.bin' (all connectors). The last occurrence wins, like the kernel."""
@@ -67,14 +62,16 @@ def mkinitcpio_has_file(texts, path):
     (dracut, booster, a UKI built elsewhere: we can't tell)."""
     if not texts:
         return None
+    # /lib is a symlink to usr/lib on Arch, so FILES=(/lib/firmware/edid/...) works too
+    paths = {path, path[4:]} if path.startswith("/usr/lib/") else {path}
     for text in texts:
         for line in text.splitlines():
             line = line.split("#", 1)[0]
-            if re.match(r"\s*FILES(\+)?=", line) and path in line:
+            if re.match(r"\s*FILES(\+)?=", line) and any(p in line for p in paths):
                 return True
         # FILES=( on several lines
         for block in re.finditer(r"FILES\+?=\(([^)]*)\)", re.sub(r"#[^\n]*", "", text)):
-            if path in block.group(1):
+            if any(p in block.group(1) for p in paths):
                 return True
     return False
 
@@ -83,9 +80,6 @@ def check(connector, current_edid, *, firmware_dir=FIRMWARE_DIR, cmdline=None,
           mkinitcpio_texts=None, initramfs_mtimes=None):
     name = firmware_name(connector)
     path = os.path.join(firmware_dir, name)
-    legacy = os.path.join(firmware_dir, legacy_firmware_name(connector))
-    if not os.path.exists(path) and os.path.exists(legacy):
-        name, path = legacy_firmware_name(connector), legacy
     expected = f"{connector}:edid/{name}"
     try:
         with open(path, "rb") as f:
@@ -118,8 +112,8 @@ def check(connector, current_edid, *, firmware_dir=FIRMWARE_DIR, cmdline=None,
         return status
 
     if mkinitcpio_texts is None:
-        mkinitcpio_texts = [_read(p) for p in ["/etc/mkinitcpio.conf", *sorted(glob.glob("/etc/mkinitcpio.conf.d/*.conf"))]
-                            if os.path.exists(p)]
+        confs = ["/etc/mkinitcpio.conf", *sorted(glob.glob("/etc/mkinitcpio.conf.d/*.conf"))]
+        mkinitcpio_texts = [_read(p) for p in confs if os.path.exists(p)]
     if mkinitcpio_has_file(mkinitcpio_texts, path) is False:
         status.state = NOT_IN_INITRAMFS
         return status

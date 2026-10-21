@@ -205,7 +205,8 @@ def clashes(bindings, mod):
 
 # ---------------------------------------------------------------- the file
 def _q(name):
-    return '"' + name.replace('"', '\\"') + '"'
+    # i3 unescapes backslash-backslash and backslash-quote inside quotes (see _unquote)
+    return '"' + name.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
 def _terminal():
@@ -330,7 +331,7 @@ def validate(text):
         return True, []
     tmp = target() + ".xcontrol-check"
     os.makedirs(os.path.dirname(tmp), exist_ok=True)
-    with open(tmp, "w") as f:
+    with open(tmp, "w", encoding="utf-8") as f:
         f.write(text)
     try:
         r = subprocess.run(["i3", "-C", "-c", tmp], capture_output=True, text=True, timeout=20)
@@ -393,7 +394,7 @@ def write(c, bar_enabled=False):
     """Check and write the config, then reload i3. Returns (ok, errors)."""
     text = generate(c, bar_enabled)
     try:
-        with open(target()) as f:
+        with open(target(), encoding="utf-8", errors="replace") as f:
             if f.read() == text and not os.path.lexists(_old_path()):
                 return True, []   # nothing changed: no reload
     except OSError:
@@ -401,12 +402,19 @@ def write(c, bar_enabled=False):
     ok, errors = validate(text)
     if not ok:
         return False, errors
-    take_over()
     path = target()
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path + ".tmp", "w") as f:
-        f.write(text)
-    os.replace(path + ".tmp", path)
+    try:   # written before the user's config moves aside, so a full disk leaves it where it was
+        with open(path + ".tmp", "w", encoding="utf-8") as f:
+            f.write(text)
+        take_over()
+        os.replace(path + ".tmp", path)
+    except OSError:
+        try:
+            os.remove(path + ".tmp")
+        except OSError:
+            pass
+        raise
     reload()
     return True, []
 
@@ -449,16 +457,32 @@ def can_restore():
 
 def reload():
     if shutil.which("i3-msg") and os.environ.get("DISPLAY"):
-        subprocess.run(["i3-msg", "-q", "reload"], capture_output=True, timeout=10)
+        try:   # i3 not running: i3-msg just fails; a hung i3 mustn't raise after the file was written
+            subprocess.run(["i3-msg", "-q", "reload"], capture_output=True, timeout=10)
+        except (OSError, subprocess.SubprocessError):
+            pass
+
+
+_version = {}   # (path, mtime) -> version: the page and every write ask
 
 
 def version():
+    """i3's (major, minor), or None when it isn't installed."""
+    exe = shutil.which("i3")
     try:
-        out = subprocess.run(["i3", "--version"], capture_output=True, text=True, timeout=5).stdout
+        key = (exe, os.stat(exe).st_mtime)
+    except (OSError, TypeError):   # not installed
+        return None
+    if key in _version:
+        return _version[key]
+    try:
+        out = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=5).stdout
     except (OSError, subprocess.SubprocessError):
         return None
     m = re.search(r"version (\d+)\.(\d+)", out)
-    return (int(m.group(1)), int(m.group(2))) if m else None
+    _version.clear()
+    _version[key] = (int(m.group(1)), int(m.group(2))) if m else None
+    return _version[key]
 
 
 # ---------------------------------------------------------------- import
@@ -477,7 +501,9 @@ def _logical_lines(text):
 
 def _unquote(s):
     s = s.strip()
-    return s[1:-1] if len(s) >= 2 and s[0] == s[-1] == '"' else s
+    if len(s) >= 2 and s[0] == s[-1] == '"':
+        return re.sub(r'\\([\\"])', r"\1", s[1:-1])
+    return s
 
 
 def import_config(text, base=None, managed=None):
@@ -530,7 +556,8 @@ def import_config(text, base=None, managed=None):
             else:
                 skipped.append("bar { … }")
             continue
-        mm = re.match(r'^mode\s+(?:--pango_markup\s+)?"?([^"{]+?)"?\s*\{$', line)
+        # substituted, as the bindings that enter it are: mode "$mode_system" {
+        mm = re.match(r'^mode\s+(?:--pango_markup\s+)?"?([^"{]+?)"?\s*\{$', subst(line))
         if mm:
             mode = mm.group(1).strip()
             continue
@@ -584,7 +611,9 @@ def _setting(c, line):
     key, value = m.group(1), m.group(2).strip()
     words = value.split()
     if key == "font":
-        c["font"] = re.sub(r"^pango:\s*", "", value)
+        if not re.match(r"^(pango|xft):", value):
+            return False   # an X core font (-misc-fixed-…): kept as is in 'extra', it isn't a Pango one
+        c["font"] = re.sub(r"^(pango|xft):\s*", "", value)
         return True
     if key in ("default_border", "new_window") and words and words[0] in BORDERS:
         c["border"] = words[0]

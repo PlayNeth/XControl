@@ -92,10 +92,18 @@ def _load(path, size=None):
         base = _PIXBUFS.get(base_key)
         if base is None:
             base = GdkPixbuf.Pixbuf.new_from_file(path).apply_embedded_orientation()
-            _PIXBUFS.clear()
+            # one display's picture mustn't push out another's (layout "separate" redraws both)
+            for k in [k for k in _PIXBUFS if k[0] == path]:   # an older version of this file
+                del _PIXBUFS[k]
+            if len({k[0] for k in _PIXBUFS}) >= 4:
+                _PIXBUFS.clear()
             _PIXBUFS[base_key] = base
         pb = base if size is None or size == (base.get_width(), base.get_height()) else \
             base.scale_simple(size[0], size[1], GdkPixbuf.InterpType.BILINEAR)
+        scaled = [k for k in _PIXBUFS if k[0] == path and k[2] is not None]
+        if len(scaled) >= 8:   # a preview being resized asks for a new size each time
+            for k in scaled:
+                del _PIXBUFS[k]
         _PIXBUFS[key] = pb
     return pb
 
@@ -139,6 +147,9 @@ def compose(wp, monitors, screen_w, screen_h, scale=1.0):
 
 
 # ---------------------------------------------------------------- the X root window
+_IGNORE = None   # the X error handler while setting the root (see _X.quiet_errors)
+
+
 class _X:
     """The few Xlib calls needed, through ctypes."""
 
@@ -167,9 +178,15 @@ class _X:
             f = getattr(x, fn)
             f.restype, f.argtypes = res, args
         self.x = x
-        # a stale pixmap id in the properties must not kill us with BadPixmap/BadValue
-        self._handler = ctypes.CFUNCTYPE(i, vp, vp)(lambda d, e: 0)
-        x.XSetErrorHandler(ctypes.cast(self._handler, vp))
+
+    def quiet_errors(self):
+        """Ignore X errors (a stale pixmap id in the properties must not kill us with BadPixmap/BadValue);
+        returns the previous handler, to put back. The handler is process-wide, so it must stay alive
+        (a module global) and the caller's own (GDK's) must come back afterwards."""
+        global _IGNORE
+        if _IGNORE is None:
+            _IGNORE = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p)(lambda d, e: 0)
+        return self.x.XSetErrorHandler(ctypes.cast(_IGNORE, ctypes.c_void_p))
 
     def get_pixmap_prop(self, dpy, root, atom):
         x = self.x
@@ -207,6 +224,7 @@ def set_root(surface, display=None):
     dpy = x.XOpenDisplay(display.encode() if display else None)
     if not dpy:
         raise RuntimeError("cannot open the X display")
+    previous = X.quiet_errors()
     try:
         scr = x.XDefaultScreen(dpy)
         root = x.XRootWindow(dpy, scr)
@@ -240,6 +258,7 @@ def set_root(surface, display=None):
         x.XSync(dpy, 0)
     finally:
         x.XCloseDisplay(dpy)
+        x.XSetErrorHandler(previous)
 
 
 # ---------------------------------------------------------------- from the saved settings

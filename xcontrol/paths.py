@@ -1,7 +1,6 @@
 """Install locations. `make install` substitutes @LIBDIR@ and @LOCALEDIR@;
 when running from a source checkout, the freshly built files in ./build are used."""
 import os
-import shutil
 
 _LIBDIR = "@LIBDIR@"
 if _LIBDIR.startswith("@"):
@@ -21,37 +20,7 @@ def _config_base():
     return os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
 
 
-_migrated = False
-
-
-def migrate_legacy():
-    """XControl used to be called mesa-panel: carry its settings over once, and
-    point its login entry at the new command."""
-    global _migrated
-    if _migrated:
-        return
-    _migrated = True
-    base = _config_base()
-    old, new = os.path.join(base, "mesa-panel"), os.path.join(base, "xcontrol")
-    try:
-        if os.path.isdir(old) and not os.path.exists(new):
-            shutil.copytree(old, new)
-        old_auto = os.path.join(base, "autostart", "mesa-panel-display.desktop")
-        if os.path.exists(old_auto):
-            new_auto = autostart_file()
-            if not os.path.exists(new_auto):
-                with open(old_auto) as f:
-                    text = f.read()
-                with open(new_auto, "w") as f:
-                    f.write(text.replace("mesa-panel --apply-display", "xcontrol --apply-display")
-                                .replace("Mesa Panel", "XControl"))
-            os.remove(old_auto)
-    except OSError:
-        pass  # best effort; the user can still set things up again
-
-
 def config_dir():
-    migrate_legacy()
     return os.path.join(_config_base(), "xcontrol")
 
 

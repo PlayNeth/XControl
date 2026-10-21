@@ -9,6 +9,7 @@
 import copy
 import json
 import os
+import threading
 
 from .paths import config_dir
 
@@ -54,17 +55,22 @@ def normalize_settings(s):
         out["post_aa"] = "off"
     try:
         out["fps_limit"] = max(0, int(out["fps_limit"]))
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):  # OverflowError: 1e999 in the file
         out["fps_limit"] = 0
     try:
         out["sharpen"] = min(100, max(0, int(out["sharpen"])))
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         out["sharpen"] = 0
     return out
 
 
 def _path():
     return os.path.join(config_dir(), "profiles.json")
+
+
+def _as(value, kind):
+    """value if it has the expected JSON type (a hand-edited or damaged file may not), else empty."""
+    return value if isinstance(value, kind) else kind()
 
 
 def load():
@@ -76,31 +82,31 @@ def load():
             raw = json.load(f)
     except (OSError, ValueError):
         return data
+    raw = _as(raw, dict)
     data["global"] = normalize_settings(raw.get("global"))
-    for g in raw.get("games", []):
+    for g in _as(raw.get("games"), list):
         if not isinstance(g, dict) or not g.get("name"):
             continue
         data["games"].append({
             "name": str(g["name"]),
-            "match": [str(m) for m in g.get("match", []) if str(m).strip()],
+            "match": [str(m) for m in _as(g.get("match"), list) if str(m).strip()],
             "command": str(g.get("command", "")),
             "settings": normalize_settings(g.get("settings")),
         })
-    disp = raw.get("display") or {}
-    data["display"]["command"] = [str(a) for a in disp.get("command", [])]
+    disp = _as(raw.get("display"), dict)
+    data["display"]["command"] = [str(a) for a in _as(disp.get("command"), list)]
     data["display"]["autostart"] = bool(disp.get("autostart", False))
     # custom resolutions per output: {"HDMI-A-0": [Modeline dict, ...]}
-    modes = disp.get("custom_modes") or {}
+    modes = _as(disp.get("custom_modes"), dict)
     data["display"]["custom_modes"] = {str(k): [m for m in v if isinstance(m, dict)]
                                        for k, v in modes.items() if isinstance(v, list)}
     # outputs where only the custom resolutions are offered
-    data["display"]["edid_ignored"] = [str(o) for o in disp.get("edid_ignored", [])]
+    data["display"]["edid_ignored"] = [str(o) for o in _as(disp.get("edid_ignored"), list)]
     # input: {"devices": {device name: {setting: value}}, "keyboard": {setting: value}}
-    inp = raw.get("input") or {}
-    devs = inp.get("devices") or {}
+    inp = _as(raw.get("input"), dict)
+    devs = _as(inp.get("devices"), dict)
     data["input"]["devices"] = {str(k): dict(v) for k, v in devs.items() if isinstance(v, dict)}
-    kb = inp.get("keyboard") or {}
-    data["input"]["keyboard"] = dict(kb) if isinstance(kb, dict) else {}
+    data["input"]["keyboard"] = dict(_as(inp.get("keyboard"), dict))
     # desktop: {"wallpaper": {...}, "lock": {...}, "blanking": {...}} (checked by desktop.normalize)
     desk = raw.get("desktop")
     if isinstance(desk, dict):
@@ -129,11 +135,22 @@ def load():
 
 
 def save(data):
+    """Write atomically: a crash, or another XControl process saving at the same
+    time (each uses its own temporary file), never leaves a partial profiles.json."""
     os.makedirs(config_dir(), exist_ok=True)
-    tmp = _path() + ".tmp"
-    with open(tmp, "w") as f:
-        json.dump(data, f, indent=2)
-    os.replace(tmp, _path())
+    tmp = f"{_path()}.{os.getpid()}.{threading.get_ident()}.tmp"
+    try:
+        with open(tmp, "w") as f:
+            json.dump(data, f, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, _path())
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
 
 
 def new_game(data, name, match, command=""):
