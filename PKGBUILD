@@ -1,4 +1,4 @@
-# Maintainer: Your Name <you@example.com>
+# Maintainer: Neth <82559127+PlayNeth@users.noreply.github.com>
 #
 # Local build: run `makepkg -si` from this directory.
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
@@ -8,7 +8,7 @@ pkgver=0.29.0
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices, controllers and system information"
 arch=('x86_64')
-url="https://github.com/yourname/xcontrol"
+url="https://github.com/PlayNeth/XControl"
 license=('MIT')
 depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'libx11' 'libxext' 'libxrandr'
          'libxss' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
