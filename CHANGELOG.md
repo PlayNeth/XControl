@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.5 (2026-10-20)
+
+**Re-enable X driver choice unless the config has its own Device section**
+
+- Allow choosing the X driver on XLibre again
+- Don't add XControl's Device section when the X config already has one, since X would take the
+  second section as another GPU; name that section's file and current Driver line instead and
+  explain how to change it
+- Refuse a switch if a Device section has appeared since the tab was opened
+
 ## 0.28.4 (2026-10-20)
 
 **Turn off choosing the X video driver on XLibre**

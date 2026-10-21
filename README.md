@@ -799,9 +799,7 @@ applies to whichever X driver runs that GPU without touching your own Device sec
 server-wide ones in a `ServerFlags` section. `AutoAddDevices` and `AutoEnableDevices` aren't
 offered (they can leave X without a keyboard and mouse).
 
-**Choosing the video driver** (turned off on XLibre for now: XLibre 25.1.9 crashed in its bus
-probe at start with XControl's Device section, with or without a BusID; there the tab only
-lists the drivers it would load and offers going back to Automatic): for each GPU, Automatic (what X picks by itself: a vendor
+**Choosing the video driver**: for each GPU, Automatic (what X picks by itself: a vendor
 driver's package adds a rule for its GPUs, otherwise modesetting) or any installed X driver
 that suits it (modesetting always; amdgpu, ati, intel, nouveau or nvidia for their own GPUs).
 The tab lists the drivers the running server would find, in its own search order (XLibre:
@@ -817,7 +815,10 @@ OutputClass section can't do it: X reads `/usr/share/X11/xorg.conf.d` first, whe
 packages' own classes, like `10-amdgpu.conf`, already name theirs, and the first named driver
 that works wins.) After the next start the tab says whether X used XControl's Device section,
 and warns about a Device section read before it or a Screen section that names its own Device.
-The helper refuses a driver whose module isn't installed. Each X driver keeps its own options: switching away remembers them and switching
+The helper refuses a driver whose module isn't installed. When your config already has a Device section of its own,
+XControl doesn't add one: X makes every Device section after the first an extra GPU device of
+the screen, and with one GPU that crashed XLibre 25.1.9 at start. Then the tab names that
+section's file and its Driver line, which is what decides, and shows the drivers to put there. Each X driver keeps its own options: switching away remembers them and switching
 back brings them back. The outputs get other names with the other driver (`DP-1` with
 modesetting is `DisplayPort-0` with amdgpu); saved display settings move over (see Switching X
 drivers).

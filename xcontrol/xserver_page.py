@@ -368,9 +368,11 @@ class XServerTab(Gtk.Box):
         grid = Gtk.Grid(column_spacing=10, row_spacing=6)
         in_use = {self.kdrivers.get(c): m.name for m in X.video_drivers(self.info)
                   for c in self.info.cards.get(m.name, ())}
-        # XLibre 25 crashes in its bus probe with XControl's Device section (seen on 25.1.9, with and
-        # without a BusID): there only going back to automatic is offered, until that's understood
-        blocked = self.info.server == "XLibre"
+        # A second Device section becomes a second GPU device of the screen (xf86Config.c): with one
+        # GPU, X then crashes in its bus probe (seen on XLibre 25.1.9). So when the config already
+        # has a Device section, XControl doesn't add its own: the Driver line in that one decides.
+        others, _screens = X.device_sections()
+        blocked = bool(others)
         for r, kd in enumerate(gpus):
             lbl = Gtk.Label(label=_("GPU with {driver}").format(driver=kd), xalign=0)
             combo = Gtk.ComboBoxText(hexpand=True)
@@ -397,10 +399,14 @@ class XServerTab(Gtk.Box):
                 grid.attach(_dim(_("now: {driver}").format(driver=now)), 3, r, 1, 1)
         self.details.pack_start(grid, False, False, 0)
         if blocked:
-            self.details.pack_start(_dim("⚠ " + _(
-                "Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed at start with "
-                "XControl's Device section. To pick one, set the Driver line in your own Device section "
-                "instead (the drivers it would load are listed below).")), False, False, 0)
+            path, ident, drv = others[0]
+            self.details.pack_start(_dim(_(
+                "Your config already has a Device section (\"{name}\" in {file}), so XControl doesn't add one: "
+                "two Device sections for one GPU make X treat it as two, and X can crash. Its Driver line "
+                "decides: now {driver}. To switch, change that line (sudoedit {file}) to one of the drivers "
+                "listed below, then log out and back in.").format(name=ident, file=path,
+                                                                  driver=drv or _("none: X picks"))),
+                False, False, 0)
         self._driver_notes()
         rows = []
         for name, (path, mabi) in sorted(found.items()):
@@ -451,6 +457,11 @@ class XServerTab(Gtk.Box):
             self.details.pack_start(_dim(n), False, False, 0)
 
     def _switch(self, kd, xd, installed):
+        if xd and X.device_sections()[0]:     # (checked again: the files may have changed meanwhile)
+            self.window.message(_("Your config has a Device section of its own"),
+                                _("Change the Driver line there instead; a second Device section can crash X."))
+            self.reload()
+            return
         old = self.picks.get(kd) or self._in_use_for(kd) or self._auto(kd, installed)
         new = xd or (self._in_use_for(kd) if not self.picks.get(kd) else "") or self._auto(kd, installed)
         md = Gtk.MessageDialog(transient_for=self.window, modal=True, message_type=Gtk.MessageType.QUESTION,

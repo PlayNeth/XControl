@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.25.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 21:38-0300\n"
+"POT-Creation-Date: 2026-10-20 21:45-0300\n"
 "PO-Revision-Date: 2026-10-20 20:15-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1048,7 +1048,7 @@ msgstr "R3 (нажатие правого стика)"
 msgid "Share / Create"
 msgstr "Share / Create"
 
-#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:520
+#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:531
 msgid "Options"
 msgstr "Options"
 
@@ -3780,7 +3780,7 @@ msgid "Add…"
 msgstr "Добавить…"
 
 #: xcontrol/i3_page.py:357 xcontrol/system_page.py:344
-#: xcontrol/xserver_page.py:334 xcontrol/xserver_page.py:522
+#: xcontrol/xserver_page.py:334 xcontrol/xserver_page.py:533
 msgid "Change…"
 msgstr "Изменить…"
 
@@ -4720,7 +4720,7 @@ msgstr "Недопустимое значение типа {type}."
 msgid "Rebuilding the initramfs, this takes a minute…"
 msgstr "Пересборка initramfs, это займёт минуту…"
 
-#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:590
+#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:601
 msgid "Saving…"
 msgstr "Сохранение…"
 
@@ -7097,7 +7097,7 @@ msgstr "Виртуальный диск"
 msgid "removable"
 msgstr "съёмный"
 
-#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:503
+#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:514
 msgid "Drives"
 msgstr "Накопители"
 
@@ -7196,11 +7196,11 @@ msgstr "Загружаемые модули не используются (яд�
 msgid "Select a module to see what it drives and its parameters."
 msgstr "Выберите модуль, чтобы увидеть, чем он управляет, и его параметры."
 
-#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:494
+#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:505
 msgid "File"
 msgstr "Файл"
 
-#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:496
+#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:507
 msgid "Version"
 msgstr "Версия"
 
@@ -7781,7 +7781,7 @@ msgstr "Выберите сервер или модуль."
 msgid "GPUs"
 msgstr "GPU"
 
-#: xcontrol/xserver_page.py:332 xcontrol/xserver_page.py:569
+#: xcontrol/xserver_page.py:332 xcontrol/xserver_page.py:580
 msgid "Server-wide options"
 msgstr "Параметры всего сервера"
 
@@ -7802,46 +7802,54 @@ msgstr ""
 "Руководство по xorg.conf не установлено, поэтому параметры нельзя показать "
 "(оно входит в пакет X-сервера)."
 
-#: xcontrol/xserver_page.py:375
+#: xcontrol/xserver_page.py:377
 #, python-brace-format
 msgid "GPU with {driver}"
 msgstr "GPU с {driver}"
 
-#: xcontrol/xserver_page.py:379
+#: xcontrol/xserver_page.py:381
 #, python-brace-format
 msgid "Automatic ({driver})"
 msgstr "Автоматически ({driver})"
 
-#: xcontrol/xserver_page.py:386
+#: xcontrol/xserver_page.py:388
 msgid "Switch…"
 msgstr "Переключить…"
 
-#: xcontrol/xserver_page.py:397
+#: xcontrol/xserver_page.py:399
 #, python-brace-format
 msgid "now: {driver}"
 msgstr "сейчас: {driver}"
 
-#: xcontrol/xserver_page.py:401
+#: xcontrol/xserver_page.py:404
+#, python-brace-format
 msgid ""
-"Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed "
-"at start with XControl's Device section. To pick one, set the Driver line in"
-" your own Device section instead (the drivers it would load are listed "
-"below)."
+"Your config already has a Device section (\"{name}\" in {file}), so XControl"
+" doesn't add one: two Device sections for one GPU make X treat it as two, "
+"and X can crash. Its Driver line decides: now {driver}. To switch, change "
+"that line (sudoedit {file}) to one of the drivers listed below, then log out"
+" and back in."
 msgstr ""
-"Выбор драйвера здесь пока отключён в XLibre: XLibre 25 падал при запуске с "
-"секцией Device от XControl. Чтобы выбрать драйвер, задайте строку Driver в "
-"своей секции Device (драйверы, которые он загрузил бы, перечислены ниже)."
+"В вашей конфигурации уже есть секция Device («{name}» в {file}), поэтому "
+"XControl не добавляет свою: две секции Device для одной GPU заставляют X "
+"считать её двумя, и X может упасть. Решает её строка Driver: сейчас "
+"{driver}. Чтобы переключиться, измените эту строку (sudoedit {file}) на один"
+" из драйверов ниже, затем выйдите из сеанса и войдите снова."
 
-#: xcontrol/xserver_page.py:411
+#: xcontrol/xserver_page.py:408
+msgid "none: X picks"
+msgstr "нет: X выбирает сам"
+
+#: xcontrol/xserver_page.py:417
 #, python-brace-format
 msgid "video ABI {abi}"
 msgstr "видео-ABI {abi}"
 
-#: xcontrol/xserver_page.py:412
+#: xcontrol/xserver_page.py:418
 msgid "not loadable"
 msgstr "не загрузится"
 
-#: xcontrol/xserver_page.py:415
+#: xcontrol/xserver_page.py:421
 #, python-brace-format
 msgid ""
 "These are the X drivers {server} finds (it looks in {folders}, in that "
@@ -7852,7 +7860,7 @@ msgstr ""
 "порядке), с версией интерфейса драйверов, под которую собран каждый; сервер "
 "принимает видео-ABI {abi}."
 
-#: xcontrol/xserver_page.py:420
+#: xcontrol/xserver_page.py:426
 #, python-brace-format
 msgid ""
 "{driver} was built for video ABI {built}, so {server} won't load it; install"
@@ -7861,7 +7869,7 @@ msgstr ""
 "{driver} собран под видео-ABI {built}, поэтому {server} его не загрузит; "
 "установите его сборку для {server}."
 
-#: xcontrol/xserver_page.py:432
+#: xcontrol/xserver_page.py:438
 #, python-brace-format
 msgid ""
 "At its last start X used the Device section \"{name}\", not XControl's. If "
@@ -7871,11 +7879,11 @@ msgstr ""
 "XControl. Если вы выбрали драйвер после этого, выйдите из сеанса и войдите "
 "снова."
 
-#: xcontrol/xserver_page.py:435
+#: xcontrol/xserver_page.py:441
 msgid "X used XControl's choice at its last start."
 msgstr "При последнем запуске X использовал выбор XControl."
 
-#: xcontrol/xserver_page.py:438
+#: xcontrol/xserver_page.py:444
 #, python-brace-format
 msgid ""
 "{file} has a Screen section that names its own Device (\"{device}\"); X uses"
@@ -7884,7 +7892,7 @@ msgstr ""
 "В {file} есть секция Screen, которая указывает свой Device («{device}»); X "
 "использует его, поэтому выбор XControl не может примениться."
 
-#: xcontrol/xserver_page.py:444
+#: xcontrol/xserver_page.py:450
 #, python-brace-format
 msgid ""
 "{file} has a Device section (\"{name}\") that X reads before XControl's, so "
@@ -7893,7 +7901,7 @@ msgstr ""
 "В {file} есть секция Device («{name}»), которую X читает раньше секции "
 "XControl, поэтому она побеждает."
 
-#: xcontrol/xserver_page.py:447
+#: xcontrol/xserver_page.py:453
 #, python-brace-format
 msgid ""
 "XControl picks the driver with a Device section in {file}: X uses the first "
@@ -7903,12 +7911,21 @@ msgstr ""
 "прочитанную вместо того, чтобы угадывать. Удалите этот файл, чтобы вернуть "
 "автоматический выбор."
 
-#: xcontrol/xserver_page.py:458
+#: xcontrol/xserver_page.py:461
+msgid "Your config has a Device section of its own"
+msgstr "В вашей конфигурации есть своя секция Device"
+
+#: xcontrol/xserver_page.py:462
+msgid ""
+"Change the Driver line there instead; a second Device section can crash X."
+msgstr "Измените строку Driver там; вторая секция Device может уронить X."
+
+#: xcontrol/xserver_page.py:469
 #, python-brace-format
 msgid "Use {new} instead of {old}?"
 msgstr "Использовать {new} вместо {old}?"
 
-#: xcontrol/xserver_page.py:460
+#: xcontrol/xserver_page.py:471
 #, python-brace-format
 msgid ""
 "It takes effect the next time X starts (log out and back in). The outputs "
@@ -7923,40 +7940,40 @@ msgstr ""
 "для {old}, сохранятся на случай, если вы переключитесь обратно. Если X не "
 "запустится, отмените это из текстовой консоли (Ctrl+Alt+F3): sudo rm {file}"
 
-#: xcontrol/xserver_page.py:498
+#: xcontrol/xserver_page.py:509
 msgid "ABI"
 msgstr "ABI"
 
-#: xcontrol/xserver_page.py:504
+#: xcontrol/xserver_page.py:515
 #, python-brace-format
 msgid "screen {n}"
 msgstr "экран {n}"
 
-#: xcontrol/xserver_page.py:507 xcontrol/xserver_page.py:510
+#: xcontrol/xserver_page.py:518 xcontrol/xserver_page.py:521
 msgid "State"
 msgstr "Состояние"
 
-#: xcontrol/xserver_page.py:507
+#: xcontrol/xserver_page.py:518
 msgid "Loaded, then let go: it didn't find hardware of its own"
 msgstr "Загружен, затем выгружен: не нашёл своего оборудования"
 
-#: xcontrol/xserver_page.py:508
+#: xcontrol/xserver_page.py:519
 msgid "Loaded, but drives no screen"
 msgstr "Загружен, но не управляет ни одним экраном"
 
-#: xcontrol/xserver_page.py:510
+#: xcontrol/xserver_page.py:521
 msgid "Loaded, then let go"
 msgstr "Загружен, затем выгружен"
 
-#: xcontrol/xserver_page.py:514
+#: xcontrol/xserver_page.py:525
 msgid "Input devices' settings are on the Input page."
 msgstr "Настройки устройств ввода находятся на странице «Ввод»."
 
-#: xcontrol/xserver_page.py:523
+#: xcontrol/xserver_page.py:534
 msgid "Saved for the next time X starts (needs your password)"
 msgstr "Сохраняется до следующего запуска X (нужен ваш пароль)"
 
-#: xcontrol/xserver_page.py:530
+#: xcontrol/xserver_page.py:541
 #, python-brace-format
 msgid ""
 "{driver}'s manual isn't installed, so its options can't be listed. Other "
@@ -7965,16 +7982,16 @@ msgstr ""
 "Руководство по {driver} не установлено, поэтому его параметры нельзя "
 "показать. Другие параметры всё равно можно задать по имени."
 
-#: xcontrol/xserver_page.py:546
+#: xcontrol/xserver_page.py:557
 msgid "No GPU found"
 msgstr "GPU не найден"
 
-#: xcontrol/xserver_page.py:546
+#: xcontrol/xserver_page.py:557
 msgid "XControl couldn't tell which GPU's driver to set options for."
 msgstr ""
 "XControl не смог определить, для драйвера какого GPU задавать параметры."
 
-#: xcontrol/xserver_page.py:553
+#: xcontrol/xserver_page.py:564
 #, python-brace-format
 msgid ""
 "For the {driver} X driver on {gpus}. Saved in {file}; they take effect the "
@@ -7984,12 +8001,12 @@ msgstr ""
 " следующем запуске X (выйдите и войдите снова или перезапустите экран "
 "входа)."
 
-#: xcontrol/xserver_page.py:556
+#: xcontrol/xserver_page.py:567
 #, python-brace-format
 msgid "{driver} options"
 msgstr "Параметры {driver}"
 
-#: xcontrol/xserver_page.py:567
+#: xcontrol/xserver_page.py:578
 #, python-brace-format
 msgid ""
 "For the whole X server. Saved in {file}; they take effect the next time X "
@@ -7998,11 +8015,11 @@ msgstr ""
 "Для всего X-сервера. Сохраняются в {file}; вступают в силу при следующем "
 "запуске X."
 
-#: xcontrol/xserver_page.py:585
+#: xcontrol/xserver_page.py:596
 msgid "Saved; X uses it the next time it starts"
 msgstr "Сохранено; X использует это при следующем запуске"
 
-#: xcontrol/xserver_page.py:588
+#: xcontrol/xserver_page.py:599
 msgid "Could not save the X options"
 msgstr "Не удалось сохранить параметры X"
 
@@ -8026,6 +8043,16 @@ msgid ""
 "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;"
 msgstr ""
 "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;графика;видеокарта;сглаживание;монитор;экран;мышь;клавиатура;тачпад;ввод;"
+
+#~ msgid ""
+#~ "Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed "
+#~ "at start with XControl's Device section. To pick one, set the Driver line in"
+#~ " your own Device section instead (the drivers it would load are listed "
+#~ "below)."
+#~ msgstr ""
+#~ "Выбор драйвера здесь пока отключён в XLibre: XLibre 25 падал при запуске с "
+#~ "секцией Device от XControl. Чтобы выбрать драйвер, задайте строку Driver в "
+#~ "своей секции Device (драйверы, которые он загрузил бы, перечислены ниже)."
 
 #, python-brace-format
 #~ msgid ""
