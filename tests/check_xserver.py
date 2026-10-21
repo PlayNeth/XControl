@@ -162,21 +162,46 @@ for bad_args in (({"amdgpu": {"X": "a b"}}, {}), ({"amd gpu": {"X": "1"}}, {}), 
     except ValueError:
         pass
 
-# choosing the X driver: what's installed for this server, what suits the GPU, the Driver line
-mods = tempfile.mkdtemp()
-for folder, names in (("xlibre-25", ("modesetting", "amdgpu", "fbdev")), ("", ("amdgpu", "intel"))):
-    d = os.path.join(mods, folder, "drivers")
-    os.makedirs(d, exist_ok=True)
-    for n in names:
-        open(os.path.join(d, f"{n}_drv.so"), "w").close()
+
+# choosing the X driver: where XLibre looks (xlibre-25, xlibre-25.0, then the plain folder), and
+# the ABI each driver was built for (read from its module version info)
+def fake_module(path, major, minor):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    blob = b"\0" * 64 + b"\0" * 16 + X.MODINFO + bytes(8) + bytes(8) + ((major << 16) | minor).to_bytes(4, "little")
+    with open(path, "wb") as f:
+        f.write(blob + b"\0" * 64)
+
+
+mods = os.path.join(tempfile.mkdtemp(), "modules")
+fake_module(os.path.join(mods, "xlibre-25", "drivers", "modesetting_drv.so"), 28, 1)
+fake_module(os.path.join(mods, "drivers", "amdgpu_drv.so"), 28, 1)       # XLibre's build, in the plain folder
+fake_module(os.path.join(mods, "drivers", "intel_drv.so"), 25, 2)        # X.Org's build
+fake_module(os.path.join(mods, "xlibre-25.0", "drivers", "nouveau_drv.so"), 28, 0)
 xl = X.parse_log(f"XLibre X Server 1.25.1.9\n(II) LoadModule: \"modesetting\"\n"
-                 f"(II) Loading {mods}/xlibre-25/drivers/modesetting_drv.so\n")
-root = X.module_root(xl)
-expect("the server's module folder", root, os.path.join(mods, "xlibre-25"))
-expect("installed for it", X.installed_drivers(root), ["amdgpu", "fbdev", "modesetting"])
-expect("for another server", X.other_server_drivers(root, [mods]), {"intel": mods})
-expect("suits an amdgpu GPU", X.choices("amdgpu", X.installed_drivers(root)), ["modesetting", "amdgpu"])
+                 f"(II) Loading {mods}/xlibre-25/drivers/modesetting_drv.so\n"
+                 f"(II) Module modesetting: vendor=\"X.Org Foundation\"\n"
+                 f"[  1.0] \tABI class: X.Org Video Driver, version 28.1\n(II) modeset(0): using drv /dev/dri/card1\n")
+dirs = X.search_dirs(xl)
+expect("XLibre's search order", dirs, [os.path.join(mods, "xlibre-25"), os.path.join(mods, "xlibre-25.0"), mods])
+found = X.find_drivers(dirs)
+expect("found everywhere it looks", {n: (os.path.relpath(p, mods), a) for n, (p, a) in found.items()},
+       {"modesetting": ("xlibre-25/drivers/modesetting_drv.so", (28, 1)),
+        "nouveau": ("xlibre-25.0/drivers/nouveau_drv.so", (28, 0)),
+        "amdgpu": ("drivers/amdgpu_drv.so", (28, 1)), "intel": ("drivers/intel_drv.so", (25, 2))})
+expect("the server's video ABI", X.server_video_abi(xl), 28)
+loadable = X.loadable(found, 28)
+expect("only what it can load", loadable, ["amdgpu", "modesetting", "nouveau"])
+expect("suits an amdgpu GPU", X.choices("amdgpu", loadable), ["modesetting", "amdgpu"])
 expect("suits an i915 GPU", X.choices("i915", ["amdgpu", "intel", "modesetting"]), ["modesetting", "intel"])
+expect("X.Org looks in the plain folder", X.search_dirs(X.parse_log(
+    "X.Org X Server 1.21.1.18\n(II) LoadModule: \"modesetting\"\n"
+    f"(II) Loading {mods}/drivers/modesetting_drv.so\n")), [mods])
+if shutil.which("gcc"):       # a real compiled module, laid out as xf86Module.h says
+    so = os.path.join(tempfile.mkdtemp(), "a_drv.so")
+    r = subprocess.run(["gcc", "-shared", "-fPIC", "-O2", "-DABIMAJ=25", "-DABIMIN=2", "-o", so,
+                        os.path.join(here, "data", "fake_drv.c")], capture_output=True)
+    if r.returncode == 0:
+        expect("ABI read from a compiled module", X.module_abi(so), (25, 2))
 text = X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"})
 expect("Driver line", 'MatchDriver "amdgpu"\n    Driver "amdgpu"\n    Option "TearFree" "true"' in text, True)
 alone = X.file_text({}, {}, "", {"amdgpu": "modesetting"})
@@ -187,15 +212,16 @@ expect("options remembered per X driver", X.remembered(),
        {"modesetting": {"amdgpu": {"Atomic": "true"}}, "amdgpu": {"amdgpu": {"TearFree": "true"}}})
 if prefix is not None:
     env["XCONTROL_XMODULES"] = mods
-    for root_dir, dirs, files in os.walk(mods):
+    os.chmod(os.path.dirname(mods), 0o755)
+    for root_dir, _dirs, _files in os.walk(mods):
         os.chmod(root_dir, 0o755)
     res = run(*X.helper_args({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"}))
-    expect("pick written", res.returncode, 0)
+    expect("pick written", (res.returncode, res.stderr), (0, ""))
     with open(os.path.join(conf, X.OUR_FILE)) as f:
         expect("as XControl expects", f.read(), X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu",
                                                             {"amdgpu": "amdgpu"}))
     expect("read back", X.read_picks(conf), {"amdgpu": "amdgpu"})
-    expect("a driver that isn't installed is refused", run("write", "x", "pick:amdgpu:nouveau").returncode != 0, True)
+    expect("a driver that isn't installed is refused", run("write", "x", "pick:amdgpu:radeon").returncode != 0, True)
     expect("bad names refused", run("write", "x", "pick:amdgpu:../evil").returncode != 0, True)
     run("write", "modesetting")
 

@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.1 (2026-10-20)
+
+**Fix which X drivers are offered on XLibre**
+
+- Fix drivers installed in the plain module folder (such as amdgpu built for XLibre) being
+  wrongly treated as belonging to another X server and not offered
+- Look for drivers in the running server's own search order (XLibre: xlibre-25, xlibre-25.0,
+  then the plain folder) and read the video ABI each driver was built for from the module file
+- Offer only drivers built for the server's video ABI, and list each driver found with its
+  file, ABI version and whether the server can load it
+- Show the driver actually running as the "Automatic" choice when XControl hasn't picked one
+- Add tests for the search order and reading a compiled module's ABI version
+
 ## 0.28.0 (2026-10-20)
 
 **Add choosing the X video driver per GPU**

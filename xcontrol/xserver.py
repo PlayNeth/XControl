@@ -47,6 +47,7 @@ class Module:
     path: str = ""
     version: str = ""
     abi: str = ""
+    abi_version: str = ""       # "28.1"
     unloaded: bool = False      # tried, then let go (a video driver that didn't find its hardware)
     screens: list = field(default_factory=list)    # "0", "G0" ... for video drivers in use
 
@@ -119,9 +120,9 @@ def parse_log(text):
             m = re.search(r"module version = (\S+)", t)
             if m:
                 current.version = m.group(1)
-            m = re.match(r"ABI class: (.+?), version", t)
+            m = re.match(r"ABI class: (.+?), version ([\d.]+)", t)
             if m:
-                current.abi = m.group(1)
+                current.abi, current.abi_version = m.group(1), m.group(2)
             continue
         current = None
         m = re.match(r'^\(II\) UnloadModule: "([^"]+)"', line)
@@ -401,38 +402,74 @@ def save(drivers, server, xdriver="", picks=None):
 
 
 # ---------------------------------------------------------------- choosing the X driver
-def module_root(info, roots=None):
-    """The module folder the running server loads from (XLibre: .../modules/xlibre-25)."""
+MODINFO = (0xEF23FDC5).to_bytes(4, "little") + (0x10DC023A).to_bytes(4, "little")
+
+
+def module_abi(path):
+    """The ABI version a module was built for, from its XF86ModuleVersionInfo (found by the
+    MODINFOSTRING1/2 marker the X server puts there for this): (major, minor), or None."""
+    try:
+        with open(path, "rb") as f:
+            data = f.read()
+    except OSError:
+        return None
+    at = data.find(MODINFO)
+    if at < 0 or at + 28 > len(data):
+        return None
+    v = int.from_bytes(data[at + 24:at + 28], "little")       # (abiversion: 24 bytes after the marker)
+    return v >> 16, v & 0xFFFF
+
+
+def server_video_abi(info):
+    """The video driver ABI major version the running server takes (from a loaded video driver)."""
     for m in info.modules if info else []:
-        for part in ("/drivers/", "/extensions/", "/input/"):
-            if part in m.path:
-                return m.path.split(part)[0]
-    for m in info.modules if info else []:
-        if m.path:
-            return os.path.dirname(m.path)
-    return next((r for r in roots or MODULE_ROOTS if os.path.isdir(r)), "")
+        if m.kind == "video" and m.abi_version and not m.unloaded:
+            try:
+                return int(m.abi_version.split(".")[0])
+            except ValueError:
+                pass
+    return None
 
 
-def installed_drivers(root):
-    """X video drivers installed in that module folder: ["amdgpu", "modesetting", ...]."""
-    found = set()
-    for path in glob.glob(os.path.join(root, "drivers", "*_drv.so")):
-        found.add(os.path.basename(path)[:-len("_drv.so")])
-    return sorted(found)
+def search_dirs(info, roots=None):
+    """Where the running server looks for modules, in its order. XLibre: its ABI folder
+    (xlibre-25), then the older xlibre-25.0, then the plain module folder; X.Org: the plain one."""
+    path = next((m.path for m in (info.modules if info else []) if "/drivers/" in m.path), "")
+    if not path:
+        path = next((m.path for m in (info.modules if info else []) if m.path), "")
+    base = tag = ""
+    if path:
+        m = re.match(r"^(.*?/modules)(?:/(xlibre-[^/]+))?/", path)
+        if m:
+            base, tag = m.group(1), m.group(2) or ""
+    if not base:
+        base = next((r for r in roots or MODULE_ROOTS if os.path.isdir(r)), "")
+    if not base:
+        return []
+    dirs = []
+    if tag or (info and info.server == "XLibre"):
+        if tag:
+            dirs.append(os.path.join(base, tag))
+        dirs += [d for d in sorted(glob.glob(os.path.join(base, "xlibre-*")), reverse=True) if d not in dirs]
+    dirs.append(base)
+    return dirs
 
 
-def other_server_drivers(root, roots=None):
-    """Video drivers installed for a different X server (another module folder): {name: folder}."""
+def find_drivers(dirs):
+    """{X driver: (file, (abi major, minor) or None)}: the first of each name in the search order,
+    which is the one the server would load."""
     out = {}
-    mine = set(installed_drivers(root))
-    for base in roots or MODULE_ROOTS:
-        for folder in [base] + sorted(glob.glob(os.path.join(base, "*"))):
-            if os.path.normpath(folder) == os.path.normpath(root) or not os.path.isdir(os.path.join(folder, "drivers")):
-                continue
-            for name in installed_drivers(folder):
-                if name not in mine:
-                    out.setdefault(name, folder)
+    for d in dirs:
+        for path in sorted(glob.glob(os.path.join(d, "drivers", "*_drv.so"))):
+            name = os.path.basename(path)[:-len("_drv.so")]
+            if name not in out:
+                out[name] = (path, module_abi(path))
     return out
+
+
+def loadable(found, server_abi):
+    """The drivers the server can load: built for its video driver ABI (or not known)."""
+    return sorted(n for n, (_p, abi) in found.items() if server_abi is None or abi is None or abi[0] == server_abi)
 
 
 def choices(kdriver, installed):

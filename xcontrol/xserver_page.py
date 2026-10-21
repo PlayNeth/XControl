@@ -356,8 +356,10 @@ class XServerTab(Gtk.Box):
         return vendor[0] if vendor else "modesetting"
 
     def _driver_choice(self):
-        root = X.module_root(self.info)
-        installed = X.installed_drivers(root) if root else []
+        dirs = X.search_dirs(self.info)
+        found = X.find_drivers(dirs)
+        abi = X.server_video_abi(self.info)
+        installed = X.loadable(found, abi)
         gpus = self._gpus()
         if not gpus or not installed:
             return
@@ -368,7 +370,9 @@ class XServerTab(Gtk.Box):
         for r, kd in enumerate(gpus):
             lbl = Gtk.Label(label=_("GPU with {driver}").format(driver=kd), xalign=0)
             combo = Gtk.ComboBoxText(hexpand=True)
-            combo.append("", _("Automatic ({driver})").format(driver=self._auto(kd, installed)))
+            # (when XControl picks nothing, what runs now is what "automatic" gives: X's own rules and yours)
+            auto = in_use.get(kd) if not self.picks.get(kd) and in_use.get(kd) else self._auto(kd, installed)
+            combo.append("", _("Automatic ({driver})").format(driver=auto))
             for d in X.choices(kd, installed):
                 combo.append(d, d)
             combo.set_active_id(self.picks.get(kd, ""))
@@ -387,20 +391,30 @@ class XServerTab(Gtk.Box):
             if now:
                 grid.attach(_dim(_("now: {driver}").format(driver=now)), 3, r, 1, 1)
         self.details.pack_start(grid, False, False, 0)
-        notes = [_("Only drivers built for this X server (in {folder}) are offered; modesetting is part of the "
-                   "server and always there.").format(folder=root)]
-        others = {n: f for n, f in X.other_server_drivers(root).items()
-                  if any(n in X.SUITS and kd in X.SUITS[n] for kd in gpus)}
-        for name, folder in sorted(others.items()):
-            note = _("The {driver} driver is installed for another X server ({folder}), so this one can't load "
-                     "it; install its build for {server}.")
-            notes.append(note.format(driver=name, folder=folder, server=self.info.server or "X"))
+        rows = []
+        for name, (path, mabi) in sorted(found.items()):
+            if not any(name == "modesetting" or kd in X.SUITS.get(name, ()) for kd in gpus):
+                continue
+            built = f"{mabi[0]}.{mabi[1]}" if mabi else "?"
+            ok = name in installed
+            rows.append((name, f"{path}  ·  " + (_("video ABI {abi}").format(abi=built)) +
+                         ("" if ok else "  ·  " + _("not loadable"))))
+        if rows:
+            self.details.pack_start(self._grid(rows), False, False, 0)
+        notes = [_("These are the X drivers {server} finds (it looks in {folders}, in that order), with the "
+                   "driver interface version each was built for; it takes video ABI {abi}.").format(
+                       server=self.info.server or "X", folders=", ".join(dirs), abi=abi if abi else "?")]
+        for name, (path, mabi) in sorted(found.items()):
+            if name not in installed and any(kd in X.SUITS.get(name, ()) for kd in gpus):
+                notes.append(_("{driver} was built for video ABI {built}, so {server} won't load it; install its "
+                               "build for {server}.").format(driver=name, built=f"{mabi[0]}.{mabi[1]}",
+                                                             server=self.info.server or "X"))
         for n in notes:
             self.details.pack_start(_dim(n), False, False, 0)
 
     def _switch(self, kd, xd, installed):
         old = self.picks.get(kd) or self._in_use_for(kd) or self._auto(kd, installed)
-        new = xd or self._auto(kd, installed)
+        new = xd or (self._in_use_for(kd) if not self.picks.get(kd) else "") or self._auto(kd, installed)
         md = Gtk.MessageDialog(transient_for=self.window, modal=True, message_type=Gtk.MessageType.QUESTION,
                                buttons=Gtk.ButtonsType.OK_CANCEL,
                                text=_("Use {new} instead of {old}?").format(new=new, old=old))

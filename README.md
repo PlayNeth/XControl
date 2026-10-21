@@ -802,9 +802,12 @@ offered (they can leave X without a keyboard and mouse).
 **Choosing the video driver**: for each GPU, Automatic (what X picks by itself: a vendor
 driver's package adds a rule for its GPUs, otherwise modesetting) or any installed X driver
 that suits it (modesetting always; amdgpu, ati, intel, nouveau or nvidia for their own GPUs).
-Only drivers built for the running server are offered: the ones in the module folder it loads
-from (XLibre uses `/usr/lib/xorg/modules/xlibre-25`), since a driver built for another X server
-won't load; the tab says when one is installed for the other server. The choice is a `Driver`
+The tab lists the drivers the running server would find, in its own search order (XLibre:
+`/usr/lib/xorg/modules/xlibre-25`, then `xlibre-25.0`, then the plain
+`/usr/lib/xorg/modules`; X.Org: the plain folder), with the driver interface (video ABI)
+version each was built for, read from the module's own version info. Only drivers built for
+the server's ABI are offered (XLibre 25 takes 28; X.Org 21.1 takes 25), since the server won't
+load the others; the tab says so for each one it skips. The choice is a `Driver`
 line in the same `OutputClass` section, and the helper refuses a driver whose module isn't
 installed. Each X driver keeps its own options: switching away remembers them and switching
 back brings them back. The outputs get other names with the other driver (`DP-1` with

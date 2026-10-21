@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.25.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:59-0300\n"
+"POT-Creation-Date: 2026-10-20 21:13-0300\n"
 "PO-Revision-Date: 2026-10-20 20:15-0300\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1048,7 +1048,7 @@ msgstr "R3 (нажатие правого стика)"
 msgid "Share / Create"
 msgstr "Share / Create"
 
-#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:468
+#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:482
 msgid "Options"
 msgstr "Options"
 
@@ -3780,7 +3780,7 @@ msgid "Add…"
 msgstr "Добавить…"
 
 #: xcontrol/i3_page.py:357 xcontrol/system_page.py:344
-#: xcontrol/xserver_page.py:333 xcontrol/xserver_page.py:470
+#: xcontrol/xserver_page.py:333 xcontrol/xserver_page.py:484
 msgid "Change…"
 msgstr "Изменить…"
 
@@ -4720,7 +4720,7 @@ msgstr "Недопустимое значение типа {type}."
 msgid "Rebuilding the initramfs, this takes a minute…"
 msgstr "Пересборка initramfs, это займёт минуту…"
 
-#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:538
+#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:552
 msgid "Saving…"
 msgstr "Сохранение…"
 
@@ -7097,7 +7097,7 @@ msgstr "Виртуальный диск"
 msgid "removable"
 msgstr "съёмный"
 
-#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:451
+#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:465
 msgid "Drives"
 msgstr "Накопители"
 
@@ -7196,11 +7196,11 @@ msgstr "Загружаемые модули не используются (яд�
 msgid "Select a module to see what it drives and its parameters."
 msgstr "Выберите модуль, чтобы увидеть, чем он управляет, и его параметры."
 
-#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:442
+#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:456
 msgid "File"
 msgstr "Файл"
 
-#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:444
+#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:458
 msgid "Version"
 msgstr "Версия"
 
@@ -7679,7 +7679,7 @@ msgid "No X11 display found (DISPLAY is not set)."
 msgstr "Не найден дисплей X11 (DISPLAY не задан)."
 
 #: xcontrol/xserver_page.py:12 xcontrol/xserver_page.py:325
-#: xcontrol/xserver_page.py:364
+#: xcontrol/xserver_page.py:366
 msgid "Video driver"
 msgstr "Видеодрайвер"
 
@@ -7781,7 +7781,7 @@ msgstr "Выберите сервер или модуль."
 msgid "GPUs"
 msgstr "GPU"
 
-#: xcontrol/xserver_page.py:331 xcontrol/xserver_page.py:517
+#: xcontrol/xserver_page.py:331 xcontrol/xserver_page.py:531
 msgid "Server-wide options"
 msgstr "Параметры всего сервера"
 
@@ -7802,49 +7802,60 @@ msgstr ""
 "Руководство по xorg.conf не установлено, поэтому параметры нельзя показать "
 "(оно входит в пакет X-сервера)."
 
-#: xcontrol/xserver_page.py:369
+#: xcontrol/xserver_page.py:371
 #, python-brace-format
 msgid "GPU with {driver}"
 msgstr "GPU с {driver}"
 
-#: xcontrol/xserver_page.py:371
+#: xcontrol/xserver_page.py:375
 #, python-brace-format
 msgid "Automatic ({driver})"
 msgstr "Автоматически ({driver})"
 
-#: xcontrol/xserver_page.py:377
+#: xcontrol/xserver_page.py:381
 msgid "Switch…"
 msgstr "Переключить…"
 
-#: xcontrol/xserver_page.py:388
+#: xcontrol/xserver_page.py:392
 #, python-brace-format
 msgid "now: {driver}"
 msgstr "сейчас: {driver}"
 
-#: xcontrol/xserver_page.py:390
+#: xcontrol/xserver_page.py:400
+#, python-brace-format
+msgid "video ABI {abi}"
+msgstr "видео-ABI {abi}"
+
+#: xcontrol/xserver_page.py:401
+msgid "not loadable"
+msgstr "не загрузится"
+
+#: xcontrol/xserver_page.py:404
 #, python-brace-format
 msgid ""
-"Only drivers built for this X server (in {folder}) are offered; modesetting "
-"is part of the server and always there."
+"These are the X drivers {server} finds (it looks in {folders}, in that "
+"order), with the driver interface version each was built for; it takes video"
+" ABI {abi}."
 msgstr ""
-"Предлагаются только драйверы, собранные для этого X-сервера (в {folder}); "
-"modesetting входит в сам сервер и есть всегда."
+"Это драйверы X, которые находит {server} (он ищет в {folders}, в этом "
+"порядке), с версией интерфейса драйверов, под которую собран каждый; сервер "
+"принимает видео-ABI {abi}."
 
-#: xcontrol/xserver_page.py:395
+#: xcontrol/xserver_page.py:409
 #, python-brace-format
 msgid ""
-"The {driver} driver is installed for another X server ({folder}), so this "
-"one can't load it; install its build for {server}."
+"{driver} was built for video ABI {built}, so {server} won't load it; install"
+" its build for {server}."
 msgstr ""
-"Драйвер {driver} установлен для другого X-сервера ({folder}), поэтому этот "
-"сервер не может его загрузить; установите его сборку для {server}."
+"{driver} собран под видео-ABI {built}, поэтому {server} его не загрузит; "
+"установите его сборку для {server}."
 
-#: xcontrol/xserver_page.py:406
+#: xcontrol/xserver_page.py:420
 #, python-brace-format
 msgid "Use {new} instead of {old}?"
 msgstr "Использовать {new} вместо {old}?"
 
-#: xcontrol/xserver_page.py:408
+#: xcontrol/xserver_page.py:422
 #, python-brace-format
 msgid ""
 "It takes effect the next time X starts (log out and back in). The outputs "
@@ -7859,40 +7870,40 @@ msgstr ""
 "для {old}, сохранятся на случай, если вы переключитесь обратно. Если X не "
 "запустится, отмените это из текстовой консоли (Ctrl+Alt+F3): sudo rm {file}"
 
-#: xcontrol/xserver_page.py:446
+#: xcontrol/xserver_page.py:460
 msgid "ABI"
 msgstr "ABI"
 
-#: xcontrol/xserver_page.py:452
+#: xcontrol/xserver_page.py:466
 #, python-brace-format
 msgid "screen {n}"
 msgstr "экран {n}"
 
-#: xcontrol/xserver_page.py:455 xcontrol/xserver_page.py:458
+#: xcontrol/xserver_page.py:469 xcontrol/xserver_page.py:472
 msgid "State"
 msgstr "Состояние"
 
-#: xcontrol/xserver_page.py:455
+#: xcontrol/xserver_page.py:469
 msgid "Loaded, then let go: it didn't find hardware of its own"
 msgstr "Загружен, затем выгружен: не нашёл своего оборудования"
 
-#: xcontrol/xserver_page.py:456
+#: xcontrol/xserver_page.py:470
 msgid "Loaded, but drives no screen"
 msgstr "Загружен, но не управляет ни одним экраном"
 
-#: xcontrol/xserver_page.py:458
+#: xcontrol/xserver_page.py:472
 msgid "Loaded, then let go"
 msgstr "Загружен, затем выгружен"
 
-#: xcontrol/xserver_page.py:462
+#: xcontrol/xserver_page.py:476
 msgid "Input devices' settings are on the Input page."
 msgstr "Настройки устройств ввода находятся на странице «Ввод»."
 
-#: xcontrol/xserver_page.py:471
+#: xcontrol/xserver_page.py:485
 msgid "Saved for the next time X starts (needs your password)"
 msgstr "Сохраняется до следующего запуска X (нужен ваш пароль)"
 
-#: xcontrol/xserver_page.py:478
+#: xcontrol/xserver_page.py:492
 #, python-brace-format
 msgid ""
 "{driver}'s manual isn't installed, so its options can't be listed. Other "
@@ -7901,16 +7912,16 @@ msgstr ""
 "Руководство по {driver} не установлено, поэтому его параметры нельзя "
 "показать. Другие параметры всё равно можно задать по имени."
 
-#: xcontrol/xserver_page.py:494
+#: xcontrol/xserver_page.py:508
 msgid "No GPU found"
 msgstr "GPU не найден"
 
-#: xcontrol/xserver_page.py:494
+#: xcontrol/xserver_page.py:508
 msgid "XControl couldn't tell which GPU's driver to set options for."
 msgstr ""
 "XControl не смог определить, для драйвера какого GPU задавать параметры."
 
-#: xcontrol/xserver_page.py:501
+#: xcontrol/xserver_page.py:515
 #, python-brace-format
 msgid ""
 "For the {driver} X driver on {gpus}. Saved in {file}; they take effect the "
@@ -7920,12 +7931,12 @@ msgstr ""
 " следующем запуске X (выйдите и войдите снова или перезапустите экран "
 "входа)."
 
-#: xcontrol/xserver_page.py:504
+#: xcontrol/xserver_page.py:518
 #, python-brace-format
 msgid "{driver} options"
 msgstr "Параметры {driver}"
 
-#: xcontrol/xserver_page.py:515
+#: xcontrol/xserver_page.py:529
 #, python-brace-format
 msgid ""
 "For the whole X server. Saved in {file}; they take effect the next time X "
@@ -7934,11 +7945,11 @@ msgstr ""
 "Для всего X-сервера. Сохраняются в {file}; вступают в силу при следующем "
 "запуске X."
 
-#: xcontrol/xserver_page.py:533
+#: xcontrol/xserver_page.py:547
 msgid "Saved; X uses it the next time it starts"
 msgstr "Сохранено; X использует это при следующем запуске"
 
-#: xcontrol/xserver_page.py:536
+#: xcontrol/xserver_page.py:550
 msgid "Could not save the X options"
 msgstr "Не удалось сохранить параметры X"
 
@@ -7962,3 +7973,11 @@ msgid ""
 "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;"
 msgstr ""
 "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;графика;видеокарта;сглаживание;монитор;экран;мышь;клавиатура;тачпад;ввод;"
+
+#, python-brace-format
+#~ msgid ""
+#~ "Only drivers built for this X server (in {folder}) are offered; modesetting "
+#~ "is part of the server and always there."
+#~ msgstr ""
+#~ "Предлагаются только драйверы, собранные для этого X-сервера (в {folder}); "
+#~ "modesetting входит в сам сервер и есть всегда."
