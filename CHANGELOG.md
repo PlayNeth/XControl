@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.2 (2026-10-20)
+
+**Fix the chosen X video driver being ignored**
+
+- Fix the X driver picked on the X server tab having no effect: the driver packages' own config
+  (such as 10-amdgpu.conf) is read first and won, so the choice is now a Device section with
+  the GPU's bus ID in its own file, 00-xcontrol-driver.conf
+- Show after the next start whether X used XControl's choice
+- Warn about a Device section in another file that X reads first, or a Screen section that names
+  its own Device, since either keeps XControl's choice from applying
+- Point the undo instructions at both of XControl's files
+- Make the root helper validate the bus ID and remove the driver file when nothing is picked
+
 ## 0.28.1 (2026-10-20)
 
 **Fix which X drivers are offered on XLibre**

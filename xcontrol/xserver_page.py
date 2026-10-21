@@ -1,4 +1,5 @@
 """System > X server: which X server runs, the modules it loaded, and its options."""
+import os
 import threading
 
 import gi
@@ -215,10 +216,10 @@ class XServerTab(Gtk.Box):
         self.head.pack_start(lbl, False, False, 0)
         self.head.pack_start(_dim(_("From its log: {path}").format(path=self.info.path)), False, False, 0)
         notes = []
-        if self.ours or self.server_ours:
+        if self.ours or self.server_ours or self.picks:
             notes.append(_("XControl's options are in {file}. They take effect the next time X starts. If X ever "
                            "won't start, undo them from a text console (Ctrl+Alt+F3): sudo rm {file}").format(
-                               file=X.our_path()))
+                               file=X.all_ours()))
         in_use = [m.name for m in X.video_drivers(self.info)]
         if self.ours and self.ours_for not in ("", "-") and in_use and self.ours_for not in in_use:
             notes.append("⚠ " + _("They were chosen for the {old} X driver, but X now runs {new}; options {new} "
@@ -391,6 +392,7 @@ class XServerTab(Gtk.Box):
             if now:
                 grid.attach(_dim(_("now: {driver}").format(driver=now)), 3, r, 1, 1)
         self.details.pack_start(grid, False, False, 0)
+        self._driver_notes()
         rows = []
         for name, (path, mabi) in sorted(found.items()):
             if not any(name == "modesetting" or kd in X.SUITS.get(name, ()) for kd in gpus):
@@ -412,6 +414,33 @@ class XServerTab(Gtk.Box):
         for n in notes:
             self.details.pack_start(_dim(n), False, False, 0)
 
+    def _driver_notes(self):
+        """Whether XControl's choice is the one X used, and what in other files could win over it."""
+        notes = []
+        ours = {f"XControl: {kd}" for kd in self.picks}
+        used = self.info.device
+        if self.picks and used and used not in ours:
+            notes.append("⚠ " + _("At its last start X used the Device section \"{name}\", not XControl's. If you "
+                                  "picked the driver after that, log out and back in.").format(name=used))
+        elif self.picks and used in ours:
+            notes.append(_("X used XControl's choice at its last start."))
+        devices, screens = X.device_sections()
+        for path, screen, dev in screens:
+            notes.append("⚠ " + _("{file} has a Screen section that names its own Device (\"{device}\"); X uses "
+                                  "that one, so XControl's choice can't apply.").format(file=path, device=dev))
+        ours_dir = os.path.dirname(X.driver_path())     # (X reads /usr/share's, then /etc's in order, then xorg.conf)
+        before = [(p, i, d) for p, i, d in devices if p.startswith("/usr/share/") or
+                  (os.path.dirname(p) == ours_dir and os.path.basename(p) < X.DRIVER_FILE)]
+        for path, ident, drv in before:
+            notes.append("⚠ " + _("{file} has a Device section (\"{name}\") that X reads before XControl's, so "
+                                  "it wins.").format(file=path, name=ident))
+        if self.picks and not screens:
+            notes.append(_("XControl picks the driver with a Device section in {file}: X uses the first one it "
+                           "reads instead of guessing. Delete that file to go back to automatic.").format(
+                               file=X.driver_path()))
+        for n in notes:
+            self.details.pack_start(_dim(n), False, False, 0)
+
     def _switch(self, kd, xd, installed):
         old = self.picks.get(kd) or self._in_use_for(kd) or self._auto(kd, installed)
         new = xd or (self._in_use_for(kd) if not self.picks.get(kd) else "") or self._auto(kd, installed)
@@ -422,7 +451,7 @@ class XServerTab(Gtk.Box):
             "It takes effect the next time X starts (log out and back in). The outputs get other names "
             "(DP-1 with modesetting is DisplayPort-0 with amdgpu); XControl moves your saved display settings "
             "over. Options you set for {old} are kept for when you switch back. If X won't start, undo it from "
-            "a text console (Ctrl+Alt+F3): sudo rm {file}").format(old=old, file=X.our_path()))
+            "a text console (Ctrl+Alt+F3): sudo rm {file}").format(old=old, file=X.all_ours()))
         ok = md.run() == Gtk.ResponseType.OK
         md.destroy()
         if not ok:
@@ -539,7 +568,7 @@ class XServerTab(Gtk.Box):
         picks = self.picks if picks is None else picks
 
         def work():
-            ok, msg = X.save(drivers, server, xdriver, picks)
+            ok, msg = X.save(drivers, server, xdriver, picks, X.gpus())
             GLib.idle_add(done, ok, msg)
 
         def done(ok, msg):

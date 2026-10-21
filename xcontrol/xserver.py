@@ -25,7 +25,9 @@ from .paths import LIBDIR
 
 HELPER = os.path.join(LIBDIR, "xcontrol-xorg-helper")
 CONF_DIR = "/etc/X11/xorg.conf.d"
-OUR_FILE = "30-xcontrol.conf"
+OUR_FILE = "30-xcontrol.conf"          # options: later classes override earlier ones, so late
+DRIVER_FILE = "00-xcontrol-driver.conf"  # the driver: X uses the first Device section it reads
+BUSID = re.compile(r"^PCI:\d{1,3}(@\d{1,5})?:\d{1,2}:\d$")
 MAN_DIRS = ["/usr/share/man", "/usr/local/share/man"]
 CONFIG_PATHS = ["/etc/X11/xorg.conf", "/etc/X11/xorg.conf.d/*.conf", "/usr/share/X11/xorg.conf.d/*.conf"]
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,47}$")
@@ -67,6 +69,7 @@ class LogInfo:
     used: dict = field(default_factory=dict)       # (scope, option) -> (value, source)
     unused: list = field(default_factory=list)     # [(scope, option)]
     cards: dict = field(default_factory=dict)      # video driver -> {"/dev/dri/card1", ...}
+    device: str = ""            # the Device section X used for its screen
     path: str = ""
 
 
@@ -92,6 +95,7 @@ def parse_log(text):
     mods = {}
     current = loading = None
     modules_started = False      # (unnamed Options after this are input devices', not the server's)
+    info.device = device_used(text)
     for raw in text.splitlines():
         line = _STAMP.sub("", raw).rstrip()
         m = re.search(r"\b(X\.Org|XLibre) X Server ([\d.]+)", line)
@@ -273,24 +277,54 @@ def kernel_drivers(sysroot="/sys"):
     return out
 
 
+def busid(card, sysroot="/sys"):
+    """X's BusID for a /dev/dri/cardN on PCI ("PCI:48:0:0", decimal), or ""."""
+    dev = os.path.realpath(os.path.join(sysroot, "class", "drm", os.path.basename(card), "device"))
+    m = re.match(r"^([0-9a-f]{4}):([0-9a-f]{2}):([0-9a-f]{2})\.([0-7])$", os.path.basename(dev))
+    if not m:
+        return ""
+    dom, bus, slot, fn = (int(x, 16) for x in m.groups())
+    return f"PCI:{bus}{'@' + str(dom) if dom else ''}:{slot}:{fn}"
+
+
+def gpus(sysroot="/sys"):
+    """[(card, kernel driver, BusID)] for every GPU."""
+    return [(card, kd, busid(card, sysroot)) for card, kd in kernel_drivers(sysroot).items()]
+
+
+def driver_path(conf_dir=CONF_DIR):
+    return os.path.join(conf_dir, DRIVER_FILE)
+
+
+def all_ours(conf_dir=CONF_DIR):
+    """Both of XControl's files, as one shell pattern (for "sudo rm ...")."""
+    return os.path.join(conf_dir, "*-xcontrol*.conf")
+
+
 def our_path(conf_dir=CONF_DIR):
     return os.path.join(conf_dir, OUR_FILE)
 
 
 def read_picks(conf_dir=CONF_DIR):
-    """The X driver XControl's file picks for each GPU kernel driver: {kernel driver: X driver}."""
+    """The X driver XControl's driver file picks for each GPU kernel driver: {kernel driver: X driver}."""
     try:
-        with open(our_path(conf_dir), errors="replace") as f:
+        with open(driver_path(conf_dir), errors="replace") as f:
             text = f.read()
     except OSError:
         return {}
     out = {}
-    for sec in re.finditer(r'Section "OutputClass"(.*?)EndSection', text, re.S):
-        md = re.search(r'MatchDriver\s+"([^"]+)"', sec.group(1))
+    for sec in re.finditer(r'Section "Device"(.*?)EndSection', text, re.S):
+        idn = re.search(r'Identifier\s+"XControl: ([a-z0-9_-]+)', sec.group(1))
         dv = re.search(r'^\s*Driver\s+"([^"]+)"', sec.group(1), re.M)
-        if md and dv:
-            out[md.group(1)] = dv.group(1)
+        if idn and dv:
+            out[idn.group(1)] = dv.group(1)
     return out
+
+
+def device_used(info_text):
+    """The Device section X used for its screen (from the log's "|-->Device" line), or ""."""
+    m = re.search(r'\|-->Device "([^"]*)"', info_text or "")
+    return m.group(1) if m else ""
 
 
 def read_ours(conf_dir=CONF_DIR):
@@ -338,17 +372,29 @@ def elsewhere(conf_dir=CONF_DIR, patterns=None):
     return found, flags
 
 
-def file_text(drivers, server, xdriver="", picks=None):
+def driver_file_text(picks, gpu_list):
+    """What XControl's driver file would hold: a Device section per GPU whose X driver it picks
+    (X uses the first Device section it reads for its screen, before guessing a driver)."""
+    lines = ["# Written by XControl (System > X server): the X driver for each GPU. Delete this file to",
+             "# go back to the automatic choice."]
+    for card, kd, bus in gpu_list:
+        if not picks.get(kd):
+            continue
+        lines += ["", 'Section "Device"', f'    Identifier "XControl: {kd}"', f'    Driver "{picks[kd]}"']
+        if bus:
+            lines.append(f'    BusID "{bus}"')
+        lines.append("EndSection")
+    return "\n".join(lines) + "\n"
+
+
+def file_text(drivers, server, xdriver=""):
     """What XControl's file would hold (the helper writes the same)."""
-    picks = picks or {}
     lines = ["# Written by XControl (System > X server). Delete this file to undo everything here.",
              f"# for the X driver: {xdriver or '-'}"]
-    for kd in sorted(set(drivers) | set(picks)):
-        if not drivers.get(kd) and not picks.get(kd):
+    for kd in sorted(drivers):
+        if not drivers.get(kd):
             continue
         lines += ["", 'Section "OutputClass"', f'    Identifier "XControl: {kd}"', f'    MatchDriver "{kd}"']
-        if picks.get(kd):
-            lines.append(f'    Driver "{picks[kd]}"')
         lines += [f'    Option "{k}" "{v}"' for k, v in drivers.get(kd, {}).items()]
         lines.append("EndSection")
     if server:
@@ -357,17 +403,18 @@ def file_text(drivers, server, xdriver="", picks=None):
     return "\n".join(lines) + "\n"
 
 
-def helper_args(drivers, server, xdriver="", picks=None):
+def helper_args(drivers, server, xdriver="", picks=None, gpu_list=None):
     """The root helper's arguments; ValueError for anything it would refuse."""
     args = ["write", xdriver or "-"]
     if xdriver and not KDRIVER.match(xdriver):
         raise ValueError(xdriver)
-    for kd, xd in sorted((picks or {}).items()):
+    for _card, kd, bus in gpu_list or []:
+        xd = (picks or {}).get(kd)
         if not xd:
             continue
-        if not KDRIVER.match(kd) or not KDRIVER.match(xd):
-            raise ValueError(f"{kd}={xd}")
-        args.append(f"pick:{kd}:{xd}")
+        if not KDRIVER.match(kd) or not KDRIVER.match(xd) or (bus and not BUSID.match(bus)):
+            raise ValueError(f"{kd}={xd} {bus}")
+        args.append(f"pick:{kd}:{xd}:{bus or '-'}")
     for kd, opts in sorted(drivers.items()):
         if not KDRIVER.match(kd):
             raise ValueError(kd)
@@ -386,10 +433,10 @@ def can_save():
     return bool(shutil.which("pkexec")) and os.path.exists(HELPER)
 
 
-def save(drivers, server, xdriver="", picks=None):
+def save(drivers, server, xdriver="", picks=None, gpu_list=None):
     """(ok, message): XControl's X options, through the root helper (asks for the password)."""
     try:
-        args = helper_args(drivers, server, xdriver, picks)
+        args = helper_args(drivers, server, xdriver, picks, gpus() if gpu_list is None else gpu_list)
     except ValueError as e:
         return False, f"not allowed: {e}"
     try:
@@ -496,3 +543,31 @@ def remember(xdriver, drivers):
     xs["by_driver"] = by
     data["xserver"] = xs
     config.save(data)
+
+
+def device_sections(conf_dir=CONF_DIR, patterns=None):
+    """Device sections in other config files, in the order X reads them: [(file, identifier, driver)],
+    and Screen sections that name their own Device: [(file, screen, device)]."""
+    order = []
+    for p in patterns or ["/usr/share/X11/xorg.conf.d/*.conf", "/etc/X11/xorg.conf.d/*.conf", "/etc/X11/xorg.conf"]:
+        order += sorted(glob.glob(p)) if "*" in p else ([p] if os.path.exists(p) else [])
+    devices, screens = [], []
+    for path in order:
+        if os.path.basename(path) in (OUR_FILE, DRIVER_FILE) and os.path.dirname(path) == conf_dir:
+            continue
+        try:
+            with open(path, errors="replace") as f:
+                text = re.sub(r"#.*", "", f.read())
+        except OSError:
+            continue
+        for sec in re.finditer(r'Section\s+"(\w+)"(.*?)EndSection', text, re.S | re.I):
+            body = sec.group(2)
+            idn = re.search(r'Identifier\s+"([^"]*)"', body)
+            if sec.group(1).lower() == "device":
+                dv = re.search(r'^\s*Driver\s+"([^"]*)"', body, re.M)
+                devices.append((path, idn.group(1) if idn else "", dv.group(1) if dv else ""))
+            elif sec.group(1).lower() == "screen":
+                dev = re.search(r'^\s*Device\s+"([^"]*)"', body, re.M)
+                if dev:
+                    screens.append((path, idn.group(1) if idn else "", dev.group(1)))
+    return devices, screens

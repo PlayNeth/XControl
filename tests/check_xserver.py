@@ -202,10 +202,24 @@ if shutil.which("gcc"):       # a real compiled module, laid out as xf86Module.h
                         os.path.join(here, "data", "fake_drv.c")], capture_output=True)
     if r.returncode == 0:
         expect("ABI read from a compiled module", X.module_abi(so), (25, 2))
-text = X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"})
-expect("Driver line", 'MatchDriver "amdgpu"\n    Driver "amdgpu"\n    Option "TearFree" "true"' in text, True)
-alone = X.file_text({}, {}, "", {"amdgpu": "modesetting"})
-expect("a pick alone still writes a section", 'Driver "modesetting"' in alone, True)
+# the driver is a Device section with the GPU's BusID (X uses the first Device section it reads;
+# an OutputClass Driver line can't win over the drivers' own classes in /usr/share)
+gsys = tempfile.mkdtemp()
+pci = os.path.join(gsys, "devices", "pci0000:00", "0000:00:08.1", "0000:30:00.0")
+os.makedirs(os.path.join(pci, "drm", "card1"))
+os.makedirs(os.path.join(gsys, "bus", "amdgpu"))
+os.symlink(os.path.join(gsys, "bus", "amdgpu"), os.path.join(pci, "driver"))
+os.makedirs(os.path.join(gsys, "class", "drm"))
+os.symlink(os.path.join(pci, "drm", "card1"), os.path.join(gsys, "class", "drm", "card1"))
+os.symlink(pci, os.path.join(pci, "drm", "card1", "device"))
+gl = X.gpus(gsys)
+expect("GPU with its BusID (decimal)", gl, [("/dev/dri/card1", "amdgpu", "PCI:48:0:0")])
+dtext = X.driver_file_text({"amdgpu": "modesetting"}, gl)
+expect("Device section", 'Section "Device"\n    Identifier "XControl: amdgpu"\n    Driver "modesetting"\n'
+       '    BusID "PCI:48:0:0"\nEndSection' in dtext, True)
+expect("no Driver line among the options",
+       '\n    Driver "' in X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu"), False)
+expect("the Device X used", X.parse_log('(**) |   |-->Device "XControl: amdgpu"\n').device, "XControl: amdgpu")
 X.remember("modesetting", {"amdgpu": {"Atomic": "true"}})
 X.remember("amdgpu", {"amdgpu": {"TearFree": "true"}})
 expect("options remembered per X driver", X.remembered(),
@@ -215,15 +229,34 @@ if prefix is not None:
     os.chmod(os.path.dirname(mods), 0o755)
     for root_dir, _dirs, _files in os.walk(mods):
         os.chmod(root_dir, 0o755)
-    res = run(*X.helper_args({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"}))
+    res = run(*X.helper_args({"amdgpu": {"Atomic": "true"}}, {}, "modesetting", {"amdgpu": "modesetting"}, gl))
     expect("pick written", (res.returncode, res.stderr), (0, ""))
+    with open(os.path.join(conf, X.DRIVER_FILE)) as f:
+        expect("driver file as XControl expects", f.read(), dtext)
     with open(os.path.join(conf, X.OUR_FILE)) as f:
-        expect("as XControl expects", f.read(), X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu",
-                                                            {"amdgpu": "amdgpu"}))
-    expect("read back", X.read_picks(conf), {"amdgpu": "amdgpu"})
-    expect("a driver that isn't installed is refused", run("write", "x", "pick:amdgpu:radeon").returncode != 0, True)
-    expect("bad names refused", run("write", "x", "pick:amdgpu:../evil").returncode != 0, True)
+        expect("options file as XControl expects", f.read(),
+               X.file_text({"amdgpu": {"Atomic": "true"}}, {}, "modesetting"))
+    expect("read back", X.read_picks(conf), {"amdgpu": "modesetting"})
+    res = run(*X.helper_args({}, {}, "modesetting", {"amdgpu": "modesetting"}, gl))
+    only = (res.returncode, os.path.exists(os.path.join(conf, X.OUR_FILE)),
+            os.path.exists(os.path.join(conf, X.DRIVER_FILE)))
+    expect("a pick without options: only the driver file", only, (0, False, True))
+    for bad_pick in ("pick:amdgpu:radeon:PCI:48:0:0", "pick:amdgpu:../evil:-", "pick:amdgpu:modesetting:PCI:1;2",
+                     "pick:amdgpu:modesetting:48:0:0", "pick:amdgpu:modesetting"):
+        expect(f"refused {bad_pick}", run("write", "x", bad_pick).returncode != 0, True)
     run("write", "modesetting")
+    expect("both gone", (os.path.exists(os.path.join(conf, X.OUR_FILE)),
+                         os.path.exists(os.path.join(conf, X.DRIVER_FILE))), (False, False))
+
+# Device sections elsewhere: one read before XControl's, and a Screen naming its own
+os.makedirs(os.path.join(conf, "d"), exist_ok=True)
+with open(os.path.join(conf, "d", "00-a.conf"), "w") as f:
+    f.write('Section "Device"\n Identifier "AMD Graphics"\n Driver "amdgpu"\nEndSection\n'
+            'Section "Screen"\n Identifier "s"\n Device "AMD Graphics"\nEndSection\n')
+devs, scrs = X.device_sections(os.path.join(conf, "d"), [os.path.join(conf, "d", "*.conf")])
+expect("other Device and Screen sections", (devs, scrs),
+       ([(os.path.join(conf, "d", "00-a.conf"), "AMD Graphics", "amdgpu")],
+        [(os.path.join(conf, "d", "00-a.conf"), "s", "AMD Graphics")]))
 
 # other files' options, and a ServerFlags section of their own
 other = os.path.join(conf, "20-mine.conf")

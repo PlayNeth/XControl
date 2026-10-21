@@ -807,9 +807,14 @@ The tab lists the drivers the running server would find, in its own search order
 `/usr/lib/xorg/modules`; X.Org: the plain folder), with the driver interface (video ABI)
 version each was built for, read from the module's own version info. Only drivers built for
 the server's ABI are offered (XLibre 25 takes 28; X.Org 21.1 takes 25), since the server won't
-load the others; the tab says so for each one it skips. The choice is a `Driver`
-line in the same `OutputClass` section, and the helper refuses a driver whose module isn't
-installed. Each X driver keeps its own options: switching away remembers them and switching
+load the others; the tab says so for each one it skips. The choice is a Device section with the
+GPU's `BusID`, in its own file, `/etc/X11/xorg.conf.d/00-xcontrol-driver.conf`: X uses the first
+Device section it reads for its screen instead of guessing a driver. (A `Driver` line in an
+OutputClass section can't do it: X reads `/usr/share/X11/xorg.conf.d` first, where the driver
+packages' own classes, like `10-amdgpu.conf`, already name theirs, and the first named driver
+that works wins.) After the next start the tab says whether X used XControl's Device section,
+and warns about a Device section read before it or a Screen section that names its own Device.
+The helper refuses a driver whose module isn't installed. Each X driver keeps its own options: switching away remembers them and switching
 back brings them back. The outputs get other names with the other driver (`DP-1` with
 modesetting is `DisplayPort-0` with amdgpu); saved display settings move over (see Switching X
 drivers).
