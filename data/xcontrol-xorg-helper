@@ -1,7 +1,10 @@
 #!/bin/sh
 # xcontrol-xorg-helper: XControl's X server options (runs as root via pkexec).
 #
-#   write XDRIVER [drv:KERNELDRIVER:OPTION=VALUE ...] [srv:OPTION=VALUE ...]
+#   write XDRIVER [pick:KERNELDRIVER:XDRIVER ...] [drv:KERNELDRIVER:OPTION=VALUE ...] [srv:OPTION=VALUE ...]
+#
+#     pick: the X driver to use for GPUs with that kernel driver (a Driver line); it must be
+#     an installed X video driver (its *_drv.so in an X module folder), or it's refused.
 #
 #     Writes /etc/X11/xorg.conf.d/30-xcontrol.conf: one OutputClass section per kernel driver
 #     (MatchDriver; X applies its options to the X driver on that GPU) and a ServerFlags
@@ -15,9 +18,20 @@ set -eu
 die() { echo "xcontrol-xorg-helper: $*" >&2; exit 1; }
 
 DIR=/etc/X11/xorg.conf.d
-if [ "$(id -u)" != 0 ]; then   # test hook, ignored when running as root
+MODULES="/usr/lib/xorg/modules /usr/lib64/xorg/modules /usr/local/lib/xorg/modules"
+if [ "$(id -u)" != 0 ]; then   # test hooks, ignored when running as root
     DIR=${XCONTROL_XORG_DIR:-$DIR}
+    MODULES=${XCONTROL_XMODULES:-$MODULES}
 fi
+
+installed() {   # an X video driver's module exists (in a module folder, or one level down: xlibre-25)
+    for root in $MODULES; do
+        for f in "$root/drivers/$1_drv.so" "$root"/*/drivers/"$1_drv.so"; do
+            [ -f "$f" ] && return 0
+        done
+    done
+    return 1
+}
 FILE=$DIR/30-xcontrol.conf
 
 [ $# -ge 2 ] || die "usage: write XDRIVER [drv:KERNELDRIVER:OPTION=VALUE ...] [srv:OPTION=VALUE ...]"
@@ -42,6 +56,16 @@ check_opt() {   # NAME=VALUE
 drivers=""
 for a in "$@"; do
     case $a in
+        pick:*:*)
+            rest=${a#pick:}
+            kd=${rest%%:*}
+            xd=${rest#*:}
+            case $kd in ''|*[!a-z0-9_-]*) die "invalid kernel driver: $kd";; esac
+            case $xd in ''|*[!a-z0-9_-]*) die "invalid X driver: $xd";; esac
+            [ ${#kd} -le 32 ] && [ ${#xd} -le 32 ] || die "name too long"
+            installed "$xd" || die "the $xd X driver isn't installed"
+            case " $drivers " in *" $kd "*) ;; *) drivers="$drivers $kd";; esac
+            ;;
         drv:*:*=*)
             rest=${a#drv:}
             kd=${rest%%:*}
@@ -71,6 +95,9 @@ tmp=$FILE.tmp
         echo 'Section "OutputClass"'
         echo "    Identifier \"XControl: $kd\""
         echo "    MatchDriver \"$kd\""
+        for a in "$@"; do
+            case $a in pick:"$kd":*) echo "    Driver \"${a#pick:"$kd":}\"";; esac
+        done
         for a in "$@"; do
             case $a in
                 drv:"$kd":*) o=${a#drv:"$kd":}; echo "    Option \"${o%%=*}\" \"${o#*=}\"";;

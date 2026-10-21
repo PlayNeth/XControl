@@ -33,6 +33,10 @@ VALUE = re.compile(r"^[A-Za-z0-9_.,:+-]{0,128}$")
 KDRIVER = re.compile(r"^[a-z0-9_-]{1,32}$")
 # X screen prefixes that aren't the module's name
 PREFIXES = {"modeset": "modesetting"}
+# which X drivers suit which GPU kernel drivers (modesetting suits every one)
+SUITS = {"amdgpu": {"amdgpu"}, "ati": {"radeon", "amdgpu"}, "radeon": {"radeon"}, "intel": {"i915", "xe"},
+         "nouveau": {"nouveau"}, "nvidia": {"nvidia"}}
+MODULE_ROOTS = ["/usr/lib/xorg/modules", "/usr/lib64/xorg/modules", "/usr/local/lib/xorg/modules"]
 HIDDEN_FLAGS = ("DefaultServerLayout", "AutoAddDevices", "AutoEnableDevices")
 
 
@@ -272,6 +276,22 @@ def our_path(conf_dir=CONF_DIR):
     return os.path.join(conf_dir, OUR_FILE)
 
 
+def read_picks(conf_dir=CONF_DIR):
+    """The X driver XControl's file picks for each GPU kernel driver: {kernel driver: X driver}."""
+    try:
+        with open(our_path(conf_dir), errors="replace") as f:
+            text = f.read()
+    except OSError:
+        return {}
+    out = {}
+    for sec in re.finditer(r'Section "OutputClass"(.*?)EndSection', text, re.S):
+        md = re.search(r'MatchDriver\s+"([^"]+)"', sec.group(1))
+        dv = re.search(r'^\s*Driver\s+"([^"]+)"', sec.group(1), re.M)
+        if md and dv:
+            out[md.group(1)] = dv.group(1)
+    return out
+
+
 def read_ours(conf_dir=CONF_DIR):
     """XControl's file: ({kernel driver: {option: value}}, {server option: value}, x driver it was for)."""
     drivers, server, xdriver = {}, {}, ""
@@ -317,15 +337,18 @@ def elsewhere(conf_dir=CONF_DIR, patterns=None):
     return found, flags
 
 
-def file_text(drivers, server, xdriver=""):
+def file_text(drivers, server, xdriver="", picks=None):
     """What XControl's file would hold (the helper writes the same)."""
+    picks = picks or {}
     lines = ["# Written by XControl (System > X server). Delete this file to undo everything here.",
              f"# for the X driver: {xdriver or '-'}"]
-    for kd in sorted(drivers):
-        if not drivers[kd]:
+    for kd in sorted(set(drivers) | set(picks)):
+        if not drivers.get(kd) and not picks.get(kd):
             continue
         lines += ["", 'Section "OutputClass"', f'    Identifier "XControl: {kd}"', f'    MatchDriver "{kd}"']
-        lines += [f'    Option "{k}" "{v}"' for k, v in drivers[kd].items()]
+        if picks.get(kd):
+            lines.append(f'    Driver "{picks[kd]}"')
+        lines += [f'    Option "{k}" "{v}"' for k, v in drivers.get(kd, {}).items()]
         lines.append("EndSection")
     if server:
         lines += ["", 'Section "ServerFlags"'] + [f'    Option "{k}" "{v}"' for k, v in server.items()]
@@ -333,11 +356,17 @@ def file_text(drivers, server, xdriver=""):
     return "\n".join(lines) + "\n"
 
 
-def helper_args(drivers, server, xdriver=""):
+def helper_args(drivers, server, xdriver="", picks=None):
     """The root helper's arguments; ValueError for anything it would refuse."""
     args = ["write", xdriver or "-"]
     if xdriver and not KDRIVER.match(xdriver):
         raise ValueError(xdriver)
+    for kd, xd in sorted((picks or {}).items()):
+        if not xd:
+            continue
+        if not KDRIVER.match(kd) or not KDRIVER.match(xd):
+            raise ValueError(f"{kd}={xd}")
+        args.append(f"pick:{kd}:{xd}")
     for kd, opts in sorted(drivers.items()):
         if not KDRIVER.match(kd):
             raise ValueError(kd)
@@ -356,10 +385,10 @@ def can_save():
     return bool(shutil.which("pkexec")) and os.path.exists(HELPER)
 
 
-def save(drivers, server, xdriver=""):
+def save(drivers, server, xdriver="", picks=None):
     """(ok, message): XControl's X options, through the root helper (asks for the password)."""
     try:
-        args = helper_args(drivers, server, xdriver)
+        args = helper_args(drivers, server, xdriver, picks)
     except ValueError as e:
         return False, f"not allowed: {e}"
     try:
@@ -369,3 +398,64 @@ def save(drivers, server, xdriver=""):
     if r.returncode in (126, 127) and not r.stderr.strip():
         return False, ""
     return r.returncode == 0, (r.stderr or r.stdout).strip()[-400:]
+
+
+# ---------------------------------------------------------------- choosing the X driver
+def module_root(info, roots=None):
+    """The module folder the running server loads from (XLibre: .../modules/xlibre-25)."""
+    for m in info.modules if info else []:
+        for part in ("/drivers/", "/extensions/", "/input/"):
+            if part in m.path:
+                return m.path.split(part)[0]
+    for m in info.modules if info else []:
+        if m.path:
+            return os.path.dirname(m.path)
+    return next((r for r in roots or MODULE_ROOTS if os.path.isdir(r)), "")
+
+
+def installed_drivers(root):
+    """X video drivers installed in that module folder: ["amdgpu", "modesetting", ...]."""
+    found = set()
+    for path in glob.glob(os.path.join(root, "drivers", "*_drv.so")):
+        found.add(os.path.basename(path)[:-len("_drv.so")])
+    return sorted(found)
+
+
+def other_server_drivers(root, roots=None):
+    """Video drivers installed for a different X server (another module folder): {name: folder}."""
+    out = {}
+    mine = set(installed_drivers(root))
+    for base in roots or MODULE_ROOTS:
+        for folder in [base] + sorted(glob.glob(os.path.join(base, "*"))):
+            if os.path.normpath(folder) == os.path.normpath(root) or not os.path.isdir(os.path.join(folder, "drivers")):
+                continue
+            for name in installed_drivers(folder):
+                if name not in mine:
+                    out.setdefault(name, folder)
+    return out
+
+
+def choices(kdriver, installed):
+    """The X drivers that can run a GPU with this kernel driver, of the installed ones."""
+    out = [d for d in installed if d == "modesetting" or kdriver in SUITS.get(d, ())]
+    return sorted(out, key=lambda d: (d != "modesetting", d))
+
+
+def remembered():
+    from . import config
+    data = config.load().get("xserver") or {}
+    by = data.get("by_driver") if isinstance(data.get("by_driver"), dict) else {}
+    return {xd: {kd: dict(o) for kd, o in v.items() if isinstance(o, dict)}
+            for xd, v in by.items() if isinstance(v, dict)}
+
+
+def remember(xdriver, drivers):
+    """Keep these options for that X driver, to bring back when switching back to it."""
+    from . import config
+    data = config.load()
+    xs = data.get("xserver") if isinstance(data.get("xserver"), dict) else {}
+    by = xs.get("by_driver") if isinstance(xs.get("by_driver"), dict) else {}
+    by[xdriver] = drivers
+    xs["by_driver"] = by
+    data["xserver"] = xs
+    config.save(data)

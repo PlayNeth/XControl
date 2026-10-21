@@ -178,6 +178,7 @@ class XServerTab(Gtk.Box):
     def reload(self):
         self.info = X.read_log()
         self.ours, self.server_ours, self.ours_for = X.read_ours()
+        self.picks = X.read_picks()
         self.others, self.flag_files = X.elsewhere()
         self.kdrivers = X.kernel_drivers()
         self._fill_head()
@@ -324,6 +325,7 @@ class XServerTab(Gtk.Box):
         rows = [(_("Video driver"), ", ".join(m.name for m in vids) or "—"),
                 (_("GPUs"), ", ".join(f"{card} ({kd})" for card, kd in self.kdrivers.items()) or "—")]
         self.details.pack_start(self._grid(rows), False, False, 0)
+        self._driver_choice()
         flags = X.server_flags()
         head = Gtk.Box(spacing=8)
         head.pack_start(_heading(_("Server-wide options")), False, False, 0)
@@ -343,6 +345,90 @@ class XServerTab(Gtk.Box):
         other = self._set_elsewhere(lambda s: s.lower() == "serverflags")
         if other:
             self.details.pack_start(other, False, False, 0)
+
+    def _gpus(self):
+        """The GPUs' kernel drivers X could drive (not firmware framebuffers)."""
+        return sorted({kd for kd in self.kdrivers.values() if kd not in ("simpledrm", "efifb", "vgem", "vkms")})
+
+    def _auto(self, kd, installed):
+        """What X picks by itself: a vendor driver's package adds a rule for its GPUs; else modesetting."""
+        vendor = [d for d in X.choices(kd, installed) if d != "modesetting"]
+        return vendor[0] if vendor else "modesetting"
+
+    def _driver_choice(self):
+        root = X.module_root(self.info)
+        installed = X.installed_drivers(root) if root else []
+        gpus = self._gpus()
+        if not gpus or not installed:
+            return
+        self.details.pack_start(_heading(_("Video driver")), False, False, 0)
+        grid = Gtk.Grid(column_spacing=10, row_spacing=6)
+        in_use = {self.kdrivers.get(c): m.name for m in X.video_drivers(self.info)
+                  for c in self.info.cards.get(m.name, ())}
+        for r, kd in enumerate(gpus):
+            lbl = Gtk.Label(label=_("GPU with {driver}").format(driver=kd), xalign=0)
+            combo = Gtk.ComboBoxText(hexpand=True)
+            combo.append("", _("Automatic ({driver})").format(driver=self._auto(kd, installed)))
+            for d in X.choices(kd, installed):
+                combo.append(d, d)
+            combo.set_active_id(self.picks.get(kd, ""))
+            if combo.get_active() < 0:
+                combo.set_active_id("")
+            apply = Gtk.Button(label=_("Switch…"))
+            apply.set_sensitive(False)
+            combo.connect("changed", lambda c, b=apply, k=kd: b.set_sensitive((c.get_active_id() or "") !=
+                                                                              self.picks.get(k, "")))
+            apply.connect("clicked", lambda _b, c=combo, k=kd: self._switch(k, c.get_active_id() or "",
+                                                                            installed))
+            grid.attach(lbl, 0, r, 1, 1)
+            grid.attach(combo, 1, r, 1, 1)
+            grid.attach(apply, 2, r, 1, 1)
+            now = in_use.get(kd)
+            if now:
+                grid.attach(_dim(_("now: {driver}").format(driver=now)), 3, r, 1, 1)
+        self.details.pack_start(grid, False, False, 0)
+        notes = [_("Only drivers built for this X server (in {folder}) are offered; modesetting is part of the "
+                   "server and always there.").format(folder=root)]
+        others = {n: f for n, f in X.other_server_drivers(root).items()
+                  if any(n in X.SUITS and kd in X.SUITS[n] for kd in gpus)}
+        for name, folder in sorted(others.items()):
+            note = _("The {driver} driver is installed for another X server ({folder}), so this one can't load "
+                     "it; install its build for {server}.")
+            notes.append(note.format(driver=name, folder=folder, server=self.info.server or "X"))
+        for n in notes:
+            self.details.pack_start(_dim(n), False, False, 0)
+
+    def _switch(self, kd, xd, installed):
+        old = self.picks.get(kd) or self._in_use_for(kd) or self._auto(kd, installed)
+        new = xd or self._auto(kd, installed)
+        md = Gtk.MessageDialog(transient_for=self.window, modal=True, message_type=Gtk.MessageType.QUESTION,
+                               buttons=Gtk.ButtonsType.OK_CANCEL,
+                               text=_("Use {new} instead of {old}?").format(new=new, old=old))
+        md.format_secondary_text(_(
+            "It takes effect the next time X starts (log out and back in). The outputs get other names "
+            "(DP-1 with modesetting is DisplayPort-0 with amdgpu); XControl moves your saved display settings "
+            "over. Options you set for {old} are kept for when you switch back. If X won't start, undo it from "
+            "a text console (Ctrl+Alt+F3): sudo rm {file}").format(old=old, file=X.our_path()))
+        ok = md.run() == Gtk.ResponseType.OK
+        md.destroy()
+        if not ok:
+            return
+        X.remember(old, {kd: dict(self.ours.get(kd, {}))})
+        mine = X.remembered().get(new, {})
+        drivers = dict(self.ours)
+        drivers[kd] = dict(mine.get(kd, {}))
+        picks = dict(self.picks)
+        if xd:
+            picks[kd] = xd
+        else:
+            picks.pop(kd, None)
+        self._save(drivers, self.server_ours, new, picks)
+
+    def _in_use_for(self, kd):
+        for m in X.video_drivers(self.info):
+            if any(self.kdrivers.get(c) == kd for c in self.info.cards.get(m.name, ())):
+                return m.name
+        return ""
 
     def _show_module(self, m):
         if not m:
@@ -435,9 +521,11 @@ class XServerTab(Gtk.Box):
         self._save(self.ours, new, self.ours_for if self.ours_for not in ("", "-") else
                    (vids[0].name if vids else ""))
 
-    def _save(self, drivers, server, xdriver):
+    def _save(self, drivers, server, xdriver, picks=None):
+        picks = self.picks if picks is None else picks
+
         def work():
-            ok, msg = X.save(drivers, server, xdriver)
+            ok, msg = X.save(drivers, server, xdriver, picks)
             GLib.idle_add(done, ok, msg)
 
         def done(ok, msg):

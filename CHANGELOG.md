@@ -2,6 +2,19 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.0 (2026-10-20)
+
+**Add choosing the X video driver per GPU**
+
+- Add a video driver choice per GPU on the X server tab: Automatic (what X picks by itself) or
+  any installed driver that suits it, such as modesetting or amdgpu
+- Offer only drivers built for the running X server (XLibre's own module folder), and say when
+  a driver is installed only for the other server
+- Show which driver each GPU uses now, and confirm before switching, explaining that outputs
+  get new names and how to undo it from a text console
+- Remember each X driver's options when switching away and bring them back when switching back
+- Make the root helper write the Driver line and refuse a driver that isn't installed
+
 ## 0.27.1 (2026-10-20)
 
 **Fix reading XLibre's log on the X server tab**

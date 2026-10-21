@@ -6,6 +6,8 @@ import subprocess
 import sys
 import tempfile
 
+os.environ["XDG_CONFIG_HOME"] = tempfile.mkdtemp()
+
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(here, ".."))
 from xcontrol import xserver as X  # noqa: E402
@@ -159,6 +161,43 @@ for bad_args in (({"amdgpu": {"X": "a b"}}, {}), ({"amd gpu": {"X": "1"}}, {}), 
         expect(f"refused before pkexec {bad_args}", False, True)
     except ValueError:
         pass
+
+# choosing the X driver: what's installed for this server, what suits the GPU, the Driver line
+mods = tempfile.mkdtemp()
+for folder, names in (("xlibre-25", ("modesetting", "amdgpu", "fbdev")), ("", ("amdgpu", "intel"))):
+    d = os.path.join(mods, folder, "drivers")
+    os.makedirs(d, exist_ok=True)
+    for n in names:
+        open(os.path.join(d, f"{n}_drv.so"), "w").close()
+xl = X.parse_log(f"XLibre X Server 1.25.1.9\n(II) LoadModule: \"modesetting\"\n"
+                 f"(II) Loading {mods}/xlibre-25/drivers/modesetting_drv.so\n")
+root = X.module_root(xl)
+expect("the server's module folder", root, os.path.join(mods, "xlibre-25"))
+expect("installed for it", X.installed_drivers(root), ["amdgpu", "fbdev", "modesetting"])
+expect("for another server", X.other_server_drivers(root, [mods]), {"intel": mods})
+expect("suits an amdgpu GPU", X.choices("amdgpu", X.installed_drivers(root)), ["modesetting", "amdgpu"])
+expect("suits an i915 GPU", X.choices("i915", ["amdgpu", "intel", "modesetting"]), ["modesetting", "intel"])
+text = X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"})
+expect("Driver line", 'MatchDriver "amdgpu"\n    Driver "amdgpu"\n    Option "TearFree" "true"' in text, True)
+alone = X.file_text({}, {}, "", {"amdgpu": "modesetting"})
+expect("a pick alone still writes a section", 'Driver "modesetting"' in alone, True)
+X.remember("modesetting", {"amdgpu": {"Atomic": "true"}})
+X.remember("amdgpu", {"amdgpu": {"TearFree": "true"}})
+expect("options remembered per X driver", X.remembered(),
+       {"modesetting": {"amdgpu": {"Atomic": "true"}}, "amdgpu": {"amdgpu": {"TearFree": "true"}}})
+if prefix is not None:
+    env["XCONTROL_XMODULES"] = mods
+    for root_dir, dirs, files in os.walk(mods):
+        os.chmod(root_dir, 0o755)
+    res = run(*X.helper_args({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu", {"amdgpu": "amdgpu"}))
+    expect("pick written", res.returncode, 0)
+    with open(os.path.join(conf, X.OUR_FILE)) as f:
+        expect("as XControl expects", f.read(), X.file_text({"amdgpu": {"TearFree": "true"}}, {}, "amdgpu",
+                                                            {"amdgpu": "amdgpu"}))
+    expect("read back", X.read_picks(conf), {"amdgpu": "amdgpu"})
+    expect("a driver that isn't installed is refused", run("write", "x", "pick:amdgpu:nouveau").returncode != 0, True)
+    expect("bad names refused", run("write", "x", "pick:amdgpu:../evil").returncode != 0, True)
+    run("write", "modesetting")
 
 # other files' options, and a ServerFlags section of their own
 other = os.path.join(conf, "20-mine.conf")

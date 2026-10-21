@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xcontrol 0.27.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 20:55-0300\n"
+"POT-Creation-Date: 2026-10-20 20:59-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -962,7 +962,7 @@ msgstr ""
 msgid "Share / Create"
 msgstr ""
 
-#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:382
+#: xcontrol/controllers_page.py:17 xcontrol/xserver_page.py:468
 msgid "Options"
 msgstr ""
 
@@ -3455,7 +3455,7 @@ msgid "Add…"
 msgstr ""
 
 #: xcontrol/i3_page.py:357 xcontrol/system_page.py:344
-#: xcontrol/xserver_page.py:331 xcontrol/xserver_page.py:384
+#: xcontrol/xserver_page.py:333 xcontrol/xserver_page.py:470
 msgid "Change…"
 msgstr ""
 
@@ -4281,7 +4281,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/module_params_dialog.py:53 xcontrol/xserver_page.py:64
-#: xcontrol/xserver_page.py:280
+#: xcontrol/xserver_page.py:281
 msgid "default"
 msgstr ""
 
@@ -4342,7 +4342,7 @@ msgstr ""
 msgid "Rebuilding the initramfs, this takes a minute…"
 msgstr ""
 
-#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:450
+#: xcontrol/module_params_dialog.py:168 xcontrol/xserver_page.py:538
 msgid "Saving…"
 msgstr ""
 
@@ -6594,7 +6594,7 @@ msgstr ""
 msgid "removable"
 msgstr ""
 
-#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:365
+#: xcontrol/sysinfo.py:890 xcontrol/xserver_page.py:451
 msgid "Drives"
 msgstr ""
 
@@ -6693,11 +6693,11 @@ msgstr ""
 msgid "Select a module to see what it drives and its parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:356
+#: xcontrol/system_page.py:322 xcontrol/xserver_page.py:442
 msgid "File"
 msgstr ""
 
-#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:358
+#: xcontrol/system_page.py:324 xcontrol/xserver_page.py:444
 msgid "Version"
 msgstr ""
 
@@ -7144,7 +7144,8 @@ msgstr ""
 msgid "No X11 display found (DISPLAY is not set)."
 msgstr ""
 
-#: xcontrol/xserver_page.py:12 xcontrol/xserver_page.py:324
+#: xcontrol/xserver_page.py:12 xcontrol/xserver_page.py:325
+#: xcontrol/xserver_page.py:364
 msgid "Video driver"
 msgstr ""
 
@@ -7182,26 +7183,26 @@ msgid ""
 "quotes): {items}"
 msgstr ""
 
-#: xcontrol/xserver_page.py:192
+#: xcontrol/xserver_page.py:193
 msgid "Video driver, in use"
 msgstr ""
 
-#: xcontrol/xserver_page.py:192
+#: xcontrol/xserver_page.py:193
 msgid "Video driver, not used"
 msgstr ""
 
-#: xcontrol/xserver_page.py:208
+#: xcontrol/xserver_page.py:209
 msgid ""
 "No X server log found for this display, so XControl can't tell what X "
 "loaded. (Is this an X session?)"
 msgstr ""
 
-#: xcontrol/xserver_page.py:215
+#: xcontrol/xserver_page.py:216
 #, python-brace-format
 msgid "From its log: {path}"
 msgstr ""
 
-#: xcontrol/xserver_page.py:218
+#: xcontrol/xserver_page.py:219
 #, python-brace-format
 msgid ""
 "XControl's options are in {file}. They take effect the next time X starts. "
@@ -7209,119 +7210,167 @@ msgid ""
 "{file}"
 msgstr ""
 
-#: xcontrol/xserver_page.py:223
+#: xcontrol/xserver_page.py:224
 #, python-brace-format
 msgid ""
 "They were chosen for the {old} X driver, but X now runs {new}; options {new} "
 "doesn't know are ignored."
 msgstr ""
 
-#: xcontrol/xserver_page.py:229
+#: xcontrol/xserver_page.py:230
 #, python-brace-format
 msgid "X ignored these options of XControl's at its last start: {names}"
 msgstr ""
 
-#: xcontrol/xserver_page.py:298
+#: xcontrol/xserver_page.py:299
 msgid "Also set in other files"
 msgstr ""
 
-#: xcontrol/xserver_page.py:310
+#: xcontrol/xserver_page.py:311
 msgid "Select the server or a module."
 msgstr ""
 
-#: xcontrol/xserver_page.py:325
+#: xcontrol/xserver_page.py:326
 msgid "GPUs"
 msgstr ""
 
-#: xcontrol/xserver_page.py:329 xcontrol/xserver_page.py:431
+#: xcontrol/xserver_page.py:331 xcontrol/xserver_page.py:517
 msgid "Server-wide options"
 msgstr ""
 
-#: xcontrol/xserver_page.py:336
+#: xcontrol/xserver_page.py:338
 #, python-brace-format
 msgid ""
 "{files} has its own ServerFlags section; X may use that one instead of "
 "XControl's."
 msgstr ""
 
-#: xcontrol/xserver_page.py:341
+#: xcontrol/xserver_page.py:343
 msgid ""
 "xorg.conf's manual isn't installed, so the options can't be listed (it comes "
 "with the X server's package)."
 msgstr ""
 
-#: xcontrol/xserver_page.py:360
+#: xcontrol/xserver_page.py:369
+#, python-brace-format
+msgid "GPU with {driver}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:371
+#, python-brace-format
+msgid "Automatic ({driver})"
+msgstr ""
+
+#: xcontrol/xserver_page.py:377
+msgid "Switch…"
+msgstr ""
+
+#: xcontrol/xserver_page.py:388
+#, python-brace-format
+msgid "now: {driver}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:390
+#, python-brace-format
+msgid ""
+"Only drivers built for this X server (in {folder}) are offered; modesetting "
+"is part of the server and always there."
+msgstr ""
+
+#: xcontrol/xserver_page.py:395
+#, python-brace-format
+msgid ""
+"The {driver} driver is installed for another X server ({folder}), so this "
+"one can't load it; install its build for {server}."
+msgstr ""
+
+#: xcontrol/xserver_page.py:406
+#, python-brace-format
+msgid "Use {new} instead of {old}?"
+msgstr ""
+
+#: xcontrol/xserver_page.py:408
+#, python-brace-format
+msgid ""
+"It takes effect the next time X starts (log out and back in). The outputs "
+"get other names (DP-1 with modesetting is DisplayPort-0 with amdgpu); "
+"XControl moves your saved display settings over. Options you set for {old} "
+"are kept for when you switch back. If X won't start, undo it from a text "
+"console (Ctrl+Alt+F3): sudo rm {file}"
+msgstr ""
+
+#: xcontrol/xserver_page.py:446
 msgid "ABI"
 msgstr ""
 
-#: xcontrol/xserver_page.py:366
+#: xcontrol/xserver_page.py:452
 #, python-brace-format
 msgid "screen {n}"
 msgstr ""
 
-#: xcontrol/xserver_page.py:369 xcontrol/xserver_page.py:372
+#: xcontrol/xserver_page.py:455 xcontrol/xserver_page.py:458
 msgid "State"
 msgstr ""
 
-#: xcontrol/xserver_page.py:369
+#: xcontrol/xserver_page.py:455
 msgid "Loaded, then let go: it didn't find hardware of its own"
 msgstr ""
 
-#: xcontrol/xserver_page.py:370
+#: xcontrol/xserver_page.py:456
 msgid "Loaded, but drives no screen"
 msgstr ""
 
-#: xcontrol/xserver_page.py:372
+#: xcontrol/xserver_page.py:458
 msgid "Loaded, then let go"
 msgstr ""
 
-#: xcontrol/xserver_page.py:376
+#: xcontrol/xserver_page.py:462
 msgid "Input devices' settings are on the Input page."
 msgstr ""
 
-#: xcontrol/xserver_page.py:385
+#: xcontrol/xserver_page.py:471
 msgid "Saved for the next time X starts (needs your password)"
 msgstr ""
 
-#: xcontrol/xserver_page.py:392
+#: xcontrol/xserver_page.py:478
 #, python-brace-format
 msgid ""
 "{driver}'s manual isn't installed, so its options can't be listed. Other "
 "options can still be set by name."
 msgstr ""
 
-#: xcontrol/xserver_page.py:408
+#: xcontrol/xserver_page.py:494
 msgid "No GPU found"
 msgstr ""
 
-#: xcontrol/xserver_page.py:408
+#: xcontrol/xserver_page.py:494
 msgid "XControl couldn't tell which GPU's driver to set options for."
 msgstr ""
 
-#: xcontrol/xserver_page.py:415
+#: xcontrol/xserver_page.py:501
 #, python-brace-format
 msgid ""
 "For the {driver} X driver on {gpus}. Saved in {file}; they take effect the "
 "next time X starts (log out and back in, or restart your login screen)."
 msgstr ""
 
-#: xcontrol/xserver_page.py:418
+#: xcontrol/xserver_page.py:504
 #, python-brace-format
 msgid "{driver} options"
 msgstr ""
 
-#: xcontrol/xserver_page.py:429
+#: xcontrol/xserver_page.py:515
 #, python-brace-format
 msgid ""
 "For the whole X server. Saved in {file}; they take effect the next time X "
 "starts."
 msgstr ""
 
-#: xcontrol/xserver_page.py:445
+#: xcontrol/xserver_page.py:533
 msgid "Saved; X uses it the next time it starts"
 msgstr ""
 
-#: xcontrol/xserver_page.py:448
+#: xcontrol/xserver_page.py:536
 msgid "Could not save the X options"
 msgstr ""
 

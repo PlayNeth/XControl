@@ -117,6 +117,10 @@ def load():
     co = raw.get("controllers")
     if isinstance(co, dict):
         data["controllers"] = co
+    # xserver: X options remembered per X driver, for switching drivers (xserver.py)
+    xs = raw.get("xserver")
+    if isinstance(xs, dict):
+        data["xserver"] = xs
     # small interface preferences, e.g. {"preview": false}
     ui = raw.get("ui")
     if isinstance(ui, dict):

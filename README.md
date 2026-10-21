@@ -799,6 +799,18 @@ applies to whichever X driver runs that GPU without touching your own Device sec
 server-wide ones in a `ServerFlags` section. `AutoAddDevices` and `AutoEnableDevices` aren't
 offered (they can leave X without a keyboard and mouse).
 
+**Choosing the video driver**: for each GPU, Automatic (what X picks by itself: a vendor
+driver's package adds a rule for its GPUs, otherwise modesetting) or any installed X driver
+that suits it (modesetting always; amdgpu, ati, intel, nouveau or nvidia for their own GPUs).
+Only drivers built for the running server are offered: the ones in the module folder it loads
+from (XLibre uses `/usr/lib/xorg/modules/xlibre-25`), since a driver built for another X server
+won't load; the tab says when one is installed for the other server. The choice is a `Driver`
+line in the same `OutputClass` section, and the helper refuses a driver whose module isn't
+installed. Each X driver keeps its own options: switching away remembers them and switching
+back brings them back. The outputs get other names with the other driver (`DP-1` with
+modesetting is `DisplayPort-0` with amdgpu); saved display settings move over (see Switching X
+drivers).
+
 They take effect the next time X starts. If X ever won't start, undo everything from a text
 console: `sudo rm /etc/X11/xorg.conf.d/30-xcontrol.conf`. After each start, the tab (and the
 session check) says which of XControl's options X ignored, and warns when they were chosen for
