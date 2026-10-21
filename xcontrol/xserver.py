@@ -394,14 +394,19 @@ def driver_file_text(picks, gpu_list):
     return "\n".join(lines) + "\n"
 
 
-def file_text(drivers, server, xdriver=""):
-    """What XControl's file would hold (the helper writes the same)."""
+def file_text(drivers, server, xdriver="", modulepath_fix=False):
+    """What XControl's file would hold (the helper writes the same). `modulepath_fix`: give each
+    OutputClass an empty ModulePath, for XLibre 25.1, which crashes on an OutputClass with neither
+    Driver, Modules nor ModulePath (it reads cl->modulepath without checking it); "" just keeps
+    the standard module path."""
     lines = ["# Written by XControl (System > X server). Delete this file to undo everything here.",
              f"# for the X driver: {xdriver or '-'}"]
     for kd in sorted(drivers):
         if not drivers.get(kd):
             continue
         lines += ["", 'Section "OutputClass"', f'    Identifier "XControl: {kd}"', f'    MatchDriver "{kd}"']
+        if modulepath_fix:
+            lines.append('    ModulePath ""')
         lines += [f'    Option "{k}" "{v}"' for k, v in drivers.get(kd, {}).items()]
         lines.append("EndSection")
     if server:
@@ -410,9 +415,14 @@ def file_text(drivers, server, xdriver=""):
     return "\n".join(lines) + "\n"
 
 
-def helper_args(drivers, server, xdriver="", picks=None, gpu_list=None):
+def needs_modulepath_fix(info):
+    """XLibre before its fix (25.x) crashes on an OutputClass without Driver/Modules/ModulePath."""
+    return bool(info and info.server == "XLibre")
+
+
+def helper_args(drivers, server, xdriver="", picks=None, gpu_list=None, modulepath_fix=False):
     """The root helper's arguments; ValueError for anything it would refuse."""
-    args = ["write", xdriver or "-"]
+    args = ["write", xdriver or "-"] + (["fix:modulepath"] if modulepath_fix else [])
     if xdriver and not KDRIVER.match(xdriver):
         raise ValueError(xdriver)
     for _card, kd, bus in gpu_list or []:
@@ -440,10 +450,13 @@ def can_save():
     return bool(shutil.which("pkexec")) and os.path.exists(HELPER)
 
 
-def save(drivers, server, xdriver="", picks=None, gpu_list=None):
+def save(drivers, server, xdriver="", picks=None, gpu_list=None, modulepath_fix=None):
     """(ok, message): XControl's X options, through the root helper (asks for the password)."""
+    if modulepath_fix is None:
+        modulepath_fix = needs_modulepath_fix(read_log())
     try:
-        args = helper_args(drivers, server, xdriver, picks, gpus() if gpu_list is None else gpu_list)
+        args = helper_args(drivers, server, xdriver, picks, gpus() if gpu_list is None else gpu_list,
+                           modulepath_fix)
     except ValueError as e:
         return False, f"not allowed: {e}"
     try:

@@ -2,6 +2,16 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.28.6 (2026-10-20)
+
+**Fix XLibre crashing at start with XControl's X options**
+
+- Fix XLibre 25.1 crashing at start when XControl had saved any X driver options: XLibre crashes
+  on an OutputClass section without Driver, Modules or ModulePath, so on XLibre each of
+  XControl's sections now gets an empty ModulePath, which keeps the standard module path
+- Correct the X server tab's explanation of why XControl doesn't add a second Device section
+- Add a test for the XLibre workaround
+
 ## 0.28.5 (2026-10-20)
 
 **Re-enable X driver choice unless the config has its own Device section**

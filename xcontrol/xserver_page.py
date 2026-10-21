@@ -368,9 +368,9 @@ class XServerTab(Gtk.Box):
         grid = Gtk.Grid(column_spacing=10, row_spacing=6)
         in_use = {self.kdrivers.get(c): m.name for m in X.video_drivers(self.info)
                   for c in self.info.cards.get(m.name, ())}
-        # A second Device section becomes a second GPU device of the screen (xf86Config.c): with one
-        # GPU, X then crashes in its bus probe (seen on XLibre 25.1.9). So when the config already
-        # has a Device section, XControl doesn't add its own: the Driver line in that one decides.
+        # A second Device section becomes a second GPU device of the screen (xf86Config.c), so when
+        # the config already has a Device section, XControl doesn't add its own: that one's Driver
+        # line decides.
         others, _screens = X.device_sections()
         blocked = bool(others)
         for r, kd in enumerate(gpus):
@@ -402,7 +402,7 @@ class XServerTab(Gtk.Box):
             path, ident, drv = others[0]
             self.details.pack_start(_dim(_(
                 "Your config already has a Device section (\"{name}\" in {file}), so XControl doesn't add one: "
-                "two Device sections for one GPU make X treat it as two, and X can crash. Its Driver line "
+                "with two Device sections X takes the second for another GPU. Its Driver line "
                 "decides: now {driver}. To switch, change that line (sudoedit {file}) to one of the drivers "
                 "listed below, then log out and back in.").format(name=ident, file=path,
                                                                   driver=drv or _("none: X picks"))),
@@ -459,7 +459,8 @@ class XServerTab(Gtk.Box):
     def _switch(self, kd, xd, installed):
         if xd and X.device_sections()[0]:     # (checked again: the files may have changed meanwhile)
             self.window.message(_("Your config has a Device section of its own"),
-                                _("Change the Driver line there instead; a second Device section can crash X."))
+                                _("Change the Driver line there instead; X would take a second Device section "
+                                  "for another GPU."))
             self.reload()
             return
         old = self.picks.get(kd) or self._in_use_for(kd) or self._auto(kd, installed)
@@ -588,7 +589,7 @@ class XServerTab(Gtk.Box):
         picks = self.picks if picks is None else picks
 
         def work():
-            ok, msg = X.save(drivers, server, xdriver, picks, X.gpus())
+            ok, msg = X.save(drivers, server, xdriver, picks, X.gpus(), X.needs_modulepath_fix(self.info))
             GLib.idle_add(done, ok, msg)
 
         def done(ok, msg):

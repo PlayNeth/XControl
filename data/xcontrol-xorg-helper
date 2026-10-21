@@ -13,6 +13,8 @@
 #     Removed when nothing is picked. The X driver must be installed (its *_drv.so in an X
 #     module folder), or it's refused. Only these two files are ever touched.
 #     XDRIVER is the X driver the options were chosen for (a comment, so XControl can tell).
+#     fix:modulepath gives each OutputClass an empty ModulePath: XLibre 25.1 crashes on an
+#     OutputClass with neither Driver, Modules nor ModulePath; "" keeps the standard path.
 #
 # Names and values are validated strictly: letters, digits and _ for names; values may also
 # have . , : + - and nothing else (no spaces, quotes or shell characters).
@@ -64,8 +66,10 @@ check_opt() {   # NAME=VALUE
 drivers=""
 npicks=0
 nopts=0
+mpfix=0
 for a in "$@"; do
     case $a in
+        fix:modulepath) mpfix=1;;
         pick:*:*:*)
             rest=${a#pick:}
             kd=${rest%%:*}; rest=${rest#*:}
@@ -140,6 +144,7 @@ tmp=$FILE.tmp
         echo 'Section "OutputClass"'
         echo "    Identifier \"XControl: $kd\""
         echo "    MatchDriver \"$kd\""
+        [ $mpfix = 0 ] || echo '    ModulePath ""'
         for a in "$@"; do
             case $a in
                 drv:"$kd":*) o=${a#drv:"$kd":}; echo "    Option \"${o%%=*}\" \"${o#*=}\"";;

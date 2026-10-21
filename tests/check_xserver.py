@@ -248,6 +248,14 @@ if prefix is not None:
     for bad_pick in ("pick:amdgpu:radeon:PCI:48:0:0", "pick:amdgpu:../evil:-", "pick:amdgpu:modesetting:PCI:1;2",
                      "pick:amdgpu:modesetting:48:0:0", "pick:amdgpu:modesetting"):
         expect(f"refused {bad_pick}", run("write", "x", bad_pick).returncode != 0, True)
+    res = run(*X.helper_args({"amdgpu": {"Atomic": "true"}}, {}, "modesetting", modulepath_fix=True))
+    with open(os.path.join(conf, X.OUR_FILE)) as f:
+        written = f.read()
+    expect("XLibre's fix: an empty ModulePath in each OutputClass",
+           (res.returncode, written, 'ModulePath ""' in written),
+           (0, X.file_text({"amdgpu": {"Atomic": "true"}}, {}, "modesetting", modulepath_fix=True), True))
+    xorg = X.parse_log("X.Org X Server 1.21.1.18\n")
+    expect("only for XLibre", (X.needs_modulepath_fix(xi), X.needs_modulepath_fix(xorg)), (True, False))
     run("write", "modesetting")
     expect("both gone", (os.path.exists(os.path.join(conf, X.OUR_FILE)),
                          os.path.exists(os.path.join(conf, X.DRIVER_FILE))), (False, False))
