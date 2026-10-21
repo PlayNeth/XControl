@@ -4,6 +4,7 @@ LIBDIR    ?= $(PREFIX)/lib/xcontrol
 DATADIR   ?= $(PREFIX)/share/xcontrol
 LOCALEDIR ?= $(PREFIX)/share/locale
 LAYERDIR  ?= $(PREFIX)/share/vulkan/implicit_layer.d
+DOCDIR    ?= $(PREFIX)/share/doc/xcontrol
 BUILDDIR  ?= build
 PYTHON    ?= python3
 
@@ -85,6 +86,8 @@ install: all
 		install -Dm644 $(BUILDDIR)/locale/$$l/LC_MESSAGES/xcontrol.mo \
 			$(DESTDIR)$(LOCALEDIR)/$$l/LC_MESSAGES/xcontrol.mo; \
 	done
+	install -Dm644 -t $(DESTDIR)$(DOCDIR) README.md CHANGELOG.md
+	install -Dm644 -t $(DESTDIR)$(DOCDIR)/docs docs/*.md
 
 check:
 	$(PYTHON) tests/check_gettext.py
