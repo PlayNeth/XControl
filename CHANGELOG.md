@@ -2,6 +2,14 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.29.1 (2026-10-27)
+
+**Leave out the XLibre ModulePath workaround from 25.1.10 on**
+
+- Write the empty `ModulePath ""` line in XControl's X options only for XLibre before
+  25.1.10, which fixed the crash on an OutputClass without Driver, Modules or ModulePath
+- Keep the line when the XLibre version can't be read, since it does no harm
+
 ## 0.29.0 (2026-10-21)
 
 **Fix about 70 bugs from a code review and drop mesa-panel compatibility**

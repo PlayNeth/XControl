@@ -418,9 +418,20 @@ def file_text(drivers, server, xdriver="", modulepath_fix=False):
     return "\n".join(lines) + "\n"
 
 
+MODULEPATH_FIXED = (25, 1, 10)   # XLibre 25.1.10 (and its development code) no longer crash
+
+
 def needs_modulepath_fix(info):
-    """XLibre before its fix (25.x) crashes on an OutputClass without Driver/Modules/ModulePath."""
-    return bool(info and info.server == "XLibre")
+    """XLibre before 25.1.10 crashes on an OutputClass without Driver/Modules/ModulePath."""
+    if not (info and info.server == "XLibre"):
+        return False
+    try:
+        v = tuple(int(x) for x in info.version.split("."))
+    except ValueError:
+        return True       # (version unknown: keep the workaround, it's harmless)
+    if len(v) == 4 and v[0] == 1:
+        v = v[1:]         # XLibre logs "1.25.1.9" for 25.1.9 (older ones "25.0.0.14")
+    return v < MODULEPATH_FIXED
 
 
 def helper_args(drivers, server, xdriver="", picks=None, gpu_list=None, modulepath_fix=False):

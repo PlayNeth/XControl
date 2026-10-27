@@ -42,10 +42,11 @@ XControl doesn't add one (X makes every Device section after the first an extra 
 the screen): the tab names that section's file and its Driver line, which is what decides, and
 shows the drivers to put there.
 
-XLibre 25.1 (25.1.9 at least) crashes at start on an OutputClass section that has neither
-`Driver`, `Modules` nor `ModulePath` (its bus probe reads the missing ModulePath; fixed in its
-development code). XControl's options are exactly such a section, so on XLibre it adds an
-empty `ModulePath ""`, which only keeps the standard module path. Each X driver keeps its own options: switching away remembers them and switching
+XLibre before 25.1.10 crashes at start on an OutputClass section that has neither `Driver`,
+`Modules` nor `ModulePath` (its bus probe reads the missing ModulePath; fixed in 25.1.10).
+XControl's options are exactly such a section, so on those versions it adds an empty
+`ModulePath ""`, which only keeps the standard module path. From 25.1.10 on it's left out;
+a file saved earlier keeps the line until the next save, which does no harm. Each X driver keeps its own options: switching away remembers them and switching
 back brings them back. The outputs get other names with the other driver (`DP-1` with
 modesetting is `DisplayPort-0` with amdgpu); saved display settings move over (see [Switching X
 drivers](displays.md#switching-x-drivers)).
