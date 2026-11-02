@@ -29,7 +29,7 @@ One page per part of the app, in the order of the sidebar.
 - [Date & Language](date-and-language.md): time zone, clock, language and formats
 - [Power](power.md): idle sleep, power buttons and lid, power profile
 - [Users](users.md): accounts, groups, pictures
-- [System](system.md): system information, kernel modules, session check and backups
+- [System](system.md): system information, the boot splash (Plymouth), kernel modules, session check and backups
 - [X server](x-server.md): loaded modules, X options, choosing the video driver
 
 **Other**

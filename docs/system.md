@@ -17,6 +17,34 @@ hwdata.
 has **Copy in English** for bug reports). `xcontrol --sysinfo` prints the same text in a
 terminal (`--sysinfo --english` for English).
 
+## Boot splash
+
+System → **Boot splash** sets Plymouth's theme, the picture or animation shown while the
+computer starts. Every installed theme is shown with a picture: XControl ships pictures of
+Plymouth's ten built-in themes (made from Plymouth's own renderer, without a distribution
+logo; see `data/plymouth/README`), and themes you add show their own `preview.png` if they
+have one. **Preview** plays the selected theme for a few seconds in a window. That needs
+Plymouth's X11 renderer (`/usr/lib/plymouth/renderers/x11.so`) and your password, because
+Plymouth only runs as root; XControl refuses to start it unless your X display answers
+first, so Plymouth never tries to take over the graphics card while X runs.
+
+**Apply** writes `Theme=`, and the optional `ShowDelay=` (wait before showing it, so a fast
+boot doesn't flash the splash) and `DeviceScale=` (for high-DPI screens), in the `[Daemon]`
+section of `/etc/plymouth/plymouthd.conf`, keeping the rest of the file, then rebuilds the
+initramfs, which the theme is copied into. This goes through `xcontrol-plymouth-helper`
+(pkexec), which only accepts installed theme names and those two numbers.
+
+The splash also needs two things in your own files, which XControl checks and shows the
+exact line for, but doesn't edit:
+
+- the `plymouth` hook in `HOOKS` in `/etc/mkinitcpio.conf`, after `systemd` (or `udev`) and
+  `kms`, and before `sd-encrypt` / `encrypt` if the disk is encrypted. With Arch's default
+  list that's `HOOKS=(base systemd autodetect microcode modconf kms plymouth keyboard
+  sd-vconsole block filesystems fsck)`;
+- `splash` (and `quiet`, which hides the kernel's messages) on the kernel command line: with
+  systemd-boot, on the `options` line of your entry in `/boot/loader/entries/`; with a unified
+  kernel image, in `/etc/kernel/cmdline`; with GRUB, in `GRUB_CMDLINE_LINUX_DEFAULT`.
+
 ## Kernel modules
 
 The **Kernel modules** tab shows the kernel command line and every module that's loaded.

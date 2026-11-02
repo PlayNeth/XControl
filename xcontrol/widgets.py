@@ -8,7 +8,7 @@ you've clicked into them; otherwise the wheel scrolls the page.
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-from gi.repository import Gdk, Gtk  # noqa: E402
+from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
 _PROTECTED = "_xcontrol_scroll_guard"
 
@@ -79,15 +79,14 @@ def sideways(widget):
     return sw
 
 
-_FITTED = "_xcontrol_fitted"
+_FITTED = "_xcontrol_fitted"   # the box inside the scrolled window, once the content scrolls
+_CAPPED = "_xcontrol_capped"
 
 
 def fit_dialog(dialog):
     """Keep a dialog inside the monitor's work area (640x480 for old games): cap its size and,
-    when its content is still too big, let the content scroll while the buttons stay put."""
-    if getattr(dialog, _FITTED, False):
-        return
-    setattr(dialog, _FITTED, True)
+    when its content is too big, let the content scroll while the buttons stay put. Called
+    before each show, so it also catches content added after the dialog was first shown."""
     try:
         display = dialog.get_display()
         parent = dialog.get_transient_for()
@@ -97,37 +96,62 @@ def fit_dialog(dialog):
     except Exception:  # noqa: BLE001
         return
     max_w, max_h = area.width - 20, area.height - 20
-    min_size, _nat = dialog.get_preferred_size()
-    if min_size.width > max_w or min_size.height > max_h:
-        content = dialog.get_content_area()
-        inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=content.get_spacing())
-        buttons = dialog.get_action_area()     # (GTK 3 keeps the buttons inside the content area)
+    content = dialog.get_content_area()
+    buttons = dialog.get_action_area()     # (GTK 3 keeps the buttons inside the content area)
+    inner = getattr(dialog, _FITTED, None)
+    if inner is None:
+        min_size, _nat = dialog.get_preferred_size()
+        if min_size.width > max_w or min_size.height > max_h:
+            inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=content.get_spacing())
+            sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
+                                    vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True,
+                                    propagate_natural_width=True, propagate_natural_height=True)
+            sw.set_max_content_width(max_w - 30)
+            sw.set_max_content_height(max_h - 110)   # (room for the title bar and the buttons)
+            sw.add(inner)
+            sw.show_all()
+            content.pack_start(sw, True, True, 0)
+            content.reorder_child(sw, 0)
+            setattr(dialog, _FITTED, inner)
+    if inner is not None:
+        # what's in the content area besides the buttons goes in the scrolled box (also what
+        # the dialog's code packed there after it was fitted)
+        sw = inner.get_ancestor(Gtk.ScrolledWindow)
         for child in content.get_children():
-            if child is buttons:
+            if child is buttons or child is sw:
                 continue
-            expand, fill, padding, _pack = content.query_child_packing(child)
+            expand, fill, padding, pack = content.query_child_packing(child)
             content.remove(child)
-            inner.pack_start(child, expand, fill, padding)
-        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
-                                vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True,
-                                propagate_natural_width=True, propagate_natural_height=True)
-        sw.set_max_content_width(max_w - 30)
-        sw.set_max_content_height(max_h - 110)   # (room for the title bar and the buttons)
-        sw.add(inner)
-        content.pack_start(sw, True, True, 0)
-        sw.show_all()
+            (inner.pack_end if pack == Gtk.PackType.END else inner.pack_start)(child, expand, fill, padding)
+        if dialog.get_visible():                 # (shown already: let it grow to show what came in)
+            _min, nat = dialog.get_preferred_size()
+            w, h = dialog.get_size()
+            dialog.resize(min(max(w, nat.width), max_w), min(max(h, nat.height), max_h))
+    _cap(dialog, area)
+    if not getattr(dialog, _CAPPED, False):
+        # some dialogs (the file chooser) pick their own size when they're mapped
+        setattr(dialog, _CAPPED, True)
+        dialog.connect("map", lambda d: GLib.idle_add(_cap, d, area, True))
+
+
+def _cap(dialog, area, mapped=False):
+    max_w, max_h = area.width - 20, area.height - 20
     w, h = dialog.get_size()                     # (the default size before it's shown)
     if w > max_w or h > max_h:
-        dialog.set_default_size(min(w, max_w), min(h, max_h))
-        dialog.resize(min(w, max_w), min(h, max_h))
+        w, h = min(w, max_w), min(h, max_h)
+        dialog.set_default_size(w, h)
+        dialog.resize(w, h)
+        if mapped:                               # (placed for its old size: put it back on the screen)
+            dialog.move(area.x + (area.width - w) // 2, area.y + (area.height - h) // 2)
+    return False
 
 
 _hooked = False
 
 
 def fit_all_dialogs():
-    """Apply fit_dialog() to every dialog XControl shows (once per process). Wraps
-    Gtk.Dialog's show/show_all/run, which only XControl's own Python code calls."""
+    """Apply fit_dialog() to every dialog XControl shows (once per process), before it shows.
+    Wraps Gtk.Dialog's show/show_all/run, which only XControl's own Python code calls."""
     global _hooked
     if _hooked:
         return
@@ -135,12 +159,13 @@ def fit_all_dialogs():
     orig_show, orig_show_all, orig_run = Gtk.Dialog.show, Gtk.Dialog.show_all, Gtk.Dialog.run
 
     def show(self):
-        orig_show(self)
         fit_dialog(self)
+        orig_show(self)
 
     def show_all(self):
-        orig_show_all(self)
+        self.get_content_area().show_all()   # (sized with everything that's about to show)
         fit_dialog(self)
+        orig_show_all(self)
 
     def run(self):
         fit_dialog(self)

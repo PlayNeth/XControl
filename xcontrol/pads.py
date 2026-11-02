@@ -15,6 +15,7 @@ import subprocess
 import zlib
 from dataclasses import dataclass, field
 
+from . import pkexec
 from .paths import LIBDIR
 
 HELPER = os.path.join(LIBDIR, "xcontrol-controller-helper")
@@ -339,7 +340,7 @@ def set_usb_poll(ms):
         r = subprocess.run(["pkexec", HELPER, "usbpoll", str(int(ms))], capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.SubprocessError) as e:
         return False, str(e)
-    if r.returncode in (126, 127) and not r.stderr.strip():
+    if pkexec.cancelled(r):
         return False, ""
     return r.returncode == 0, (r.stderr or r.stdout).strip()[-400:]
 

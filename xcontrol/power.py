@@ -9,6 +9,7 @@ import gi
 gi.require_version("Gio", "2.0")
 from gi.repository import Gio, GLib  # noqa: E402
 
+from . import pkexec  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
 
 HELPER = os.path.join(LIBDIR, "xcontrol-power-helper")
@@ -98,7 +99,7 @@ def set_buttons(values):
         r = subprocess.run(["pkexec", HELPER, "logind", *args], capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.SubprocessError) as e:
         return False, str(e)
-    if r.returncode in (126, 127) and not r.stderr.strip():
+    if pkexec.cancelled(r):
         return False, ""
     return r.returncode == 0, (r.stderr or r.stdout).strip()[-400:]
 

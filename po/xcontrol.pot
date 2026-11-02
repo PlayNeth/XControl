@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcontrol 0.28.7\n"
+"Project-Id-Version: xcontrol 0.30.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 12:12-0300\n"
+"POT-Creation-Date: 2026-11-02 20:49-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,72 +18,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: xcontrol/app.py:56
+#: xcontrol/app.py:62
 msgid "Gaming"
 msgstr ""
 
-#: xcontrol/app.py:60
+#: xcontrol/app.py:66
 msgid "Controllers"
 msgstr ""
 
-#: xcontrol/app.py:64
+#: xcontrol/app.py:70
 msgid "Displays"
 msgstr ""
 
-#: xcontrol/app.py:68
+#: xcontrol/app.py:74
 msgid "Input"
 msgstr ""
 
-#: xcontrol/app.py:72
+#: xcontrol/app.py:78
 msgid "Appearance"
 msgstr ""
 
-#: xcontrol/app.py:76 xcontrol/notify_page.py:290
+#: xcontrol/app.py:82 xcontrol/notify_page.py:290
 msgid "Sound"
 msgstr ""
 
-#: xcontrol/app.py:80 xcontrol/sidebar.py:10
+#: xcontrol/app.py:86 xcontrol/sidebar.py:10
 msgid "Desktop"
 msgstr ""
 
-#: xcontrol/app.py:82
+#: xcontrol/app.py:88
 msgid "Bar & Compositor"
 msgstr ""
 
-#: xcontrol/app.py:85
+#: xcontrol/app.py:91
 msgid "Notifications"
 msgstr ""
 
-#: xcontrol/app.py:88
+#: xcontrol/app.py:94
 msgid "Default Apps"
 msgstr ""
 
-#: xcontrol/app.py:89
+#: xcontrol/app.py:95
 msgid "Window Manager (i3)"
 msgstr ""
 
-#: xcontrol/app.py:93
+#: xcontrol/app.py:99
 msgid "Date & Language"
 msgstr ""
 
-#: xcontrol/app.py:97
+#: xcontrol/app.py:103
 msgctxt "page"
 msgid "Power"
 msgstr ""
 
-#: xcontrol/app.py:101
+#: xcontrol/app.py:107
 msgid "Users"
 msgstr ""
 
-#: xcontrol/app.py:103 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:762
+#: xcontrol/app.py:109 xcontrol/sidebar.py:11 xcontrol/sysinfo.py:762
 msgid "System"
 msgstr ""
 
-#: xcontrol/app.py:142
+#: xcontrol/app.py:148
 msgid "Display details"
 msgstr ""
 
-#: xcontrol/app.py:143 xcontrol/appearance_page.py:416
+#: xcontrol/app.py:149 xcontrol/appearance_page.py:416
 #: xcontrol/edid_override_dialog.py:28 xcontrol/i3_page.py:872
 #: xcontrol/module_params_dialog.py:120 xcontrol/resolutions_dialog.py:68
 msgid "Close"
@@ -248,7 +248,7 @@ msgstr ""
 msgid "Open GTK 4 apps switch between light and dark when they restart."
 msgstr ""
 
-#: xcontrol/appearance_page.py:111
+#: xcontrol/appearance_page.py:111 xcontrol/plymouth_page.py:143
 msgid "Theme"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgstr ""
 msgid "{px} px"
 msgstr ""
 
-#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:213
+#: xcontrol/appearance_page.py:137 xcontrol/system_page.py:218
 msgid "Size"
 msgstr ""
 
@@ -358,7 +358,8 @@ msgstr ""
 #: xcontrol/appearance_page.py:203 xcontrol/audio_page.py:23
 #: xcontrol/bar_module_dialog.py:113 xcontrol/controllers_page.py:364
 #: xcontrol/display_page.py:266 xcontrol/input_page.py:212
-#: xcontrol/power_page.py:116 xcontrol/region_page.py:169
+#: xcontrol/plymouth_page.py:218 xcontrol/power_page.py:116
+#: xcontrol/region_page.py:169
 msgid "Apply"
 msgstr ""
 
@@ -437,7 +438,7 @@ msgid ""
 msgstr ""
 
 #: xcontrol/appearance_page.py:366 xcontrol/appearance_page.py:458
-#: xcontrol/system_page.py:513 xcontrol/users_page.py:335
+#: xcontrol/system_page.py:518 xcontrol/users_page.py:335
 msgid "That didn't work"
 msgstr ""
 
@@ -533,8 +534,8 @@ msgstr ""
 #: xcontrol/controllers_page.py:68 xcontrol/edid_override_dialog.py:253
 #: xcontrol/gaming_page.py:138 xcontrol/gaming_page.py:494
 #: xcontrol/i3_page.py:81 xcontrol/i3_page.py:805 xcontrol/monitors_page.py:138
-#: xcontrol/region_page.py:251 xcontrol/system_page.py:521
-#: xcontrol/system_page.py:541 xcontrol/users_page.py:358
+#: xcontrol/region_page.py:251 xcontrol/system_page.py:526
+#: xcontrol/system_page.py:546 xcontrol/users_page.py:358
 #: xcontrol/users_page.py:380 xcontrol/users_page.py:444
 #: xcontrol/users_page.py:456 xcontrol/xserver_page.py:38
 msgid "Cancel"
@@ -1906,7 +1907,8 @@ msgid "For 4 hours"
 msgstr ""
 
 #: xcontrol/desktop_page.py:49 xcontrol/i3_page.py:871
-#: xcontrol/system_page.py:72 xcontrol/system_page.py:316
+#: xcontrol/plymouth_page.py:93 xcontrol/system_page.py:76
+#: xcontrol/system_page.py:321
 msgid "Copy"
 msgstr ""
 
@@ -2202,7 +2204,7 @@ msgstr ""
 msgid "Automatic (HDMI TVs)"
 msgstr ""
 
-#: xcontrol/display_color.py:23
+#: xcontrol/display_color.py:23 xcontrol/plymouth_page.py:17
 msgid "Automatic"
 msgstr ""
 
@@ -2580,7 +2582,7 @@ msgid "Save EDID"
 msgstr ""
 
 #: xcontrol/edid_override_dialog.py:253 xcontrol/module_params_dialog.py:121
-#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:521
+#: xcontrol/monitors_page.py:138 xcontrol/system_page.py:526
 #: xcontrol/users_page.py:234 xcontrol/xserver_page.py:39
 msgid "Save"
 msgstr ""
@@ -3454,7 +3456,7 @@ msgstr ""
 msgid "Add…"
 msgstr ""
 
-#: xcontrol/i3_page.py:357 xcontrol/system_page.py:345
+#: xcontrol/i3_page.py:357 xcontrol/system_page.py:350
 #: xcontrol/xserver_page.py:350 xcontrol/xserver_page.py:550
 msgid "Change…"
 msgstr ""
@@ -3847,7 +3849,7 @@ msgid "Device:"
 msgstr ""
 
 #: xcontrol/input_page.py:155 xcontrol/input_page.py:627
-#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:202
+#: xcontrol/monitors_page.py:23 xcontrol/system_page.py:207
 #: xcontrol/xserver_page.py:172
 msgid "Refresh"
 msgstr ""
@@ -4249,16 +4251,16 @@ msgstr ""
 msgid "This section could not be loaded: {error}"
 msgstr ""
 
-#: xcontrol/kmods.py:248 xcontrol/system_page.py:343
+#: xcontrol/kmods.py:248 xcontrol/system_page.py:348
 msgid "Parameters"
 msgstr ""
 
 #: xcontrol/kmods.py:251 xcontrol/module_params_dialog.py:59
-#: xcontrol/system_page.py:361
+#: xcontrol/system_page.py:366
 msgid "(only readable by root)"
 msgstr ""
 
-#: xcontrol/kmods.py:254 xcontrol/system_page.py:381
+#: xcontrol/kmods.py:254 xcontrol/system_page.py:386
 msgid "Set in modprobe.d"
 msgstr ""
 
@@ -4665,11 +4667,11 @@ msgstr ""
 msgid "Copy details"
 msgstr ""
 
-#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:77
+#: xcontrol/monitors_page.py:73 xcontrol/system_page.py:81
 msgid "More copy options"
 msgstr ""
 
-#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:79
+#: xcontrol/monitors_page.py:75 xcontrol/system_page.py:83
 msgid "Copy in English (for bug reports)"
 msgstr ""
 
@@ -5790,6 +5792,181 @@ msgid ""
 "the next login:"
 msgstr ""
 
+#: xcontrol/plymouth_page.py:55
+msgid "Plymouth isn't installed"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:56
+msgid ""
+"Plymouth draws a picture or an animation while the computer starts, instead "
+"of the kernel's messages. Install the plymouth package to choose its look "
+"here."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:102
+msgid "Showing it at boot"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:107
+msgid "The plymouth hook is in /etc/mkinitcpio.conf."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:109
+msgid ""
+"XControl can't read mkinitcpio's HOOKS (another initramfs tool?). Make sure "
+"Plymouth is part of your initramfs."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:112
+msgid ""
+"Add plymouth to HOOKS in /etc/mkinitcpio.conf, or the splash never starts."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:113
+msgid ""
+"In /etc/mkinitcpio.conf, plymouth comes too early in HOOKS: it has to come "
+"after systemd (or udev)."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:115
+msgid ""
+"In /etc/mkinitcpio.conf, plymouth comes after the encryption hook: move it "
+"before encrypt / sd-encrypt, so it can ask for the password."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:117
+msgid ""
+"Put it after kms and before any encryption hook. Your line would read (edit "
+"the file as root; XControl rebuilds the initramfs when you apply a theme):"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:125
+msgid "splash is on the kernel command line."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:128
+msgid ""
+"With systemd-boot, add splash (and quiet, to hide the kernel's messages) to "
+"the options line of your entry in /boot/loader/entries/ (for example arch."
+"conf). It applies at the next boot. The whole line would read:"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:131
+msgid ""
+"Your kernel options are in /etc/kernel/cmdline (a unified kernel image): add "
+"splash and quiet there, then rebuild the image. It would read:"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:133
+msgid ""
+"With GRUB, add splash and quiet to GRUB_CMDLINE_LINUX_DEFAULT in /etc/"
+"default/grub, then run grub-mkconfig -o /boot/grub/grub.cfg. The options "
+"would read:"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:135
+msgid ""
+"Add splash and quiet to the kernel options in your boot loader's "
+"configuration. They would read:"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:137
+msgid "splash isn't on the kernel command line, so the splash doesn't show."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:156
+msgid "in use"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:163
+msgid "Shows your PC maker's logo from the firmware, like Windows does."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:165
+msgid "Text mode: drawn with the console's characters."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:173
+msgid ""
+"Pictures of the built-in themes are XControl's; on some themes your "
+"distribution's logo appears too. Themes you add show the picture they come "
+"with, if any."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:187
+msgid "No picture"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:195
+msgid "Wait before showing it"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:205
+msgid "seconds"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:207
+msgid "A fast boot then never flashes the splash for a moment."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:208
+msgid "Scale"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:214
+msgid "For high-DPI screens, when the automatic choice is too small."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:222
+msgid "Preview"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:223
+msgid ""
+"Plays the selected theme for a few seconds in a window (asks for your "
+"password: Plymouth only runs as root)."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:227
+msgid "Applying rebuilds the initramfs, which takes a minute."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:245
+msgid "Playing the preview…"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:256
+msgid "No preview."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:258
+msgid "Could not play the preview"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:258 xcontrol/plymouth_page.py:290
+msgid "No details."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:263
+msgid "Copied"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:273
+msgid "Rebuilding the initramfs…"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:285
+msgid "Boot splash set; it shows at the next boot"
+msgstr ""
+
+#: xcontrol/plymouth_page.py:288
+msgid "Not applied."
+msgstr ""
+
+#: xcontrol/plymouth_page.py:290
+msgid "Could not set the boot splash"
+msgstr ""
+
 #: xcontrol/power_page.py:14
 msgid "Shut down"
 msgstr ""
@@ -6635,203 +6812,207 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: xcontrol/system_page.py:29
-msgid "Kernel modules"
+#: xcontrol/system_page.py:28
+msgid "Boot splash"
 msgstr ""
 
 #: xcontrol/system_page.py:33
+msgid "Kernel modules"
+msgstr ""
+
+#: xcontrol/system_page.py:37
 msgid "X server"
 msgstr ""
 
-#: xcontrol/system_page.py:36
+#: xcontrol/system_page.py:40
 msgid "Check & Backup"
 msgstr ""
 
-#: xcontrol/system_page.py:73
+#: xcontrol/system_page.py:77
 msgid "Copy this information (without your computer and user names)"
 msgstr ""
 
-#: xcontrol/system_page.py:168
+#: xcontrol/system_page.py:173
 msgid "System information copied"
 msgstr ""
 
-#: xcontrol/system_page.py:195
+#: xcontrol/system_page.py:200
 msgid "Search modules, devices or parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:198
+#: xcontrol/system_page.py:203
 msgid "Include parts built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:199
+#: xcontrol/system_page.py:204
 msgid "Parts of the kernel that can't be unloaded but still have parameters"
 msgstr ""
 
-#: xcontrol/system_page.py:213 xcontrol/xserver_page.py:14
+#: xcontrol/system_page.py:218 xcontrol/xserver_page.py:14
 #: xcontrol/xserver_page.py:149
 msgid "Module"
 msgstr ""
 
-#: xcontrol/system_page.py:214 xcontrol/system_page.py:329
+#: xcontrol/system_page.py:219 xcontrol/system_page.py:334
 msgid "Used by"
 msgstr ""
 
-#: xcontrol/system_page.py:252
+#: xcontrol/system_page.py:257
 msgid "built into the kernel"
 msgstr ""
 
-#: xcontrol/system_page.py:260
+#: xcontrol/system_page.py:265
 #, python-brace-format
 msgid "{n} modules loaded"
 msgstr ""
 
-#: xcontrol/system_page.py:261
+#: xcontrol/system_page.py:266
 msgid "No loadable modules are in use (the kernel was started without them)."
 msgstr ""
 
-#: xcontrol/system_page.py:303
+#: xcontrol/system_page.py:308
 msgid "Select a module to see what it drives and its parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:323 xcontrol/xserver_page.py:522
+#: xcontrol/system_page.py:328 xcontrol/xserver_page.py:522
 msgid "File"
 msgstr ""
 
-#: xcontrol/system_page.py:325 xcontrol/xserver_page.py:524
+#: xcontrol/system_page.py:330 xcontrol/xserver_page.py:524
 msgid "Version"
 msgstr ""
 
-#: xcontrol/system_page.py:327
+#: xcontrol/system_page.py:332
 msgid "License"
 msgstr ""
 
-#: xcontrol/system_page.py:331
+#: xcontrol/system_page.py:336
 msgid "Needs"
 msgstr ""
 
-#: xcontrol/system_page.py:333
+#: xcontrol/system_page.py:338
 msgid "Firmware files"
 msgstr ""
 
-#: xcontrol/system_page.py:338
+#: xcontrol/system_page.py:343
 msgid "Devices it drives"
 msgstr ""
 
-#: xcontrol/system_page.py:346
+#: xcontrol/system_page.py:351
 msgid "Set parameters for every time the module loads (needs your password)"
 msgstr ""
 
-#: xcontrol/system_page.py:351
+#: xcontrol/system_page.py:356
 #, python-brace-format
 msgid ""
 "This part is built into the kernel, so modprobe.d doesn't reach it. Set it "
 "on the kernel command line as {example}."
 msgstr ""
 
-#: xcontrol/system_page.py:379
+#: xcontrol/system_page.py:384
 msgid "This module has no parameters."
 msgstr ""
 
-#: xcontrol/system_page.py:390
+#: xcontrol/system_page.py:395
 msgid ""
 "Nothing; the module runs with its defaults and anything on the kernel "
 "command line."
 msgstr ""
 
-#: xcontrol/system_page.py:427
+#: xcontrol/system_page.py:432
 msgid "Module details copied"
 msgstr ""
 
-#: xcontrol/system_page.py:440
+#: xcontrol/system_page.py:445
 msgid "Session check"
 msgstr ""
 
-#: xcontrol/system_page.py:442
+#: xcontrol/system_page.py:447
 msgid "Check again"
 msgstr ""
 
-#: xcontrol/system_page.py:453
+#: xcontrol/system_page.py:458
 msgid "Back up settings"
 msgstr ""
 
-#: xcontrol/system_page.py:455
+#: xcontrol/system_page.py:460
 msgid ""
 "One file with everything set in XControl, plus the theme, default apps, "
 "terminal, language and your picture. Restoring keeps the current files as *."
 "before-restore."
 msgstr ""
 
-#: xcontrol/system_page.py:461
+#: xcontrol/system_page.py:466
 msgid "Save a backup…"
 msgstr ""
 
-#: xcontrol/system_page.py:463
+#: xcontrol/system_page.py:468
 msgid "Restore a backup…"
 msgstr ""
 
-#: xcontrol/system_page.py:478
+#: xcontrol/system_page.py:483
 msgid "The check failed"
 msgstr ""
 
-#: xcontrol/system_page.py:480
+#: xcontrol/system_page.py:485
 msgid "Everything looks right."
 msgstr ""
 
-#: xcontrol/system_page.py:481
+#: xcontrol/system_page.py:486
 #, python-brace-format
 msgid "{n} thing needs a look."
 msgstr ""
 
-#: xcontrol/system_page.py:482
+#: xcontrol/system_page.py:487
 #, python-brace-format
 msgid "{n} things need a look."
 msgstr ""
 
-#: xcontrol/system_page.py:519
+#: xcontrol/system_page.py:524
 msgid "Save a backup"
 msgstr ""
 
-#: xcontrol/system_page.py:531
+#: xcontrol/system_page.py:536
 msgid "Could not save the backup"
 msgstr ""
 
-#: xcontrol/system_page.py:533
+#: xcontrol/system_page.py:538
 #, python-brace-format
 msgid "Backup saved ({n} files and the settings)"
 msgstr ""
 
-#: xcontrol/system_page.py:539
+#: xcontrol/system_page.py:544
 msgid "Restore a backup"
 msgstr ""
 
-#: xcontrol/system_page.py:541 xcontrol/users_page.py:456
+#: xcontrol/system_page.py:546 xcontrol/users_page.py:456
 msgid "Open"
 msgstr ""
 
-#: xcontrol/system_page.py:543
+#: xcontrol/system_page.py:548
 msgid "XControl backups"
 msgstr ""
 
-#: xcontrol/system_page.py:553
+#: xcontrol/system_page.py:558
 msgid "That isn't an XControl backup"
 msgstr ""
 
-#: xcontrol/system_page.py:557
+#: xcontrol/system_page.py:562
 #, python-brace-format
 msgid "Restore the backup from {date}?"
 msgstr ""
 
-#: xcontrol/system_page.py:558
+#: xcontrol/system_page.py:563
 msgid ""
 "Your current settings are replaced (and kept as *.before-restore). XControl "
 "restarts afterwards."
 msgstr ""
 
-#: xcontrol/system_page.py:568
+#: xcontrol/system_page.py:573
 msgid "Could not restore the backup"
 msgstr ""
 
-#: xcontrol/system_page.py:571
+#: xcontrol/system_page.py:576
 msgid "Restored, with problems"
 msgstr ""
 

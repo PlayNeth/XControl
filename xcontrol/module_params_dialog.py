@@ -9,7 +9,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
-from . import kmods, widgets  # noqa: E402
+from . import kmods, pkexec, widgets  # noqa: E402
 from .i18n import _  # noqa: E402
 
 
@@ -175,7 +175,7 @@ class ModuleParamsDialog(Gtk.Dialog):
         def work():
             try:
                 out = subprocess.run(["pkexec", kmods.HELPER, *args], capture_output=True, text=True, timeout=900)
-                if out.returncode in (126, 127) and not out.stderr.strip():
+                if pkexec.cancelled(out):
                     ok, text = False, _("Authorization was cancelled.")
                 else:
                     ok, text = out.returncode == 0, (out.stdout + out.stderr).strip()

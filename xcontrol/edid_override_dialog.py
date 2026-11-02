@@ -10,7 +10,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import edid, edid_override, monitor_info, widgets, xrandr  # noqa: E402
+from . import edid, edid_override, monitor_info, pkexec, widgets, xrandr  # noqa: E402
 from . import edid_override_status as status  # noqa: E402
 from .i18n import _, num  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
@@ -244,7 +244,7 @@ class EdidOverrideDialog(Gtk.Dialog):
             out = subprocess.run(["pkexec", HELPER, *args], capture_output=True, text=True, timeout=300)
         except (OSError, subprocess.TimeoutExpired) as e:
             return False, str(e)
-        if out.returncode in (126, 127) and not out.stderr.strip():
+        if pkexec.cancelled(out):
             return False, _("Authorization was cancelled.")
         return out.returncode == 0, (out.stdout + out.stderr).strip()
 

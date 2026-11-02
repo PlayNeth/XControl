@@ -15,6 +15,11 @@ if _LOCALEDIR.startswith("@"):
 LOCALEDIR = os.environ.get("XCONTROL_LOCALEDIR", _LOCALEDIR)
 GL_SHIM = os.path.join(LIBDIR, "libxcontrol_gl.so")
 
+_TOP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# pictures of the built-in boot splash themes: /usr/share/xcontrol/plymouth, or data/ in a checkout
+PLYMOUTH_PREVIEWS = next((d for d in (os.path.join(_TOP, "plymouth"), os.path.join(_TOP, "data", "plymouth"))
+                          if os.path.isdir(d)), os.path.join(_TOP, "plymouth"))
+
 
 def _config_base():
     return os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")

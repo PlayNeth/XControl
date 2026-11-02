@@ -66,6 +66,9 @@ install: all
 	install -Dm755 data/xcontrol-controller-helper $(DESTDIR)$(LIBDIR)/xcontrol-controller-helper
 	install -Dm755 data/xcontrol-controller-hide $(DESTDIR)$(LIBDIR)/xcontrol-controller-hide
 	install -Dm755 data/xcontrol-xorg-helper $(DESTDIR)$(LIBDIR)/xcontrol-xorg-helper
+	install -Dm755 data/xcontrol-plymouth-helper $(DESTDIR)$(LIBDIR)/xcontrol-plymouth-helper
+	install -dm755 $(DESTDIR)$(DATADIR)/plymouth
+	install -m644 data/plymouth/*.png data/plymouth/README $(DESTDIR)$(DATADIR)/plymouth/
 	install -Dm644 data/70-xcontrol-controllers.rules $(DESTDIR)$(PREFIX)/lib/udev/rules.d/70-xcontrol-controllers.rules
 	install -dm755 $(DESTDIR)$(PREFIX)/share/polkit-1/actions
 	sed 's|@LIBDIR@|$(LIBDIR)|g' data/io.github.xcontrol.policy.in > $(DESTDIR)$(PREFIX)/share/polkit-1/actions/io.github.xcontrol.policy
@@ -133,6 +136,8 @@ check:
 	sh -n data/xcontrol-controller-helper
 	sh -n data/xcontrol-controller-hide
 	sh -n data/xcontrol-xorg-helper
+	sh -n data/xcontrol-plymouth-helper
+	$(PYTHON) tests/check_plymouth.py
 	for l in $(LINGUAS); do msgfmt --check -o /dev/null po/$$l.po; done
 
 clean:

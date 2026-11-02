@@ -22,6 +22,10 @@ class SystemPage(Gtk.Box):
         overview = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         overview.add(OverviewTab(window))
         stack.add_titled(overview, "overview", _("Overview"))
+        from .plymouth_page import BootSplashTab
+        splash = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
+        splash.add(BootSplashTab(window))
+        stack.add_titled(splash, "splash", _("Boot splash"))
         # the tab fills the height itself (its lists scroll); scroll sideways when the window is narrow
         modules = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
                                      vscrollbar_policy=Gtk.PolicyType.NEVER)

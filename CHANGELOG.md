@@ -2,6 +2,25 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.30.0 (2026-11-02)
+
+**Add a Boot splash tab for Plymouth themes**
+
+- Add System → Boot splash: pick Plymouth's theme from pictures of every installed theme
+  (XControl ships pictures of the ten built-in ones), set a delay before it shows and the
+  scale for high-DPI screens, and apply (writes /etc/plymouth/plymouthd.conf and rebuilds the
+  initramfs through a new root helper)
+- Add Preview, which plays the selected theme for a few seconds in a window with Plymouth's
+  X11 renderer, only once the X display has answered
+- Check that the plymouth hook is in /etc/mkinitcpio.conf in the right place and that splash is
+  on the kernel command line, and show the exact line to use (HOOKS, or the options line for
+  systemd-boot, a unified kernel image or GRUB)
+- Fix dialogs bigger than the screen opening partly off screen, and content added to a dialog
+  after it opened, or the file chooser, not being fitted (0.29.2)
+- Read the XLibre version right when its log line ends with a full stop (0.29.1)
+- Don't show an error when the password prompt is cancelled, on every page that asks for it;
+  a refusal ("Not authorized") is still shown
+
 ## 0.29.2 (2026-11-02)
 
 **Fit the window and its dialogs on a 640x480 screen**

@@ -1,0 +1,161 @@
+#!/bin/sh
+# xcontrol-plymouth-helper: sets the boot splash for XControl (runs as root via pkexec).
+#
+#   set THEME DELAY SCALE
+#
+#     THEME  a theme installed in /usr/share/plymouth/themes (THEME/THEME.plymouth)
+#     DELAY  seconds before the splash shows (ShowDelay, 0-30, e.g. 2 or 1.5), or - to leave it out
+#     SCALE  DeviceScale 1-4 for high-DPI screens, or - for automatic
+#
+#   Writes those keys in the [Daemon] section of /etc/plymouth/plymouthd.conf, keeping anything
+#   else in the file, then rebuilds the initramfs (the theme is copied into it) when one of the
+#   usual tools is there. Only that file is ever written.
+#
+#   preview THEME DISPLAY XAUTHORITY|-
+#
+#     Plays THEME for a few seconds in a window on the caller's X display, with Plymouth's X11
+#     renderer (plymouthd only runs as root). Refuses unless that display answers first, so
+#     Plymouth never falls back to taking the graphics card while X runs. XAUTHORITY is read with
+#     the caller's own rights.
+set -eu
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
+
+die() { echo "xcontrol-plymouth-helper: $*" >&2; exit 1; }
+
+CONF=/etc/plymouth/plymouthd.conf
+THEMES=/usr/share/plymouth/themes
+INITRAMFS=1
+# test hooks, ignored when running as root
+if [ "$(id -u)" != 0 ]; then
+    CONF=${XCONTROL_PLYMOUTH_CONF:-$CONF}
+    THEMES=${XCONTROL_PLYMOUTH_THEMES:-$THEMES}
+    INITRAMFS=${XCONTROL_INITRAMFS:-1}
+fi
+
+rebuild_initramfs() {
+    if command -v mkinitcpio >/dev/null 2>&1; then
+        mkinitcpio -P
+    elif command -v dracut >/dev/null 2>&1; then
+        dracut --regenerate-all --force
+    elif command -v update-initramfs >/dev/null 2>&1; then
+        update-initramfs -u -k all
+    else
+        echo "no initramfs tool found (mkinitcpio, dracut or update-initramfs); rebuild it yourself" >&2
+    fi
+}
+
+read_as_caller() {   # FILE MAX OUT: up to MAX bytes of FILE, opened with the caller's own rights
+    if [ "$(id -u)" = 0 ] && [ -n "${PKEXEC_UID:-}" ] && [ "$PKEXEC_UID" != 0 ] && command -v setpriv >/dev/null; then
+        g=$(id -g -- "$PKEXEC_UID") || die "unknown caller"
+        setpriv --reuid="$PKEXEC_UID" --regid="$g" --init-groups head -c "$2" -- "$1" > "$3"
+    else
+        head -c "$2" < "$1" > "$3"
+    fi
+}
+check_theme() {
+    case $1 in ''|-*|*[!A-Za-z0-9_-]*) die "invalid theme name: $1";; esac
+    [ ${#1} -le 64 ] || die "invalid theme name: $1"
+    [ -f "$THEMES/$1/$1.plymouth" ] || die "no such theme: $1"
+}
+
+if [ $# -eq 4 ] && [ "$1" = preview ]; then
+    theme=$2 display=$3 xauth=$4
+    check_theme "$theme"
+    printf '%s' "$display" | grep -Eq '^:[0-9]{1,3}(\.[0-9])?$' || die "invalid display: $display"
+    command -v plymouthd >/dev/null && command -v plymouth >/dev/null || die "plymouth isn't installed"
+    ! pidof plymouthd >/dev/null 2>&1 || die "plymouth is already running"
+    work=$(mktemp -d)
+    trap 'rm -rf "$work"' EXIT
+    if [ "$xauth" != - ]; then
+        case $xauth in /*) ;; *) die "invalid XAUTHORITY: $xauth";; esac
+        [ -f "$xauth" ] && [ ! -L "$xauth" ] || die "not a regular file: $xauth"
+        read_as_caller "$xauth" 65536 "$work/xauth" || die "can't read $xauth"
+        export XAUTHORITY="$work/xauth"
+    else
+        unset XAUTHORITY
+    fi
+    export DISPLAY="$display"
+    xset q >/dev/null 2>&1 || die "can't reach the X display $display"
+    plymouthd --no-daemon --no-boot-log --mode=boot --graphical-boot --pid-file="$work/pid" \
+        --kernel-command-line="splash plymouth.splash=$theme" </dev/null >/dev/null 2>&1 &
+    pid=$!
+    # make sure an abnormal exit (an interrupt, a SIGTERM) never leaves a root plymouthd
+    # running: tear it down as well as the work dir. EXIT alone is not enough -- POSIX sh
+    # runs the EXIT trap on a signal only if that signal is trapped. Once plymouthd has
+    # been reaped its pid is cleared, so a reused pid is never signalled.
+    cleanup() {
+        if [ -n "$pid" ]; then plymouth quit >/dev/null 2>&1 || true; kill "$pid" 2>/dev/null || true; fi
+        rm -rf "$work"
+    }
+    trap cleanup EXIT
+    trap 'cleanup; trap - EXIT; exit 143' INT TERM HUP
+    sleep 1
+    plymouth show-splash || true
+    secs=6
+    case ${XCONTROL_PREVIEW_SECONDS:-} in [1-9]|[1-5][0-9]) secs=$XCONTROL_PREVIEW_SECONDS;; esac
+    sleep "$secs"
+    plymouth quit || true
+    sleep 0.5
+    kill "$pid" 2>/dev/null || true
+    wait "$pid" 2>/dev/null || true
+    pid=
+    exit 0
+fi
+
+[ $# -eq 4 ] && [ "$1" = set ] || die "usage: set THEME DELAY SCALE | preview THEME DISPLAY XAUTHORITY"
+theme=$2 delay=$3 scale=$4
+check_theme "$theme"
+
+case $delay in
+    -) ;;
+    *[!0-9.]*|.*|*.|*.*.*|'') die "invalid delay: $delay";;
+    *) whole=${delay%%.*}
+       [ ${#whole} -le 2 ] && [ "$whole" -le 30 ] || die "delay too long: $delay"
+       [ "$whole" -lt 30 ] || [ "$delay" = 30 ] || [ "${delay#*.}" = "$delay" ] || \
+           case ${delay#*.} in *[!0]*) die "delay too long: $delay";; esac;;
+esac
+case $scale in -|1|2|3|4) ;; *) die "invalid scale: $scale";; esac
+
+dir=$(dirname "$CONF")
+[ ! -L "$CONF" ] || die "$CONF is a symbolic link; not touching it"
+mkdir -p "$dir"
+tmp=$(mktemp "$dir/.plymouthd.conf.XXXXXX")
+trap 'rm -f "$tmp" "$tmp.body"' EXIT
+
+# Rewrite [Daemon]: drop our three keys there, then add them right after its header (a new
+# [Daemon] section at the end when there is none). Everything else is copied as it is.
+{ [ -f "$CONF" ] && cat "$CONF" || true; } | awk -v theme="$theme" -v delay="$delay" -v scale="$scale" '
+    function ours() {
+        print "Theme=" theme
+        if (delay != "-") print "ShowDelay=" delay
+        if (scale != "-") print "DeviceScale=" scale
+    }
+    BEGIN { insec = 0; done = 0 }
+    { sub(/\r$/, "") }   # (a file saved with Windows line endings)
+    /^[ \t]*\[/ {
+        insec = ($0 ~ /^[ \t]*\[Daemon\][ \t]*$/)
+        print
+        if (insec && !done) { ours(); done = 1 }
+        next
+    }
+    insec && /^[ \t]*(Theme|ShowDelay|DeviceScale)[ \t]*=/ { next }
+    { print }
+' > "$tmp.body"
+if grep -q '^[ 	]*\[Daemon\][ 	]*$' "$tmp.body"; then
+    cat "$tmp.body" > "$tmp"
+else
+    { [ -s "$tmp.body" ] && { cat "$tmp.body"; echo; }
+      echo "[Daemon]"; echo "Theme=$theme"
+      [ "$delay" = - ] || echo "ShowDelay=$delay"
+      [ "$scale" = - ] || echo "DeviceScale=$scale"
+    } > "$tmp"
+fi
+rm -f "$tmp.body"
+chmod 644 "$tmp"
+mv -f "$tmp" "$CONF"
+trap - EXIT
+echo "boot splash set to $theme"
+
+if [ "$INITRAMFS" = 1 ]; then
+    rebuild_initramfs
+fi

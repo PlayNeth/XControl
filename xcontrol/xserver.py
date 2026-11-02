@@ -20,7 +20,7 @@ import shutil
 import subprocess
 from dataclasses import dataclass, field
 
-from . import vrr
+from . import pkexec, vrr
 from .paths import LIBDIR
 
 HELPER = os.path.join(LIBDIR, "xcontrol-xorg-helper")
@@ -426,7 +426,7 @@ def needs_modulepath_fix(info):
     if not (info and info.server == "XLibre"):
         return False
     try:
-        v = tuple(int(x) for x in info.version.split("."))
+        v = tuple(int(x) for x in info.version.strip(".").split("."))
     except ValueError:
         return True       # (version unknown: keep the workaround, it's harmless)
     if len(v) == 4 and v[0] == 1:
@@ -477,7 +477,7 @@ def save(drivers, server, xdriver="", picks=None, gpu_list=None, modulepath_fix=
         r = subprocess.run(["pkexec", HELPER] + args, capture_output=True, text=True, timeout=120)
     except (OSError, subprocess.SubprocessError) as e:
         return False, str(e)
-    if r.returncode in (126, 127) and not r.stderr.strip():
+    if pkexec.cancelled(r):
         return False, ""
     return r.returncode == 0, (r.stderr or r.stdout).strip()[-400:]
 

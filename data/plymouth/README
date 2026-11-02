@@ -1,0 +1,13 @@
+Pictures of Plymouth's built-in boot splash themes, shown on System → Boot splash.
+
+bgrt, fade-in, glow, script, solar, spinfinity, spinner:
+  Screenshots of the themes as Plymouth 24.004.60 draws them (its X11 renderer on a 640x400
+  screen, built from the original sources with the default settings and no distribution
+  logo). The artwork in them is Plymouth's: https://gitlab.freedesktop.org/plymouth/plymouth,
+  GNU General Public License, version 2 or later. The source of each picture is that theme's
+  directory in Plymouth's source tree.
+
+details, text, tribar:
+  Text-mode themes, which draw with the console's characters. These pictures were drawn by
+  XControl to show the same layout and colours (from Plymouth's ply-text-step-bar.c and
+  ply-text-progress-bar.c and the text and tribar plugins), on an 80x25 console.

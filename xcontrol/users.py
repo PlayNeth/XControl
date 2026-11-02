@@ -7,6 +7,7 @@ import shutil
 import subprocess
 from dataclasses import dataclass, field
 
+from . import pkexec
 from .paths import LIBDIR
 
 HELPER = os.path.join(LIBDIR, "xcontrol-user-helper")
@@ -200,7 +201,7 @@ def run_helper(*args, stdin=None):
         out = subprocess.run(["pkexec", HELPER, *args], input=stdin, capture_output=True, text=True, timeout=300)
     except (OSError, subprocess.SubprocessError) as e:
         return False, str(e)
-    if out.returncode in (126, 127) and not out.stderr.strip():
+    if pkexec.cancelled(out):
         return False, "cancelled"
     text = (out.stdout + out.stderr).strip()
     text = re.sub(r"^xcontrol-user-helper: ", "", text.splitlines()[-1]) if text else ""

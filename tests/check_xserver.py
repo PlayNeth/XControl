@@ -269,8 +269,8 @@ if prefix is not None:
     expect("only before XLibre 25.1.10",
            [X.needs_modulepath_fix(X.parse_log(f"XLibre X Server {v}\n"))
             for v in ("1.25.0.3", "1.25.1.9", "1.25.1.10", "1.25.2.0", "1.25.99.1",
-                      "25.0.0.14", "25.1.9", "25.1.10")],
-           [True, True, False, False, False, True, True, False])
+                      "25.0.0.14", "25.1.9", "25.1.10", "25.0.0.5", "25.2.0.1-rc1", "21.1.99.1")],
+           [True, True, False, False, False, True, True, False, True, False, True])
     expect("unknown XLibre version: keep it", X.needs_modulepath_fix(X.LogInfo(server="XLibre")), True)
     run("write", "modesetting")
     expect("both gone", (os.path.exists(os.path.join(conf, X.OUR_FILE)),

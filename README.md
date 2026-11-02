@@ -117,7 +117,7 @@ Each page has its own documentation:
   - [Date & Language](docs/date-and-language.md): time zone, clock, language and formats.
   - [Power](docs/power.md): idle sleep, power buttons and lid, power profile.
   - [Users](docs/users.md): accounts, groups, pictures.
-  - [System](docs/system.md): system information, kernel modules, the session check and backups.
+  - [System](docs/system.md): system information, the boot splash (Plymouth), kernel modules, the session check and backups.
   - [X server](docs/x-server.md): loaded modules, X options, choosing the video driver.
 
 The full documentation starts at [docs/](docs/README.md).
