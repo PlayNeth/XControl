@@ -205,7 +205,7 @@ class I3Page(Gtk.Box):
         self.import_btn = Gtk.Button(label=_("Import my previous config…"))
         self.import_btn.connect("clicked", self._import)
         head.pack_end(self.import_btn, False, False, 0)
-        top.pack_start(head, False, False, 0)
+        top.pack_start(widgets.sideways(head), False, False, 0)
         top.pack_start(_hint(_("XControl writes ~/.config/i3/config from this page and reloads i3 after each change. "
                                "Your current config is kept as config.before-xcontrol and can be put back by "
                                "switching this off. Every change is checked with i3 first, so a mistake never "
@@ -222,7 +222,7 @@ class I3Page(Gtk.Box):
 
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         switcher = Gtk.StackSwitcher(stack=stack, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=4)
-        self.pack_start(switcher, False, False, 0)
+        self.pack_start(widgets.sideways(switcher), False, False, 0)
         self.tabs = []
         for name, title, build in (("look", _("Look"), self._build_look),
                                    ("keys", _("Keys"), self._build_keys),

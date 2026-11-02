@@ -7,7 +7,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, GObject, Gtk, Pango  # noqa: E402
 
-from . import kmods, sysinfo  # noqa: E402
+from . import kmods, sysinfo, widgets  # noqa: E402
 from .i18n import _  # noqa: E402
 
 REFRESH_MS = 2000
@@ -18,7 +18,7 @@ class SystemPage(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         switcher = Gtk.StackSwitcher(stack=stack, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=4)
-        self.pack_start(switcher, False, False, 0)
+        self.pack_start(widgets.sideways(switcher), False, False, 0)
         overview = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
         overview.add(OverviewTab(window))
         stack.add_titled(overview, "overview", _("Overview"))
@@ -152,6 +152,7 @@ class OverviewTab(Gtk.Box):
             k = Gtk.Label(label=label, xalign=0, yalign=0)
             k.get_style_context().add_class("dim-label")
             k.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+            k.set_width_chars(min(len(label), 10))   # (narrow windows shorten long names, never short ones)
             k.set_max_width_chars(22)
             v = Gtk.Label(label=value, xalign=0, yalign=0, selectable=True, wrap=True, hexpand=True)
             v.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR)

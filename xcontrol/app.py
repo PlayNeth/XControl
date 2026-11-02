@@ -25,6 +25,7 @@ from .system_page import SystemPage  # noqa: E402
 from .users_page import UsersPage  # noqa: E402
 
 APP_ID = "io.github.xcontrol"
+PAGE_MIN_WIDTH = 400     # with the 190 px sidebar, the window fits in 640 px
 PAGES = ("gaming", "controllers", "displays", "input", "sound", "appearance", "desktop", "panel", "notifications",
          "i3", "defaults", "region", "power", "users", "system")
 
@@ -49,7 +50,12 @@ class MainWindow(Gtk.ApplicationWindow):
             self.set_titlebar(header)
         # otherwise the window manager draws the title bar, like it does for Thunar
 
-        stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        # Each page sizes itself (not the largest one), and the page area keeps a sensible
+        # minimum width: GTK sizes a window's minimum height at its narrowest width, where
+        # wrapped text gets very tall. This keeps the window usable at 640x480.
+        stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE,
+                          hhomogeneous=False, vhomogeneous=False)
+        stack.set_size_request(PAGE_MIN_WIDTH, -1)
 
         gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         gaming.add(GamingPage(self))
@@ -177,6 +183,7 @@ class App(Gtk.Application):
         self.page = page
 
     def do_activate(self):
+        widgets.fit_all_dialogs()   # dialogs stay inside small screens (640x480)
         win = self.get_active_window()
         if not win:
             win = MainWindow(self)

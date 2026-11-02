@@ -2,6 +2,17 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.29.2 (2026-11-02)
+
+**Fit the window and its dialogs on a 640x480 screen**
+
+- Let the window shrink to 640x480: each page now sizes itself instead of the widest one setting
+  the size for all, and the window no longer grows very tall when made narrow
+- Scroll the i3 page's top row and the tab switchers on the Bar & Compositor, Window Manager
+  and System pages sideways when they don't fit
+- Make dialogs that are bigger than the screen scroll inside, with their buttons always in view
+- Keep short labels on the System overview readable in a narrow window
+
 ## 0.29.1 (2026-10-27)
 
 **Leave out the XLibre ModulePath workaround from 25.1.10 on**

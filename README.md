@@ -76,6 +76,8 @@ System → **Check & Backup** tells you if something XControl relies on isn't ru
 
 **Title bar:** on GNOME-style desktops (GNOME, Pantheon, Budgie) XControl draws a GTK header bar. Everywhere else the window manager draws the title bar, and status messages appear at the bottom of the window. `XCONTROL_CSD=1` or `0` forces either style, and `XCONTROL_DECORATION` picks the header bar's buttons (for example `":close"`).
 
+**Small screens:** the window fits a 640x480 screen (handy while an old game runs at that resolution). Rows that don't fit scroll sideways, and dialogs taller or wider than the screen scroll inside, with their buttons always in view.
+
 ---
 
 ## What's in it

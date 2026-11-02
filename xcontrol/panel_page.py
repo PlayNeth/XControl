@@ -82,7 +82,7 @@ class PanelPage(Gtk.Box):
 
         stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         switcher = Gtk.StackSwitcher(stack=stack, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=4)
-        self.pack_start(switcher, False, False, 0)
+        self.pack_start(widgets.sideways(switcher), False, False, 0)
         for name, title, build in (("bar", _("Bar (polybar)"), self._build_bar),
                                    ("compositor", _("Compositor (picom)"), self._build_compositor)):
             sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
