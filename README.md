@@ -160,4 +160,6 @@ System → **Check & Backup** → **Save a backup…** writes all of XControl's 
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+GPL-3.0-or-later, see [LICENSE](LICENSE). XControl was MIT-licensed until it switched to the GPL on 2 November 2026; copies from before then remain available under the MIT license.
+
+The Boot splash pictures in `data/plymouth/` show Plymouth's artwork (GPL-2.0-or-later); `data/plymouth/README` credits them.

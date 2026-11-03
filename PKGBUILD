@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices, controllers and system information"
 arch=('x86_64')
 url="https://github.com/PlayNeth/XControl"
-license=('MIT')
+license=('GPL-3.0-or-later')
 depends=('glibc' 'python' 'python-gobject' 'python-cairo' 'gtk3' 'libepoxy' 'libglvnd' 'libx11' 'libxext' 'libxrandr'
          'libxss' 'xorg-xrandr' 'xorg-xinput' 'xorg-setxkbmap' 'xorg-xset')
 makedepends=('vulkan-headers' 'gettext')
