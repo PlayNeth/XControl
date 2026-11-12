@@ -1,7 +1,8 @@
 # X server
 
-The **X server** tab on the System page is the X counterpart of Kernel modules. It reads the
-running server's log (`~/.local/share/xorg/Xorg.N.log` or `/var/log/Xorg.N.log`) for:
+The **X server** tab on the About & Tools page is the X counterpart of Kernel modules. It reads the
+running server's log (`~/.local/state/xorg/Xorg.N.log` on XLibre 25.2 and later,
+`~/.local/share/xorg/Xorg.N.log` before that and on X.Org, or `/var/log/Xorg.N.log`) for:
 
 - which server runs (X.Org or XLibre) and its version;
 - every module it loaded: video drivers (the one in use, and the ones it tried and let go),

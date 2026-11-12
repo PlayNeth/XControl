@@ -11,7 +11,7 @@ from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
 from . import config, i3cfg as I3, widgets, xrandr  # noqa: E402
 from .i18n import N_, _  # noqa: E402
-from .panel_page import _hex, _hint, _rgba, _scale, _section  # noqa: E402
+from .panel_page import _hex, _hint, _rgba, _section  # noqa: E402
 
 LABELS = {
     "normal": N_("With title bar"), "pixel": N_("Border only"), "none": N_("None"),
@@ -279,9 +279,9 @@ class I3Page(Gtk.Box):
             w.connect("value-changed", self._changed)
 
         g = _section(box, _("Gaps"))
-        self.gaps_inner = _scale(0, 60, 1)
+        self.gaps_inner = widgets.slider(0, 60, 1)
         r = self._row(g, 0, _("Between windows"), self.gaps_inner)
-        self.gaps_outer = _scale(0, 60, 1)
+        self.gaps_outer = widgets.slider(0, 60, 1)
         r = self._row(g, r, _("Around the edge"), self.gaps_outer, _("Added to the space between windows."))
         self.smart_gaps = _combo(I3.CHOICES["smart_gaps"])
         self._row(g, r, _("No gaps when it's the only window"), self.smart_gaps)
@@ -321,6 +321,10 @@ class I3Page(Gtk.Box):
         return b
 
     def _reset_colors(self, _b):
+        if not self._ask(_("Replace all your colors with i3's own?"),
+                         _("Every color on this tab, and the one behind windows, goes back to i3's defaults."),
+                         yes=_("Use i3's colors")):
+            return
         self.c["colors"] = {k: list(v) for k, v in I3.DEFAULT_COLORS.items()}
         self.c["background"] = I3.DEFAULT["background"]
         self.loading = True

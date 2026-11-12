@@ -9,9 +9,12 @@ if you don't. **Restore this layout when I log in** adds an autostart entry
 that runs `xcontrol --apply-display`. In a Wayland session xrandr can't
 change outputs, so the page explains that and disables Apply.
 
+The display you pick at the top is the one the **Arrangement** and **Scaling and color** tabs
+are about; **Night light** is the third tab.
+
 ## Scaling and color
 
-The **Scaling and color** section under the display settings shows only what the X driver offers
+The **Scaling and color** tab shows only what the X driver offers
 for that output. xf86-video-amdgpu and modesetting both pass the kernel's connector properties
 through, so on AMD you normally get all of them:
 

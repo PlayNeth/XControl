@@ -1,4 +1,6 @@
-"""The Desktop page: wallpaper, screen lock, screen power and keeping the screen on."""
+"""The Wallpaper & Lock page: wallpaper and screen lock. It also builds the screen power and
+"keep the screen on" sections, which the Power page shows on its Screen tab (`screen_box`):
+they share the lock's timing and are saved with it."""
 import shutil
 import time
 
@@ -7,7 +9,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import desktop as D, wallpaper as W, widgets  # noqa: E402
+from . import desktop as D, wallpaper as W, widgets, wm  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 MODE_LABELS = {"fill": N_("Fill (crop to cover the display)"), "fit": N_("Fit (whole picture, borders in the color)"),
@@ -96,19 +98,29 @@ class DesktopPage(Gtk.Box):
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
         self.autostart_bar = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
+        if wm.page_for() == "openbox":
+            text = _("Openbox doesn't start XControl at login (it isn't in {file}, and Openbox wasn't started with "
+                     "openbox-session), so after the next login nothing would set the wallpaper or start the screen "
+                     "lock. Add this line, or turn on XControl's config on the Window Manager page:").format(
+                file=wm.startup_file("openbox"))
+        else:
+            text = _("i3 doesn't run ~/.config/autostart by itself, so after the next login nothing would set the "
+                     "wallpaper or start the screen lock. Add this line to your i3 config (it also brings back your "
+                     "display layout, mouse and keyboard settings and live theme updates):")
         self.autostart_bar.get_content_area().add(_command(
-            _("i3 doesn't run ~/.config/autostart by itself, so after the next login nothing would set the wallpaper "
-              "or start the screen lock. Add this line to your i3 config (it also brings back your display layout, "
-              "mouse and keyboard settings and live theme updates):"),
-            "exec --no-startup-id xcontrol --session", window))
+            text, wm.startup_line("xcontrol --session"), window))
         self.autostart_bar.set_no_show_all(True)
         self.pack_start(self.autostart_bar, False, False, 0)
 
+        self._into = self
         self._build_wallpaper()
         self._build_lock()
+        self.screen_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)   # for the Power page
+        self._into = self.screen_box
         self._build_power()
         self._build_awake()
-        self.connect("map", lambda *_a: (self._sensitivity(), self._refresh_status()))  # after show_all
+        for shown in (self, self.screen_box):
+            shown.connect("map", lambda *_a: (self._sensitivity(), self._refresh_status()))  # after show_all
         GLib.timeout_add_seconds(2, self._poll_awake)
         self._fill()
         self.loading = False
@@ -125,7 +137,7 @@ class DesktopPage(Gtk.Box):
         frame.set_label_widget(head)
         grid = Gtk.Grid(column_spacing=12, row_spacing=8, margin_start=12, margin_top=8, margin_bottom=4)
         frame.add(grid)
-        self.pack_start(frame, False, False, 0)
+        self._into.pack_start(frame, False, False, 0)
         return grid
 
     def _row(self, grid, r, label, widget):
@@ -233,8 +245,12 @@ class DesktopPage(Gtk.Box):
         self.lock_status = _hint("")
         bar.pack_start(self.lock_status, True, True, 0)
         g.attach(bar, 1, 6, 1, 1)
-        g.attach(_command(_("To lock with a key, add to your i3 config:"),
-                          "bindsym $mod+Shift+x exec --no-startup-id xcontrol --lock", self.window), 1, 7, 1, 1)
+        if wm.page_for() == "openbox":
+            g.attach(_command(_("To lock with a key, add one on the Window Manager page that runs:"),
+                              "xcontrol --lock", self.window), 1, 7, 1, 1)
+        else:
+            g.attach(_command(_("To lock with a key, add to your i3 config:"),
+                              "bindsym $mod+Shift+x exec --no-startup-id xcontrol --lock", self.window), 1, 7, 1, 1)
         self.lock_conflict = _hint("")
         self.lock_conflict.set_no_show_all(True)
         g.attach(self.lock_conflict, 1, 8, 1, 1)
@@ -284,10 +300,14 @@ class DesktopPage(Gtk.Box):
         g.attach(self.awake_full, 1, 7, 1, 1)
         self.awake_status = Gtk.Label(xalign=0, wrap=True)
         g.attach(self.awake_status, 1, 8, 1, 1)
-        g.attach(_command(_("To switch it from a key, add a binding like this to your i3 config (or on the "
-                            "Window Manager page):"),
-                          "bindsym $mod+Shift+a exec --no-startup-id xcontrol --awake toggle", self.window),
-                 1, 9, 1, 1)
+        if wm.page_for() == "openbox":
+            g.attach(_command(_("To switch it from a key, add one on the Window Manager page that runs:"),
+                              "xcontrol --awake toggle", self.window), 1, 9, 1, 1)
+        else:
+            g.attach(_command(_("To switch it from a key, add a binding like this to your i3 config (or on the "
+                                "Window Manager page):"),
+                              "bindsym $mod+Shift+a exec --no-startup-id xcontrol --awake toggle", self.window),
+                     1, 9, 1, 1)
 
     def _awake_toggled(self, *_a):
         if self.loading:
@@ -298,7 +318,7 @@ class DesktopPage(Gtk.Box):
         GLib.timeout_add(1200, lambda: self._poll_awake() and False)
 
     def _poll_awake(self):
-        if not self.get_mapped():
+        if not (self.get_mapped() or self.screen_box.get_mapped()):
             return True
         until = D.set_awake("status")
         self.loading, was = True, self.loading
@@ -452,11 +472,11 @@ class DesktopPage(Gtk.Box):
         lock_lines = [line for kind, line in conflicts if kind == "lock"]
         foreign = list(D.foreign_xss_lock().values())
         self._conflict(self.wp_conflict, self.desk["wallpaper"]["enabled"] and wp_lines,
-                       _("Your i3 config also sets the wallpaper; remove these lines or they'll replace XControl's "
-                         "at login:"), wp_lines)
+                       _("{file} also sets the wallpaper; remove these lines or they'll replace XControl's "
+                         "at login:").format(file=wm.startup_file()), wp_lines)
         self._conflict(self.lock_conflict, lock["enabled"] and (lock_lines or foreign),
-                       _("Another screen lock is set up; remove it from your i3 config, or two lockers will "
-                         "start:"), lock_lines or foreign)
+                       _("Another screen lock is set up; remove it from {file}, or two lockers will "
+                         "start:").format(file=wm.startup_file()), lock_lines or foreign)
         widgets.reveal(self.autostart_bar, D.wanted(self.desk) and D.autostart_runs() is False)
 
     def _conflict(self, label, show, text, lines):

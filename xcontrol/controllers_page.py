@@ -145,8 +145,18 @@ class LayoutDialog(Gtk.Dialog):
 
 class ControllersPage(Gtk.Box):
     def __init__(self, window):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
+        # what's above the tabs applies to all of them: the switch, the controllers that are
+        # connected, and which game's layout is being edited
+        self.top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, border_width=18)
+        self.pack_start(self.top, False, False, 0)
+        switcher, self.tab_stack, self.tab_boxes = widgets.tabs((("games", _("Games & Buttons")),
+                                                                 ("gyro", _("Gyro")),
+                                                                 ("lights", _("Lights & Rate"))))
+        self.pack_start(switcher, False, False, 0)
+        self.pack_start(self.tab_stack, True, True, 0)
+        self._into = self.top
         self.c = S.load()
         self.restart_keys = S.restart_keys(self.c)   # what the running service was started with
         self.loading = True
@@ -161,26 +171,30 @@ class ControllersPage(Gtk.Box):
         self.switch = Gtk.Switch(valign=Gtk.Align.CENTER)
         self.switch.connect("notify::active", self._changed)
         head.pack_start(self.switch, False, False, 0)
-        self.pack_start(head, False, False, 0)
-        self.pack_start(_hint(_("For PlayStation controllers (DualShock 4 and DualSense), over USB or Bluetooth: "
-                                "light bar, report rate, adaptive triggers, gyro aiming, and an Xbox 360 controller "
-                                "for games with your own button layout. Runs in the background with the desktop "
-                                "service; stop sc-controller or DS4Windows-like tools first, or both will drive "
-                                "the controller.")), False, False, 0)
+        self.top.pack_start(head, False, False, 0)
         self.status = Gtk.Label(xalign=0, wrap=True)
-        self.pack_start(self.status, False, False, 0)
+        self.top.pack_start(self.status, False, False, 0)
         self.pads_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.pack_start(self.pads_box, False, False, 0)
+        self.top.pack_start(self.pads_box, False, False, 0)
 
         self.sections = []
         self._build_layouts()
+        self._into = self.tab_boxes["games"]
+        self._into.pack_start(_hint(_(
+            "For PlayStation controllers (DualShock 4 and DualSense), over USB or Bluetooth: "
+            "light bar, report rate, adaptive triggers, gyro aiming, and an Xbox 360 controller "
+            "for games with your own button layout. Runs in the background with the desktop "
+            "service; stop sc-controller or DS4Windows-like tools first, or both will drive "
+            "the controller.")), False, False, 0)
+        self._build_emulation()
+        self._build_buttons()
+        self._build_touchpad()
+        self._into = self.tab_boxes["gyro"]
+        self._build_gyro()
+        self._into = self.tab_boxes["lights"]
         self._build_lightbar()
         self._build_dualsense()
         self._build_rate()
-        self._build_emulation()
-        self._build_gyro()
-        self._build_buttons()
-        self._build_touchpad()
         self._fill()
         widgets.protect(self)
         self.loading = False
@@ -276,7 +290,7 @@ class ControllersPage(Gtk.Box):
         frame.set_label_widget(head)
         grid = Gtk.Grid(column_spacing=12, row_spacing=8, margin_start=12, margin_top=8, margin_bottom=4)
         frame.add(grid)
-        self.pack_start(frame, False, False, 0)
+        self._into.pack_start(frame, False, False, 0)
         self.sections.append(frame)
         return grid
 
@@ -293,10 +307,7 @@ class ControllersPage(Gtk.Box):
         self.color.props.use_alpha = False
         self.color.connect("color-set", self._lightbar_changed)
         self._row(g, 0, _("Color"), self.color)
-        self.brightness = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 100, 5)
-        self.brightness.set_hexpand(True)
-        self.brightness.set_value_pos(Gtk.PositionType.RIGHT)
-        self.brightness.connect("format-value", lambda _s, v: _("Off") if v == 0 else f"{int(v)} %")
+        self.brightness = widgets.slider(0, 100, 5, fmt=lambda v: _("Off") if v == 0 else f"{int(v)} %")
         self.brightness.connect("value-changed", self._lightbar_changed)
         self._row(g, 1, _("Brightness"), self.brightness)
         g.attach(_hint(_("A dimmer light bar makes a Bluetooth controller's battery last longer.")), 1, 2, 1, 1)
@@ -323,14 +334,9 @@ class ControllersPage(Gtk.Box):
                                                    ("frequency", N_("Shaking"), 1, 80))):
                 lbl = Gtk.Label(label=_(text), xalign=0)
                 lbl.get_style_context().add_class("dim-label")
-                sc = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, 1)
-                sc.set_hexpand(True)
-                sc.set_digits(0)
-                sc.set_value_pos(Gtk.PositionType.RIGHT)
-                if k in ("start", "end"):
-                    sc.connect("format-value", lambda _w, v: f"{int(v) * 10} %")
-                elif k == "frequency":
-                    sc.connect("format-value", lambda _w, v: f"{int(v)} Hz")
+                fmt = {"start": lambda v: f"{int(v) * 10} %", "end": lambda v: f"{int(v) * 10} %",
+                       "frequency": lambda v: f"{int(v)} Hz"}.get(k)
+                sc = widgets.slider(lo, hi, 1, fmt=fmt)
                 sc.connect("value-changed", self._changed)
                 sub.attach(lbl, 0, i, 1, 1)
                 sub.attach(sc, 1, i, 1, 1)
@@ -457,7 +463,7 @@ class ControllersPage(Gtk.Box):
                            "let it learn that whenever it lies still."))
         g.attach(cal_hint, 1, 9, 1, 1)
         self.gyro_rows.append((cal_hint,))
-        self.stick_note = _hint(_("The right stick needs games to see the Xbox 360 controller (above)."))
+        self.stick_note = _hint(_("The right stick needs games to see the Xbox 360 controller (Games & Buttons tab)."))
         g.attach(self.stick_note, 1, 10, 1, 1)
 
     def _build_touchpad(self):
@@ -497,11 +503,7 @@ class ControllersPage(Gtk.Box):
                  1, 5, 1, 1)
 
     def _scale(self, lo, hi, step, digits, fmt):
-        sc = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
-        sc.set_hexpand(True)
-        sc.set_digits(digits)
-        sc.set_value_pos(Gtk.PositionType.RIGHT)
-        sc.connect("format-value", lambda _w, v: fmt(v))
+        sc = widgets.slider(lo, hi, step, digits, fmt)
         sc.connect("value-changed", self._changed)
         return sc
 

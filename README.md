@@ -2,9 +2,9 @@
 
 A Catalyst-style control panel for **X11 on Linux**.
 
-XControl brings back per-game graphics settings for Mesa drivers, and covers displays, input devices and PlayStation controllers. It also handles the parts of a desktop that a window manager like i3 leaves to you: theme, wallpaper, screen lock, bar, compositor, notifications, sound, power and users.
+XControl brings back per-game graphics settings for Mesa drivers, and covers displays, input devices and PlayStation controllers. It also handles the parts of a desktop that a window manager like i3 or Openbox leaves to you: theme, wallpaper, screen lock, bar, compositor, notifications, sound, power and users.
 
-![XControl's Gaming page with the live 3D preview](docs/images/gaming.png)
+![XControl's Graphics page with the live 3D preview](docs/images/gaming.png)
 
 ---
 
@@ -27,7 +27,7 @@ XControl brings back per-game graphics settings for Mesa drivers, and covers dis
 
 - **Arch Linux**, or a distribution that can build a `PKGBUILD`, running an **X11** session. XControl doesn't support Wayland.
 - **Mesa** graphics drivers for the per-game graphics settings.
-- **i3** is what the desktop pages are made for, but the gaming, display, input and controller pages work on any X11 desktop.
+- **i3** or **Openbox** is what the desktop pages are made for, but the gaming, display, input and controller pages work on any X11 desktop.
 - The package pulls in what it needs: Python with GTK 3 (`python-gobject`, `python-cairo`, `gtk3`), `libepoxy`, `libglvnd`, the X libraries and the `xrandr`, `xinput`, `setxkbmap` and `xset` tools. Building needs `vulkan-headers` and `gettext`.
 - **Optional extras** unlock individual features, such as vkBasalt, libratbag, PipeWire, polybar, picom and dunst. The `PKGBUILD`'s `optdepends` lists each one with what it's for.
 
@@ -47,7 +47,7 @@ makepkg -si
 sudo pacman -R xcontrol
 ```
 
-Your settings stay in `~/.config/xcontrol`; delete that folder too if you won't be back. Also remove the `exec --no-startup-id xcontrol --session` line from your i3 config, and `xcontrol-run` from any game's launch options.
+Your settings stay in `~/.config/xcontrol`; delete that folder too if you won't be back. Also remove the `exec --no-startup-id xcontrol --session` line from your i3 config (or `xcontrol --session &` from `~/.config/openbox/autostart`), and `xcontrol-run` from any game's launch options.
 
 Some pages change system files, which uninstalling leaves in place. Set those settings back in XControl first, or delete the files by hand:
 
@@ -70,7 +70,9 @@ Some pages change system files, which uninstalling leaves in place. Set those se
    exec --no-startup-id xcontrol --session
    ```
 
-System → **Check & Backup** tells you if something XControl relies on isn't running.
+   **On Openbox,** add `xcontrol --session &` to `~/.config/openbox/autostart`. Either way, turning on XControl's config on the Window Manager page adds it for you.
+
+About & Tools → **Check & Backup** tells you if something XControl relies on isn't running.
 
 **Scrolling:** turning the mouse wheel over a dropdown, number field or slider scrolls the page instead of changing the setting. Number fields and sliders take the wheel once you've clicked into them.
 
@@ -100,24 +102,25 @@ System → **Check & Backup** tells you if something XControl relies on isn't ru
 
 Each page has its own documentation:
 
-- **Gaming & Hardware:**
-  - [Gaming](docs/gaming.md): per-game graphics, launching games, the live 3D preview, FreeSync, vkBasalt, MSAA for Direct3D 8/9 games.
-  - [Displays](docs/displays.md): layout, scaling and color, night light, custom resolutions, the system-wide mode list, switching X drivers.
-  - [Input](docs/input.md): mouse and touchpad, keyboard, gaming mice (libratbag).
+- **Gaming:**
+  - [Graphics](docs/gaming.md): per-game graphics, launching games, the live 3D preview, FreeSync, vkBasalt, MSAA for Direct3D 8/9 games.
   - [Controllers](docs/controllers.md): DualShock 4 and DualSense light bar, report rate, Xbox 360 emulation, remapping, touchpad gestures, gyro aiming, per-game layouts.
+- **Hardware:**
+  - [Displays](docs/displays.md): layout, scaling and color, night light, custom resolutions, the system-wide mode list, switching X drivers.
+  - [Mouse & Keyboard](docs/input.md): mouse and touchpad, keyboard, gaming mice (libratbag).
   - [Sound](docs/sound.md): renaming, hiding and keeping devices awake, the PipeWire sample rate and buffer.
+  - [Power](docs/power.md): idle sleep, power buttons and lid, power profile, screen power, battery and power alerts.
 - **Desktop:**
   - [Appearance](docs/appearance.md): themes, icons, cursor, fonts, sounds and animations.
-  - [Desktop](docs/desktop.md): wallpaper, screen lock, screen power, starting at login.
+  - [Wallpaper & Lock](docs/desktop.md): wallpaper, screen lock, starting at login.
+  - [Window Manager](docs/window-manager.md): the generated i3 or Openbox config.
   - [Bar & Compositor](docs/bar-and-compositor.md): polybar and picom.
-  - [Notifications](docs/notifications.md): dunst and power alerts.
-  - [Window Manager (i3)](docs/window-manager.md): the generated i3 config.
+  - [Notifications](docs/notifications.md): dunst.
   - [Default Apps](docs/default-apps.md): what opens which file type, and the terminal.
 - **System:**
   - [Date & Language](docs/date-and-language.md): time zone, clock, language and formats.
-  - [Power](docs/power.md): idle sleep, power buttons and lid, power profile.
   - [Users](docs/users.md): accounts, groups, pictures.
-  - [System](docs/system.md): system information, the boot splash (Plymouth), kernel modules, the session check and backups.
+  - [About & Tools](docs/system.md): system information, the boot splash (Plymouth), kernel modules, the session check and backups.
   - [X server](docs/x-server.md): loaded modules, X options, choosing the video driver.
 
 The full documentation starts at [docs/](docs/README.md).
@@ -134,14 +137,15 @@ XControl is translated into Brazilian Portuguese, Spanish, French, German and Ru
 |---|---|
 | `~/.config/xcontrol/profiles.json` | Your global settings and per-game profiles. |
 | `~/.config/xcontrol/` | The rest of XControl's settings and generated configs. |
-| `~/.config/i3/config` | Your i3 config, which XControl's i3 page can generate. |
+| `~/.config/i3/config` | Your i3 config, which the Window Manager page can generate. |
+| `~/.config/openbox/rc.xml`, `autostart` | Your Openbox config, which the Window Manager page can generate. |
 
-System → **Check & Backup** → **Save a backup…** writes all of XControl's settings, and the files it manages, to one JSON file. **Restore a backup…** puts them back.
+About & Tools → **Check & Backup** → **Save a backup…** writes all of XControl's settings, and the files it manages, to one JSON file. **Restore a backup…** puts them back.
 
 ## Troubleshooting
 
-- **A setting doesn't reach a game:** start the game through `xcontrol-run` (see [Getting started](#getting-started)). The Gaming page shows which settings apply to which API.
-- **Something stopped working after login:** check that `exec --no-startup-id xcontrol --session` is in your i3 config, then run System → **Check & Backup**, which finds what's missing and offers a fix.
+- **A setting doesn't reach a game:** start the game through `xcontrol-run` (see [Getting started](#getting-started)). The Graphics page shows which settings apply to which API.
+- **Something stopped working after login:** check that `exec --no-startup-id xcontrol --session` is in your i3 config (or `xcontrol --session &` in `~/.config/openbox/autostart`), then run About & Tools → **Check & Backup**, which finds what's missing and offers a fix.
 - **A 32-bit Linux game prints an `ld.so` warning:** it's harmless. The GL shim is 64-bit only.
 - **Forced MSAA does nothing:** see [Limitations](#limitations).
 

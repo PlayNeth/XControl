@@ -1,4 +1,4 @@
-"""The Input page: mouse and touchpad (libinput), keyboard (XKB), and gaming mouse
+"""The Mouse & Keyboard page: mouse and touchpad (libinput), keyboard (XKB), and gaming mouse
 hardware (libratbag)."""
 import os
 import queue
@@ -62,37 +62,6 @@ def _section(title):
     return frame, grid
 
 
-def _wheel_steps(scale, event):
-    """One wheel notch = one step (GTK jumps a whole page by default)."""
-    if not widgets.wheel_allowed(scale):
-        return widgets.scroll_page(scale, event)
-    adj = scale.get_adjustment()
-    step = 0
-    if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
-        step = 1
-    elif event.direction in (Gdk.ScrollDirection.DOWN, Gdk.ScrollDirection.LEFT):
-        step = -1
-    elif event.direction == Gdk.ScrollDirection.SMOOTH:
-        ok, dx, dy = event.get_scroll_deltas()
-        if ok and abs(dx - dy) >= 0.5:
-            step = 1 if dx - dy > 0 else -1
-    if step:
-        adj.set_value(adj.get_value() + step * adj.get_step_increment())
-    return True
-
-
-def _scale(lo, hi, step, digits, fmt, marks=()):
-    s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
-    s.set_digits(digits)
-    s.set_hexpand(True)
-    s.set_value_pos(Gtk.PositionType.RIGHT)
-    s.get_adjustment().set_page_increment(step)
-    s.connect("format-value", lambda _s, v: fmt(v))
-    for value, text in marks:
-        s.add_mark(value, Gtk.PositionType.BOTTOM, text)
-    s.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
-    s.connect("scroll-event", _wheel_steps)
-    return s
 
 
 def sync_autostart():
@@ -165,10 +134,10 @@ class PointerTab(Gtk.Box):
         self.rows = {}
         self.profile = Gtk.ComboBoxText()
         self.profile.connect("changed", self._combo_changed, "accel_profile")
-        self.speed = _scale(-1, 1, 0.05, 2, lambda v: f"{v:+.2f}",
+        self.speed = widgets.slider(-1, 1, 0.05, 2, lambda v: f"{v:+.2f}",
                             [(-1, _("Slow")), (0, _("Default")), (1, _("Fast"))])
         self.speed.connect("value-changed", lambda s: self._set("accel_speed", round(s.get_value(), 2)))
-        self.scroll = _scale(0.25, 4, 0.25, 2, lambda v: f"{v:.2f}×", [(1, _("Default"))])
+        self.scroll = widgets.slider(0.25, 4, 0.25, 2, lambda v: f"{v:.2f}×", [(1, _("Default"))])
         self.scroll.connect("value-changed", lambda s: self._set("scroll_factor", round(s.get_value(), 2)))
         self.checks = {}
         rows = [("accel_profile", _("Acceleration"), self.profile),
@@ -434,8 +403,8 @@ class KeyboardTab(Gtk.Box):
         self.pack_start(frame, False, False, 0)
 
         frame, g = _section(_("Key repeat"))
-        self.delay = _scale(150, 1000, 10, 0, lambda v: _("{ms} ms").format(ms=int(v)))
-        self.rate = _scale(5, 60, 1, 0, lambda v: _("{n} per second").format(n=int(v)))
+        self.delay = widgets.slider(150, 1000, 10, 0, lambda v: _("{ms} ms").format(ms=int(v)))
+        self.rate = widgets.slider(5, 60, 1, 0, lambda v: _("{n} per second").format(n=int(v)))
         self._repeat_later = _Debounce(300, lambda _v: self._apply({"repeat_delay": int(self.delay.get_value()),
                                                                      "repeat_rate": int(self.rate.get_value())}))
         for s in (self.delay, self.rate):
@@ -1012,7 +981,7 @@ class GamingMouseTab(Gtk.Box):
                                  "pick a darker color to dim it.")), 1, row, 1, 1)
                 row += 1
             elif led.get("Mode") != R.LED_OFF:
-                bright = _scale(0, 255, 5, 0, lambda v: f"{round(v * 100 / 255)} %")
+                bright = widgets.slider(0, 255, 5, 0, lambda v: f"{round(v * 100 / 255)} %")
                 bright.set_value(led.get("Brightness", 255))
                 later = _Debounce(250, self._guard(lambda v, led=led: (lambda: led.set_brightness(v))))
                 bright.connect("value-changed", lambda s, later=later: None if self.loading else later(s.get_value()))
@@ -1021,7 +990,7 @@ class GamingMouseTab(Gtk.Box):
                 self.w["leds"][-1]["brightness"] = bright
                 row += 1
             if led.get("Mode") in (R.LED_CYCLE, R.LED_BREATHING):
-                speed = _scale(100, 10000, 100, 0, lambda v: _("{s} s").format(s=f"{v / 1000:g}"))
+                speed = widgets.slider(100, 10000, 100, 0, lambda v: _("{s} s").format(s=f"{v / 1000:g}"))
                 speed.set_value(led.get("EffectDuration", 1000))
                 later = _Debounce(250, self._guard(lambda v, led=led: (lambda: led.set_duration(v))))
                 speed.connect("value-changed", lambda s, later=later: None if self.loading else later(s.get_value()))

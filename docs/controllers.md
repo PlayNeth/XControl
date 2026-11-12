@@ -8,6 +8,11 @@ controllers: the **DualShock 4** (both models and the USB adapter) and the
 for controllers"; a small service (`xcontrol --pads`) then runs with the desktop
 service and picks up controllers as they connect.
 
+The switch, the connected controllers and the per-game layout picker stay at the top. The
+settings are on three tabs: **Games & Buttons** (what games see, the button layout, the
+touchpad), **Gyro**, and **Lights & Rate** (light bar, DualSense triggers and player lights,
+report rate).
+
 - **Light bar**: color and brightness (0 turns it off), set through the kernel
   driver's LEDs (DualShock 4: `/sys/class/leds/inputN:red|green|blue|global`;
   DualSense: the multicolor `inputN:rgb:indicator`), so rumble doesn't reset

@@ -8,10 +8,9 @@ import os
 import shutil
 import subprocess
 
-from . import desktop as D
+from . import desktop as D, wm
 from .i18n import N_, _
 
-SESSION_LINE = "exec --no-startup-id xcontrol --session"
 POLKIT_AGENTS = ("polkit-gnome-authentication-agent-1", "polkit-kde-authentication-agent-1", "lxpolkit",
                  "lxqt-policykit-agent", "polkit-mate-authentication-agent-1", "xfce-polkit", "mate-polkit",
                  "hyprpolkitagent", "soteria", "polkit-efl-authentication-agent-1", "ts-polkitagent",
@@ -73,8 +72,9 @@ def _start_xsettingsd():
 
 def checks():
     """All checks, worst first."""
-    from . import audio, i3cfg, night, notify, poweralerts, theming
+    from . import audio, i3cfg, night, notify, obcfg, poweralerts, theming
     out = []
+    which, file = wm.page_for(), wm.startup_file()
     desk = D.load()
     st = D.state()
     procs = _cmdlines()
@@ -84,9 +84,9 @@ def checks():
     if D.wanted(desk):
         if runs is False:
             out.append(("error", _("XControl doesn't start when you log in"),
-                        _("Your i3 config doesn't run xcontrol --session, so after the next login the wallpaper, "
-                        "bar, compositor, screen lock and other desktop settings won't start. Add this line:"),
-                        ("copy", SESSION_LINE)))
+                        _("{file} doesn't run xcontrol --session, so after the next login the wallpaper, "
+                        "bar, compositor, screen lock and other desktop settings won't start. Add this line:")
+                        .format(file=file), ("copy", wm.startup_line("xcontrol --session", which))))
         else:
             out.append(("ok", _("XControl starts when you log in"), "", None))
         if not st.get("daemon"):
@@ -106,20 +106,22 @@ def checks():
         else:
             path = installed_agent()
             detail = _("No polkit agent is running, so everything that asks for a password (users, kernel "
-                       "modules, EDID, power buttons, languages, time) fails without a word. i3 doesn't start one.")
+                       "modules, EDID, power buttons, languages, time) fails without a word. i3 and Openbox "
+                       "don't start one.")
             if path:
                 out.append(("error", _("Password prompts can't appear"),
-                            detail + " " + _("Start it now, and add this to your i3 config:"),
+                            detail + " " + _("Start it now, and add this to {file}:").format(file=file),
                             (_("Start it"), lambda: start_agent(path))))
                 out.append(("info", _("Start the polkit agent at login"), "",
-                            ("copy", f"exec --no-startup-id {path}")))
+                            ("copy", wm.startup_line(path, which))))
             else:
                 out.append(("error", _("Password prompts can't appear"),
-                            detail + " " + _("Install one, e.g. polkit-gnome, and start it from your i3 config."),
+                            detail + " " + _("Install one, e.g. polkit-gnome, and start it from {file}.").format(
+                                file=file),
                             None))
 
     # ---- duplicates
-    managed = [(N_("Another bar is running besides XControl's"), ["polybar"], desk["bar"]["enabled"]),
+    managed = [(N_("Another bar is running besides XControl's"), ["polybar"], desk[D.bar_key()]["enabled"]),
                (N_("Another compositor is running besides XControl's"), ["picom", "compton", "xcompmgr"],
                 desk["picom"]["enabled"]),
                (N_("Another notification program is running besides XControl's"),
@@ -135,14 +137,14 @@ def checks():
                         "\n".join(sorted(set(extra.values())))[:400],
                         (_("Stop the extra ones"), lambda n=names: D.stop_foreign(n))))
     conflicts = [line for kind, line in D.session_conflicts()
-                 if (kind == "bar" and desk["bar"]["enabled"]) or (kind == "i3bar" and desk["bar"]["enabled"])
+                 if (kind == "bar" and desk[D.bar_key()]["enabled"]) or (kind == "i3bar" and desk["bar"]["enabled"])
                  or (kind == "compositor" and desk["picom"]["enabled"])
                  or (kind == "wallpaper" and desk["wallpaper"]["enabled"])
                  or (kind == "lock" and desk["lock"]["enabled"])
                  or (kind == "notifications" and desk["notify"]["enabled"])
                  or (kind == "power_alerts" and desk["power_alerts"]["enabled"])]
-    if conflicts and not i3cfg.is_ours():
-        out.append(("warn", _("Your i3 config starts things XControl also starts"),
+    if conflicts and not (obcfg.is_ours(obcfg.autostart_path()) if which == "openbox" else i3cfg.is_ours()):
+        out.append(("warn", _("{file} starts things XControl also starts").format(file=file),
                     _("Remove these lines, or there'll be two of each after the next login:") + "\n" +
                     "\n".join(conflicts[:6]), None))
     if desk["power_alerts"]["enabled"] and poweralerts.service_state()[0]:

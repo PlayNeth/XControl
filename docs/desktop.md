@@ -1,4 +1,4 @@
-# Desktop
+# Wallpaper & Lock
 
 ## Wallpaper
 
@@ -34,31 +34,6 @@ or a crash leaves the session open. XControl sets up the proven ones instead:
 
 Remove any `exec xss-lock …` line from your i3 config, or two lockers will start.
 
-## Screen power
-
-**Turn the screen off after** sets DPMS (`xset dpms 0 0 N`). **Leave as it is** doesn't touch it.
-
-## Keep the screen on
-
-- **Stay awake now** holds off the screen lock and screen-off until you turn it off, or for 30
-  minutes to 4 hours. From a key or a script: `xcontrol --awake on|off|toggle|MINUTES|status`.
-- **Gamepads and joysticks count as activity** (like joystickwake): a button press, a d-pad or a
-  real stick/trigger movement (not stick drift) restarts X's idle timer the way a key press does,
-  and wakes a screen that's off. Every device udev marks as a joystick is watched, including ones
-  plugged in later; motion sensors and touchpads of controllers are ignored. It reads
-  `/dev/input/event*`, which the logged-in user can normally read already.
-  Virtual pads that programs create (Steam Input, sc-controller, xboxdrv, input-remapper) are
-  marked as such on the page, with the program that probably made them.
-- **Apps can keep it on**: XControl answers `org.freedesktop.ScreenSaver` on the session bus, so
-  Steam, browsers, video players and SDL games that ask for the screen to stay on get their
-  way while they play (and the request ends when the app quits). A desktop's own power manager
-  answering already takes precedence.
-- **While the focused window is full screen**.
-
-While something keeps the screen on, the service suspends X's screen saver and DPMS timers
-(`XScreenSaverSuspend`); when it ends, the idle time starts over, so the screen doesn't go dark
-the moment a video finishes. The page shows what is keeping it on.
-
 ## At login
 
 `xcontrol --desktop-daemon` sets the wallpaper, applies blanking, runs xss-lock (restarting it
@@ -72,4 +47,4 @@ config instead (or use `dex`):
 use: it restores the display layout, starts xsettingsd for live theme updates, starts the
 input watcher (mouse, touchpad and keyboard settings, re-applied on hotplug) and runs the desktop
 service. Single flags still work and can be combined, e.g.
-`xcontrol --desktop-daemon --watch-input`. The Desktop page warns when nothing would start them.
+`xcontrol --desktop-daemon --watch-input`. The Wallpaper & Lock page warns when nothing would start them.

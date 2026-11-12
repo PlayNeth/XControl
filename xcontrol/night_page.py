@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import GLib, Gtk  # noqa: E402
 
-from . import desktop as D, night as NL, xrandr  # noqa: E402
+from . import desktop as D, night as NL, widgets, wm, xrandr  # noqa: E402
 from .desktop_page import _command, _hint  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
@@ -46,7 +46,7 @@ class NightPanel(Gtk.Frame):
             return lab
 
         g.attach(_hint(_("Warmer colors in the evening, easier on the eyes. It changes right away (no Apply "
-                         "needed) and builds on each display's gamma above.")), 0, 0, 2, 1)
+                         "needed) and builds on each display's gamma (Scaling and color tab).")), 0, 0, 2, 1)
         self.mode = Gtk.ComboBoxText()
         for k in NL.MODES:
             self.mode.append(k, _(MODE_LABELS[k]))
@@ -86,14 +86,9 @@ class NightPanel(Gtk.Frame):
         self.hours_label = row(3, _("Hours"), hours)
         self.hours_box = hours
 
-        self.temp = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, NL.TEMP_RANGE[0], 6000, 100)
-        self.temp.set_hexpand(True)
+        self.temp = widgets.slider(NL.TEMP_RANGE[0], 6000, 100, fmt=lambda v: f"{int(v)} K",
+                                   marks=((4500, _("a little")), (3400, _("warm")), (2300, _("very warm"))))
         self.temp.set_inverted(True)        # warmer to the right
-        self.temp.set_digits(0)
-        self.temp.set_value_pos(Gtk.PositionType.RIGHT)
-        self.temp.connect("format-value", lambda _s, v: f"{int(v)} K")
-        for v, mark in ((4500, _("a little")), (3400, _("warm")), (2300, _("very warm"))):
-            self.temp.add_mark(v, Gtk.PositionType.BOTTOM, mark)
         self.temp.connect("value-changed", self._changed)
         row(4, _("Night color"), self.temp)
         self.preview = Gtk.ToggleButton(label=_("Show it now"))
@@ -238,7 +233,8 @@ class NightPanel(Gtk.Frame):
         self.status.set_text(" ".join(parts))
         self.status.set_visible(bool(parts))
         other = NL.conflicting()
-        self.conflict.set_text(_("{programs} is also changing the colors; stop it (and remove it from your i3 "
-                                 "config), or the two will fight.").format(programs=", ".join(other)) if other else "")
+        self.conflict.set_text(_("{programs} is also changing the colors; stop it (and remove it from {file}), "
+                                 "or the two will fight.").format(programs=", ".join(other), file=wm.startup_file())
+                               if other else "")
         self.conflict.set_visible(bool(other))
         return True

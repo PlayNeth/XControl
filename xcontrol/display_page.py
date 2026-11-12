@@ -9,7 +9,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk  # noqa: E402
 
-from . import config, modelines, output_names, output_props, xrandr  # noqa: E402
+from . import config, modelines, output_names, output_props, widgets, xrandr  # noqa: E402
 from .display_color import ColorPanel  # noqa: E402
 from .i18n import N_, _, hz, ngettext  # noqa: E402
 from .paths import autostart_file  # noqa: E402
@@ -168,8 +168,16 @@ class Arrangement(Gtk.DrawingArea):
 
 class DisplayPage(Gtk.Box):
     def __init__(self, window):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=12, border_width=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
+        # above the tabs: which display the Arrangement and Scaling and color tabs are about
+        top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, border_width=18)
+        self.pack_start(top, False, False, 0)
+        switcher, self.tab_stack, tab = widgets.tabs((("layout", _("Arrangement")),
+                                                      ("color", _("Scaling and color")),
+                                                      ("night", _("Night light"))))
+        self.pack_start(switcher, False, False, 0)
+        self.pack_start(self.tab_stack, True, True, 0)
         self.monitors = []
         self.selected = None
         self.original = []  # the layout as read, for revert
@@ -179,17 +187,17 @@ class DisplayPage(Gtk.Box):
         self.warning_label = Gtk.Label(xalign=0, wrap=True)
         self.warning.get_content_area().add(self.warning_label)
         self.warning.set_no_show_all(True)
-        self.pack_start(self.warning, False, False, 0)
+        top.pack_start(self.warning, False, False, 0)
 
         frame = Gtk.Frame()
         self.canvas = Arrangement(self)
         frame.add(self.canvas)
-        self.pack_start(frame, False, False, 0)
-        hint = Gtk.Label(label=_("Drag the displays to match how they sit on your desk."), xalign=0)
+        tab["layout"].pack_start(frame, False, False, 0)
+        hint = Gtk.Label(label=_("Drag the displays to match how they sit on your desk."), halign=Gtk.Align.CENTER)
         hint.get_style_context().add_class("dim-label")
-        self.pack_start(hint, False, False, 0)
+        tab["layout"].pack_start(hint, False, False, 0)
 
-        g = Gtk.Grid(column_spacing=12, row_spacing=8)
+        g = Gtk.Grid(column_spacing=12, row_spacing=8, halign=Gtk.Align.CENTER)
         self.monitor_combo = Gtk.ComboBoxText(hexpand=True)
         self.monitor_combo.connect("changed", self._monitor_chosen)
         self.enabled_switch = Gtk.Switch(halign=Gtk.Align.START)
@@ -231,14 +239,19 @@ class DisplayPage(Gtk.Box):
         display_row.pack_start(self.monitor_combo, True, True, 0)
         display_row.pack_start(res_btn, False, False, 0)
         display_row.pack_start(info_btn, False, False, 0)
-        rows = [(_("Display"), display_row), (_("Enabled"), self.enabled_switch), ("", self.primary_check),
+        which = Gtk.Box(spacing=12)
+        which_label = Gtk.Label(label=_("Display"), xalign=0)
+        which.pack_start(which_label, False, False, 0)
+        which.pack_start(display_row, True, True, 0)
+        top.pack_start(which, False, False, 0)
+        rows = [(_("Enabled"), self.enabled_switch), ("", self.primary_check),
                 (_("Resolution"), mode_box), (_("Refresh rate"), self.rate_combo),
                 (_("Orientation"), self.rot_combo), (_("Position"), pos)]
         for i, (label, widget) in enumerate(rows):
             g.attach(Gtk.Label(label=label, xalign=0), 0, i, 1, 1)
             g.attach(widget, 1, i, 1, 1)
-        self.controls = [w for _, w in rows[1:]]
-        self.pack_start(g, False, False, 0)
+        self.controls = [w for _, w in rows]
+        tab["layout"].pack_start(g, False, False, 0)
 
         self.previewed = set()      # outputs whose colours are being previewed live
         self._preview_pending = {}
@@ -247,8 +260,9 @@ class DisplayPage(Gtk.Box):
         # leaving without Apply puts the previewed colours back
         self.window.connect("delete-event", lambda *_a: (self._undo_preview(), False)[1])
         self.connect("destroy", lambda *_a: self._undo_preview())
-        self.pack_start(self.color, False, False, 0)
+        tab["color"].pack_start(self.color, False, False, 0)
         labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
+        labels.add_widget(which_label)
         for child in g.get_children():
             if g.child_get_property(child, "left-attach") == 0:
                 labels.add_widget(child)
@@ -256,9 +270,9 @@ class DisplayPage(Gtk.Box):
             labels.add_widget(w)
         from .night_page import NightPanel
         self.night = NightPanel(self.window)
-        self.pack_start(self.night, False, False, 6)
+        tab["night"].pack_start(self.night, False, False, 0)
 
-        buttons = Gtk.Box(spacing=6)
+        buttons = Gtk.Box(spacing=6, margin_start=18, margin_end=18, margin_top=6, margin_bottom=12)
         self.autostart_check = Gtk.CheckButton(label=_("Restore this layout when I log in"))
         self.autostart_check.set_active(config.load()["display"]["autostart"])
         self.autostart_check.connect("toggled", self._autostart_toggled)

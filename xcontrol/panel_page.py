@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import bar as B, compositor as C, desktop as D, i3cfg as I3, widgets  # noqa: E402
+from . import bar as B, compositor as C, desktop as D, i3cfg as I3, widgets, wm  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 MODULE_LABELS = {
@@ -63,12 +63,6 @@ def _section(box, title):
     return grid
 
 
-def _scale(lo, hi, step, digits=0):
-    s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
-    s.set_digits(digits)
-    s.set_hexpand(True)
-    s.set_value_pos(Gtk.PositionType.RIGHT)
-    return s
 
 
 class PanelPage(Gtk.Box):
@@ -76,6 +70,7 @@ class PanelPage(Gtk.Box):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
         self.desk = D.load()
+        self.bar_key = D.bar_key()   # i3 and Openbox each have their own bar
         self.loading = True
         self._timer = None
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -127,6 +122,8 @@ class PanelPage(Gtk.Box):
         box.pack_start(head, False, False, 0)
         box.pack_start(_hint(_("XControl writes its own polybar setup from scratch and starts one bar per display. "
                                "Your own polybar config isn't used or changed.")), False, False, 0)
+        box.pack_start(_hint(_("These are the bar settings for {wm}; i3 and Openbox each have their own.").format(
+            wm="Openbox" if self.bar_key == "bar_openbox" else "i3")), False, False, 0)
         self.bar_status, self.bar_warn = self._status_area(box)
         self.bar_warn.add_button(_("Stop them"), 1)
         self.bar_warn.connect("response", lambda *_a: self._stop_foreign(["polybar"]))
@@ -202,7 +199,7 @@ class PanelPage(Gtk.Box):
             btn.connect("color-set", self._changed)
             self.colors[key] = btn
             self._row(g, r, label, btn)
-        self.opacity = _scale(0, 100, 5)
+        self.opacity = widgets.slider(0, 100, 5)
         self.opacity.connect("value-changed", self._changed)
         self._row(g, 7, _("Background opacity"), self.opacity)
         g.attach(_hint(_("Below 100 the bar is see-through when a compositor runs (see the other tab).")),
@@ -224,7 +221,7 @@ class PanelPage(Gtk.Box):
     def _fill_modules(self):
         for row in self.mod_list.get_children():
             row.destroy()
-        b = self.desk["bar"]
+        b = self.desk[self.bar_key]
         ver = B.version()
         can = B.available(b, ver)
         for i, (mid, pos, enabled) in enumerate(b["modules"]):
@@ -271,7 +268,7 @@ class PanelPage(Gtk.Box):
     def _module_settings(self, _btn, mid):
         from .bar_module_dialog import ModuleDialog
         title = _("Bar settings") if mid == "bar" else _("{module} settings").format(module=_(MODULE_LABELS[mid][0]))
-        dlg = ModuleDialog(self.window, self.desk["bar"], mid, title)
+        dlg = ModuleDialog(self.window, self.desk[self.bar_key], mid, title)
         if dlg.run() == Gtk.ResponseType.OK:
             dlg.save()
             self._commit_later()
@@ -280,7 +277,7 @@ class PanelPage(Gtk.Box):
     def _module_toggled(self, check, mid):
         other = {"workspaces": "xworkspaces", "xworkspaces": "workspaces"}.get(mid)
         refill = False
-        for m in self.desk["bar"]["modules"]:
+        for m in self.desk[self.bar_key]["modules"]:
             if m[0] == mid:
                 m[2] = check.get_active()
             elif m[0] == other and check.get_active() and m[2]:
@@ -291,13 +288,13 @@ class PanelPage(Gtk.Box):
         self._commit_later()
 
     def _module_side(self, combo, mid):
-        for m in self.desk["bar"]["modules"]:
+        for m in self.desk[self.bar_key]["modules"]:
             if m[0] == mid:
                 m[1] = combo.get_active_id()
         self._commit_later()
 
     def _module_move(self, _btn, mid, delta):
-        mods = self.desk["bar"]["modules"]
+        mods = self.desk[self.bar_key]["modules"]
         i = next(k for k, m in enumerate(mods) if m[0] == mid)
         j = i + delta
         if 0 <= j < len(mods):
@@ -343,19 +340,19 @@ class PanelPage(Gtk.Box):
         self.shadows = Gtk.CheckButton(label=_("Shadows"))
         self.shadows.connect("toggled", self._changed)
         g.attach(self.shadows, 1, 0, 1, 1)
-        self.sh_radius = _scale(2, 40, 1)
+        self.sh_radius = widgets.slider(2, 40, 1)
         self.sh_radius.connect("value-changed", self._changed)
         self._row(g, 1, _("Shadow size"), self.sh_radius)
-        self.sh_opacity = _scale(5, 100, 5)
+        self.sh_opacity = widgets.slider(5, 100, 5)
         self.sh_opacity.connect("value-changed", self._changed)
         self._row(g, 2, _("Shadow strength"), self.sh_opacity)
         self.fading = Gtk.CheckButton(label=_("Fade windows in and out"))
         self.fading.connect("toggled", self._changed)
         g.attach(self.fading, 1, 3, 1, 1)
-        self.fade_speed = _scale(1, 30, 1)
+        self.fade_speed = widgets.slider(1, 30, 1)
         self.fade_speed.connect("value-changed", self._changed)
         self._row(g, 4, _("Fade speed"), self.fade_speed)
-        self.corners = _scale(0, 30, 1)
+        self.corners = widgets.slider(0, 30, 1)
         self.corners.connect("value-changed", self._changed)
         self._row(g, 5, _("Rounded corners"), self.corners)
         self.blur = Gtk.ComboBoxText()
@@ -366,10 +363,10 @@ class PanelPage(Gtk.Box):
 
         g = _section(box, _("Transparency"))
         self.pic_widgets.append(g)
-        self.active = _scale(30, 100, 5)
+        self.active = widgets.slider(30, 100, 5)
         self.active.connect("value-changed", self._changed)
         self._row(g, 0, _("Focused window"), self.active)
-        self.inactive = _scale(30, 100, 5)
+        self.inactive = widgets.slider(30, 100, 5)
         self.inactive.connect("value-changed", self._changed)
         self._row(g, 1, _("Other windows"), self.inactive)
         g.attach(_hint(_("Percent opacity. Full-screen windows and the lock screen are never see-through.")),
@@ -381,7 +378,7 @@ class PanelPage(Gtk.Box):
 
     # ---------------------------------------------------------------- model <-> view
     def _fill(self):
-        b, p = self.desk["bar"], self.desk["picom"]
+        b, p = self.desk[self.bar_key], self.desk["picom"]
         self.bar_switch.set_active(b["enabled"])
         self.position.set_active_id(b["position"])
         self.height.set_value(b["height"])
@@ -431,7 +428,7 @@ class PanelPage(Gtk.Box):
     def _changed(self, *_a):
         if self.loading:
             return
-        b, p = self.desk["bar"], self.desk["picom"]
+        b, p = self.desk[self.bar_key], self.desk["picom"]
         b["enabled"] = self.bar_switch.get_active()
         b["position"] = self.position.get_active_id() or "bottom"
         b["height"] = int(self.height.get_value())
@@ -472,7 +469,7 @@ class PanelPage(Gtk.Box):
     def _commit(self):
         self._timer = None
         fresh = D.load()   # other pages (Desktop) keep their part
-        fresh["bar"], fresh["picom"] = self.desk["bar"], self.desk["picom"]
+        fresh[self.bar_key], fresh["picom"] = self.desk[self.bar_key], self.desk["picom"]
         try:
             D.save(fresh)
             D.notify_daemon(fresh)
@@ -502,7 +499,7 @@ class PanelPage(Gtk.Box):
         errors = st.get("errors") or {}
         conflicts = D.session_conflicts()
 
-        b = self.desk["bar"]
+        b = self.desk[self.bar_key]
         bars = sorted(k[4:] or _("the screen") for k in kids if k.startswith("bar:"))
         if not shutil.which("polybar"):
             text = _("polybar isn't installed.")
@@ -518,10 +515,11 @@ class PanelPage(Gtk.Box):
         foreign = D.foreign(["polybar"])
         lines = [line for kind, line in conflicts if kind in ("bar", "i3bar")]
         self._warn(self.bar_warn, b["enabled"] and foreign,
-                   _("Another polybar is running (started by your i3 config or a script); it will sit on top "
-                     "of XControl's."))
+                   _("Another polybar is running (started by {file} or a script); it will sit on top "
+                     "of XControl's.").format(file=wm.startup_file()))
         self._conflict(self.bar_conflicts, b["enabled"] and lines,
-                       _("Remove these from your i3 config, or there will be two bars after the next login:"), lines)
+                       _("Remove these from {file}, or there will be two bars after the next login:").format(
+                           file=wm.startup_file()), lines)
 
         p = self.desk["picom"]
         if not shutil.which("picom"):
@@ -539,10 +537,10 @@ class PanelPage(Gtk.Box):
         lines = [line for kind, line in conflicts if kind == "compositor"]
         self._warn(self.pic_warn, p["enabled"] and foreign,
                    _("Another compositor is running, so XControl's can't start. Stop it, and remove it from "
-                     "your i3 config."))
+                     "{file}.").format(file=wm.startup_file()))
         self._conflict(self.pic_conflicts, p["enabled"] and lines,
-                       _("Remove these from your i3 config, or the other compositor starts first after the next "
-                         "login:"), lines)
+                       _("Remove these from {file}, or the other compositor starts first after the next "
+                         "login:").format(file=wm.startup_file()), lines)
         return False
 
     def _warn(self, bar, show, text):

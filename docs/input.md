@@ -1,6 +1,6 @@
-# Input
+# Mouse & Keyboard
 
-The **Input** page has three tabs.
+The **Mouse & Keyboard** page has three tabs.
 
 **Mouse & Touchpad** (libinput, through `xinput`), per device:
 - acceleration: **Flat** (no acceleration, what most players want) or **Adaptive**;

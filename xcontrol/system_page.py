@@ -1,4 +1,4 @@
-"""The System page: an overview (distribution, kernel, hardware, live readings) and the
+"""The About & Tools page: an overview (distribution, kernel, hardware, live readings) and the
 kernel modules in use."""
 import threading
 

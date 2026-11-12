@@ -3,6 +3,7 @@ the X log tells whether X allows variable refresh."""
 import os
 import sys
 import tempfile
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from xcontrol import config, launcher as L, vrr  # noqa: E402
@@ -83,6 +84,37 @@ expect("no line", X("[  12.3] (II) AMDGPU(0): something else\n"), None)
 expect("option only", X('[ 1.0] (**) AMDGPU(0): Option "VariableRefresh" "true"\n'), True)
 expect("display number", vrr._display_number(":1.0"), "1")
 expect("remote display", vrr._display_number("localhost:10.0"), "10")
+
+# the server's log: ~/.local/state (XLibre 25.2+), ~/.local/share (before, and X.Org) or /var/log
+with tempfile.TemporaryDirectory() as home:
+    saved = {k: os.environ.pop(k, None) for k in ("XDG_STATE_HOME", "XDG_DATA_HOME")}
+    saved_log_dir, vrr.LOG_DIR = vrr.LOG_DIR, os.path.join(home, "var-log")
+
+    def log(*parts, age):
+        path = os.path.join(home, *parts)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        open(path, "w").close()
+        os.utime(path, (time.time() - age,) * 2)
+        return path
+
+    expect("no log anywhere", vrr.server_log(":0", home), None)
+    share = log(".local", "share", "xorg", "Xorg.0.log", age=500)
+    log(".local", "share", "xorg", "Xorg.1.log", age=0)
+    expect("log in ~/.local/share", vrr.server_log(":0", home), share)
+    state = log(".local", "state", "xorg", "Xorg.0.log", age=100)
+    expect("log in ~/.local/state, older one in share left behind", vrr.server_log(":0", home), state)
+    os.utime(share, None)
+    expect("back on a server that logs in share", vrr.server_log(":0", home), share)
+    os.environ["XDG_STATE_HOME"] = os.path.join(home, "st")
+    moved = log("st", "xorg", "Xorg.0.log", age=-50)
+    expect("XDG_STATE_HOME is followed", vrr.server_log(":0", home), moved)
+    root = log("var-log", "Xorg.0.log", age=-100)
+    expect("a server started as root", vrr.server_log(":0", home), root)
+    expect("no display, no log", vrr.server_log("", home), None)
+    del os.environ["XDG_STATE_HOME"]
+    os.environ.update({k: v for k, v in saved.items() if v is not None})
+    vrr.LOG_DIR = saved_log_dir
+
 
 print("check_launcher:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

@@ -10,6 +10,7 @@ running. SIGHUP makes it re-read the settings.
 """
 import ctypes
 import ctypes.util
+import copy
 import fcntl
 import glob
 import json
@@ -58,7 +59,20 @@ def normalize(d):
     return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake,
             "notify": notify.normalize(d.get("notify")), "night": night.normalize(d.get("night")),
             "power": power.normalize(d.get("power")), "power_alerts": poweralerts.normalize(d.get("power_alerts")),
-            "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom"))}
+            "bar": bar.normalize(d.get("bar")), "picom": compositor.normalize(d.get("picom")),
+            # Openbox's bar has settings of its own; the first time, it starts as a copy of i3's
+            "bar_openbox": bar.normalize(copy.deepcopy(d["bar_openbox"] if isinstance(d.get("bar_openbox"), dict)
+                                                       else d.get("bar")))}
+
+
+BAR_KEYS = {"i3": "bar", "openbox": "bar_openbox"}
+
+
+def bar_key(which=None):
+    """Where the bar settings for this window manager are: i3 and Openbox each have their own
+    (anything else uses i3's)."""
+    from . import wm
+    return BAR_KEYS.get(which or wm.page_for(), "bar")
 
 
 def load():
@@ -130,7 +144,7 @@ def _controllers():
 def wanted(desk):
     """Whether the background service is needed at all."""
     return bool(desk["wallpaper"]["enabled"] or desk["lock"]["enabled"] or desk["blanking"]["managed"]
-                or desk["bar"]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
+                or desk[bar_key()]["enabled"] or desk["picom"]["enabled"] or any(desk["awake"].values())
                 or desk["notify"]["enabled"] or desk["power_alerts"]["enabled"] or desk["night"]["enabled"]
                 or desk["power"]["sleep_minutes"]
                 or night.forced(_runtime) is not None or _controllers()["enabled"]
@@ -189,39 +203,58 @@ def foreign_xss_lock():
     return foreign(["xss-lock"])
 
 
-def session_conflicts():
-    """Lines in the i3 config that would fight with these settings: [(kind, line)], kinds
-    wallpaper, lock, bar, compositor and i3bar (an i3 `bar { }` block)."""
-    out = []
+def _conflict_kind(cmd):
+    """What a startup command would fight with, or None."""
+    if "xcontrol" in cmd:
+        return None
+    for kind, pattern in (("wallpaper", r"\b(feh|nitrogen|xwallpaper|hsetroot|xsetroot\s+-solid)\b|\.fehbg"),
+                          ("lock", r"\b(xss-lock|xautolock|xidlehook)\b"),
+                          ("bar", r"\bpolybar\b|launch\.sh"),
+                          ("compositor", r"\b(picom|compton|xcompmgr)\b"),
+                          ("notifications", r"\b(dunst|xfce4-notifyd|notify-osd|notification-daemon|"
+                                            r"deadd-notification-center|lxqt-notificationd|twmnd)\b"),
+                          ("power_alerts", r"\bpoweralertd\b")):
+        if re.search(pattern, cmd):
+            return kind
+    return None
+
+
+def _wm_startup():
+    """(which, lines) of the window manager's startup: Openbox's autostart when Openbox runs,
+    else the i3 config (its exec lines and bar blocks); (None, []) when there's none."""
+    from . import wm
+    if wm.running() == "openbox":
+        from . import obcfg
+        try:
+            with open(obcfg.autostart_path(), errors="replace") as f:
+                return "openbox", [ln.strip() for ln in f.read().splitlines()
+                                   if ln.strip() and not ln.strip().startswith("#")]
+        except OSError:
+            return "openbox", []
     for path in (os.path.expanduser("~/.config/i3/config"), os.path.expanduser("~/.i3/config")):
         try:
             with open(path, errors="replace") as f:
-                lines = f.read().splitlines()
+                return "i3", [ln.strip() for ln in f.read().splitlines()]
         except OSError:
             continue
-        for line in lines:
-            s = line.strip()
+    return None, []
+
+
+def session_conflicts():
+    """Lines in the window manager's startup that would fight with these settings: [(kind, line)],
+    kinds wallpaper, lock, bar, compositor, notifications, power_alerts and i3bar (an i3 `bar { }`)."""
+    which, lines = _wm_startup()
+    out = []
+    for s in lines:
+        if which == "i3":
             if re.match(r"^bar\s*\{", s):
                 out.append(("i3bar", s))
                 continue
             if not s.startswith("exec"):
                 continue
-            if "xcontrol" in s:
-                continue
-            if re.search(r"\b(feh|nitrogen|xwallpaper|hsetroot|xsetroot\s+-solid)\b|\.fehbg", s):
-                out.append(("wallpaper", s))
-            elif re.search(r"\b(xss-lock|xautolock|xidlehook)\b", s):
-                out.append(("lock", s))
-            elif re.search(r"\bpolybar\b|launch\.sh", s):
-                out.append(("bar", s))
-            elif re.search(r"\b(picom|compton|xcompmgr)\b", s):
-                out.append(("compositor", s))
-            elif re.search(r"\b(dunst|xfce4-notifyd|notify-osd|notification-daemon|deadd-notification-center|"
-                           r"lxqt-notificationd|twmnd)\b", s):
-                out.append(("notifications", s))
-            elif re.search(r"\bpoweralertd\b", s):
-                out.append(("power_alerts", s))
-        break
+        kind = _conflict_kind(s)
+        if kind:
+            out.append((kind, s))
     return out
 
 
@@ -246,18 +279,19 @@ def child_errors():
 
 
 def autostart_runs():
-    """None when unknown; False when the session is i3 and nothing in its config runs
-    ~/.config/autostart (dex) or XControl's services directly."""
-    if not _user_procs("i3"):
+    """None when unknown; False when the window manager (i3, or Openbox's autostart) doesn't
+    start XControl's services at login (nor, on i3, ~/.config/autostart through dex)."""
+    which, lines = _wm_startup()
+    if which == "openbox":
+        if any(re.search(r"\bxcontrol\b", ln) for ln in lines):
+            return True
+        # started by openbox-session, Openbox also runs ~/.config/autostart (with python-pyxdg)
+        import importlib.util
+        session = any("openbox-autostart" in cmd for cmd in _user_procs("openbox").values())
+        return bool(session and importlib.util.find_spec("xdg"))
+    if which != "i3" or not _user_procs("i3"):
         return None
-    for path in (os.path.expanduser("~/.config/i3/config"), os.path.expanduser("~/.i3/config")):
-        try:
-            with open(path, errors="replace") as f:
-                text = f.read()
-        except OSError:
-            continue
-        return bool(re.search(r"^\s*exec\S*\s.*\b(dex|xdg-autostart|xcontrol)\b", text, re.M))
-    return None
+    return any(re.search(r"^exec\S*\s.*\b(dex|xdg-autostart|xcontrol)\b", ln) for ln in lines)
 
 
 def autostart_file():
@@ -479,7 +513,7 @@ def wanted_children(desk):
         out["dunst"] = (notify.command(), {})
     if desk["power_alerts"]["enabled"] and poweralerts.installed():
         out["poweralertd"] = (poweralerts.command(desk["power_alerts"]), {})
-    b = desk["bar"]
+    b = desk[bar_key()]
     if b["enabled"] and shutil.which("polybar"):
         names = _primary() if b["displays"] == "primary" else [m[0] for m in wallpaper.monitors()]
         for name in names or [""]:
@@ -664,8 +698,8 @@ def daemon():
         changed = set()
         if desk["picom"]["enabled"] and compositor.write(desk["picom"]):
             changed.add("picom")      # picom reads its config once; polybar reloads by itself
-        if desk["bar"]["enabled"]:
-            bar.write(desk["bar"])
+        if desk[bar_key()]["enabled"]:
+            bar.write(desk[bar_key()])
         if desk["notify"]["enabled"] and notify.write(desk["notify"]):
             changed.add("dunst")      # dunst reads its config when it starts
         return changed

@@ -296,8 +296,17 @@ def available(b, ver=None, root="/"):
     return out
 
 
-def generate(b, ver=None, nerd=None, root="/", has_pavu=None):
-    """The polybar config text for settings `b` (normalized)."""
+def generate(b, ver=None, nerd=None, root="/", has_pavu=None, wm_name=None):
+    """The polybar config text for settings `b` (normalized). `wm_name`: the running window
+    manager ("i3", "openbox"; by default looked up): i3's workspaces module and scrolling with
+    i3-msg only work on i3, so elsewhere the generic workspaces module takes its place."""
+    from . import wm
+    wm_name = wm.running() if wm_name is None else wm_name
+    if wm_name and wm_name != "i3":
+        mods = b["modules"]
+        generic_on = any(m[0] == "xworkspaces" and m[2] for m in mods)
+        b = dict(b, modules=[["xworkspaces", m[1], m[2]] if m[0] == "workspaces" and m[2] and not generic_on
+                             else m for m in mods if not (m[0] == "xworkspaces" and not m[2])])
     ver = ver if ver is not None else version()
     nerd = nerd_font() if nerd is None else (nerd or None)
     use_icons = b["labels"] == "icons" and nerd
@@ -365,7 +374,7 @@ def generate(b, ver=None, nerd=None, root="/", has_pavu=None):
         "cursor-scroll = default",
         "enable-ipc = true",
     ]
-    if b["scroll_workspaces"]:
+    if b["scroll_workspaces"] and wm_name in (None, "", "i3"):
         bar += ["scroll-up = i3-msg -q workspace prev_on_output", "scroll-down = i3-msg -q workspace next_on_output"]
     loc = b["clock_locale"] or system_locale()
     if loc:  # polybar reads this from the bar, not the clock; without it dates come out in English

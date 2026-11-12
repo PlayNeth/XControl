@@ -1,4 +1,4 @@
-"""The 3D / gaming page: global settings and per-game profiles."""
+"""The Graphics page: global settings and per-game profiles."""
 import os
 import shlex
 import shutil
@@ -75,19 +75,10 @@ class SliderSetting:
         self.values = values
         self.default = default
         self.on_change = on_change
-        self._scroll_acc = 0.0
         self.check = Gtk.CheckButton(label=_("Use application settings"))
-        self.scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, len(values) - 1, 1)
-        self.scale.set_round_digits(0)
-        self.scale.set_draw_value(False)
-        self.scale.set_hexpand(True)
+        self.scale = widgets.slider(0, len(values) - 1, 1, show_value=False,
+                                    marks=[(i, _factor_label(v)) for i, v in enumerate(values)])
         self.scale.set_size_request(260, -1)
-        # Keyboard Page Up/Down and clicks in the trough move one notch, not ten.
-        self.scale.get_adjustment().set_page_increment(1)
-        for i, v in enumerate(values):
-            self.scale.add_mark(i, Gtk.PositionType.BOTTOM, _factor_label(v))
-        self.scale.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
-        self.scale.connect("scroll-event", self._scroll)
         name = Gtk.Label(label=label, xalign=0)
         grid.attach(name, 0, row, 1, 1)
         grid.attach(self.check, 1, row, 1, 1)
@@ -105,27 +96,6 @@ class SliderSetting:
         if self.check.get_active():
             return 0
         return self.values[int(round(self.scale.get_value()))]
-
-    def _scroll(self, scale, event):
-        """One wheel notch = one step. GTK's default jumps by a whole page."""
-        if not widgets.wheel_allowed(scale):  # scrolling the page past the slider
-            return widgets.scroll_page(scale, event)
-        step = 0
-        if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
-            step = 1
-        elif event.direction in (Gdk.ScrollDirection.DOWN, Gdk.ScrollDirection.LEFT):
-            step = -1
-        elif event.direction == Gdk.ScrollDirection.SMOOTH:
-            ok, dx, dy = event.get_scroll_deltas()
-            # touchpads send many small deltas; act once per notch's worth
-            self._scroll_acc += (dx - dy) if ok else 0.0
-            if abs(self._scroll_acc) >= 1.0:
-                step = 1 if self._scroll_acc > 0 else -1
-                self._scroll_acc = 0.0
-        if step:
-            idx = int(round(scale.get_value())) + step
-            scale.set_value(max(0, min(len(self.values) - 1, idx)))
-        return True  # handled; don't let GTK apply its own page-sized jump
 
     def _changed(self, *_args):
         self.scale.set_sensitive(not self.check.get_active())

@@ -1,4 +1,10 @@
-# Window Manager (i3)
+# Window Manager
+
+The **Window Manager** page writes the config of the window manager you use: i3 or Openbox.
+It shows the one that's running (when neither runs, the one that's installed; i3 if both are).
+`xcontrol --page wm` opens it.
+
+## i3
 
 ![The Window Manager (i3) page, Look tab](images/window-manager.png)
 
@@ -33,3 +39,48 @@ that part) are left out, and anything else lands in **Extra i3 config**.
 
 `exec --no-startup-id xcontrol --session` is always in the generated file, so the wallpaper,
 bar, compositor, screen lock and input settings start with i3.
+
+## Openbox
+
+When **Use XControl's Openbox config** is on, XControl writes `~/.config/openbox/rc.xml` and
+`~/.config/openbox/autostart` itself and tells Openbox to reconfigure after every change (the
+autostart file is read at the next login). The files you had are moved aside as
+`rc.xml.before-xcontrol` and `autostart.before-xcontrol`; switching the page off offers to put
+them back (or, if you had none, to go back to Openbox's defaults).
+
+The first time it's switched on you can start from Openbox's own config (`/etc/xdg/openbox/rc.xml`)
+or **import** yours. rc.xml is written from that file with the page's settings put in, so what the
+page doesn't cover stays as it was: mouse bindings other than the two below, the menu file, the
+dock, margins, the resize popup. Autostart lines for things XControl now runs (feh, picom,
+polybar, dunst, xss-lock, ...) are left out, as on the i3 page.
+
+- **Look:** the Openbox theme (folders with `openbox-3/themerc` in `~/.themes`, `~/.local/share/themes`
+  or `/usr/share/themes`), the title bar's buttons, the title and menu fonts, keeping the border on
+  windows without a title bar, and the minimize animation.
+- **Keys:** the key to hold while dragging a window to move it (Alt or Super; the right button
+  resizes), and every key binding, with search. A binding runs a command, does something to the
+  window, switches desktops or shows a menu, or anything else Openbox can do as `<action>` XML.
+  Chains (`C-a` then `t`) and bindings with several actions are kept and can be edited as XML.
+  Keys used twice are shown in red; **Openbox's defaults** brings back Openbox's own bindings.
+- **Behavior & Desktops:** focus follows the mouse (with a delay), raising the focused window,
+  focusing new windows, where new windows open and on which display, how strongly windows stick
+  to each other and to the screen's edges, what double-clicking the title does, whether clicking
+  the desktop opens Openbox's menu (right button) or the list of windows (middle button), and how
+  many desktops there are, their names and how long the name shows when switching.
+- **Startup & Rules:** programs started at login (each goes to the background by itself; shell
+  lines like `if`/`fi` are kept as they are), and window rules (`<applications>`): which windows
+  (`class="Steam"`, `title="…"`, `role`, `name`, `type`) and what to do with them (`desktop=2`,
+  `decor=no`, `maximized=yes`, `fullscreen=yes`, `layer=above`, `iconic=yes`, `skip_taskbar=yes`,
+  `focus=no`, `x=center y=0 monitor=2`). **Pick a window…** fills in a program's class.
+
+`xcontrol --session &` is always the first line of the generated autostart. Started with
+`openbox-session`, Openbox also runs `~/.config/autostart`, where XControl's own entries are, so
+the desktop service may be started twice; the second one exits right away.
+
+LXDE starts Openbox with `~/.config/openbox/lxde-rc.xml` instead of `rc.xml`; the page says so when
+the running Openbox reads another file.
+
+i3 and Openbox each have their own bar settings: the Bar & Compositor page edits the one for the
+window manager in use, and the first time, Openbox's starts as a copy of i3's. With Openbox, the
+bar's **i3 workspaces** module is written as polybar's generic workspaces module, which works
+with Openbox.

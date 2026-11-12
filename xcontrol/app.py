@@ -59,54 +59,49 @@ class MainWindow(Gtk.ApplicationWindow):
 
         gaming = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         gaming.add(GamingPage(self))
-        stack.add_titled(gaming, "gaming", _("Gaming"))
+        stack.add_titled(gaming, "gaming", C_("page", "Graphics"))
 
-        controllers = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        controllers.add(ControllersPage(self))
-        stack.add_titled(controllers, "controllers", _("Controllers"))
-
-        displays = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        displays.add(DisplayPage(self))
-        stack.add_titled(displays, "displays", _("Displays"))
+        # (pages with tabs scroll inside their tabs)
+        stack.add_titled(ControllersPage(self), "controllers", _("Controllers"))
+        stack.add_titled(DisplayPage(self), "displays", _("Displays"))
 
         inputs = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         inputs.add(InputPage(self))
-        stack.add_titled(inputs, "input", _("Input"))
-
-        appearance = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        appearance.add(AppearancePage(self))
-        stack.add_titled(appearance, "appearance", _("Appearance"))
+        stack.add_titled(inputs, "input", _("Mouse & Keyboard"))
+        stack.add_titled(AppearancePage(self), "appearance", _("Appearance"))
 
         sound = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         sound.add(AudioPage(self))
         stack.add_titled(sound, "sound", _("Sound"))
 
         desktop = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        desktop.add(DesktopPage(self))
-        stack.add_titled(desktop, "desktop", _("Desktop"))
+        self.desktop_page = DesktopPage(self)   # (the Power page shows its screen power sections)
+        desktop.add(self.desktop_page)
+        stack.add_titled(desktop, "desktop", _("Wallpaper & Lock"))
 
-        stack.add_titled(PanelPage(self), "panel", _("Bar & Compositor"))  # scrolls inside its tabs
-        notifications = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        notifications.add(NotifyPage(self))
-        stack.add_titled(notifications, "notifications", _("Notifications"))
+        stack.add_titled(PanelPage(self), "panel", _("Bar & Compositor"))
+        self.notify_page = NotifyPage(self)     # (and this one's power alerts)
+        stack.add_titled(self.notify_page, "notifications", _("Notifications"))
         defaults = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         defaults.add(DefaultsPage(self))
         stack.add_titled(defaults, "defaults", _("Default Apps"))
-        stack.add_titled(I3Page(self), "i3", _("Window Manager (i3)"))  # scrolls inside its tabs
+        if wm.page_for() == "openbox":   # one Window Manager page, for the one in use
+            from .openbox_page import OpenboxPage
+            stack.add_titled(OpenboxPage(self), "i3", _("Window Manager (Openbox)"))
+        else:
+            stack.add_titled(I3Page(self), "i3", _("Window Manager (i3)"))
 
         region = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         region.add(RegionPage(self))
         stack.add_titled(region, "region", _("Date & Language"))
 
-        power = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        power.add(PowerPage(self))
-        stack.add_titled(power, "power", C_("page", "Power"))
+        stack.add_titled(PowerPage(self), "power", C_("page", "Power"))
 
         users = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
         users.add(UsersPage(self))
         stack.add_titled(users, "users", _("Users"))
 
-        stack.add_titled(SystemPage(self), "system", _("System"))  # scrolls inside its tabs
+        stack.add_titled(SystemPage(self), "system", _("About & Tools"))
 
         self.stack = stack
         from .sidebar import Sidebar
@@ -292,6 +287,7 @@ def main(argv=None):
     page = "gaming"
     if "--page" in argv[:-1]:
         page = argv[argv.index("--page") + 1]
+    page = {"wm": "i3", "openbox": "i3"}.get(page, page)   # (the Window Manager page is "i3")
     if page not in PAGES:
         print("xcontrol: --page must be one of: " + ", ".join(PAGES), file=sys.stderr)
         return 2

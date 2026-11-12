@@ -59,6 +59,86 @@ def protect(root):
             stack.extend(w.get_children())
 
 
+def snap_value(lo, hi, step, value):
+    """`value` moved onto the nearest step between `lo` and `hi`. The ends always count as
+    stops, also when `hi` isn't a whole number of steps from `lo`."""
+    value = min(max(value, lo), hi)
+    if step <= 0:
+        return value
+    snapped = min(lo + round((value - lo) / step) * step, hi)
+    if abs(hi - value) < abs(snapped - value):
+        snapped = hi
+    return round(snapped, 9)   # 0.5 + 3 * 0.05 isn't exactly 0.65
+
+
+def _slider_moved(scale, _scroll, value):
+    """Dragging, clicking in the trough and the keyboard all land on a step, never between two."""
+    adj = scale.get_adjustment()
+    scale.set_value(snap_value(adj.get_lower(), adj.get_upper() - adj.get_page_size(),
+                               adj.get_step_increment(), value))
+    return True  # handled: GTK would put the handle wherever the pointer is
+
+
+def _slider_wheel(scale, event):
+    """One wheel notch = one step, and only once the slider was clicked (see the top of this file)."""
+    if not wheel_allowed(scale):
+        return scroll_page(scale, event)
+    steps = 0
+    if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
+        steps = 1
+    elif event.direction in (Gdk.ScrollDirection.DOWN, Gdk.ScrollDirection.LEFT):
+        steps = -1
+    elif event.direction == Gdk.ScrollDirection.SMOOTH:
+        ok, dx, dy = event.get_scroll_deltas()
+        # touchpads send many small deltas: act once per notch's worth
+        scale._xcontrol_wheel = getattr(scale, "_xcontrol_wheel", 0.0) + ((dx - dy) if ok else 0.0)
+        if abs(scale._xcontrol_wheel) >= 1.0:
+            steps = 1 if scale._xcontrol_wheel > 0 else -1
+            scale._xcontrol_wheel = 0.0
+    if steps:
+        if scale.get_inverted():   # up is still "towards the right end"
+            steps = -steps
+        adj = scale.get_adjustment()
+        _slider_moved(scale, None, scale.get_value() + steps * adj.get_step_increment())
+    return True  # handled; GTK's own wheel jump is much bigger than a step
+
+
+def slider(lo, hi, step, digits=0, fmt=None, marks=(), show_value=True):
+    """The slider every page uses: it stops only on its steps (dragged, clicked, with the keys or
+    the wheel), shows its value on the right as `fmt(value)` unless `show_value` is off, and has
+    the (value, text) `marks` below it."""
+    s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
+    s.set_hexpand(True)
+    s.set_digits(digits)
+    s.set_draw_value(show_value)
+    s.set_value_pos(Gtk.PositionType.RIGHT)
+    s.get_adjustment().set_page_increment(step)   # Page Up/Down and trough clicks: one step too
+    if fmt is not None:
+        s.connect("format-value", lambda _s, v: fmt(v))
+    for value, text in marks:
+        s.add_mark(value, Gtk.PositionType.BOTTOM, text)
+    s.connect("change-value", _slider_moved)
+    s.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
+    s.connect("scroll-event", _slider_wheel)
+    setattr(s, _PROTECTED, True)   # protect() needn't add its own wheel guard
+    return s
+
+
+def tabs(titles):
+    """Tabs the way every page with tabs has them: a switcher centred at the top (scrolling
+    sideways when it doesn't fit a narrow window) over a stack whose tabs each scroll on their
+    own. `titles` is (name, title) pairs. Returns (switcher, stack, {name: the tab's box})."""
+    stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+    switcher = Gtk.StackSwitcher(stack=stack, halign=Gtk.Align.CENTER, margin_top=10, margin_bottom=4)
+    boxes = {}
+    for name, title in titles:
+        sw = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vexpand=True)
+        boxes[name] = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        sw.add(boxes[name])
+        stack.add_titled(sw, name, title)
+    return sideways(switcher), stack, boxes
+
+
 def reveal(bar, visible=True):
     """Show or hide a Gtk.InfoBar that's kept out of show_all() (set_no_show_all): show_all()
     on such a widget does nothing, so its parts are shown explicitly."""

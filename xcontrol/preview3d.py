@@ -1,4 +1,4 @@
-"""A live 3D preview for the Gaming page, in the spirit of the old Catalyst and NVIDIA
+"""A live 3D preview for the Graphics page, in the spirit of the old Catalyst and NVIDIA
 control panels: glxgears' three gears turning above a checkerboard floor, with a
 chain-link fence behind them, drawn with the settings being edited:
 

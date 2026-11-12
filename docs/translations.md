@@ -14,5 +14,5 @@ language (or the one set on the Date & Language page).
   that nothing is left untranslated or fuzzy and that markup and placeholders
   match the English.
 
-**Copy** on the System page and **Copy details** in the display details copy in your language. The arrow next to
+**Copy** on the About & Tools page and **Copy details** in the display details copy in your language. The arrow next to
 it has **Copy in English**, which is more useful in bug reports.

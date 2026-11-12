@@ -112,18 +112,19 @@ def _keep(path):
 
 def apply_restored():
     """Make the restored settings take effect without logging out."""
-    from . import audio, desktop, i3cfg
+    from . import audio, desktop, i3cfg, obcfg
     notes = []
     try:
         desktop.notify_daemon(desktop.load())
     except Exception as e:  # noqa: BLE001
         notes.append(str(e))
-    try:
-        ok, errors = i3cfg.refresh()
-        if not ok:
-            notes += errors
-    except Exception as e:  # noqa: BLE001
-        notes.append(str(e))
+    for wm_config in (i3cfg, obcfg):
+        try:
+            ok, errors = wm_config.refresh()
+            if not ok:
+                notes += errors
+        except Exception as e:  # noqa: BLE001
+            notes.append(str(e))
     try:
         a = audio.load()
         audio.write(a)

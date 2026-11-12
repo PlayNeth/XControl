@@ -1,8 +1,8 @@
-# System
+# About & Tools
 
-![The System page, Overview tab](images/system.png)
+![The About & Tools page, Overview tab](images/system.png)
 
-The **System** page shows the distribution, kernel, uptime, package count, window manager,
+The **About & Tools** page shows the distribution, kernel, uptime, package count, window manager,
 X server and X driver (from the server's log), OpenGL, Mesa and Vulkan versions, the
 processor (cores, cache, clock, frequency driver and policy, microcode), memory and swap,
 each graphics card (model and card maker, kernel driver, video memory, and on amdgpu its
@@ -19,7 +19,7 @@ terminal (`--sysinfo --english` for English).
 
 ## Boot splash
 
-System → **Boot splash** sets Plymouth's theme, the picture or animation shown while the
+About & Tools → **Boot splash** sets Plymouth's theme, the picture or animation shown while the
 computer starts. Every installed theme is shown with a picture: XControl ships pictures of
 Plymouth's ten built-in themes (made from Plymouth's own renderer, without a distribution
 logo; see `data/plymouth/README`), and themes you add show their own `preview.png` if they
@@ -73,7 +73,7 @@ field empty for the module's default; **Remove XControl's settings** deletes the
 
 ## Session check and backups
 
-System → **Check & Backup** looks at everything that quietly breaks other pages and offers a fix
+About & Tools → **Check & Backup** looks at everything that quietly breaks other pages and offers a fix
 where it can: whether `xcontrol --session` runs at login, whether the desktop service is up and
 what keeps stopping, whether a **polkit agent** runs (on i3 nothing starts one, and then every
 password prompt fails silently; it can start an installed agent and gives the line for your i3

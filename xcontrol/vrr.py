@@ -8,20 +8,26 @@ _LAYER_DIRS = ("/usr/share/vulkan/implicit_layer.d", "/usr/local/share/vulkan/im
                "/etc/vulkan/implicit_layer.d")
 
 
+LOG_DIR = "/var/log"   # where a server started as root logs
+
+
 def _display_number(display):
     m = re.match(r"^[^:]*:(\d+)", display or "")
     return m.group(1) if m else None
 
 
 def server_log(display=None, home=None):
-    """The log of the running X server for $DISPLAY (newest matching file), or None."""
+    """The log of the running X server for $DISPLAY (newest matching file), or None.
+    A rootless server logs under your home: XLibre from 25.2 in ~/.local/state, X.Org and
+    older XLibre in ~/.local/share. A log left behind in the other place is older, so it loses."""
     n = _display_number(display if display is not None else os.environ.get("DISPLAY"))
     if n is None:
         return None
     home = home if home is not None else os.path.expanduser("~")
-    xdg = os.environ.get("XDG_DATA_HOME") or os.path.join(home, ".local", "share")
+    state = os.environ.get("XDG_STATE_HOME") or os.path.join(home, ".local", "state")
+    data = os.environ.get("XDG_DATA_HOME") or os.path.join(home, ".local", "share")
     candidates = []
-    for d in (os.path.join(xdg, "xorg"), "/var/log"):
+    for d in (os.path.join(state, "xorg"), os.path.join(state, "xlibre"), os.path.join(data, "xorg"), LOG_DIR):
         candidates += [p for p in glob.glob(os.path.join(d, f"*.{n}.log")) if os.path.isfile(p)]
     if not candidates:
         return None

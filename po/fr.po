@@ -1642,10 +1642,8 @@ msgstr ""
 " qu'elle est immobile."
 
 #: xcontrol/controllers_page.py:460
-msgid "The right stick needs games to see the Xbox 360 controller (above)."
-msgstr ""
-"Le stick droit nécessite que les jeux voient la manette Xbox 360 (ci-"
-"dessus)."
+msgid "The right stick needs games to see the Xbox 360 controller (Games & Buttons tab)."
+msgstr "Le stick droit nécessite que les jeux voient la manette Xbox 360 (onglet Jeux et boutons)."
 
 #: xcontrol/controllers_page.py:464 xcontrol/input_page.py:188
 msgid "Touchpad"
@@ -2385,20 +2383,12 @@ msgid "Not running yet."
 msgstr "Pas encore en cours d'exécution."
 
 #: xcontrol/desktop_page.py:455
-msgid ""
-"Your i3 config also sets the wallpaper; remove these lines or they'll "
-"replace XControl's at login:"
-msgstr ""
-"Votre configuration i3 définit aussi le fond d'écran ; supprimez ces lignes,"
-" sinon elles remplaceront celui de XControl à la connexion :"
+msgid "{file} also sets the wallpaper; remove these lines or they'll replace XControl's at login:"
+msgstr "{file} définit aussi le fond d'écran ; supprimez ces lignes, sinon elles remplaceront celui de XControl à la connexion :"
 
 #: xcontrol/desktop_page.py:458
-msgid ""
-"Another screen lock is set up; remove it from your i3 config, or two lockers"
-" will start:"
-msgstr ""
-"Un autre verrouillage de l'écran est configuré ; supprimez-le de votre "
-"configuration i3, sinon deux verrouilleurs démarreront :"
+msgid "Another screen lock is set up; remove it from {file}, or two lockers will start:"
+msgstr "Un autre verrouillage de l'écran est configuré ; supprimez-le de {file}, sinon deux verrouilleurs démarreront :"
 
 #: xcontrol/desktop_page.py:556
 msgid "Could not save the desktop settings"
@@ -3296,15 +3286,8 @@ msgid "XControl doesn't start when you log in"
 msgstr "XControl ne démarre pas à la connexion"
 
 #: xcontrol/health.py:87
-msgid ""
-"Your i3 config doesn't run xcontrol --session, so after the next login the "
-"wallpaper, bar, compositor, screen lock and other desktop settings won't "
-"start. Add this line:"
-msgstr ""
-"Votre configuration i3 ne lance pas xcontrol --session : après la prochaine "
-"connexion, le fond d'écran, la barre, le compositeur, le verrouillage de "
-"l'écran et les autres réglages du bureau ne démarreront pas. Ajoutez cette "
-"ligne :"
+msgid "{file} doesn't run xcontrol --session, so after the next login the wallpaper, bar, compositor, screen lock and other desktop settings won't start. Add this line:"
+msgstr "{file} ne lance pas xcontrol --session : après la prochaine connexion, le fond d'écran, la barre, le compositeur, le verrouillage de l'écran et les autres réglages du bureau ne démarreront pas. Ajoutez cette ligne :"
 
 #: xcontrol/health.py:91
 msgid "XControl starts when you log in"
@@ -3345,32 +3328,24 @@ msgid "The polkit agent is {agent}."
 msgstr "L'agent polkit est {agent}."
 
 #: xcontrol/health.py:108
-msgid ""
-"No polkit agent is running, so everything that asks for a password (users, "
-"kernel modules, EDID, power buttons, languages, time) fails without a word. "
-"i3 doesn't start one."
-msgstr ""
-"Aucun agent polkit n'est en cours d'exécution : tout ce qui demande un mot "
-"de passe (utilisateurs, modules du noyau, EDID, boutons d'alimentation, "
-"langues, heure) échoue donc sans un mot. i3 n'en lance pas."
+msgid "No polkit agent is running, so everything that asks for a password (users, kernel modules, EDID, power buttons, languages, time) fails without a word. i3 and Openbox don't start one."
+msgstr "Aucun agent polkit n'est en cours d'exécution : tout ce qui demande un mot de passe (utilisateurs, modules du noyau, EDID, boutons d'alimentation, langues, heure) échoue donc sans un mot. Ni i3 ni Openbox n'en lancent."
 
 #: xcontrol/health.py:111 xcontrol/health.py:117
 msgid "Password prompts can't appear"
 msgstr "Les demandes de mot de passe ne peuvent pas s'afficher"
 
 #: xcontrol/health.py:112
-msgid "Start it now, and add this to your i3 config:"
-msgstr "Le démarrer maintenant, et ajoutez ceci à votre configuration i3 :"
+msgid "Start it now, and add this to {file}:"
+msgstr "Le démarrer maintenant, et ajoutez ceci à {file} :"
 
 #: xcontrol/health.py:114
 msgid "Start the polkit agent at login"
 msgstr "Lancer l'agent polkit à la connexion"
 
 #: xcontrol/health.py:118
-msgid "Install one, e.g. polkit-gnome, and start it from your i3 config."
-msgstr ""
-"Installez-en un, par ex. polkit-gnome, et lancez-le depuis votre "
-"configuration i3."
+msgid "Install one, e.g. polkit-gnome, and start it from {file}."
+msgstr "Installez-en un, par ex. polkit-gnome, et lancez-le depuis {file}."
 
 #: xcontrol/health.py:122
 msgid "Another bar is running besides XControl's"
@@ -3399,8 +3374,8 @@ msgid "Stop the extra ones"
 msgstr "Arrêter ceux en trop"
 
 #: xcontrol/health.py:145
-msgid "Your i3 config starts things XControl also starts"
-msgstr "Votre configuration i3 lance des éléments que XControl lance aussi"
+msgid "{file} starts things XControl also starts"
+msgstr "{file} lance des éléments que XControl lance aussi"
 
 #: xcontrol/health.py:146
 msgid "Remove these lines, or there'll be two of each after the next login:"
@@ -5185,13 +5160,8 @@ msgid "Night light"
 msgstr "Éclairage nocturne"
 
 #: xcontrol/night_page.py:48
-msgid ""
-"Warmer colors in the evening, easier on the eyes. It changes right away (no "
-"Apply needed) and builds on each display's gamma above."
-msgstr ""
-"Des couleurs plus chaudes le soir, plus reposantes pour les yeux. Le "
-"changement est immédiat (pas besoin d'Appliquer) et s'ajoute au gamma de "
-"chaque écran ci-dessus."
+msgid "Warmer colors in the evening, easier on the eyes. It changes right away (no Apply needed) and builds on each display's gamma (Scaling and color tab)."
+msgstr "Des couleurs plus chaudes le soir, plus reposantes pour les yeux. Le changement est immédiat (pas besoin d'Appliquer) et s'ajoute au gamma de chaque écran (onglet Mise à l'échelle et couleur)."
 
 #: xcontrol/night_page.py:57
 msgid "From the time zone"
@@ -5295,12 +5265,8 @@ msgstr ""
 
 #: xcontrol/night_page.py:241
 #, python-brace-format
-msgid ""
-"{programs} is also changing the colors; stop it (and remove it from your i3 "
-"config), or the two will fight."
-msgstr ""
-"{programs} modifie aussi les couleurs ; arrêtez-le (et supprimez-le de votre"
-" configuration i3), sinon les deux vont se contrarier."
+msgid "{programs} is also changing the colors; stop it (and remove it from {file}), or the two will fight."
+msgstr "{programs} modifie aussi les couleurs ; arrêtez-le (et supprimez-le de {file}), sinon les deux vont se contrarier."
 
 #: xcontrol/notify_page.py:16
 msgid "Top center"
@@ -5683,19 +5649,8 @@ msgid "Alert about batteries and power (poweralertd)"
 msgstr "Alerter au sujet des batteries et de l'alimentation (poweralertd)"
 
 #: xcontrol/notify_page.py:335
-msgid ""
-"A notification when the battery starts or stops charging, gets low or "
-"critical, or the charger is plugged in or out, also for wireless devices "
-"with their own battery. XControl runs poweralertd for the session; any "
-"notification program shows its alerts (they're in English), and "
-"\"poweralertd\" works in the Per app rules above."
-msgstr ""
-"Une notification quand la batterie commence ou cesse de se charger, devient "
-"faible ou critique, ou quand le chargeur est branché ou débranché, y compris"
-" pour les appareils sans fil ayant leur propre batterie. XControl lance "
-"poweralertd pour la session ; n'importe quel programme de notifications "
-"affiche ses alertes (elles sont en anglais), et « poweralertd » fonctionne "
-"dans les règles Par application ci-dessus."
+msgid "A notification when the battery starts or stops charging, gets low or critical, or the charger is plugged in or out, also for wireless devices with their own battery. XControl runs poweralertd for the session; any notification program shows its alerts (they're in English), and \"poweralertd\" works in the Per app rules on the Notifications page."
+msgstr "Une notification quand la batterie commence ou cesse de se charger, devient faible ou critique, ou quand le chargeur est branché ou débranché, y compris pour les appareils sans fil ayant leur propre batterie. XControl lance poweralertd pour la session ; n'importe quel programme de notifications affiche ses alertes (elles sont en anglais), et « poweralertd » fonctionne dans les règles Par application de la page Notifications."
 
 #: xcontrol/notify_page.py:349
 msgid "Only for changes, not for how things are when the session starts"
@@ -5771,33 +5726,20 @@ msgstr ""
 
 #: xcontrol/notify_page.py:424
 #, python-brace-format
-msgid ""
-"Another poweralertd (process {pid}) is running besides XControl's, so every "
-"alert shows twice. Stop it, and remove it from your i3 config or autostart."
-msgstr ""
-"Un autre poweralertd (processus {pid}) fonctionne en plus de celui de "
-"XControl : chaque alerte s'affiche donc deux fois. Arrêtez-le, et supprimez-"
-"le de votre configuration i3 ou du démarrage automatique."
+msgid "Another poweralertd (process {pid}) is running besides XControl's, so every alert shows twice. Stop it, and remove it from {file} or autostart."
+msgstr "Un autre poweralertd (processus {pid}) fonctionne en plus de celui de XControl : chaque alerte s'affiche donc deux fois. Arrêtez-le, et supprimez-le de {file} ou du démarrage automatique."
 
 #: xcontrol/notify_page.py:434
-msgid ""
-"Remove these from your i3 config, or a second poweralertd starts after the "
-"next login:"
-msgstr ""
-"Supprimez ceci de votre configuration i3, sinon un second poweralertd "
-"démarrera après la prochaine connexion :"
+msgid "Remove these from {file}, or a second poweralertd starts after the next login:"
+msgstr "Supprimez ceci de {file}, sinon un second poweralertd démarrera après la prochaine connexion :"
 
 #: xcontrol/notify_page.py:439
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
 #: xcontrol/notify_page.py:440
-msgid ""
-"These commands control the notifications. Bind them to keys in your i3 "
-"config (or on the Window Manager page):"
-msgstr ""
-"Ces commandes contrôlent les notifications. Associez-les à des touches dans "
-"votre configuration i3 (ou sur la page Gestionnaire de fenêtres) :"
+msgid "These commands control the notifications. Bind them to keys on the Window Manager page:"
+msgstr "Ces commandes contrôlent les notifications. Associez-les à des touches sur la page Gestionnaire de fenêtres :"
 
 #: xcontrol/notify_page.py:442
 msgid "Close the newest notification:"
@@ -5899,21 +5841,12 @@ msgstr "En cours d'exécution (dunst {v})."
 
 #: xcontrol/notify_page.py:697
 #, python-brace-format
-msgid ""
-"{name} (process {pid}) is showing notifications, so XControl's dunst can't "
-"start. Stop it, and remove it from your i3 config or autostart."
-msgstr ""
-"{name} (processus {pid}) affiche les notifications : le dunst de XControl ne"
-" peut donc pas démarrer. Arrêtez-le, et supprimez-le de votre configuration "
-"i3 ou du démarrage automatique."
+msgid "{name} (process {pid}) is showing notifications, so XControl's dunst can't start. Stop it, and remove it from {file} or autostart."
+msgstr "{name} (processus {pid}) affiche les notifications : le dunst de XControl ne peut donc pas démarrer. Arrêtez-le, et supprimez-le de {file} ou du démarrage automatique."
 
 #: xcontrol/notify_page.py:705
-msgid ""
-"Remove these from your i3 config, or another notification program starts "
-"first after the next login:"
-msgstr ""
-"Supprimez ceci de votre configuration i3, sinon un autre programme de "
-"notifications démarrera en premier après la prochaine connexion :"
+msgid "Remove these from {file}, or another notification program starts first after the next login:"
+msgstr "Supprimez ceci de {file}, sinon un autre programme de notifications démarrera en premier après la prochaine connexion :"
 
 #: xcontrol/panel_page.py:13
 msgid "i3 workspaces"
@@ -6310,20 +6243,12 @@ msgid "Running on {displays}."
 msgstr "En cours d'exécution sur {displays}."
 
 #: xcontrol/panel_page.py:521
-msgid ""
-"Another polybar is running (started by your i3 config or a script); it will "
-"sit on top of XControl's."
-msgstr ""
-"Une autre polybar est en cours d'exécution (lancée par votre configuration "
-"i3 ou un script) ; elle se placera par-dessus celle de XControl."
+msgid "Another polybar is running (started by {file} or a script); it will sit on top of XControl's."
+msgstr "Une autre polybar est en cours d'exécution (lancée par {file} ou un script) ; elle se placera par-dessus celle de XControl."
 
 #: xcontrol/panel_page.py:524
-msgid ""
-"Remove these from your i3 config, or there will be two bars after the next "
-"login:"
-msgstr ""
-"Supprimez ceci de votre configuration i3, sinon il y aura deux barres après "
-"la prochaine connexion :"
+msgid "Remove these from {file}, or there will be two bars after the next login:"
+msgstr "Supprimez ceci de {file}, sinon il y aura deux barres après la prochaine connexion :"
 
 #: xcontrol/panel_page.py:528
 msgid "picom isn't installed."
@@ -6335,20 +6260,12 @@ msgid "Running (picom {v})."
 msgstr "En cours d'exécution (picom {v})."
 
 #: xcontrol/panel_page.py:541
-msgid ""
-"Another compositor is running, so XControl's can't start. Stop it, and "
-"remove it from your i3 config."
-msgstr ""
-"Un autre compositeur est en cours d'exécution : celui de XControl ne peut "
-"donc pas démarrer. Arrêtez-le, et supprimez-le de votre configuration i3."
+msgid "Another compositor is running, so XControl's can't start. Stop it, and remove it from {file}."
+msgstr "Un autre compositeur est en cours d'exécution : celui de XControl ne peut donc pas démarrer. Arrêtez-le, et supprimez-le de {file}."
 
 #: xcontrol/panel_page.py:544
-msgid ""
-"Remove these from your i3 config, or the other compositor starts first after"
-" the next login:"
-msgstr ""
-"Supprimez ceci de votre configuration i3, sinon l'autre compositeur "
-"démarrera en premier après la prochaine connexion :"
+msgid "Remove these from {file}, or the other compositor starts first after the next login:"
+msgstr "Supprimez ceci de {file}, sinon l'autre compositeur démarrera en premier après la prochaine connexion :"
 
 #: xcontrol/plymouth_page.py:55
 msgid "Plymouth isn't installed"
@@ -6669,15 +6586,8 @@ msgid "Not while sound is playing (music, a video call)"
 msgstr "Pas pendant la lecture de son (musique, appel vidéo)"
 
 #: xcontrol/power_page.py:77
-msgid ""
-"Counted from the last time you used the mouse, keyboard or a gamepad. "
-"Nothing sleeps while the screen is kept on (Desktop page, Keep the screen "
-"on). The screen lock, if it's on, locks first."
-msgstr ""
-"Compté depuis la dernière utilisation de la souris, du clavier ou d'une "
-"manette. Rien ne se met en veille tant que l'écran est maintenu allumé (page"
-" Bureau, Garder l'écran allumé). Le verrouillage de l'écran, s'il est "
-"activé, verrouille d'abord."
+msgid "Counted from the last time you used the mouse, keyboard or a gamepad. Nothing sleeps while the screen is kept on (Screen tab, Keep the screen on). The screen lock, if it's on, locks first."
+msgstr "Compté depuis la dernière utilisation de la souris, du clavier ou d'une manette. Rien ne se met en veille tant que l'écran est maintenu allumé (onglet Écran, Garder l'écran allumé). Le verrouillage de l'écran, s'il est activé, verrouille d'abord."
 
 #: xcontrol/power_page.py:82
 msgid "Sleep now"
@@ -8317,9 +8227,8 @@ msgid "Loaded, then let go"
 msgstr "Chargé, puis libéré"
 
 #: xcontrol/xserver_page.py:542
-msgid "Input devices' settings are on the Input page."
-msgstr ""
-"Les réglages des périphériques d'entrée se trouvent sur la page Saisie."
+msgid "Input devices' settings are on the Mouse & Keyboard page."
+msgstr "Les réglages des périphériques d'entrée se trouvent sur la page Souris et clavier."
 
 #: xcontrol/xserver_page.py:551
 msgid "Saved for the next time X starts (needs your password)"
@@ -8399,6 +8308,487 @@ msgid ""
 msgstr ""
 "graphics;gpu;amd;radeon;anisotropic;antialiasing;vsync;fps;monitor;display;xrandr;mouse;keyboard;touchpad;input;graphisme;anisotrope;anticrénelage;ips;moniteur;écran;souris;clavier;pavé"
 " tactile;saisie;"
+
+#: xcontrol/sidebar.py
+msgid "Hardware"
+msgstr "Matériel"
+
+#: xcontrol/app.py
+msgid "Mouse & Keyboard"
+msgstr "Souris et clavier"
+
+#: xcontrol/app.py
+msgid "Wallpaper & Lock"
+msgstr "Fond d'écran et verrouillage"
+
+#: xcontrol/app.py
+msgid "About & Tools"
+msgstr "À propos et outils"
+
+#: xcontrol/controllers_page.py
+msgid "Games & Buttons"
+msgstr "Jeux et boutons"
+
+#: xcontrol/controllers_page.py
+msgid "Gyro"
+msgstr "Gyroscope"
+
+#: xcontrol/controllers_page.py
+msgid "Lights & Rate"
+msgstr "Lumières et fréquence"
+
+#: xcontrol/display_page.py
+msgid "Arrangement"
+msgstr "Disposition"
+
+#: xcontrol/power_page.py
+msgid "Sleep & Buttons"
+msgstr "Veille et boutons"
+
+#: xcontrol/power_page.py
+msgid "Screen"
+msgstr "Écran"
+
+#: xcontrol/power_page.py
+msgid "Alerts"
+msgstr "Alertes"
+
+#: xcontrol/appearance_page.py
+msgid "Fonts & Effects"
+msgstr "Polices et effets"
+
+#: xcontrol/app.py
+msgctxt "page"
+msgid "Graphics"
+msgstr "Graphismes"
+
+#: xcontrol/i3_page.py
+msgid "Replace all your colors with i3's own?"
+msgstr "Remplacer toutes vos couleurs par celles d'i3 ?"
+
+#: xcontrol/i3_page.py
+msgid "Every color on this tab, and the one behind windows, goes back to i3's defaults."
+msgstr "Toutes les couleurs de cet onglet, et celle derrière les fenêtres, reviennent aux valeurs par défaut d'i3."
+
+#: xcontrol/i3_page.py
+msgid "Use i3's colors"
+msgstr "Utiliser les couleurs d'i3"
+
+#: xcontrol/openbox_page.py
+msgid "Window Manager (Openbox)"
+msgstr "Gestionnaire de fenêtres (Openbox)"
+
+#: xcontrol/openbox_page.py
+msgid "Openbox doesn't start XControl at login (it isn't in {file}, and Openbox wasn't started with openbox-session), so after the next login nothing would set the wallpaper or start the screen lock. Add this line, or turn on XControl's config on the Window Manager page:"
+msgstr "Openbox ne lance pas XControl à la connexion (il n'est pas dans {file}, et Openbox n'a pas été lancé avec openbox-session) : après la prochaine connexion, rien ne définirait le fond d'écran ni ne lancerait le verrouillage de l'écran. Ajoutez cette ligne, ou activez la configuration de XControl sur la page Gestionnaire de fenêtres :"
+
+#: xcontrol/openbox_page.py
+msgid "To lock with a key, add one on the Window Manager page that runs:"
+msgstr "Pour verrouiller avec une touche, ajoutez-en une sur la page Gestionnaire de fenêtres qui lance :"
+
+#: xcontrol/openbox_page.py
+msgid "To switch it from a key, add one on the Window Manager page that runs:"
+msgstr "Pour l'activer avec une touche, ajoutez-en une sur la page Gestionnaire de fenêtres qui lance :"
+
+#: xcontrol/openbox_page.py
+msgid "The one to the left"
+msgstr "Celui de gauche"
+
+#: xcontrol/openbox_page.py
+msgid "The one to the right"
+msgstr "Celui de droite"
+
+#: xcontrol/openbox_page.py
+msgid "The previous one"
+msgstr "Le précédent"
+
+#: xcontrol/openbox_page.py
+msgid "Where there's room"
+msgstr "Là où il y a de la place"
+
+#: xcontrol/openbox_page.py
+msgid "Under the mouse pointer"
+msgstr "Sous le pointeur de la souris"
+
+#: xcontrol/openbox_page.py
+msgid "The primary display"
+msgstr "L'écran principal"
+
+#: xcontrol/openbox_page.py
+msgid "The display with the mouse pointer"
+msgstr "L'écran où se trouve la souris"
+
+#: xcontrol/openbox_page.py
+msgid "The display with the focused window"
+msgstr "L'écran de la fenêtre active"
+
+#: xcontrol/openbox_page.py
+msgid "Any display"
+msgstr "N'importe quel écran"
+
+#: xcontrol/openbox_page.py
+msgid "Maximize or restore"
+msgstr "Agrandir ou restaurer"
+
+#: xcontrol/openbox_page.py
+msgid "Roll up or down"
+msgstr "Enrouler ou dérouler"
+
+#: xcontrol/openbox_page.py
+msgid "Minimize"
+msgstr "Réduire"
+
+#: xcontrol/openbox_page.py
+msgid "Always on top on or off"
+msgstr "Toujours au-dessus oui ou non"
+
+#: xcontrol/openbox_page.py
+msgid "Icon and title · minimize, maximize, close"
+msgstr "Icône et titre · réduire, agrandir, fermer"
+
+#: xcontrol/openbox_page.py
+msgid "Title · minimize, maximize, close"
+msgstr "Titre · réduire, agrandir, fermer"
+
+#: xcontrol/openbox_page.py
+msgid "Icon and title · close"
+msgstr "Icône et titre · fermer"
+
+#: xcontrol/openbox_page.py
+msgid "Title · close"
+msgstr "Titre · fermer"
+
+#: xcontrol/openbox_page.py
+msgid "Close, maximize, minimize · title"
+msgstr "Fermer, agrandir, réduire · titre"
+
+#: xcontrol/openbox_page.py
+msgid "Icon and title · roll up, every desktop, minimize, maximize, close"
+msgstr "Icône et titre · enrouler, tous les bureaux, réduire, agrandir, fermer"
+
+#: xcontrol/openbox_page.py
+msgid "Run a command"
+msgstr "Lancer une commande"
+
+#: xcontrol/openbox_page.py
+msgid "Close the window"
+msgstr "Fermer la fenêtre"
+
+#: xcontrol/openbox_page.py
+msgid "Minimize the window"
+msgstr "Réduire la fenêtre"
+
+#: xcontrol/openbox_page.py
+msgid "Maximize or restore the window"
+msgstr "Agrandir ou restaurer la fenêtre"
+
+#: xcontrol/openbox_page.py
+msgid "Full screen on or off"
+msgstr "Plein écran oui ou non"
+
+#: xcontrol/openbox_page.py
+msgid "Roll the window up or down"
+msgstr "Enrouler ou dérouler la fenêtre"
+
+#: xcontrol/openbox_page.py
+msgid "On every desktop on or off"
+msgstr "Sur tous les bureaux oui ou non"
+
+#: xcontrol/openbox_page.py
+msgid "Show the desktop"
+msgstr "Afficher le bureau"
+
+#: xcontrol/openbox_page.py
+msgid "Next window"
+msgstr "Fenêtre suivante"
+
+#: xcontrol/openbox_page.py
+msgid "Previous window"
+msgstr "Fenêtre précédente"
+
+#: xcontrol/openbox_page.py
+msgid "Go to desktop"
+msgstr "Aller au bureau"
+
+#: xcontrol/openbox_page.py
+msgid "Send the window to desktop"
+msgstr "Envoyer la fenêtre sur le bureau"
+
+#: xcontrol/openbox_page.py
+msgid "Show a menu"
+msgstr "Afficher un menu"
+
+#: xcontrol/openbox_page.py
+msgid "Reload Openbox's config"
+msgstr "Recharger la configuration d'Openbox"
+
+#: xcontrol/openbox_page.py
+msgid "Log out (quit Openbox)"
+msgstr "Se déconnecter (quitter Openbox)"
+
+#: xcontrol/openbox_page.py
+msgid "The desktop menu"
+msgstr "Le menu du bureau"
+
+#: xcontrol/openbox_page.py
+msgid "The window's menu"
+msgstr "Le menu de la fenêtre"
+
+#: xcontrol/openbox_page.py
+msgid "The list of windows"
+msgstr "La liste des fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "Something else (Openbox's XML)"
+msgstr "Autre chose (XML d'Openbox)"
+
+#: xcontrol/openbox_page.py
+msgid "One or more <action> elements, as in rc.xml, e.g. <action name=\"Execute\"><command>firefox</command></action>"
+msgstr "Un ou plusieurs éléments <action>, comme dans rc.xml, par ex. <action name=\"Execute\"><command>firefox</command></action>"
+
+#: xcontrol/openbox_page.py
+msgid "Openbox themes draw the title bars and borders; they're folders with an openbox-3 subfolder in ~/.themes or /usr/share/themes."
+msgstr "Les thèmes Openbox dessinent les barres de titre et les bordures ; ce sont des dossiers avec un sous-dossier openbox-3 dans ~/.themes ou /usr/share/themes."
+
+#: xcontrol/openbox_page.py
+msgid "Title bar"
+msgstr "Barre de titre"
+
+#: xcontrol/openbox_page.py
+msgid "Menu font"
+msgstr "Police des menus"
+
+#: xcontrol/openbox_page.py
+msgid "Keep the border on windows without a title bar"
+msgstr "Garder la bordure des fenêtres sans barre de titre"
+
+#: xcontrol/openbox_page.py
+msgid "Animate minimizing"
+msgstr "Animer la réduction"
+
+#: xcontrol/openbox_page.py
+msgid "Moving with the mouse"
+msgstr "Déplacer avec la souris"
+
+#: xcontrol/openbox_page.py
+msgid "Key to hold"
+msgstr "Touche à maintenir"
+
+#: xcontrol/openbox_page.py
+msgid "Hold it and drag anywhere in a window to move it; with the right button, to resize it."
+msgstr "Maintenez-la et faites glisser n'importe où dans une fenêtre pour la déplacer ; avec le bouton droit, pour la redimensionner."
+
+#: xcontrol/openbox_page.py
+msgid "Replace all key bindings with Openbox's defaults?"
+msgstr "Remplacer tous les raccourcis clavier par ceux d'Openbox par défaut ?"
+
+#: xcontrol/openbox_page.py
+msgid "Use Openbox's defaults"
+msgstr "Utiliser ceux d'Openbox par défaut"
+
+#: xcontrol/openbox_page.py
+msgid "Openbox's defaults"
+msgstr "Valeurs par défaut d'Openbox"
+
+#: xcontrol/openbox_page.py
+msgid "Focus follows the mouse (no click needed)"
+msgstr "Le focus suit la souris (sans clic)"
+
+#: xcontrol/openbox_page.py
+msgid "Delay"
+msgstr "Délai"
+
+#: xcontrol/openbox_page.py
+msgid "Bring the focused window to the front"
+msgstr "Mettre au premier plan la fenêtre active"
+
+#: xcontrol/openbox_page.py
+msgid "Focus new windows"
+msgstr "Donner le focus aux nouvelles fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "New windows"
+msgstr "Nouvelles fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "Open them"
+msgstr "Les ouvrir"
+
+#: xcontrol/openbox_page.py
+msgid "In the middle of the free space"
+msgstr "Au milieu de l'espace libre"
+
+#: xcontrol/openbox_page.py
+msgid "Moving windows"
+msgstr "Déplacer les fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "Stick to other windows"
+msgstr "Coller aux autres fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "Stick to the screen's edges"
+msgstr "Coller aux bords de l'écran"
+
+#: xcontrol/openbox_page.py
+msgid "How far you have to push a window past an edge before it moves on."
+msgstr "Jusqu'où il faut pousser une fenêtre au-delà d'un bord avant qu'elle continue."
+
+#: xcontrol/openbox_page.py
+msgid "Double-click on the title"
+msgstr "Double-clic sur le titre"
+
+#: xcontrol/openbox_page.py
+msgid "Desktops"
+msgstr "Bureaux"
+
+#: xcontrol/openbox_page.py
+msgid "How many"
+msgstr "Combien"
+
+#: xcontrol/openbox_page.py
+msgid "Show the name when switching"
+msgstr "Afficher le nom au changement"
+
+#: xcontrol/openbox_page.py
+msgid "Desktop {n}"
+msgstr "Bureau {n}"
+
+#: xcontrol/openbox_page.py
+msgid "Start at login"
+msgstr "Lancer à la connexion"
+
+#: xcontrol/openbox_page.py
+msgid "One command per line, run in this order after XControl's own (wallpaper, bar, lock and the rest). Each goes to the background by itself. Changes apply at the next login."
+msgstr "Une commande par ligne, lancées dans cet ordre après celles de XControl (fond d'écran, barre, verrouillage et le reste). Chacune passe d'elle-même en arrière-plan. Les changements s'appliquent à la prochaine connexion."
+
+#: xcontrol/openbox_page.py
+msgid "Settings"
+msgstr "Réglages"
+
+#: xcontrol/openbox_page.py
+msgid "Windows: class=\"Steam\", title=\"Friends*\", role or name (* matches anything). Settings: desktop=2, decor=no (no title bar), maximized=yes, fullscreen=yes, layer=above, iconic=yes (minimized), skip_taskbar=yes, focus=no, x=center y=0 monitor=2."
+msgstr "Fenêtres : class=\"Steam\", title=\"Friends*\", role ou name (* correspond à tout). Réglages : desktop=2, decor=no (sans barre de titre), maximized=yes, fullscreen=yes, layer=above, iconic=yes (réduite), skip_taskbar=yes, focus=no, x=center y=0 monitor=2."
+
+#: xcontrol/openbox_page.py
+msgid "Openbox isn't installed."
+msgstr "Openbox n'est pas installé."
+
+#: xcontrol/openbox_page.py
+msgid "Openbox isn't installed"
+msgstr "Openbox n'est pas installé"
+
+#: xcontrol/openbox_page.py
+msgid "Install the openbox package first."
+msgstr "Installez d'abord le paquet openbox."
+
+#: xcontrol/openbox_page.py
+msgid "Openbox writes keys like W-e: W is Super, A Alt, C Ctrl, S Shift."
+msgstr "Openbox écrit les touches ainsi : W-e. W est Super, A Alt, C Ctrl, S Maj."
+
+#: xcontrol/openbox_page.py
+msgid "Type or press the keys."
+msgstr "Tapez ou appuyez sur les touches."
+
+#: xcontrol/openbox_page.py
+msgid "Type the command to run."
+msgstr "Tapez la commande à lancer."
+
+#: xcontrol/openbox_page.py
+msgid "XControl writes ~/.config/openbox/rc.xml and autostart from this page, and Openbox reloads after each change. Your current files are kept as rc.xml.before-xcontrol and autostart.before-xcontrol and can be put back by switching this off. What the page doesn't cover (other mouse bindings, menus, the dock, margins) is kept as it was."
+msgstr "XControl écrit ~/.config/openbox/rc.xml et autostart à partir de cette page, et Openbox se recharge après chaque changement. Vos fichiers actuels sont conservés sous les noms rc.xml.before-xcontrol et autostart.before-xcontrol et peuvent être rétablis en désactivant ceci. Ce que la page ne couvre pas (autres actions de la souris, menus, dock, marges) reste tel quel."
+
+#: xcontrol/openbox_page.py
+msgid "Applied, Openbox reloaded"
+msgstr "Appliqué, Openbox rechargé"
+
+#: xcontrol/openbox_page.py
+msgid "No Openbox config other than XControl's was found."
+msgstr "Aucune configuration Openbox autre que celle de XControl n'a été trouvée."
+
+#: xcontrol/openbox_page.py
+msgid "Use XControl's Openbox config"
+msgstr "Utiliser la configuration Openbox de XControl"
+
+#: xcontrol/openbox_page.py
+msgid "Behavior & Desktops"
+msgstr "Comportement et bureaux"
+
+#: xcontrol/openbox_page.py
+msgid "Say which windows, e.g. class=\"Steam\""
+msgstr "Indiquez quelles fenêtres, par ex. class=\"Steam\""
+
+#: xcontrol/openbox_page.py
+msgid "XControl's files are kept as rc.xml.xcontrol and autostart.xcontrol."
+msgstr "Les fichiers de XControl sont conservés sous les noms rc.xml.xcontrol et autostart.xcontrol."
+
+#: xcontrol/openbox_page.py
+msgid "Openbox goes back to its own default config. XControl's files are kept as rc.xml.xcontrol and autostart.xcontrol."
+msgstr "Openbox revient à sa propre configuration par défaut. Les fichiers de XControl sont conservés sous les noms rc.xml.xcontrol et autostart.xcontrol."
+
+#: xcontrol/openbox_page.py
+msgid "Put your previous Openbox config back?"
+msgstr "Rétablir votre configuration Openbox précédente ?"
+
+#: xcontrol/openbox_page.py
+msgid "Your previous config is kept as rc.xml.before-xcontrol."
+msgstr "Votre configuration précédente est conservée sous le nom rc.xml.before-xcontrol."
+
+#: xcontrol/openbox_page.py
+msgid "then {keys}: …"
+msgstr "puis {keys} : …"
+
+#: xcontrol/openbox_page.py
+msgid "Menu"
+msgstr "Menu"
+
+#: xcontrol/openbox_page.py
+msgid "XML"
+msgstr "XML"
+
+#: xcontrol/openbox_page.py
+msgid "That isn't valid: {why}"
+msgstr "Ce n'est pas valide : {why}"
+
+#: xcontrol/openbox_page.py
+msgid "Openbox's config couldn't be written, so nothing was changed:"
+msgstr "La configuration d'Openbox n'a pas pu être écrite : rien n'a été modifié :"
+
+#: xcontrol/openbox_page.py
+msgid "Start from your current Openbox config?"
+msgstr "Partir de votre configuration Openbox actuelle ?"
+
+#: xcontrol/openbox_page.py
+msgid "Its look, keys, desktops, window rules and autostart programs are brought over to this page. Otherwise the page starts from Openbox's defaults. Either way your files are kept as backups."
+msgstr "Son apparence, ses touches, ses bureaux, ses règles de fenêtres et ses programmes de démarrage sont repris sur cette page. Sinon, la page part des valeurs par défaut d'Openbox. Dans les deux cas, vos fichiers sont conservés en sauvegarde."
+
+#: xcontrol/openbox_page.py
+msgid "Left out, Openbox doesn't know them here: {names}"
+msgstr "Omis, Openbox ne les connaît pas ici : {names}"
+
+#: xcontrol/openbox_page.py
+msgid "Openbox reads {path}, not XControl's rc.xml (LXDE does this)."
+msgstr "Openbox lit {path}, pas le rc.xml de XControl (LXDE fait cela)."
+
+#: xcontrol/panel_page.py
+msgid "These are the bar settings for {wm}; i3 and Openbox each have their own."
+msgstr "Ce sont les réglages de la barre pour {wm} ; i3 et Openbox ont chacun les leurs."
+
+#: xcontrol/openbox_page.py
+msgid "Clicking the desktop"
+msgstr "Clic sur le bureau"
+
+#: xcontrol/openbox_page.py
+msgid "Right-click opens Openbox's menu"
+msgstr "Le clic droit ouvre le menu d'Openbox"
+
+#: xcontrol/openbox_page.py
+msgid "Middle-click opens the list of windows"
+msgstr "Le clic du milieu ouvre la liste des fenêtres"
+
+#: xcontrol/openbox_page.py
+msgid "Without them, a key can still open these menus (Keys tab, Show a menu)."
+msgstr "Sans eux, une touche peut toujours ouvrir ces menus (onglet Touches, Afficher un menu)."
 
 #~ msgid ""
 #~ "Choosing the driver here is turned off on XLibre for now: XLibre 25 crashed "

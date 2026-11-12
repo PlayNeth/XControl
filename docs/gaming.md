@@ -1,8 +1,8 @@
-# Gaming
+# Graphics
 
-![The Gaming page with the 3D preview](images/gaming.png)
+![The Graphics page with the 3D preview](images/gaming.png)
 
-The Gaming page sets graphics overrides globally and per game. Profiles match a game by Steam
+The Graphics page sets graphics overrides globally and per game. Profiles match a game by Steam
 AppID (`steam:220`) or by the file name of the program or one of its arguments
 (`ioquake3.x86_64`, `game.exe`). Anything without a profile gets the global settings. The table
 in the [README](../README.md) shows which setting works with which API.
@@ -46,7 +46,7 @@ have the shim and layer log what they hook.
 
 ## 3D preview
 
-The Gaming page opens with a live 3D scene, like the ones in the old Catalyst and NVIDIA control
+The Graphics page opens with a live 3D scene, like the ones in the old Catalyst and NVIDIA control
 panels: glxgears' three gears turning above a checkerboard floor, with a chain-link fence
 behind them, drawn with the settings you're editing:
 

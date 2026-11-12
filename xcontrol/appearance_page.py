@@ -8,7 +8,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import GLib, Gtk, Pango  # noqa: E402
 
-from . import appcheck, theming as T  # noqa: E402
+from . import appcheck, theming as T, widgets  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
 PREVIEW_ICONS = ["folder", "user-home", "text-x-generic", "image-x-generic", "audio-x-generic",
@@ -79,8 +79,12 @@ def _section(title):
 
 class AppearancePage(Gtk.Box):
     def __init__(self, window):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
+        switcher, self.tab_stack, tab = widgets.tabs((("theme", _("Theme")), ("fonts", _("Fonts & Effects"))))
+        # under the tabs, for both of them: what Apply does, and Revert
+        bottom = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, border_width=18)
+        bottom.set_margin_top(6)
         self.settings = Gtk.Settings.get_default()
         self.loading = False
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -98,6 +102,9 @@ class AppearancePage(Gtk.Box):
         self.css_bar.set_no_show_all(True)
         self.connect("map", lambda *_a: self._css_note())  # also notice links made while XControl runs
         self.pack_start(self.css_bar, False, False, 0)
+        self.pack_start(switcher, False, False, 0)
+        self.pack_start(self.tab_stack, True, True, 0)
+        self.pack_start(bottom, False, False, 0)
 
         # ---- style
         frame, g = _section(_("Style"))
@@ -109,7 +116,7 @@ class AppearancePage(Gtk.Box):
         self.theme_note = _hint("")
         self.theme_note.set_no_show_all(True)
         self._rows(g, [(_("Theme"), self.theme), ("", self.dark), ("", self.theme_note)])
-        self.pack_start(frame, False, False, 0)
+        tab["theme"].pack_start(frame, False, False, 0)
 
         # ---- icons
         frame, g = _section(_("Icons"))
@@ -122,7 +129,7 @@ class AppearancePage(Gtk.Box):
             img.set_pixel_size(32)
             preview.add(img)
         self._rows(g, [(_("Icon theme"), self.icons), ("", preview)])
-        self.pack_start(frame, False, False, 0)
+        tab["theme"].pack_start(frame, False, False, 0)
 
         # ---- cursor
         frame, g = _section(_("Cursor"))
@@ -139,7 +146,7 @@ class AppearancePage(Gtk.Box):
         self._rows(g, [(_("Cursor theme"), box),
                        ("", _hint(_("i3 and other window managers load the cursor when they start; restart them "
                                     "(i3: Mod+Shift+R) to see it on the desktop and window borders.")))])
-        self.pack_start(frame, False, False, 0)
+        tab["theme"].pack_start(frame, False, False, 0)
 
         # ---- fonts
         frame, g = _section(_("Fonts"))
@@ -158,7 +165,7 @@ class AppearancePage(Gtk.Box):
         self.rgba.connect("changed", self._changed)
         self._rows(g, [(_("Interface font"), self.font), ("", self.antialias),
                        (_("Hinting"), self.hint), (_("Subpixel order"), self.rgba)])
-        self.pack_start(frame, False, False, 0)
+        tab["fonts"].pack_start(frame, False, False, 0)
 
         # ---- sounds and effects
         frame, g = _section(_("Sounds and effects"))
@@ -171,7 +178,7 @@ class AppearancePage(Gtk.Box):
         self._rows(g, [("", self.event_sounds), ("", self.input_sounds), ("", self.animations),
                        ("", _hint(_("For GTK and libadwaita apps. Windows fading in and out as they open and close "
                                     "is the compositor's (Bar & Compositor → \"Fade windows in and out\").")))])
-        self.pack_start(frame, False, False, 0)
+        tab["fonts"].pack_start(frame, False, False, 0)
 
         # ---- Qt
         self.qt_tools, qt_env = T.qt_tools()
@@ -183,7 +190,7 @@ class AppearancePage(Gtk.Box):
             self._rows(g, [("", _hint(_("Qt apps take their colors, icons and font from the GTK settings above, "
                                         "because QT_QPA_PLATFORMTHEME={value}. Nothing else is needed.")
                                       .format(value=qt_env)))])
-            self.pack_start(frame, False, False, 0)
+            tab["theme"].pack_start(frame, False, False, 0)
         elif self.qt_tools:
             frame, g = _section(_("Qt applications"))
             note = (_("Qt apps follow this because QT_QPA_PLATFORMTHEME={value}.").format(value=qt_env)
@@ -191,11 +198,11 @@ class AppearancePage(Gtk.Box):
                     _("Qt apps only use these settings when QT_QPA_PLATFORMTHEME=qt5ct (or qt6ct) is set in your "
                       "session, e.g. in ~/.xprofile. It isn't set now."))
             self._rows(g, [("", self.qt_check), ("", _hint(note))])
-            self.pack_start(frame, False, False, 0)
+            tab["theme"].pack_start(frame, False, False, 0)
 
         # ---- live updates and buttons
         self.live = _hint("")
-        self.pack_start(self.live, False, False, 0)
+        bottom.pack_start(self.live, False, False, 0)
         bar = Gtk.Box(spacing=6)
         self.revert_btn = Gtk.Button(label=_("Revert"))
         self.revert_btn.connect("clicked", self._revert)
@@ -204,10 +211,10 @@ class AppearancePage(Gtk.Box):
         self.apply_btn.get_style_context().add_class("suggested-action")
         self.apply_btn.connect("clicked", self._apply)
         bar.pack_end(self.apply_btn, False, False, 0)
-        self.pack_start(bar, False, False, 0)
-        self.pack_start(_hint(_("Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
-                                "cursors, libadwaita's dark preference and Qt, and updates open apps.")),
-                        False, False, 0)
+        bottom.pack_start(bar, False, False, 0)
+        bottom.pack_start(_hint(_("Changes are previewed in this window. Apply sets them for GTK 2, 3 and 4, X "
+                                  "cursors, libadwaita's dark preference and Qt, and updates open apps.")),
+                          False, False, 0)
 
         # ---- troubleshooting
         frame, g = _section(_("An app ignores the theme?"))
@@ -216,7 +223,7 @@ class AppearancePage(Gtk.Box):
         self._rows(g, [("", self.check_btn),
                        ("", _hint(_("Click the button, then click the app's window. XControl looks at how the app "
                                     "runs and tells you why it doesn't follow the theme.")))])
-        self.pack_start(frame, False, False, 0)
+        tab["theme"].pack_start(frame, False, False, 0)
 
         self._fill()
 

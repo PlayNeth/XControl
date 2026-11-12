@@ -42,7 +42,7 @@ def managed_now():
         d = desktop.load()
     except Exception:  # noqa: BLE001
         return set()
-    on = {"wallpaper": d["wallpaper"]["enabled"], "lock": d["lock"]["enabled"], "bar": d["bar"]["enabled"],
+    on = {"wallpaper": d["wallpaper"]["enabled"], "lock": d["lock"]["enabled"], "bar": d[desktop.bar_key()]["enabled"],
           "picom": d["picom"]["enabled"], "notify": d["notify"]["enabled"]}
     return {k for k, v in on.items() if v}
 

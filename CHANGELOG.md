@@ -2,6 +2,36 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.31.0 (2026-11-12)
+
+**Openbox support, reorganized pages, and sliders that stop on their steps**
+
+- Add Openbox support: the Window Manager page writes ~/.config/openbox/rc.xml and autostart
+  when Openbox is running, with tabs for the look (theme, title bar buttons, fonts), keys (every
+  key binding, and the key to hold to drag windows), behavior and desktops (focus, where new
+  windows open, edge resistance, double-clicking the title, the desktop's right- and middle-click
+  menus, desktop count and names) and startup
+  programs and window rules; your rc.xml can be imported, and what the page doesn't cover is kept
+- Point every "remove it from your i3 config" hint and the session check at Openbox's autostart
+  file on Openbox, and accept openbox-session's autostart as starting XControl at login
+- Give i3 and Openbox bars of their own: the Bar & Compositor page edits the one for the window
+  manager in use, and Openbox's starts as a copy of i3's
+- Use polybar's generic workspaces module instead of the i3 one when the window manager isn't i3
+- Group the sidebar as Gaming, Hardware, Desktop and System, and rename Gaming to Graphics,
+  Input to Mouse & Keyboard, Desktop to Wallpaper & Lock and System to About & Tools
+- Split the longer pages into tabs: Controllers (Games & Buttons, Gyro, Lights & Rate), Displays
+  (Arrangement, Scaling and color, Night light), Appearance (Theme, Fonts & Effects) and
+  Notifications (Look, Behavior, Per app); what applies to every tab stays above the tabs
+- Move screen power, keeping the screen on and battery and power alerts to the Power page, as
+  its Screen and Alerts tabs next to Sleep & Buttons
+- Center the display settings under the arrangement on the Displays page
+- Make every slider stop only on its steps when dragged, clicked, moved with the keys or the
+  wheel; the anti-aliasing and texture filtering sliders could stop between two notches
+- Ask before "i3's colors" replaces all the colors on the Window Manager page
+- Find the X server's log in ~/.local/state, where XLibre keeps it from 25.2 on
+- Fix the Resolutions and system-wide mode list dialogs opening with the start of each line cut
+  off when their content was wider than the dialog
+
 ## 0.30.0 (2026-11-02)
 
 **Add a Boot splash tab for Plymouth themes**

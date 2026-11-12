@@ -8,10 +8,10 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import GLib, Gtk  # noqa: E402
 
-from . import desktop as D, notify as N, poweralerts as PA, widgets  # noqa: E402
+from . import desktop as D, notify as N, poweralerts as PA, widgets, wm  # noqa: E402
 from .desktop_page import _command  # noqa: E402
 from .i18n import N_, _  # noqa: E402
-from .panel_page import _hex, _hint, _rgba, _scale  # noqa: E402
+from .panel_page import _hex, _hint, _rgba  # noqa: E402
 
 POS_LABELS = {"top-left": N_("Top left"), "top-center": N_("Top center"), "top-right": N_("Top right"),
               "left-center": N_("Left, middle"), "center": N_("Center"), "right-center": N_("Right, middle"),
@@ -52,8 +52,16 @@ def _spin(lo, hi, step=1):
 
 class NotifyPage(Gtk.Box):
     def __init__(self, window):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
+        top = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, border_width=18)
+        self.pack_start(top, False, False, 0)
+        switcher, self.tab_stack, tab = widgets.tabs((("look", _("Look")), ("behavior", _("Behavior")),
+                                                      ("apps", _("Per app"))))
+        self.pack_start(switcher, False, False, 0)
+        self.pack_start(self.tab_stack, True, True, 0)
+        # the power alerts are shown by the Power page, on its Alerts tab
+        self.alerts_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
         self.desk = D.load()
         self.n = self.desk["notify"]
         self.pa = self.desk["power_alerts"]
@@ -69,12 +77,12 @@ class NotifyPage(Gtk.Box):
         self.switch = Gtk.Switch(valign=Gtk.Align.CENTER)
         self.switch.connect("notify::active", self._changed)
         head.pack_start(self.switch, False, False, 0)
-        self.pack_start(head, False, False, 0)
-        self.pack_start(_hint(_("XControl writes its own dunst setup and runs dunst for the session. Your own "
-                                "~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
-                                "notification.")), False, False, 0)
+        top.pack_start(head, False, False, 0)
+        tab["look"].pack_start(_hint(_("XControl writes its own dunst setup and runs dunst for the session. Your own "
+                                       "~/.config/dunst/dunstrc isn't used or changed. Changes show on the next "
+                                       "notification.")), False, False, 0)
         self.status = _hint("")
-        self.pack_start(self.status, False, False, 0)
+        top.pack_start(self.status, False, False, 0)
         self.warn = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
         self.warn_text = _hint("")
         self.warn_text.get_style_context().remove_class("dim-label")
@@ -82,26 +90,39 @@ class NotifyPage(Gtk.Box):
         self.warn.add_button(_("Stop it"), 1)
         self.warn.connect("response", self._stop_other)
         self.warn.set_no_show_all(True)
-        self.pack_start(self.warn, False, False, 0)
+        top.pack_start(self.warn, False, False, 0)
         self.conflicts = Gtk.Label(xalign=0, wrap=True, selectable=True)
         self.conflicts.set_no_show_all(True)
-        self.pack_start(self.conflicts, False, False, 0)
+        top.pack_start(self.conflicts, False, False, 0)
 
         self.sections = []
+        self._into = tab["look"]
         self._build_try()
         self._build_position()
         self._build_look()
         self._build_colors()
+        self._into = tab["behavior"]
         self._build_behavior()
-        self._build_rules()
-        self._build_power_alerts()
         self._build_keys()
         self._build_extra()
+        self._into = tab["apps"]
+        self._build_rules()
+        self._into = self.alerts_box
+        self._build_power_alerts()
         self._fill()
         self.loading = False
         widgets.protect(self)
         self.connect("map", lambda *_a: self._status())
-        GLib.timeout_add_seconds(3, lambda: (self._status() if self.get_mapped() else None) or True)
+        self.alerts_box.connect("map", lambda *_a: self._pa_status())
+        GLib.timeout_add_seconds(3, self._poll)
+
+    def _poll(self):
+        """Every 3 s: the whole status on this page, only the power alerts' on the Power page."""
+        if self.get_mapped():
+            self._status()
+        elif self.alerts_box.get_mapped():
+            self._pa_status()
+        return True
 
     # ---------------------------------------------------------------- layout helpers
     def _section(self, title, always=False):
@@ -111,7 +132,7 @@ class NotifyPage(Gtk.Box):
         frame.set_label_widget(head)
         grid = Gtk.Grid(column_spacing=12, row_spacing=8, margin_start=12, margin_top=8, margin_bottom=4)
         frame.add(grid)
-        self.pack_start(frame, False, False, 0)
+        self._into.pack_start(frame, False, False, 0)
         if not always:
             self.sections.append(frame)
         return grid
@@ -207,7 +228,7 @@ class NotifyPage(Gtk.Box):
         self.custom = Gtk.Entry(hexpand=True, placeholder_text="<b>%a</b>: %s\\n%b")
         r = self._row(g, r, "", self.custom,
                       _("%a app, %s title, %b text, %p progress, \\n a new line; Pango markup like <b>, <i>."))
-        self.transparency = _scale(0, 100, 5)
+        self.transparency = widgets.slider(0, 100, 5)
         r = self._row(g, r, _("See-through (%)"), self.transparency, _("Needs the compositor."))
         self.separator = Gtk.CheckButton(label=_("A line between notifications shown together"))
         g.attach(self.separator, 1, r, 1, 1)
@@ -335,7 +356,8 @@ class NotifyPage(Gtk.Box):
         g.attach(_hint(_("A notification when the battery starts or stops charging, gets low or critical, or the "
                          "charger is plugged in or out, also for wireless devices with their own battery. XControl "
                          "runs poweralertd for the session; any notification program shows its alerts (they're "
-                         "in English), and \"poweralertd\" works in the Per app rules above.")), 0, 1, 2, 1)
+                         "in English), and \"poweralertd\" works in the Per app rules on the Notifications "
+                         "page.")), 0, 1, 2, 1)
         self.pa_status = _hint("")
         g.attach(self.pa_status, 0, 2, 2, 1)
         self.pa_warn = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
@@ -422,7 +444,8 @@ class NotifyPage(Gtk.Box):
                      "turns that service off (systemctl --user disable --now poweralertd).")
         elif theirs:
             warn = _("Another poweralertd (process {pid}) is running besides XControl's, so every alert shows "
-                     "twice. Stop it, and remove it from your i3 config or autostart.").format(pid=min(theirs))
+                     "twice. Stop it, and remove it from {file} or autostart.").format(pid=min(theirs),
+                                                                              file=wm.startup_file())
         else:
             warn = ""
         self.pa_warn_text.set_text(warn)
@@ -431,14 +454,15 @@ class NotifyPage(Gtk.Box):
         show = pa["enabled"] and lines
         if show:
             self.pa_conflicts.set_markup("⚠ " + GLib.markup_escape_text(
-                _("Remove these from your i3 config, or a second poweralertd starts after the next login:")) + "\n" +
+                _("Remove these from {file}, or a second poweralertd starts after the next login:").format(
+                    file=wm.startup_file())) + "\n" +
                 "\n".join(f"<tt>{GLib.markup_escape_text(x)}</tt>" for x in lines[:4]))
         self.pa_conflicts.set_visible(bool(show))
 
     def _build_keys(self):
         g = self._section(_("Keyboard shortcuts"), always=True)
-        g.attach(_hint(_("These commands control the notifications. Bind them to keys in your i3 config (or on the "
-                         "Window Manager page):")), 0, 0, 1, 1)
+        g.attach(_hint(_("These commands control the notifications. Bind them to keys on the Window Manager "
+                         "page:")), 0, 0, 1, 1)
         for i, (cmd, what) in enumerate((("dunstctl close", _("Close the newest notification:")),
                                          ("dunstctl close-all", _("Close all of them:")),
                                          ("dunstctl history-pop", _("Bring back the last closed one:")),
@@ -695,15 +719,16 @@ class NotifyPage(Gtk.Box):
         self.status.set_text(text)
         other = n["enabled"] and owner and not ours
         self.warn_text.set_text(_("{name} (process {pid}) is showing notifications, so XControl's dunst can't "
-                                  "start. Stop it, and remove it from your i3 config or autostart.")
-                                .format(name=owner[1], pid=owner[0]) if other else "")
+                                  "start. Stop it, and remove it from {file} or autostart.")
+                                .format(name=owner[1], pid=owner[0], file=wm.startup_file()) if other else "")
         widgets.reveal(self.warn, bool(other))
         lines = [line for kind, line in D.session_conflicts() if kind == "notifications"]
         show = n["enabled"] and lines
         if show:
             self.conflicts.set_markup("⚠ " + GLib.markup_escape_text(
-                _("Remove these from your i3 config, or another notification program starts first after the next "
-                  "login:")) + "\n" + "\n".join(f"<tt>{GLib.markup_escape_text(x)}</tt>" for x in lines[:4]))
+                _("Remove these from {file}, or another notification program starts first after the next "
+                  "login:").format(file=wm.startup_file())) + "\n" +
+                "\n".join(f"<tt>{GLib.markup_escape_text(x)}</tt>" for x in lines[:4]))
         self.conflicts.set_visible(bool(show))
         self.loading, was = True, self.loading
         self.dnd.set_active(bool(ours) and N.paused())

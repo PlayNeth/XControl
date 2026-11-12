@@ -111,10 +111,10 @@ def load():
     desk = raw.get("desktop")
     if isinstance(desk, dict):
         data["desktop"] = desk
-    # i3: XControl's i3 config (checked by i3cfg.normalize)
-    i3 = raw.get("i3")
-    if isinstance(i3, dict):
-        data["i3"] = i3
+    # i3 and Openbox: XControl's window manager configs (checked by i3cfg/obcfg.normalize)
+    for wm_key in ("i3", "openbox"):
+        if isinstance(raw.get(wm_key), dict):
+            data[wm_key] = raw[wm_key]
     # audio: XControl's PipeWire/WirePlumber settings (checked by audio.normalize)
     au = raw.get("audio")
     if isinstance(au, dict):

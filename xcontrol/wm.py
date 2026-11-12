@@ -60,3 +60,53 @@ def decoration_layout(name=None):
     if is_tiling(window_manager_name() if name is None else name):
         return ":close"
     return None
+
+
+# ---------------------------------------------------------------- which one runs
+SUPPORTED = ("i3", "openbox")   # the window managers XControl writes a config for
+_running = [0.0, None]          # (when, what): the pages ask on every status refresh
+
+
+def running():
+    """The supported window manager this user is running ("i3" or "openbox"), or None. From the
+    process list, so it also works without a display (the desktop service, the bar's config)."""
+    import glob
+    import time
+    now = time.monotonic()
+    if now - _running[0] < 5:
+        return _running[1]
+    found, uid = None, os.getuid()
+    for d in glob.glob("/proc/[0-9]*"):
+        try:
+            with open(os.path.join(d, "comm")) as f:
+                name = f.read().strip()
+            if name in SUPPORTED and os.stat(d).st_uid == uid:
+                found = name
+                break
+        except OSError:
+            continue
+    _running[:] = [now, found]
+    return found
+
+
+def page_for():
+    """Which Window Manager page to show: the running one's; else the one that's installed (i3
+    when both or neither are)."""
+    import shutil
+    now = running()
+    if now:
+        return now
+    if shutil.which("openbox") and not shutil.which("i3"):
+        return "openbox"
+    return "i3"
+
+
+def startup_line(cmd, which=None):
+    """How to start `cmd` at login in this window manager's config (for hints to copy)."""
+    which = which or page_for()
+    return f"{cmd} &" if which == "openbox" else f"exec --no-startup-id {cmd}"
+
+
+def startup_file(which=None):
+    """Where this window manager's login programs are listed, as shown to the user."""
+    return "~/.config/openbox/autostart" if (which or page_for()) == "openbox" else "~/.config/i3/config"

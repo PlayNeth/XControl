@@ -128,6 +128,8 @@ check:
 	$(PYTHON) tests/check_poweralerts.py
 	$(PYTHON) tests/check_health.py
 	$(PYTHON) tests/check_backup.py
+	$(PYTHON) tests/check_widgets.py
+	$(PYTHON) tests/check_openbox.py
 	sh -n data/xcontrol-edid-helper
 	sh -n data/xcontrol-module-helper
 	sh -n data/xcontrol-user-helper

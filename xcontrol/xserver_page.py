@@ -539,7 +539,8 @@ class XServerTab(Gtk.Box):
         if rows:
             self.details.pack_start(self._grid(rows), False, False, 0)
         if m.kind == "input":
-            self.details.pack_start(_dim(_("Input devices' settings are on the Input page.")), False, False, 0)
+            self.details.pack_start(_dim(_("Input devices' settings are on the Mouse & Keyboard page.")),
+                                    False, False, 0)
             return
         if m.kind != "video" or not in_use:
             return

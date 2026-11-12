@@ -1,4 +1,6 @@
-"""The Power page: sleeping when idle, the power and sleep buttons, power profiles."""
+"""The Power page: sleeping when idle, the power and sleep buttons, power profiles. Its Screen and
+Alerts tabs show sections that the Wallpaper & Lock and Notifications pages build and save
+(their `screen_box` and `alerts_box`)."""
 import threading
 
 import gi
@@ -34,8 +36,19 @@ def _minutes(n):
 
 class PowerPage(Gtk.Box):
     def __init__(self, window):
-        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=14, border_width=18)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
+        switcher, self.tab_stack, tab = widgets.tabs((("power", _("Sleep & Buttons")), ("screen", _("Screen")),
+                                                      ("alerts", _("Alerts"))))
+        self.pack_start(switcher, False, False, 0)
+        self.pack_start(self.tab_stack, True, True, 0)
+        self._into = tab["power"]
+        for name, owner, box in (("screen", "desktop_page", "screen_box"), ("alerts", "notify_page", "alerts_box")):
+            page = getattr(window, owner, None)
+            if page is not None:
+                tab[name].pack_start(getattr(page, box), False, False, 0)
+            else:   # that page couldn't be built
+                self.tab_stack.remove(tab[name].get_ancestor(Gtk.ScrolledWindow))
         self.desk = D.load()
         self.loading = True
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -53,7 +66,7 @@ class PowerPage(Gtk.Box):
         frame.set_label_widget(head)
         grid = Gtk.Grid(column_spacing=12, row_spacing=8, margin_start=12, margin_top=8, margin_bottom=4)
         frame.add(grid)
-        self.pack_start(frame, False, False, 0)
+        self._into.pack_start(frame, False, False, 0)
         return grid
 
     def _row(self, g, r, label, widget):
@@ -75,7 +88,7 @@ class PowerPage(Gtk.Box):
         self.not_sound.connect("toggled", self._sleep_changed)
         g.attach(self.not_sound, 1, 1, 1, 1)
         g.attach(_hint(_("Counted from the last time you used the mouse, keyboard or a gamepad. Nothing sleeps "
-                         "while the screen is kept on (Desktop page, Keep the screen on). The screen lock, if it's "
+                         "while the screen is kept on (Screen tab, Keep the screen on). The screen lock, if it's "
                          "on, locks first.")), 1, 2, 1, 1)
         self.sleep_note = _hint("")
         g.attach(self.sleep_note, 1, 3, 1, 1)

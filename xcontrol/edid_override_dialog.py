@@ -33,7 +33,10 @@ class EdidOverrideDialog(Gtk.Dialog):
         self.modes = self._collect_modes()
 
         area = self.get_content_area()
-        outer = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        # Only up and down: the dialog is as wide as its content needs. Scrolling sideways let the
+        # focused switch at the right edge pull the content left, cutting off its start. (On a
+        # screen too narrow for it, widgets.fit_dialog() makes it scroll sideways after all.)
+        outer = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
         outer.set_propagate_natural_height(True)
         outer.set_max_content_height(max(320, _work_area_height(window) - 140))
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, border_width=16)

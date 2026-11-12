@@ -7,7 +7,7 @@ import traceback
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-from gi.repository import Gdk, Gtk, Pango  # noqa: E402
+from gi.repository import Gtk, Pango  # noqa: E402
 
 from . import output_props as P, widgets  # noqa: E402
 from .i18n import N_, _, num  # noqa: E402
@@ -35,44 +35,14 @@ def _hint(text):
     return lbl
 
 
-def _wheel_steps(scale, event):
-    """One wheel notch = one step increment (GTK jumps much further by default)."""
-    if not widgets.wheel_allowed(scale):
-        return widgets.scroll_page(scale, event)
-    adj = scale.get_adjustment()
-    step = 0
-    if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.RIGHT):
-        step = 1
-    elif event.direction in (Gdk.ScrollDirection.DOWN, Gdk.ScrollDirection.LEFT):
-        step = -1
-    elif event.direction == Gdk.ScrollDirection.SMOOTH:
-        ok, dx, dy = event.get_scroll_deltas()
-        if ok and abs(dx - dy) >= 0.5:
-            step = 1 if dx - dy > 0 else -1
-    if step:
-        adj.set_value(adj.get_value() + step * adj.get_step_increment())
-    return True
 
 
-def _scale(lo, hi, step, digits, fmt):
-    s = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, lo, hi, step)
-    s.set_digits(digits)
-    s.set_hexpand(True)
-    s.set_value_pos(Gtk.PositionType.RIGHT)
-    s.get_adjustment().set_page_increment(step)
-    s.connect("format-value", lambda _s, v: fmt(v))
-    s.add_events(Gdk.EventMask.SCROLL_MASK | Gdk.EventMask.SMOOTH_SCROLL_MASK)
-    s.connect("scroll-event", _wheel_steps)
-    return s
+class ColorPanel(Gtk.Box):
+    """The Displays page's Scaling and color tab (the tab's title is its heading)."""
 
-
-class ColorPanel(Gtk.Expander):
     def __init__(self, on_change, on_preview=None):
-        super().__init__()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.on_preview = on_preview or (lambda m: None)
-        head = Gtk.Label(xalign=0)
-        head.set_markup("<b>" + _("Scaling and color") + "</b>")
-        self.set_label_widget(head)
         self.on_change = on_change
         self.mon = None
         self.loading = False
@@ -124,7 +94,7 @@ class ColorPanel(Gtk.Expander):
         row("max bpc", _("Color depth"), self.bpc,
             _("The highest depth the link may use; the driver lowers it when bandwidth runs out."))
 
-        self.saturation = _scale(0, 200, 5, 0, lambda v: _("{n} %").format(n=int(round(v))))
+        self.saturation = widgets.slider(0, 200, 5, 0, lambda v: _("{n} %").format(n=int(round(v))))
         self.saturation.add_mark(100, Gtk.PositionType.BOTTOM, None)
         self.saturation.connect("value-changed", self._saturation_changed)
         self.sat_note = _hint("")
@@ -136,7 +106,7 @@ class ColorPanel(Gtk.Expander):
             _("Done by the display engine, so it applies to everything on screen, games included. "
               "At 100 colors are unchanged. Shown live while you drag; Apply keeps it."))
 
-        self.gamma = _scale(0.5, 2.0, 0.05, 2, lambda v: num(v, 2))
+        self.gamma = widgets.slider(0.5, 2.0, 0.05, 2, lambda v: num(v, 2))
         self.gamma.add_mark(1.0, Gtk.PositionType.BOTTOM, None)
         self.gamma.connect("value-changed", self._gamma_changed)
         row("gamma", _("Gamma"), self.gamma,
@@ -150,10 +120,8 @@ class ColorPanel(Gtk.Expander):
 
         self.empty = _hint(_("The driver offers no scaling or color settings for this display."))
         self.empty.set_no_show_all(True)
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        box.pack_start(g, False, False, 0)
-        box.pack_start(self.empty, False, False, 0)
-        self.add(box)
+        self.pack_start(g, False, False, 0)
+        self.pack_start(self.empty, False, False, 0)
 
     def label_widgets(self):
         """Left-column labels, for lining up with the page's other labels."""

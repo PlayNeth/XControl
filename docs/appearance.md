@@ -6,7 +6,8 @@ One place to pick the GTK theme, icon theme, cursor (theme and size), interface 
 (antialiasing, hinting, subpixel order), the dark preference, and **sounds and effects**:
 event sounds (the alert/error "bell" sounds apps play), click and key feedback sounds, and
 animations (the fades and slides in menus, popovers, switches and tabs). Choices preview inside
-XControl; **Apply** writes them everywhere an X11 program looks:
+XControl; **Apply** writes them everywhere an X11 program looks. The **Theme** tab has the
+style, icons, cursor and Qt; **Fonts & Effects** has the rest. Apply and Revert sit under both:
 
 - `~/.config/gtk-3.0/settings.ini`, `~/.config/gtk-4.0/settings.ini` and `~/.gtkrc-2.0`
   (other settings in those files are kept)
