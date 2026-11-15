@@ -71,6 +71,8 @@ def read(path):
         bundle = json.load(f)
     if not isinstance(bundle, dict) or bundle.get("kind") != KIND or not isinstance(bundle.get("settings"), dict):
         raise ValueError("not an XControl backup")
+    if not isinstance(bundle.get("files"), dict):   # (checked here, before restore() has written anything)
+        bundle["files"] = {}
     return bundle
 
 
@@ -91,7 +93,10 @@ def restore(bundle):
         value = entry.get("base64" if binary else "text")
         if not isinstance(value, str):
             continue
-        data = base64.b64decode(value) if binary else value.encode()
+        try:
+            data = base64.b64decode(value) if binary else value.encode()
+        except ValueError:   # damaged picture data: skip it, the rest still goes back
+            continue
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         _keep(dest)
         with open(dest + ".tmp", "wb") as f:

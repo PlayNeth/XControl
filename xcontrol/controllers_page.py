@@ -2,6 +2,7 @@
 emulation, gyro aiming and buttons."""
 import grp
 import os
+import threading
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
@@ -161,6 +162,7 @@ class ControllersPage(Gtk.Box):
         self.restart_keys = S.restart_keys(self.c)   # what the running service was started with
         self.loading = True
         self._timer = None
+        self._shown = None       # what the list of controllers shows, so it's only rebuilt when it changes
         self.editing = None      # None: every game; else the index of the game's layout being edited
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
@@ -214,11 +216,14 @@ class ControllersPage(Gtk.Box):
             bar.pack_start(b, False, False, 0)
             if cb != self._layout_new:
                 setattr(self, "layout_" + cb.__name__.rsplit("_", 1)[-1], b)
-        self._row(g, 0, _("Settings for"), bar)
+        # (above the tabs nothing scrolls: sideways, or this row is the narrowest the window can get)
+        row = widgets.sideways(bar)
+        row.set_hexpand(True)
+        self._row(g, 0, _("Settings for"), row)
         self.layout_hint = _hint("")
-        g.attach(self.layout_hint, 1, 1, 1, 1)
+        g.attach(self.layout_hint, 0, 1, 2, 1)   # (full width: fewer lines on a 640x480 screen)
         self.layout_now = _hint("")
-        g.attach(self.layout_now, 1, 2, 1, 1)
+        g.attach(self.layout_now, 0, 2, 2, 1)
 
     def _fill_layouts(self):
         was, self.loading = self.loading, True
@@ -662,6 +667,9 @@ class ControllersPage(Gtk.Box):
         self._timer = None
         try:
             self.c = S.normalize(self.c)
+            if self.editing is not None and self.editing >= len(self.c["profiles"]):
+                self.editing = None      # (past the 50 layouts that are kept)
+                self._fill()
             S.save(self.c)
             D.notify_daemon(D.load())    # starts, restarts or stops the controller service
             keys = S.restart_keys(self.c)
@@ -695,11 +703,18 @@ class ControllersPage(Gtk.Box):
 
     def _usb_apply(self, *_a):
         ms = int(self.usb_rate.get_active_id() or 0)
-        ok, msg = P.set_usb_poll(ms)
-        if ok:
-            self.window.set_status(_("USB polling changed"))
-        elif msg:
-            self.window.message(_("Could not change the USB polling"), msg)
+        self.usb_apply.set_sensitive(False)
+
+        def done(ok, msg):
+            self.usb_apply.set_sensitive(True)
+            if ok:
+                self.window.set_status(_("USB polling changed"))
+            elif msg:
+                self.window.message(_("Could not change the USB polling"), msg)
+            return False
+
+        # (not in the UI thread: the window would freeze while the password is asked for)
+        threading.Thread(target=lambda: GLib.idle_add(done, *P.set_usb_poll(ms)), daemon=True).start()
 
     def _reset_map(self, *_a):
         self.loading = True
@@ -712,13 +727,8 @@ class ControllersPage(Gtk.Box):
     def _poll(self):
         st = S.state()
         found = P.discover()
-        for child in self.pads_box.get_children():
-            child.destroy()
         live = {p["key"]: p for p in st.get("pads", [])}
-        if not found:
-            self.pads_box.pack_start(_hint(_("No DualShock 4 or DualSense connected. Plug it in, or pair it over "
-                                             "Bluetooth (hold Share or Create and PS until the light bar flashes).")),
-                                     False, False, 0)
+        rows = []
         notes = set()
         for pad in found:
             info = live.get(pad.key, {})
@@ -737,10 +747,8 @@ class ControllersPage(Gtk.Box):
                               "uncalibrated": _("gyro not calibrated yet")}.get(info["gyro"], ""))
             if info.get("gyro_error"):
                 notes.add(_("The gyro mouse couldn't be made: {error}").format(error=info["gyro_error"]))
-            row = Gtk.Label(xalign=0, wrap=True)
-            row.set_markup("<b>{}</b>  <span alpha='70%'>{}</span>".format(
+            rows.append("<b>{}</b>  <span alpha='70%'>{}</span>".format(
                 GLib.markup_escape_text(pad.name), GLib.markup_escape_text(" · ".join(parts))))
-            self.pads_box.pack_start(row, False, False, 0)
             if info.get("error"):
                 notes.add(_("The controller service: {error}").format(error=info["error"]))
             if info.get("hide_error"):
@@ -763,9 +771,22 @@ class ControllersPage(Gtk.Box):
             if pad.model == "dualsense" and not P.hidraw_writable(pad):
                 notes.add(_("The adaptive triggers can't be set yet: reconnect the controller so XControl's "
                             "device permissions apply."))
-        for n in sorted(notes):
-            self.pads_box.pack_start(_hint(n), False, False, 0)
-        self.pads_box.show_all()
+        shown = (rows, sorted(notes))
+        if shown != self._shown:     # (every 2 s: rebuilding it each time would also drop a text selection)
+            self._shown = shown
+            for child in self.pads_box.get_children():
+                child.destroy()
+            if not found:
+                self.pads_box.pack_start(_hint(_(
+                    "No DualShock 4 or DualSense connected. Plug it in, or pair it over "
+                    "Bluetooth (hold Share or Create and PS until the light bar flashes).")), False, False, 0)
+            for markup in rows:
+                row = Gtk.Label(xalign=0, wrap=True)
+                row.set_markup(markup)
+                self.pads_box.pack_start(row, False, False, 0)
+            for n in shown[1]:
+                self.pads_box.pack_start(_hint(n), False, False, 0)
+            self.pads_box.show_all()
         if not self.c["enabled"]:
             text = ""
         elif st:

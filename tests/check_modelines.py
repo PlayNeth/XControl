@@ -97,4 +97,21 @@ for i, (w, h, hz, *_rest) in M.DMT.items():
            m.vsync_end, m.vtotal, m.hsync_positive, m.vsync_positive)
     bad += got != ref
 print(f"dmt      {len(M.DMT) - bad:4d}/{len(M.DMT)} identical to edid-decode")
-sys.exit(1 if failed or bad else 0)
+
+# saved modes come back from the settings file as they went in; a damaged entry is refused
+import json  # noqa: E402
+damaged = 0
+for m in (M.cvt(640, 480, 60), M.gtf(1024, 768, 85), M.dmt(640, 480, 60),
+          M.parse_modeline("25.175 640 656 752 800 480 490 492 525 -hsync -vsync")):
+    damaged += M.Modeline.from_dict(json.loads(json.dumps(m.to_dict()))) != m
+good = M.cvt(640, 480, 60).to_dict()
+for entry in ({}, {**good, "width": "wide"}, {**good, "standard": "nope"}, {**good, "htotal": 0},
+              {**good, "requested_hz": "fast"}, {**good, "clock_khz": None}):
+    try:
+        M.Modeline.from_dict(entry)
+        damaged += 1
+        print("    accepted a damaged saved mode:", entry)
+    except (TypeError, KeyError, ValueError):
+        pass
+print("saved modes:", "FAILED" if damaged else "ok")
+sys.exit(1 if failed or bad or damaged else 0)

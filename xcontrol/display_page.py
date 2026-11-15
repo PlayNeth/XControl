@@ -7,9 +7,9 @@ import shlex
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
-from gi.repository import Gdk, GLib, Gtk  # noqa: E402
+from gi.repository import Gdk, GLib, Gtk, Pango  # noqa: E402
 
-from . import config, modelines, output_names, output_props, widgets, xrandr  # noqa: E402
+from . import config, modelines, night, output_names, output_props, widgets, xrandr  # noqa: E402
 from .display_color import ColorPanel  # noqa: E402
 from .i18n import N_, _, hz, ngettext  # noqa: E402
 from .paths import autostart_file  # noqa: E402
@@ -199,6 +199,8 @@ class DisplayPage(Gtk.Box):
 
         g = Gtk.Grid(column_spacing=12, row_spacing=8, halign=Gtk.Align.CENTER)
         self.monitor_combo = Gtk.ComboBoxText(hexpand=True)
+        # a long name is cut short instead of pushing the buttons out of a 640 px window
+        self.monitor_combo.get_cells()[0].set_property("ellipsize", Pango.EllipsizeMode.END)
         self.monitor_combo.connect("changed", self._monitor_chosen)
         self.enabled_switch = Gtk.Switch(halign=Gtk.Align.START)
         self.enabled_switch.connect("notify::active", self._enabled_toggled)
@@ -243,7 +245,7 @@ class DisplayPage(Gtk.Box):
         which_label = Gtk.Label(label=_("Display"), xalign=0)
         which.pack_start(which_label, False, False, 0)
         which.pack_start(display_row, True, True, 0)
-        top.pack_start(which, False, False, 0)
+        top.pack_start(widgets.sideways(which), False, False, 0)
         rows = [(_("Enabled"), self.enabled_switch), ("", self.primary_check),
                 (_("Resolution"), mode_box), (_("Refresh rate"), self.rate_combo),
                 (_("Orientation"), self.rot_combo), (_("Position"), pos)]
@@ -254,6 +256,8 @@ class DisplayPage(Gtk.Box):
         tab["layout"].pack_start(g, False, False, 0)
 
         self.previewed = set()      # outputs whose colours are being previewed live
+        self._gamma_previewed = set()   # ...the ones whose gamma ramps the preview replaced
+        self._gamma_read = {}       # output -> gamma as read, where the saved one is shown (see reload)
         self._preview_pending = {}
         self._preview_timer = None
         self.color = ColorPanel(self._color_changed, self._color_preview)
@@ -274,6 +278,12 @@ class DisplayPage(Gtk.Box):
 
         buttons = Gtk.Box(spacing=6, margin_start=18, margin_end=18, margin_top=6, margin_bottom=12)
         self.autostart_check = Gtk.CheckButton(label=_("Restore this layout when I log in"))
+        # in a 640 px window the label is cut short (and shown whole as a tooltip), so Apply stays in sight
+        text = self.autostart_check.get_child()
+        text.set_ellipsize(Pango.EllipsizeMode.END)
+        self.autostart_check.set_has_tooltip(True)
+        self.autostart_check.connect("query-tooltip", lambda _w, _x, _y, _kb, tip: bool(
+            text.get_layout().is_ellipsized() and (tip.set_text(text.get_text()) or True)))
         self.autostart_check.set_active(config.load()["display"]["autostart"])
         self.autostart_check.connect("toggled", self._autostart_toggled)
         buttons.pack_start(self.autostart_check, False, False, 0)
@@ -287,7 +297,7 @@ class DisplayPage(Gtk.Box):
         buttons.pack_end(self.apply_btn, False, False, 0)
         buttons.pack_end(detect, False, False, 0)
         buttons.pack_end(ident, False, False, 0)
-        self.pack_end(buttons, False, False, 0)
+        self.pack_end(widgets.sideways(buttons), False, False, 0)
 
         self.reload()
 
@@ -297,6 +307,8 @@ class DisplayPage(Gtk.Box):
         return connected.index(m) + 1 if m in connected else 0
 
     def reload(self, keep=None):
+        """Read the displays again. The display that was selected stays selected (`keep`: its name)."""
+        keep = keep or (self.selected.name if self.selected else None)
         self._undo_preview()  # a re-read discards unapplied changes, previews included
         warn = xrandr.session_warning()
         self.warning_label.set_text(warn or "")
@@ -304,8 +316,7 @@ class DisplayPage(Gtk.Box):
         self.warning_label.set_visible(bool(warn))
         self.mode_problems = {}
         try:
-            self.monitors = (xrandr.query(with_props=True)
-                             if xrandr.available() and os.environ.get("DISPLAY") and not warn else [])
+            self.monitors = xrandr.query(with_props=True) if not warn else []
             if self.monitors:
                 renamed = output_names.migrate_saved([m.name for m in self.monitors if m.connected])
                 if renamed:
@@ -316,8 +327,11 @@ class DisplayPage(Gtk.Box):
         except Exception as e:  # noqa: BLE001 - surface any xrandr failure
             self.monitors = []
             self.window.set_status("xrandr: {error}".format(error=e))
+        self._gamma_read = output_props.keep_saved_gamma(
+            self.monitors, night.saved_gamma(config.load()["display"]["command"]))
         self.original = copy.deepcopy(self.monitors)
         connected = [m for m in self.monitors if m.connected]
+        self.night.set_outputs([m.name for m in connected])
         self.selected = (next((m for m in connected if m.name == keep), None)
                          or next((m for m in connected if m.primary), connected[0] if connected else None))
         self._fill_monitor_combo()
@@ -393,13 +407,18 @@ class DisplayPage(Gtk.Box):
     def _flush_preview(self):
         self._preview_timer = None
         pending, self._preview_pending = self._preview_pending, {}
+        originals = {m.name: m for m in self.original}
         for name, m in pending.items():
-            args = output_props.preview_args(m)
+            # the ramps only when the gamma slider moved: a saturation preview keeps the night light
+            gamma = name in self._gamma_previewed or name not in originals or m.gamma != originals[name].gamma
+            args = output_props.preview_args(m, gamma)
             if not args:
                 continue
             try:
                 xrandr.run(["xrandr"] + args)
                 self.previewed.add(name)
+                if gamma and m.has_gamma:
+                    self._gamma_previewed.add(name)
                 self.window.set_status(_("Previewing: press Apply to keep these colors"))
             except Exception as e:  # noqa: BLE001
                 self.window.set_status(_("Preview failed: {error}").format(error=e))
@@ -414,16 +433,44 @@ class DisplayPage(Gtk.Box):
     def _undo_preview(self):
         """Put back the colours from before the preview (nothing was applied)."""
         self._cancel_preview_timer()
-        originals = {m.name: m for m in self.original}
+        originals = {m.name: m for m in self._as_read(self._gamma_previewed)}
         for name in sorted(self.previewed):
             orig = originals.get(name)
-            args = output_props.preview_args(orig) if orig else []
+            args = output_props.preview_args(orig, name in self._gamma_previewed) if orig else []
             if args:
                 try:
                     xrandr.run(["xrandr"] + args)
                 except Exception:  # noqa: BLE001 - best effort; the output may be gone
                     pass
+        self._previews_done(night_light=bool(self._gamma_previewed))
+
+    def _previews_done(self, night_light=False):
         self.previewed.clear()
+        self._gamma_previewed.clear()
+        if night_light:
+            self._redraw_night_light()
+
+    def _as_read(self, names):
+        """The layout as read, for going back to it. For the outputs in `names` with the gamma
+        that was really read, where the saved one is shown instead (see keep_saved_gamma)."""
+        before = copy.deepcopy(self.original)
+        for m in before:
+            if m.name in names and m.name in self._gamma_read:
+                m.gamma = self._gamma_read[m.name]
+        return before
+
+    def _redraw_night_light(self):
+        """xrandr --gamma replaced the ramps, the night light's colors with them, and the saved
+        gamma it builds on may be another now: have the desktop service read it and draw again
+        (by itself it only looks every 30 s, and would put the old gamma back)."""
+        from . import desktop
+        try:
+            desk = desktop.load()
+            if (desk["night"]["enabled"] or night.forced(desktop._runtime) is not None) \
+                    and desktop.state().get("daemon"):
+                desktop.notify_daemon(desk)
+        except Exception:  # noqa: BLE001 - the colors come back within 30 s anyway
+            pass
 
     def _restore_missing_modes(self):
         """X forgets custom modes when it restarts; put back any saved ones that
@@ -437,10 +484,9 @@ class DisplayPage(Gtk.Box):
             for d in modes:
                 try:
                     ml = modelines.Modeline.from_dict(d)
-                    name = ml.name
-                except (TypeError, KeyError):  # a damaged entry in the config: the rest still works
+                except (TypeError, KeyError, ValueError):  # a damaged entry in the config: the rest still works
                     continue
-                if name in mon.modes:
+                if ml.name in mon.modes:
                     continue
                 try:
                     xrandr.add_custom_mode(output, ml)
@@ -601,7 +647,9 @@ class DisplayPage(Gtk.Box):
         self._cancel_preview_timer()  # the full command below includes the previewed values
         try:
             cmd = xrandr.build_command(self.monitors, reference=self.original)
-            previous = xrandr.build_command(self.original, reference=self.monitors) if self.original else None
+            changed = {m.name for m, o in zip(self.monitors, self.original) if m.gamma != o.gamma}
+            previous = (xrandr.build_command(self._as_read(changed), reference=self.monitors)
+                        if self.original else None)
         except Exception as e:  # noqa: BLE001 - never fail silently
             self.window.message(_("xrandr could not apply this layout"), f"{type(e).__name__}: {e}")
             return
@@ -613,14 +661,14 @@ class DisplayPage(Gtk.Box):
             return
         if self._confirm_keep():
             self._remember(xrandr.build_command(self.monitors))  # only what differs from defaults
-            self.previewed.clear()  # now applied for real
+            self._previews_done("--gamma" in cmd)  # now applied for real
             self.reload()
             self.window.set_status(_("Display settings applied"))
         else:
             if previous:
                 try:
                     xrandr.run(previous)
-                    self.previewed.clear()  # `previous` restored the colours too
+                    self._previews_done("--gamma" in cmd)  # `previous` restored the colours too
                 except Exception as e:  # noqa: BLE001
                     self.window.message(_("Could not restore the previous layout"), str(e))
             self.reload()

@@ -33,6 +33,17 @@ with open(os.path.join(locs, "pt_BR"), "w") as f:
     f.write('LC_IDENTIFICATION\ntitle "Portuguese locale for Brazil"\nlanguage "Portuguese"\nterritory "Brazil"\n')
 expect("describe", R.describe("pt_BR.UTF-8", base=locs), "Portuguese (Brazil)")
 
+# `locale -a` lists Latin-1 aliases ("fran\xe7ais") once such locales are generated
+fakebin = os.path.join(tmp, "bin")
+os.makedirs(fakebin)
+with open(os.path.join(fakebin, "locale"), "wb") as f:
+    f.write(b"#!/bin/sh\nprintf 'C\\nC.utf8\\nfran\\347ais\\nfr_FR\\nfr_FR.utf8\\npt_BR.utf8\\n'\n")
+os.chmod(os.path.join(fakebin, "locale"), 0o755)
+path = os.environ.get("PATH", "")
+os.environ["PATH"] = fakebin + os.pathsep + path
+expect("installed, with a name that isn't UTF-8 in the list", R.installed(), ["fr_FR.UTF-8", "pt_BR.UTF-8"])
+os.environ["PATH"] = path
+
 # per user
 R.write_user_locale({"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8", "BOGUS": "x"})
 expect("user locale", R.user_locale(), {"LANG": "pt_BR.UTF-8", "LC_TIME": "en_GB.UTF-8"})

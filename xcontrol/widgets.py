@@ -177,7 +177,11 @@ def fit_dialog(dialog):
         return
     max_w, max_h = area.width - 20, area.height - 20
     content = dialog.get_content_area()
-    buttons = dialog.get_action_area()     # (GTK 3 keeps the buttons inside the content area)
+    # GTK 3 keeps the buttons inside the content area, in a box of their own (GTK 3.12+): find
+    # the content area's child that holds them, so they aren't moved into the scrolled part
+    buttons = dialog.get_action_area()
+    while buttons.get_parent() not in (None, content):
+        buttons = buttons.get_parent()
     inner = getattr(dialog, _FITTED, None)
     if inner is None:
         min_size, _nat = dialog.get_preferred_size()

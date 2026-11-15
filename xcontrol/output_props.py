@@ -112,10 +112,34 @@ def attach(monitors, verbose):
             # xrandr prints the exponent of the ramp, the reciprocal of what --gamma takes
             # (--gamma 1.2 reads back as 0.83), with two significant digits.
             try:
-                m.gamma = tuple(round(1.0 / float(x), 2) for x in g.split(":"))
-                m.has_gamma = len(m.gamma) == 3
+                read = tuple(round(1.0 / float(x), 2) for x in g.split(":"))
             except (ValueError, ZeroDivisionError):
-                pass
+                continue
+            m.has_gamma = len(read) == 3
+            # ramps xrandr can't describe read back as nan, inf or negative numbers, which
+            # --gamma refuses: the gamma control is there, its value just isn't known
+            if m.has_gamma and all(0.05 <= x <= 20 for x in read):
+                m.gamma = read
+
+
+def keep_saved_gamma(monitors, saved):
+    """Show the gamma of the saved layout (`saved`: {output: gamma}, see night.saved_gamma) where
+    the ramps don't say what was set here. xrandr prints two significant digits, so 0.8 reads
+    back as 0.77 and would be saved as that by the next Apply; and under a night light the
+    channels differ, which read as "no gamma set" and dropped it from the saved layout.
+    Returns {output: the gamma as read} for the outputs whose channels differ."""
+    uneven = {}
+    for m in monitors:
+        if not m.has_gamma:
+            continue
+        g = saved.get(m.name)
+        if not _uniform(m.gamma):
+            uneven[m.name] = m.gamma
+            g = g or 1.0
+        elif not g or abs(m.gamma[0] - g) > 0.06 * g + 0.005:
+            continue    # set to something else since (xrandr by hand): that is the gamma now
+        m.gamma = (g, g, g)
+    return uneven
 
 
 def default_of(m, name):
@@ -184,12 +208,13 @@ def args_for(m, reference=None):
     return args
 
 
-def preview_args(m):
+def preview_args(m, gamma=True):
     """xrandr arguments that set only this output's colour matrix and gamma: no mode
-    set, so they can run while a slider moves (live preview)."""
+    set, so they can run while a slider moves (live preview). `gamma` off leaves the ramps
+    alone: --gamma replaces them, a night light's colors included."""
     args = ["--output", m.name]
     if "CTM" in m.props:
         args += ["--set", "CTM", ctm_value(m)]
-    if m.has_gamma:
+    if gamma and m.has_gamma:
         args += ["--gamma", ":".join(f"{g:.3g}" for g in m.gamma)]
     return args if len(args) > 2 else []

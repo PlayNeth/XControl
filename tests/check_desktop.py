@@ -3,13 +3,14 @@ import os
 import shutil
 import sys
 import tempfile
+import time
 
 tmp = tempfile.mkdtemp()
 os.environ.update(HOME=tmp, XDG_CONFIG_HOME=os.path.join(tmp, ".config"), XDG_CACHE_HOME=os.path.join(tmp, ".cache"),
                   XDG_RUNTIME_DIR=tmp)
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import cairo  # noqa: E402
-from xcontrol import desktop as D, wallpaper as W  # noqa: E402
+from xcontrol import desktop as D, wallpaper as W, wm  # noqa: E402
 
 bad = 0
 
@@ -87,6 +88,8 @@ expect("never", D.xset_commands(desk), [["xset", "s", "off"], ["xset", "-dpms"]]
 expect("nothing managed: nothing touched", D.xset_commands(D.normalize({})), [])
 expect("service only when needed", (D.wanted(D.normalize({})), D.wanted(desk)), (False, True))
 
+expect("hand-edited sections that aren't {}",
+       [D.normalize({k: [1]})[k] == D.normalize({})[k] for k in ("wallpaper", "lock", "blanking", "awake")], [True] * 4)
 expect("hand-edited junk", (D.normalize({"lock": {"idle_minutes": "ten", "color": 5}})["lock"]["idle_minutes"],
                             D.normalize({"lock": {"color": 5}})["lock"]["color"],
                             D.normalize({"blanking": {"screen_off_minutes": [1]}})["blanking"]["screen_off_minutes"]),
@@ -121,6 +124,7 @@ expect("log trimmed", os.path.getsize(c.log_path()), 0)
 c.stop()
 
 # ---- the i3 config
+wm._running[:] = [time.monotonic() + 1e9, None]   # (whatever runs on the machine the tests run on)
 os.makedirs(os.path.join(tmp, ".config", "i3"))
 with open(os.path.join(tmp, ".config", "i3", "config"), "w") as f:
     f.write("exec --no-startup-id ~/.fehbg\n# exec feh --bg-fill old.png\nexec_always nitrogen --restore\n"
@@ -133,6 +137,55 @@ D.sync_autostart(desk)
 expect("autostart written", os.path.exists(D.autostart_file()), True)
 D.sync_autostart(D.normalize({}))
 expect("autostart removed", os.path.exists(D.autostart_file()), False)
+wm._running[:] = [time.monotonic() + 1e9, "i3"]
+only_ob = D.normalize({"bar": {"enabled": False}, "bar_openbox": {"enabled": True}})
+expect("on i3, with only Openbox's bar on: nothing to run now", (D.bar_key(), D.wanted(only_ob)), ("bar", False))
+D.sync_autostart(only_ob)
+expect("but the entry stays for the next login into Openbox", os.path.exists(D.autostart_file()), True)
+D.sync_autostart(D.normalize({}))
+wm._running[:] = [time.monotonic() + 1e9, None]
+
+# ---- Openbox: its autostart file is the startup, and its bar the one that counts
+wm._running[:] = [time.monotonic() + 1e9, "openbox"]
+expect("Openbox's bar", (D.bar_key(), D.wanted(only_ob)), ("bar_openbox", True))
+os.makedirs(os.path.join(tmp, ".config", "openbox"))
+with open(os.path.join(tmp, ".config", "openbox", "autostart"), "w") as f:
+    f.write("# picom &\nnitrogen --restore &\ndunst &\n")
+expect("Openbox conflicts", [k for k, _line in D.session_conflicts()], ["wallpaper", "notifications"])
+os.environ.pop("XDG_CURRENT_DESKTOP", None)
+D._user_procs = lambda names: {}   # (no openbox-session here)
+expect("not started by Openbox", D.autostart_runs(), False)
+os.environ["XDG_CURRENT_DESKTOP"] = "LXQt"
+expect("LXQt runs ~/.config/autostart itself: unknown", D.autostart_runs(), None)
+with open(os.path.join(tmp, ".config", "openbox", "autostart"), "a") as f:
+    f.write("xcontrol --session &\n")
+expect("started from Openbox's autostart", D.autostart_runs(), True)
+
+# Openbox's bar follows i3's until it is first saved under Openbox
+from xcontrol import config  # noqa: E402
+config.save({})
+wm._running[:] = [time.monotonic() + 1e9, "i3"]
+d = D.load()
+d["wallpaper"]["enabled"] = True
+D.save(d)                                   # any save on i3...
+expect("...doesn't freeze a copy of i3's bar for Openbox", "bar_openbox" in config.load()["desktop"], False)
+d = D.load()
+d["bar"]["enabled"], d["bar"]["height"] = True, 40
+D.save(d)
+wm._running[:] = [time.monotonic() + 1e9, "openbox"]
+d = D.load()
+expect("first Openbox login: i3's bar as it is now", (d["bar_openbox"]["enabled"], d["bar_openbox"]["height"]),
+       (True, 40))
+d["bar_openbox"]["height"] = 30
+D.save(d)                                   # first save under Openbox: its own from here on
+wm._running[:] = [time.monotonic() + 1e9, "i3"]
+d = D.load()
+d["bar"]["height"] = 50
+D.save(d)
+d = D.load()
+expect("then each keeps its own", (d["bar"]["height"], d["bar_openbox"]["height"]), (50, 30))
+expect("the same display, with or without the screen number",
+       [wm._display(v) for v in (":0", ":0.0", "host:10.1", "", None)], [":0", ":0", "host:10", None, None])
 
 print("check_desktop:", "FAILED" if bad else "ok")
 shutil.rmtree(tmp, ignore_errors=True)

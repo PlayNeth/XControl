@@ -137,6 +137,16 @@ c2 = O.normalize(dict(c, double_click="Iconify"))
 c2["base"] = O.generate(dict(c, double_click="none"))
 expect("double-click added back", O.import_config(O.generate(c2))[0]["double_click"], "Iconify")
 
+# a double-click the page has no word for (maximize one way only) stays as it is
+vert = RC.replace('<action name="ToggleShade"/>',
+                  '<action name="ToggleMaximize"><direction>vertical</direction></action>')
+expect("double-click's own arguments kept", "<direction>vertical</direction>" in O.generate(O.import_config(vert)[0]),
+       True)
+# windows matched by their group
+group = RC.replace('<application title="Picture-in-Picture">', '<application groupclass="Gimp" groupname="gimp">')
+expect("group matches kept", O.import_config(O.generate(O.import_config(group)[0]))[0]["rules"][1]["match"],
+       {"groupclass": "Gimp", "groupname": "gimp"})
+
 # clicking the desktop: the menus come and go
 expect("menus imported", (c["root_menu"], c["root_window_list"]), (True, False))
 off = O.import_config(O.generate(O.normalize(dict(c, root_menu=False, root_window_list=False))))[0]
@@ -168,10 +178,30 @@ expect("autostart lines", lines[4:], ["nm-applet &", "if [ -x /usr/bin/foo ]; th
 expect("autostart line kept as is", [O.autostart_line(x) for x in ("a &", "export X=1", "b; \\", "x=1")],
        ["a &", "export X=1", "b; \\", "x=1"])
 
+# what would break the script, or wait for ever, when sent to the background or not
+expect("autostart: programs go to the background, shell syntax doesn't",
+       [O.autostart_line(x) for x in ("firefox", "dolphin --daemon", "foo # note", "[ -x /bin/foo ] &&", "a |",
+                                      "laptop)", "X=1 foo", 'X="a b"', "sleep 2", "foo $(bar)", "x='two", "fi",
+                                      "sleep 3 && conky", "sleep 1; tint2", "exec nm-applet", "cd ~/bin && ./panel.sh",
+                                      "set -x", "eval $(ssh-agent)")],
+       ["firefox &", "dolphin --daemon &", "foo &   # note", "[ -x /bin/foo ] &&", "a |",
+        "laptop)", "X=1 foo &", 'X="a b"', "sleep 2", "foo $(bar) &", "x='two", "fi",
+        "sleep 3 && conky &", "sleep 1; tint2 &", "exec nm-applet &", "cd ~/bin && ./panel.sh &",
+        "set -x", "eval $(ssh-agent)"])
+expect("autostart: && at the end of a line isn't a &", O.import_autostart("[ -x /bin/foo ] &&\n  foo &\nbar&\n", set()),
+       ([{"command": "[ -x /bin/foo ] &&"}, {"command": "foo"}, {"command": "bar"}], []))
+
 # ---- keys
 expect("key id", (O.key_id("W-S-e"), O.key_id("S-W-E"), O.key_id("Mod4-shift-e"), O.key_id("C-a t")),
        ("S-W-e", "S-W-e", "S-W-e", "C-a"))
 expect("clash Mod4-E and W-e", O.clashes(c["bindings"]), {0: [4], 4: [0]})
+chain = [{"keys": "C-a", "xml": '<keybind key="t"><action name="Close"/></keybind>'},
+         {"keys": "C-a b", "xml": '<action name="Close"/>'}, {"keys": "c-A", "xml": '<keybind key="B"/>'},
+         {"keys": "C-a", "xml": '<action name="Close"/>'}]
+expect("chains clash when one starts the other", (O.clashes(chain[:2]), O.clashes(chain[:3]), O.clashes(chain)[0]),
+       ({}, {1: [2], 2: [1]}, [3]))
+expect("valid keys", [O.valid_keys(k) for k in ("W-e", "C-a t", "F1", "W-", "", "C-a -", "-x")],
+       [True, True, True, False, False, False, False])
 expect("simple action", (O.simple_action(c["bindings"][0]["xml"]), O.simple_action(c["bindings"][1]["xml"]),
                          O.simple_action(c["bindings"][3]["xml"]), O.simple_action(c["bindings"][2]["xml"])),
        (("Execute", "thunar"), ("Close", ""), None, None))
@@ -190,8 +220,10 @@ expect("write refuses a bad binding", O.write(O.normalize(dict(c, bindings=[{"ke
 
 # ---- rules as text
 expect("parse match", (O.parse_match('class="Steam" title="A b"'), O.parse_match("firefox"),
-                       O.parse_match("role=browser"), O.parse_match("nonsense here")),
-       ({"class": "Steam", "title": "A b"}, {"class": "firefox"}, {"role": "browser"}, {}))
+                       O.parse_match("role=browser"), O.parse_match("nonsense here"),
+                       O.parse_match('title="a class=b"'), O.parse_match(O.match_text({"title": 'say "hi"'}))),
+       ({"class": "Steam", "title": "A b"}, {"class": "firefox"}, {"role": "browser"}, {},
+        {"title": "a class=b"}, {"title": 'say "hi"'}))
 expect("parse settings", O.parse_settings("desktop=2, decor=no skip-taskbar=yes size=3"),
        ({"desktop": "2", "decor": "no", "skip_taskbar": "yes"}, ["size"]))
 expect("match text", O.match_text({"class": "Steam", "title": "A b"}), 'class="Steam" title="A b"')
@@ -201,6 +233,9 @@ n = O.normalize({"desktops": 99, "title_layout": "nlimcx", "placement": "Nope", 
                  "rules": [{"match": {}}, {"match": {"class": "a"}, "settings": {"bogus": "1", "decor": "no"}}]})
 expect("normalize", (n["desktops"], n["title_layout"], n["placement"], n["focus_delay"], n["rules"]),
        (10, "NLIMC", "Smart", 200, [{"match": {"class": "a"}, "settings": {"decor": "no"}, "raw": ""}]))
+n = O.normalize({"placement": "undermouse", "double_click": "toggleshade", "rules": [{"match": ["a"]}, "x"]})
+expect("normalize: case as Openbox reads it, odd rules", (n["placement"], n["double_click"], n["rules"]),
+       ("UnderMouse", "ToggleShade", []))
 expect("defaults don't share lists", O.normalize({})["rules"] is O.DEFAULT["rules"], False)
 
 # ---- files on disk: taking over, writing, restoring
@@ -227,6 +262,15 @@ os.remove(O.autostart_path())
 O.write(cfg)
 expect("restore without a previous config: Openbox's defaults", (O.restore(), os.path.exists(O.target())),
        (True, False))
+
+# an rc.xml that isn't UTF-8 is read in its own encoding; desktops are only sent to a running Openbox
+with open(O.target(), "wb") as f:
+    f.write(RC.replace("UTF-8", "ISO-8859-1").replace("<name>web</name>", "<name>caf\xe9</name>").encode("latin-1"))
+expect("Latin-1 rc.xml", O.import_config(O.read_rc(O.target()))[0]["desktop_names"], ["caf\xe9", "chat"])
+expect("desktops in a file", (O._desktops_in(O.target()), O._desktops_in(O.target() + ".none")),
+       ((3, ["caf\xe9", "chat"]), None))
+expect("no display: desktops not sent", O.set_desktops(2, ["a"]), False)
+os.remove(O.target())
 
 # ---- Openbox's own rc.xml as the defaults
 os.makedirs(os.path.join(tmp, "xdg", "openbox"))

@@ -5,11 +5,17 @@ Sources, merged by identical EDID:
   - /sys/class/drm    (kernel connectors; works on Wayland too)
 """
 import os
+import re
 from dataclasses import dataclass, field
 
 from . import edid, i18n, output_names, vrr, xrandr
 
 TIMES = " × "  # 2560 × 1440
+
+
+def _size(mode):
+    """An X mode name as a size: 640x480 and the custom 640x480_60.00G both give 640 × 480."""
+    return re.sub(r"_[\d.]+(?:[A-Z]\d?)?$", "", mode).replace("x", TIMES)
 
 
 @dataclass
@@ -146,9 +152,9 @@ def describe(rec, tr=None):
         best = max(((float(r), m) for m, rates in rec.xmon.modes.items() for r in rates
                     if not m.endswith("i")), default=None)
         if best:
-            sync.append((_("Highest refresh rate"), f"{hz(best[0])} ({best[1].replace('x', TIMES)})"))
+            sync.append((_("Highest refresh rate"), f"{hz(best[0])} ({_size(best[1])})"))
         biggest = max(rec.xmon.modes, key=lambda m: rec.xmon.mode_size(m)[0] * rec.xmon.mode_size(m)[1])
-        sync.append((_("Highest resolution"), biggest.replace("x", " × ")))
+        sync.append((_("Highest resolution"), _size(biggest)))
     else:
         progressive = [t for t in i.timings if not t.interlaced]
         best = max(progressive, key=lambda t: (round(t.refresh), t.width * t.height), default=None)
@@ -214,7 +220,7 @@ def describe(rec, tr=None):
     conn = [(_("Output"), ", ".join(names) or rec.name)]
     if rec.xmon and rec.xmon.enabled and rec.xmon.mode:
         conn.append((_("Current mode"),
-                     f"{rec.xmon.mode.replace('x', TIMES)} @ {hz(float(rec.xmon.rate or 0))}"))
+                     f"{_size(rec.xmon.mode)} @ {hz(float(rec.xmon.rate or 0))}"))
     conn.append((_("Input type"), i.interface if i.interface and i.digital else
                  (_("Digital") if i.digital else _("Analog (VGA)"))))
     if i.hdmi:

@@ -41,10 +41,13 @@ def _minutes(v, default):
 
 def normalize(d):
     d = d if isinstance(d, dict) else {}
+
+    def part(key):   # a hand-edited section that isn't a {} counts as empty
+        return d[key] if isinstance(d.get(key), dict) else {}
     wp = wallpaper.normalize(d.get("wallpaper"))
-    wp["enabled"] = bool((d.get("wallpaper") or {}).get("enabled", False))
+    wp["enabled"] = bool(part("wallpaper").get("enabled", False))
     lock = dict(LOCK_DEFAULT)
-    lock.update({k: v for k, v in (d.get("lock") or {}).items() if k in LOCK_DEFAULT})
+    lock.update({k: v for k, v in part("lock").items() if k in LOCK_DEFAULT})
     if lock["locker"] not in LOCKERS:
         lock["locker"] = "i3lock"
     if lock["image"] not in ("wallpaper", "color"):
@@ -53,9 +56,9 @@ def normalize(d):
         lock["color"] = LOCK_DEFAULT["color"]
     lock["idle_minutes"] = _minutes(lock["idle_minutes"], LOCK_DEFAULT["idle_minutes"])
     blank = dict(BLANK_DEFAULT)
-    blank.update({k: v for k, v in (d.get("blanking") or {}).items() if k in BLANK_DEFAULT})
+    blank.update({k: v for k, v in part("blanking").items() if k in BLANK_DEFAULT})
     blank["screen_off_minutes"] = _minutes(blank["screen_off_minutes"], BLANK_DEFAULT["screen_off_minutes"])
-    awake = {k: bool((d.get("awake") or {}).get(k, v)) for k, v in AWAKE_DEFAULT.items()}
+    awake = {k: bool(part("awake").get(k, v)) for k, v in AWAKE_DEFAULT.items()}
     return {"wallpaper": wp, "lock": lock, "blanking": blank, "awake": awake,
             "notify": notify.normalize(d.get("notify")), "night": night.normalize(d.get("night")),
             "power": power.normalize(d.get("power")), "power_alerts": poweralerts.normalize(d.get("power_alerts")),
@@ -81,6 +84,12 @@ def load():
 
 def save(desk):
     data = config.load()
+    stored = data.get("desktop")
+    if (bar_key() != "bar_openbox" and not (isinstance(stored, dict) and "bar_openbox" in stored)
+            and desk.get("bar_openbox") == normalize(stored)["bar_openbox"]):
+        # Openbox's bar keeps following i3's until it gets settings of its own: normalize()
+        # fills it in on every load, and writing that untouched copy here would freeze it too early
+        desk = {k: v for k, v in desk.items() if k != "bar_openbox"}
     data["desktop"] = desk
     config.save(data)
 
@@ -273,11 +282,6 @@ def stop_foreign(names):
             pass
 
 
-def child_errors():
-    """{child: last error line} for programs that exited right after starting."""
-    return state().get("errors") or {}
-
-
 def autostart_runs():
     """None when unknown; False when the window manager (i3, or Openbox's autostart) doesn't
     start XControl's services at login (nor, on i3, ~/.config/autostart through dex)."""
@@ -285,6 +289,9 @@ def autostart_runs():
     if which == "openbox":
         if any(re.search(r"\bxcontrol\b", ln) for ln in lines):
             return True
+        desktop = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+        if desktop and desktop != "openbox":
+            return None   # LXQt, LXDE...: their own session runs ~/.config/autostart, whatever Openbox does
         # started by openbox-session, Openbox also runs ~/.config/autostart (with python-pyxdg)
         import importlib.util
         session = any("openbox-autostart" in cmd for cmd in _user_procs("openbox").values())
@@ -301,7 +308,9 @@ def autostart_file():
 
 def sync_autostart(desk):
     path = autostart_file()
-    if wanted(desk):
+    # (also for the other window manager's bar: the next login may be into that one, and the
+    # service started where nothing is wanted exits at once)
+    if wanted(desk) or any(desk[key]["enabled"] for key in BAR_KEYS.values()):
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w") as f:
             f.write("[Desktop Entry]\nType=Application\nName=XControl desktop (wallpaper, screen lock)\n"
@@ -475,7 +484,9 @@ class _Child:
         if self.alive():
             self.proc.terminate()
             try:
-                self.proc.wait(5)
+                # the controller service gives hidden controllers back before it exits (a helper
+                # call for each): killed too early, they'd stay hidden until reconnected
+                self.proc.wait(20 if self.key == "pads" else 5)
             except subprocess.TimeoutExpired:
                 self.proc.kill()
         self.proc = None
@@ -570,6 +581,8 @@ def _stop_leftovers():
 
 def daemon():
     """xcontrol --desktop-daemon"""
+    from . import wm
+
     def log(msg):
         if os.environ.get("XCONTROL_DEBUG"):
             print(f"xcontrol-desktop: {msg}", file=sys.stderr, flush=True)
@@ -599,6 +612,9 @@ def daemon():
     pads = None          # awake.Gamepads while gamepads count as activity
     inhibit = None       # awake.InhibitService while apps may keep the screen on
     aw = {"reset": 0.0, "full_check": 0.0, "fullscreen": False}
+    # Started before the window manager (~/.xinitrc, ~/.xprofile), the bar's settings were guessed
+    # from what's installed: for the first minute, look again once the window manager is up.
+    wm_seen, wm_wait = None, time.monotonic() + 60
     sleeper = power.IdleSleep()
     try:
         gamma = night.Gamma(rr.x11, rr.dpy)
@@ -710,7 +726,10 @@ def daemon():
             if flags["reload"]:
                 flags["reload"] = False
                 desk = load()
-                if not wanted(desk):
+                # (not yet when another window manager's bar may be the one to run: see wm_wait)
+                waiting = (wm.running() is None and time.monotonic() < wm_wait
+                           and any(desk[k]["enabled"] for k in BAR_KEYS.values()))
+                if not wanted(desk) and not waiting:
                     break
                 draw()
                 for cmd in xset_commands(desk):
@@ -719,10 +738,17 @@ def daemon():
                 awake_setup()
                 nl["gammas"] = night.saved_gamma(config.load()["display"]["command"])
                 night_step(force_apply=True)
+                wm_seen = wm.running()
                 tick = 0.0
             # gamepad events can wake the loop hundreds of times a second: the rest waits for its second
             if time.monotonic() - tick >= 1.0:
                 tick = time.monotonic()
+                if wm_seen is None and tick < wm_wait and wm.running():
+                    log(f"the window manager is {wm.running()}")
+                    flags["reload"] = True
+                    continue
+                if tick >= wm_wait and not wanted(desk):
+                    break   # (waited for a window manager whose bar is on: it didn't come)
                 for c in children.values():
                     c.ensure()
                 if inhibit:

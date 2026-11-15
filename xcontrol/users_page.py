@@ -260,9 +260,8 @@ class UsersPage(Gtk.Box):
 
         admin = Gtk.Switch(halign=Gtk.Align.START, active=u.admin)
         admin.set_sensitive(can and not (u.me and u.admin))
-        admin.connect("state-set", lambda _s, state: self._call(["admin", u.name, "1" if state else "0"],
-                                                                 _("Administrator rights changed"), keep=u.name)
-                      or True)
+        admin.connect("state-set", lambda _s, state: self._call(
+            ["admin", u.name, "1" if state else "0"], _("Administrator rights changed"), keep=u.name) or True)
         row(_("Administrator"), admin)
         grid.attach(_dim(_("Administrators (the wheel group) can use sudo and approve system changes like these.") +
                          (" " + _("You can't remove this from your own account.") if u.me and u.admin else "")),
@@ -460,7 +459,7 @@ class UsersPage(Gtk.Box):
         dlg.add_filter(flt)
         path = dlg.get_filename() if dlg.run() == Gtk.ResponseType.OK else None
         dlg.destroy()
-        if not path:
+        if not path or (self.busy and not u.me):   # (_call would do nothing and leave the copy in /tmp)
             return
         try:
             if u.me:
@@ -482,10 +481,9 @@ class UsersPage(Gtk.Box):
             return
 
         def cleanup(_ok):
-            if not u.me:
-                try:
-                    os.remove(face)
-                except OSError:
-                    pass
+            try:
+                os.remove(face)
+            except OSError:
+                pass
         # login screens (LightDM, GDM, SDDM through AccountsService) read the system copy
         self._call(["icon", u.name, face], _("Picture changed"), keep=u.name, after=cleanup)

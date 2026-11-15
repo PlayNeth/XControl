@@ -69,8 +69,11 @@ def normalize(c):
         sub = p.get("settings") if isinstance(p.get("settings"), dict) else {}
         sub = {k: v for k, v in sub.items() if k in PROFILE_KEYS}
         norm = normalize(sub) if sub else {}
+        match = p.get("match")
+        if not isinstance(match, list):     # (a hand-written "match": "steam_app_*" is one pattern, not its letters)
+            match = [match] if isinstance(match, str) else []
         profiles.append({"name": str(p.get("name") or "").strip()[:60] or "?",
-                         "match": [str(m).strip()[:200] for m in (p.get("match") or []) if str(m).strip()][:12],
+                         "match": [str(m).strip()[:200] for m in match if str(m).strip()][:12],
                          "settings": {k: norm[k] for k in sub}})
     out["profiles"] = profiles[:50]
     c = str(out["lightbar"] or "")
@@ -241,7 +244,7 @@ class Rumble:
         etype, vid, direction, tb, ti, length, delay, union = FF_EFFECT.unpack_from(buf, 8)
         if etype == FF_PERIODIC:   # some games shake with a periodic effect: make it a rumble
             magnitude = abs(struct.unpack_from("HHhhH", union)[2])
-            strong, weak = magnitude * 2 if magnitude < 16384 else 65535, 0
+            strong, weak = min(65535, magnitude * 2), 0
         elif etype == FF_RUMBLE:
             strong, weak = struct.unpack_from("HH", union)
         else:
@@ -292,6 +295,12 @@ class Controller:
         self.rate_count, self.rate_since, self.rate = 0, time.monotonic(), 0
         self.error = ""
         self.hidden, self.hide_error = [], ""
+        nodes = pads.hide_nodes(pad)
+        if not all(os.access(n, os.R_OK) for n in nodes):
+            # left hidden by a service that couldn't give them back (killed, or stopped too late at
+            # logout): without this the controller stays dead to everything until it's reconnected
+            ok, msg = pads.set_hidden(nodes, False)
+            log(f"gave back: {' '.join(nodes)}" if ok else f"couldn't give back: {msg}")
         self.raw = None          # the hidraw node, kept open: the report rate still works once it's hidden
         if pad.hidraw:
             try:
@@ -623,6 +632,8 @@ def service():
             if front.dpy and time.monotonic() - looked >= 0.5:
                 looked = time.monotonic()
                 now = front.names()
+                if front.lost:      # the X server is gone, and the session with it
+                    break
                 if now != names:
                     names = now
                     if names and not _ours(names):

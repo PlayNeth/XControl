@@ -117,7 +117,7 @@ class NotifyPage(Gtk.Box):
         GLib.timeout_add_seconds(3, self._poll)
 
     def _poll(self):
-        """Every 3 s: the whole status on this page, only the power alerts' on the Power page."""
+        """Every 3 s: this page's status, or the power alerts' while the Power page shows them."""
         if self.get_mapped():
             self._status()
         elif self.alerts_box.get_mapped():
@@ -416,7 +416,7 @@ class NotifyPage(Gtk.Box):
         theirs = D.foreign(["poweralertd"])
         if theirs:
             D.stop_foreign(["poweralertd"])
-        GLib.timeout_add(1500, lambda: self._status() and False)
+        GLib.timeout_add(1500, lambda: self._pa_status() and False)
 
     def _pa_status(self):
         pa = self.pa
@@ -444,8 +444,8 @@ class NotifyPage(Gtk.Box):
                      "turns that service off (systemctl --user disable --now poweralertd).")
         elif theirs:
             warn = _("Another poweralertd (process {pid}) is running besides XControl's, so every alert shows "
-                     "twice. Stop it, and remove it from {file} or autostart.").format(pid=min(theirs),
-                                                                              file=wm.startup_file())
+                     "twice. Stop it, and remove it from {file} or autostart.").format(
+                pid=min(theirs), file=wm.startup_file())
         else:
             warn = ""
         self.pa_warn_text.set_text(warn)
@@ -463,12 +463,14 @@ class NotifyPage(Gtk.Box):
         g = self._section(_("Keyboard shortcuts"), always=True)
         g.attach(_hint(_("These commands control the notifications. Bind them to keys on the Window Manager "
                          "page:")), 0, 0, 1, 1)
+        # (i3's config syntax on i3; Openbox's page asks for the command alone)
+        bind = "{}" if wm.page_for() == "openbox" else "bindsym $mod+... exec --no-startup-id {}"
         for i, (cmd, what) in enumerate((("dunstctl close", _("Close the newest notification:")),
                                          ("dunstctl close-all", _("Close all of them:")),
                                          ("dunstctl history-pop", _("Bring back the last closed one:")),
                                          ("dunstctl context", _("Choose one of its actions from a menu:")),
                                          ("xcontrol --dnd toggle", _("Do not disturb on/off:"))), 1):
-            g.attach(_command(what, f"bindsym $mod+... exec --no-startup-id {cmd}", self.window), 0, i, 1, 1)
+            g.attach(_command(what, bind.format(cmd), self.window), 0, i, 1, 1)
 
     def _build_extra(self):
         g = self._section(_("Extra dunst settings"))
@@ -606,7 +608,7 @@ class NotifyPage(Gtk.Box):
             self.window.message(_("Could not save the settings"), str(e))
             return False
         self.window.set_status(_("Applied"))
-        GLib.timeout_add(1500, lambda: self._status() and False)
+        GLib.timeout_add(1500, lambda: self._poll() and False)   # (of the page that's showing)
         return False
 
     def _reset_colors(self, _b):
@@ -697,7 +699,6 @@ class NotifyPage(Gtk.Box):
         GLib.timeout_add(1500, lambda: self._status() and False)
 
     def _status(self):
-        self._pa_status()
         n = self.n
         st = D.state()
         kids = st.get("children") or {}

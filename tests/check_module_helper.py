@@ -83,6 +83,19 @@ for args, why in ((["apply", "amdgpu", "dc=1;reboot"], "shell characters"),
     expect(f"refuses {why}", code != 0, True)
 expect("nothing else written", sorted(os.listdir(conf)), ["xcontrol-amdgpu.conf", "xcontrol-snd_hda_intel.conf"])
 
+# ranges like [a-z] mean ASCII whatever the caller's language (bash takes more in other locales)
+utf8 = next((loc for loc in subprocess.run(["locale", "-a"], capture_output=True, text=True, errors="replace")
+             .stdout.split() if "_" in loc and loc.lower().endswith(("utf8", "utf-8"))), None) \
+    if shutil.which("locale") else None
+for shell in ("sh", "bash"):
+    if utf8 and shutil.which(shell):
+        for var in ("LANG", "LC_ALL"):
+            r = subprocess.run(prefix + [shell, helper, "apply", "amdgpu", "dc=\uff11"], capture_output=True,
+                               env=dict(env, **{var: utf8}))
+            expect(f"refuses a fullwidth digit ({shell}, {var}={utf8})", r.returncode != 0, True)
+expect("still nothing else written", sorted(os.listdir(conf)), ["xcontrol-amdgpu.conf", "xcontrol-snd_hda_intel.conf"])
+expect("file untouched", read("xcontrol-amdgpu.conf").splitlines()[-1], "options amdgpu dc=0")
+
 code, out = run("apply", "amdgpu")
 expect("remove", (code, os.path.exists(os.path.join(conf, "xcontrol-amdgpu.conf"))), (0, False))
 
@@ -93,7 +106,10 @@ expect("helper args", K.helper_args("snd-hda-intel", {"power_save": "1", "enable
 for value, typ, want in (("0xfff7bfff", "hexint", None), ("-1", "int", None), ("-1", "uint", "type"),
                          ("Y", "bool", None), ("off", "bool", None), ("maybe", "bool", "type"),
                          ("1,0,1", "array of int", None), ("300", "byte", "type"), ("a b", "charp", "chars"),
-                         ("/lib/firmware/x.bin", "charp", None), ("", "int", None)):
+                         ("/lib/firmware/x.bin", "charp", None), ("", "int", None),
+                         ("0x1e", "ulong", None), ("-0x10", "int", None), ("0x", "int", "type"),
+                         ("0xff", "byte", None), ("0x100", "byte", "type"), ("1,0x2", "array of uint", None),
+                         ("1e", "uint", "type")):
     expect(f"check {value!r} as {typ}", K.check_value(value, typ), want)
 expect("cmdline values", K.cmdline_values("amdgpu", "root=/dev/x amdgpu.ppfeaturemask=0xffffffff "
                                                     "snd_hda_intel.power_save=0 amdgpu.dc=1 -- amdgpu.x=1"),

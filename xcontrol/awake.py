@@ -540,20 +540,3 @@ class InhibitService:
         self.thread = None
         with self.lock:
             self.cookies.clear()
-
-
-def status_text_parts(st):
-    """(reasons the screen is kept on now, gamepad names, gamepads without permission)."""
-    a = st.get("awake") or {}
-    return a.get("reasons") or [], a.get("gamepads") or [], a.get("denied") or []
-
-
-def joystick_group_hint():
-    """The group that owns the event devices, for the 'no permission' message."""
-    for p in glob.glob("/dev/input/event*"):
-        try:
-            import grp
-            return grp.getgrgid(os.stat(p).st_gid).gr_name
-        except (OSError, KeyError):
-            continue
-    return "input"

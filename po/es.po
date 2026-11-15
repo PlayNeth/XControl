@@ -3448,10 +3448,10 @@ msgstr "X ignoró algunas de las opciones de X de XControl"
 #, python-brace-format
 msgid ""
 "At its last start X didn't use: {names}. The driver in use may not have them"
-" (System > X server)."
+" (About & Tools > X server)."
 msgstr ""
 "En su último inicio, X no usó: {names}. Puede que el controlador en uso no "
-"las tenga (Sistema > Servidor X)."
+"las tenga (Información y herramientas > Servidor X)."
 
 #: xcontrol/i3_page.py:17
 msgid "With title bar"

@@ -133,7 +133,7 @@ def query(with_props=False):
     monitors = parse(out.stdout)
     if with_props:
         from . import output_props
-        output_props.attach(monitors, query_verbose())
+        output_props.attach(monitors, query_verbose(current=True))  # (--query just polled the outputs)
     return monitors
 
 
@@ -226,8 +226,11 @@ def version():
     return _VERSION
 
 
-def query_verbose():
-    out = subprocess.run(["xrandr", "--verbose"], capture_output=True, text=True, timeout=15, env=_env())
+def query_verbose(current=False):
+    """`current`: what the server knows already, without asking every output again (reading
+    each display's EDID takes a while); for right after a query()."""
+    out = subprocess.run(["xrandr", "--verbose"] + (["--current"] if current else []),
+                         capture_output=True, text=True, timeout=15, env=_env())
     if out.returncode != 0:
         raise RuntimeError(out.stderr.strip() or "xrandr --verbose failed")
     return parse_verbose(out.stdout)

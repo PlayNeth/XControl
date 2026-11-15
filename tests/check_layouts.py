@@ -64,6 +64,9 @@ try:
 finally:
     P.set_lightbar = real
 
+got = S.normalize({"profiles": [{"name": "A", "match": "steam_app_*"}, {"name": "B", "match": 5}]})["profiles"]
+expect("a hand-written match that isn't a list", [p["match"] for p in got], [["steam_app_*"], []])
+
 # the program in front: a Proton game (wine process, Windows path)
 proc = tempfile.mkdtemp()
 os.makedirs(os.path.join(proc, "4242"))

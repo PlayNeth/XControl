@@ -7,7 +7,10 @@ import tempfile
 tmp = tempfile.mkdtemp()
 os.environ.update(HOME=tmp, XDG_CONFIG_HOME=os.path.join(tmp, ".config"))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from xcontrol import bar as B, compositor as C, desktop as D  # noqa: E402
+from xcontrol import bar as B, compositor as C, desktop as D, wm  # noqa: E402
+
+running = [None]             # the window manager "in use": the result mustn't depend on where the tests run
+wm.running = lambda: running[0]
 
 bad = 0
 
@@ -185,6 +188,72 @@ expect("xworkspaces label", x["module/xworkspaces"]["label-active"], "%index%")
 expect("no i3 module", "module/i3" in x, False)
 mods = B.normalize({"modules": [["clock", "left", True], ["workspaces", "right", True]]})["modules"]
 expect("added after workspaces, same side", mods[2], ["xworkspaces", "right", False])
+
+
+# ---- a bar per window manager
+running[0] = "i3"
+mods = [["title", "left", True], ["workspaces", "center", True], ["xworkspaces", "left", False],
+        ["clock", "right", True]]
+b = B.normalize({"enabled": True, "scroll_workspaces": True, "modules": mods})
+on_i3 = ini(B.generate(b, ver=(3, 7), nerd="", has_pavu=False))
+expect("i3: its own module and scrolling", ("module/i3" in on_i3, "module/xworkspaces" in on_i3,
+                                            "scroll-up" in on_i3["bar/xcontrol"]), (True, False, True))
+expect("i3: the list stays as it is", B.for_wm(b["modules"], "i3"), b["modules"])
+expect("unknown window manager: the list stays as it is", B.for_wm(b["modules"], None), b["modules"])
+running[0] = "openbox"
+on_ob = ini(B.generate(b, ver=(3, 7), nerd="", has_pavu=False))
+expect("openbox: the generic module where i3's was, no i3-msg",
+       ("module/i3" in on_ob, on_ob["bar/xcontrol"]["modules-center"], "scroll-up" in on_ob["bar/xcontrol"]),
+       (False, "xworkspaces", False))
+expect("openbox: desktops aren't pinned to a display", on_ob["module/xworkspaces"]["pin-workspaces"], "false")
+expect("other window managers may pin them",
+       ini(B.generate(b, ver=(3, 7), nerd="", has_pavu=False, wm_name="bspwm"))["module/xworkspaces"]["pin-workspaces"],
+       "true")
+swapped = B.for_wm(b["modules"], "openbox")
+expect("openbox list: generic on in i3's place, i3's off",
+       [m for m in swapped if "workspaces" in m[0]], [["xworkspaces", "center", True], ["workspaces", "left", False]])
+expect("the settings themselves aren't changed", ["workspaces", "center", True] in b["modules"], True)
+both = B.normalize({"modules": [["workspaces", "left", True], ["xworkspaces", "right", True]]})
+both_ob = ini(B.generate(both, ver=(3, 7), nerd="", has_pavu=False))
+expect("openbox, both ticked: never the i3 module",
+       ("module/i3" in both_ob, both_ob["bar/xcontrol"]["modules-left"], both_ob["bar/xcontrol"]["modules-right"][:11]),
+       (False, "", "xworkspaces"))
+expect("workspace modules off: none appears", "workspaces" in B.generate(
+    B.normalize({"modules": [["workspaces", "left", False]]}), ver=(3, 7), nerd="", has_pavu=False), False)
+
+# each one's settings: Openbox's start as i3's, then each keeps its own
+running[0] = "i3"
+desk = D.normalize({"bar": {"enabled": True, "height": 40}})
+expect("bar keys", (D.bar_key("i3"), D.bar_key("openbox"), D.bar_key()), ("bar", "bar_openbox", "bar"))
+expect("openbox's bar starts as i3's (also settings from before 0.31)",
+       (desk["bar_openbox"]["enabled"], desk["bar_openbox"]["height"]), (True, 40))
+desk["bar_openbox"]["height"] = 20
+desk["bar_openbox"]["modules"][0][2] = False
+expect("a copy, not the same lists", desk["bar"]["modules"][0][2], True)
+D.save(desk)
+running[0] = "openbox"
+desk = D.load()
+expect("openbox session: its own bar", (D.bar_key(), desk[D.bar_key()]["height"]), ("bar_openbox", 20))
+desk["bar_openbox"]["position"] = "top"
+D.save(desk)
+running[0] = "i3"
+desk = D.load()
+expect("back on i3: its bar untouched", (desk["bar"]["height"], desk["bar"]["position"]), (40, "bottom"))
+desk["bar"]["height"] = 30
+D.save(desk)
+expect("and openbox's kept", (D.load()["bar_openbox"]["height"], D.load()["bar_openbox"]["position"]), (20, "top"))
+running[0] = None
+
+# ---- hand-edited settings don't stop the service or the pages
+odd = B.normalize({"height": "tall", "radius": None, "opacity": "", "modules": "all"})
+expect("bar numbers fall back", (odd["height"], odd["radius"], odd["opacity"]), (24, 0, 100))
+expect("picom numbers fall back", C.normalize({"shadow_radius": None, "fade_speed": "x"})["shadow_radius"], 12)
+exe = os.path.join(tmp, "bin", "polybar")
+mk("/bin/polybar", "#!/bin/sh\necho polybar 3.7.2\necho x >> " + exe + ".calls\n")
+os.chmod(exe, 0o755)
+os.environ["PATH"] = os.path.dirname(exe) + os.pathsep + os.environ["PATH"]
+expect("polybar version", (B.version(), B.version()), ((3, 7), (3, 7)))
+expect("asked once", open(exe + ".calls").read().count("x"), 1)
 
 print("check_panel:", "FAILED" if bad else "ok")
 shutil.rmtree(tmp, ignore_errors=True)

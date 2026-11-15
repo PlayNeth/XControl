@@ -13,6 +13,10 @@
 # Names and values are validated strictly: no spaces, quotes or shell characters.
 set -eu
 umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
+# [a-z] and [0-9] below must mean ASCII only: in other locales (pkexec keeps LANG) bash also
+# takes characters such as fullwidth letters or Arabic digits for them. Messages keep their language.
+case ${LC_ALL:-} in ?*) LANG=$LC_ALL; unset LC_ALL;; esac
+LC_COLLATE=C; export LANG LC_COLLATE
 
 die() { echo "xcontrol-module-helper: $*" >&2; exit 1; }
 
@@ -81,7 +85,7 @@ else
     mkdir -p "$CONFDIR"
     tmp="$file.tmp.$$"
     {
-        echo "# Written by XControl (System > Kernel modules). Edits here are replaced."
+        echo "# Written by XControl (About & Tools > Kernel modules). Edits here are replaced."
         echo "options $module $*"
     } > "$tmp"
     chmod 644 "$tmp"

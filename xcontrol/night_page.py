@@ -6,7 +6,7 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 from gi.repository import GLib, Gtk  # noqa: E402
 
-from . import desktop as D, night as NL, widgets, wm, xrandr  # noqa: E402
+from . import desktop as D, night as NL, widgets, wm  # noqa: E402
 from .desktop_page import _command, _hint  # noqa: E402
 from .i18n import N_, _  # noqa: E402
 
@@ -20,6 +20,9 @@ def _time_entry(value):
 
 
 class NightPanel(Gtk.Frame):
+    """The Displays page's Night light tab. The page tells it which displays there are
+    (set_outputs), each time it reads them."""
+
     def __init__(self, window):
         super().__init__(shadow_type=Gtk.ShadowType.NONE)
         self.window = window
@@ -36,11 +39,9 @@ class NightPanel(Gtk.Frame):
         g = Gtk.Grid(column_spacing=12, row_spacing=8, margin_start=12, margin_top=8, margin_bottom=4)
         self.add(g)
         self.grid = g
-        self.labels = []
 
         def row(r, label, widget):
             lab = Gtk.Label(label=label, xalign=0)
-            self.labels.append(lab)
             g.attach(lab, 0, r, 1, 1)
             g.attach(widget, 1, r, 1, 1)
             return lab
@@ -105,17 +106,17 @@ class NightPanel(Gtk.Frame):
         self.conflict = _hint("")
         g.attach(self.conflict, 1, 8, 1, 1)
         g.attach(_command(_("Switch it from a key (until the schedule next changes):"),
+                          # (i3's config syntax on i3; Openbox's page asks for the command alone)
+                          "xcontrol --night toggle" if wm.page_for() == "openbox" else
                           "bindsym $mod+Shift+n exec --no-startup-id xcontrol --night toggle", window), 1, 9, 1, 1)
 
         self.n = D.load()["night"]
+        self.skips = {}
         self._fill()
         self.loading = False
         poll = GLib.timeout_add_seconds(3, lambda: self._poll() if self.get_mapped() else True)
         self.connect("destroy", lambda *_a: GLib.source_remove(poll))
         self.connect("map", lambda *_a: self._poll())   # (not polled while another page is shown)
-
-    def label_widgets(self):
-        return self.labels
 
     def _fill(self):
         n = self.n
@@ -131,22 +132,25 @@ class NightPanel(Gtk.Frame):
         self.end.set_text(n["end"])
         self.fade.set_value(n["fade_minutes"])
         self.temp.set_value(n["night_temp"])
+        self.set_outputs(())
+        self._sensitivity()
+        self.loading = False
+        self._poll()
+
+    def set_outputs(self, names):
+        """The connected displays, to choose which ones the night light leaves alone."""
+        names = sorted(set(names) | set(self.n["outputs"]))
+        if names == list(self.skips):
+            return
         for c in self.skip_box.get_children():
             c.destroy()
-        try:
-            outs = [m.name for m in xrandr.query() if m.connected]
-        except Exception:  # noqa: BLE001
-            outs = []
         self.skips = {}
-        for o in sorted(set(outs) | set(n["outputs"])):
-            c = Gtk.CheckButton(label=o, active=o in n["outputs"])
+        for o in names:
+            c = Gtk.CheckButton(label=o, active=o in self.n["outputs"])
             c.connect("toggled", self._changed)
             self.skip_box.pack_start(c, False, False, 0)
             self.skips[o] = c
         self.skip_box.show_all()
-        self._sensitivity()
-        self.loading = False
-        self._poll()
 
     def _sensitivity(self):
         on = self.switch.get_active()

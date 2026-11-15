@@ -145,7 +145,7 @@ def modinfo(name):
     if not shutil.which("modinfo"):
         return {"parm": {}, "firmware": [], "depends": []}
     try:
-        out = subprocess.run(["modinfo", name], capture_output=True, text=True, timeout=5,
+        out = subprocess.run(["modinfo", name], capture_output=True, text=True, errors="replace", timeout=5,
                              env=dict(os.environ, LC_ALL="C")).stdout
     except (OSError, subprocess.SubprocessError):
         out = ""
@@ -342,9 +342,9 @@ def loads_early(name):
     return False
 
 
-_INT = {"int": r"-?\d+", "short": r"-?\d+", "long": r"-?\d+", "llong": r"-?\d+",
-        "uint": r"\d+", "ushort": r"\d+", "ulong": r"\d+", "ullong": r"\d+", "byte": r"\d+",
-        "hexint": r"(0[xX][0-9a-fA-F]+|\d+)"}
+_NUM = r"(0[xX][0-9a-fA-F]+|\d+)"     # (the kernel reads every integer type in hex too: drm.debug=0x1e)
+_INT = dict({t: "-?" + _NUM for t in ("int", "short", "long", "llong")},
+            **{t: _NUM for t in ("uint", "ushort", "ulong", "ullong", "byte", "hexint")})
 _BOOL = r"([yYnN01]|on|off|true|false)"
 
 
@@ -363,7 +363,7 @@ def check_value(value, typ):
         return None  # charp, string or unknown: anything allowed by VALUE_RE
     full = rf"^{pattern}(,{pattern})*$" if array else rf"^{pattern}$"
     if t == "byte" and not array:
-        return None if re.match(full, value) and int(value) < 256 else "type"
+        return None if re.match(full, value) and int(value, 16 if value[1:2] in "xX" else 10) < 256 else "type"
     return None if re.match(full, value, re.I if pattern == _BOOL else 0) else "type"
 
 

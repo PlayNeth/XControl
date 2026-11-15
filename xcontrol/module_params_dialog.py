@@ -22,6 +22,7 @@ class ModuleParamsDialog(Gtk.Dialog):
         self.changed = False
         self.busy = False
         self.entries = {}
+        self.now_labels = {}
         self.ours = kmods.our_values(self.name)
         self.others = kmods.other_values(self.name)
         self.cmdline = kmods.cmdline_values(self.name)
@@ -56,8 +57,8 @@ class ModuleParamsDialog(Gtk.Dialog):
             entry.connect("changed", self._validate)
             entry.prm = prm
             self.entries[prm.name] = entry
-            now = _("(only readable by root)") if prm.value is kmods.UNREADABLE else prm.value
-            now_lbl = Gtk.Label(label=_("now: {value}").format(value=now or "—"), xalign=0)
+            now_lbl = Gtk.Label(label=self._now(prm), xalign=0)
+            self.now_labels[prm.name] = now_lbl
             now_lbl.get_style_context().add_class("dim-label")
             now_lbl.set_ellipsize(Pango.EllipsizeMode.END)
             now_lbl.set_max_width_chars(22)
@@ -130,6 +131,11 @@ class ModuleParamsDialog(Gtk.Dialog):
         widgets.protect(self)
         self._validate()
 
+    @staticmethod
+    def _now(prm):
+        now = _("(only readable by root)") if prm.value is kmods.UNREADABLE else prm.value
+        return _("now: {value}").format(value=now or "—")
+
     def _values(self):
         return {name: e.get_text().strip() for name, e in self.entries.items()}
 
@@ -174,7 +180,8 @@ class ModuleParamsDialog(Gtk.Dialog):
 
         def work():
             try:
-                out = subprocess.run(["pkexec", kmods.HELPER, *args], capture_output=True, text=True, timeout=900)
+                out = subprocess.run(["pkexec", kmods.HELPER, *args], capture_output=True, text=True,
+                                     errors="replace", timeout=900)
                 if pkexec.cancelled(out):
                     ok, text = False, _("Authorization was cancelled.")
                 else:
@@ -194,6 +201,9 @@ class ModuleParamsDialog(Gtk.Dialog):
             self.changed = True
             self.ours = kmods.our_values(self.name)
             self.remove_btn.set_visible(bool(self.ours))
+            for prm in kmods.params(self.name):     # (what a live change did shows right away)
+                if prm.name in self.now_labels:
+                    self.now_labels[prm.name].set_text(self._now(prm))
             head = _("Saved. It applies the next time the module loads (usually: after a reboot).") if saved \
                 else _("XControl's settings for this module were removed.")
             live = [line[6:] for line in lines if line.startswith("live: ")]

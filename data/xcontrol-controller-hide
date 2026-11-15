@@ -10,6 +10,10 @@
 # opens them before hiding them, so it keeps reading them while games can't find the
 # controller. A reconnected controller gets the usual access again from udev.
 set -eu
+# Character ranges below ([a-z], [0-9]) must mean ASCII: under a UTF-8 locale bash (Arch's sh)
+# takes characters such as fullwidth letters or Arabic digits for them. Messages keep their language.
+case ${LC_ALL:-} in ?*) LANG=$LC_ALL; unset LC_ALL;; esac
+LC_COLLATE=C; export LANG LC_COLLATE
 
 die() { echo "xcontrol-controller-hide: $*" >&2; exit 1; }
 

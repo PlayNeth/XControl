@@ -151,5 +151,40 @@ v = xrandr.parse_verbose("DP-2 connected 640x480+0+0 (0x4a) normal (normal) 0mm 
 expect("an unknown-connection output keeps its own properties", (v["DP-2"]["props"], v["VIRTUAL1"]["props"]),
        ({"scaling mode": "None"}, {"scaling mode": "Full", "scaling mode (range)": "Full"}))
 
+
+# ---- the gamma shown is the saved layout's where the ramps can't say what was set
+def gamma_line(text):
+    mons = xrandr.parse(QUERY)
+    P.attach(mons, xrandr.parse_verbose(VERBOSE.replace("0.83:0.83:0.83", text)))
+    return mons
+
+
+mons = gamma_line("1.3:1.3:1.3")     # 0.8 was set: xrandr prints two significant digits
+expect("0.8 reads back as 0.77", mons[0].gamma, (0.77, 0.77, 0.77))
+expect("nothing uneven", P.keep_saved_gamma(mons, {"DisplayPort-0": 0.8}), {})
+expect("the saved 0.8 is kept", mons[0].gamma, (0.8, 0.8, 0.8))
+expect("and saved again as 0.8", xrandr.build_command(mons)[-2:], ["--gamma", "0.8:0.8:0.8"])
+mons = gamma_line("0.46:0.84:1.2")   # a night light at 3600 K over gamma 1.2 (as Xvfb reads it back)
+uneven = P.keep_saved_gamma(mons, {"DisplayPort-0": 1.2})
+expect("a night light's ramps are reported", uneven, {"DisplayPort-0": (2.17, 1.19, 0.83)})
+expect("under a night light the saved gamma shows", mons[0].gamma, (1.2, 1.2, 1.2))
+expect("and stays in the saved layout", xrandr.build_command(mons)[-2:], ["--gamma", "1.2:1.2:1.2"])
+mons = gamma_line("0.46:0.84:1.2")
+P.keep_saved_gamma(mons, {})
+expect("a night light with no gamma saved: 1.0", mons[0].gamma, (1.0, 1.0, 1.0))
+mons = gamma_line("0.67:0.67:0.67")  # set to 1.5 by hand since the layout was saved with 1.2
+P.keep_saved_gamma(mons, {"DisplayPort-0": 1.2})
+expect("a gamma set elsewhere is the gamma now", mons[0].gamma, (1.49, 1.49, 1.49))
+for text in ("-0.034:0.70:-0.28", "nan:nan:nan", "inf:inf:inf", "-1.0:-1.0:-1.0"):
+    mons = gamma_line(text)
+    expect(f"unusable gamma {text}", (mons[0].has_gamma, mons[0].gamma), (True, (1.0, 1.0, 1.0)))
+    expect(f"unusable gamma {text} isn't passed to xrandr", "--gamma" in xrandr.build_command(mons), False)
+mons = gamma_line("0.83:0.83:0.83")
+expect("a preview sets matrix and gamma", P.preview_args(mons[0])[-2:], ["--gamma", "1.2:1.2:1.2"])
+expect("a saturation preview leaves the ramps alone", "--gamma" in P.preview_args(mons[0], gamma=False), False)
+expect("...and still sets the matrix", P.preview_args(mons[0], gamma=False)[2:4], ["--set", "CTM"])
+del mons[0].props["CTM"]
+expect("nothing to preview", P.preview_args(mons[0], gamma=False), [])
+
 print("check_output_props:", "FAILED" if bad else "ok")
 sys.exit(1 if bad else 0)

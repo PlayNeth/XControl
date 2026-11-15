@@ -122,6 +122,8 @@ def parse_extra(text):
             continue
         out.append((s.split("=", 1)[0].strip(), s))
     return out
+
+
 CLOCK_FORMATS = ["%H:%M", "%H:%M:%S", "%I:%M %p", "%a %H:%M", "%a %d %b  %H:%M", "%d/%m %H:%M"]
 
 # icons from Nerd Fonts (used only when one is installed and chosen)
@@ -158,14 +160,41 @@ def normalize(b):
     out["extra"] = {k: str(v) for k, v in (out.get("extra") or {}).items() if k == "bar" or k in MODULES}
     if out["height_unit"] not in ("px", "pt"):
         out["height_unit"] = "px"
-    out["radius"] = max(0, min(30, int(out["radius"] or 0)))
+    out["radius"] = max(0, min(30, _int(out["radius"], 0)))
     if out["position"] not in ("top", "bottom"):
         out["position"] = "bottom"
     if out["displays"] not in ("all", "primary"):
         out["displays"] = "all"
-    out["height"] = max(16, min(64, int(out["height"] or 24)))
-    out["opacity"] = max(0, min(100, int(out["opacity"] if out["opacity"] is not None else 100)))
+    out["height"] = max(16, min(64, _int(out["height"] or 24, 24)))
+    out["opacity"] = max(0, min(100, _int(out["opacity"], 100)))
     return out
+
+
+def _int(v, default):
+    try:
+        return int(v)
+    except (TypeError, ValueError):   # a hand-edited config must not stop the service and the pages
+        return default
+
+
+def for_wm(mods, wm_name):
+    """The module list as it works on this window manager ("i3", "openbox", None when unknown):
+    polybar's i3 module only talks to i3, so on another one the generic workspaces module takes
+    its place (same spot and side) and the i3 one is switched off. A new list; `mods` is untouched."""
+    mods = [list(m) for m in mods]
+    if not wm_name or wm_name == "i3":
+        return mods
+    i3 = next((m for m in mods if m[0] == "workspaces"), None)
+    generic = next((m for m in mods if m[0] == "xworkspaces"), None)
+    if i3 and i3[2]:
+        if generic is None:
+            i3[0] = "xworkspaces"
+        elif generic[2]:
+            i3[2] = False
+        else:   # trade places: the generic one where i3's was
+            i3[0], generic[0] = "xworkspaces", "workspaces"
+            generic[2] = False
+    return mods
 
 
 def config_path():
@@ -198,13 +227,25 @@ def locales():
     return sorted(set(found))
 
 
+_version = {}   # (path, mtime) -> version: every write and every refill of the module list ask
+
+
 def version():
+    exe = shutil.which("polybar")
     try:
-        out = subprocess.run(["polybar", "--version"], capture_output=True, text=True, timeout=5).stdout
+        key = (exe, os.stat(exe).st_mtime)
+    except (OSError, TypeError):   # not installed
+        return None
+    if key in _version:
+        return _version[key]
+    try:
+        out = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=5).stdout
     except (OSError, subprocess.SubprocessError):
         return None
     m = re.search(r"polybar (\d+)\.(\d+)", out)
-    return (int(m.group(1)), int(m.group(2))) if m else None
+    _version.clear()
+    _version[key] = (int(m.group(1)), int(m.group(2))) if m else None
+    return _version[key]
 
 
 def nerd_font():
@@ -300,16 +341,16 @@ def generate(b, ver=None, nerd=None, root="/", has_pavu=None, wm_name=None):
     """The polybar config text for settings `b` (normalized). `wm_name`: the running window
     manager ("i3", "openbox"; by default looked up): i3's workspaces module and scrolling with
     i3-msg only work on i3, so elsewhere the generic workspaces module takes its place."""
-    from . import wm
-    wm_name = wm.running() if wm_name is None else wm_name
-    if wm_name and wm_name != "i3":
-        mods = b["modules"]
-        generic_on = any(m[0] == "xworkspaces" and m[2] for m in mods)
-        b = dict(b, modules=[["xworkspaces", m[1], m[2]] if m[0] == "workspaces" and m[2] and not generic_on
-                             else m for m in mods if not (m[0] == "xworkspaces" and not m[2])])
+    if wm_name is None:
+        from . import wm
+        wm_name = wm.running()
+    b = dict(b, modules=for_wm(b["modules"], wm_name))
     ver = ver if ver is not None else version()
-    nerd = nerd_font() if nerd is None else (nerd or None)
-    use_icons = b["labels"] == "icons" and nerd
+    if b["labels"] != "icons":
+        nerd = None   # not needed: no fc-list run on every write
+    elif nerd is None:
+        nerd = nerd_font()
+    use_icons = bool(nerd)
     L = ICONS if use_icons else WORDS
     can = available(b, ver, root)
     on = [m for m in b["modules"] if m[2] and m[0] in can]
@@ -430,8 +471,10 @@ def generate(b, ver=None, nerd=None, root="/", has_pavu=None, wm_name=None):
         elif mid == "xworkspaces":
             lab = "%index%" if o["label"] == "index" else "%name%"
             pad_ws = max(0, o["padding"])
+            # Openbox's desktops span every display: pinned, only the bar of the display at 0,0 shows them
+            pin = o["pin_workspaces"] and wm_name != "openbox"
             body += [
-                f"pin-workspaces = {str(o['pin_workspaces']).lower()}",
+                f"pin-workspaces = {str(pin).lower()}",
                 f"enable-click = {str(o['enable_click']).lower()}",
                 f"enable-scroll = {str(o['enable_scroll']).lower()}",
                 f"reverse-scroll = {str(o['reverse_scroll']).lower()}",

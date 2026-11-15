@@ -189,6 +189,10 @@ expect("restored", (open(cfg).read(), open(os.path.join(tmp, ".i3/config")).read
        ("# mine\n", "# older\n", False))
 expect("ours kept", os.path.exists(cfg + ".xcontrol"), True)
 
+odd = I.normalize({"startup": None, "rules": 3, "colors": ["#fff"], "gaps_inner": "wide"})
+expect("hand-edited settings fall back", (odd["startup"], odd["rules"], odd["colors"], odd["gaps_inner"]),
+       ([], [], I.DEFAULT_COLORS, 0))
+
 shutil.rmtree(tmp, ignore_errors=True)
 if bad:
     sys.exit(1)

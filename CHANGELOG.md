@@ -2,6 +2,56 @@
 
 XControl was called mesa-panel up to 0.8.0. Versions before 0.5.0 weren't kept.
 
+## 0.31.1 (2026-11-14)
+
+**Bug fixes for 0.31.0**
+
+Window managers and the bar
+- Wait for the window manager when the desktop service starts before it (the first minute of
+  the session): the bar and the generated configs were written for the wrong one
+- Tell i3 and Openbox apart by the display they run on when both are running
+- Keep Openbox's bar following i3's until it gets settings of its own, instead of freezing
+  the copy at the first save under i3
+- Hide the i3-only rows of the Bar & Compositor page on Openbox, and never pin workspaces there
+- Keep XControl's autostart entry while either bar is on
+- Turn the "let XControl write the config" switch back off when importing the i3 or Openbox
+  config fails, and report a config that can't be read instead of failing silently
+
+Openbox
+- Change the number and names of desktops right away (Openbox ignores them on reconfigure)
+- Keep `&&` chains, quoted arguments and double-click actions when importing rc.xml and
+  autostart; read rc.xml files saved as Latin-1 or with a byte-order mark
+- Match window rules on groupclass and groupname too; find key clashes inside key chains
+- Refuse an incomplete key such as "W-", and keep imported values outside a slider's range
+
+Displays
+- Fit the Displays and Controllers pages on a 640x480 screen (they needed 753 and 863 pixels)
+- Send the gamma only when its slider moved, so Apply no longer overwrites the night light
+- Keep the selected output after a reload, and skip damaged custom modes instead of failing
+
+Controllers
+- Stop the controller service cleanly when the X server goes away, and give back controllers
+  it found hidden at start
+- Fix an error with a 51st layout, rumble strength being halved for periodic effects, and the
+  list being rebuilt (losing the selection) at every poll
+- Re-apply the USB report rate off the interface thread; re-bind the DualSense as well
+
+Root helpers
+- Compare characters in the C locale in every helper: under bash with a UTF-8 locale, `[a-z]`
+  and `[0-9]` also matched other alphabets' letters and digits
+- Write the USB report-rate files through a temporary file
+
+Everything else
+- Step gaming-mouse DPI through uneven lists and mark the default stage
+- Apply only the key-repeat slider that moved
+- Accept hexadecimal values for every integer kernel module parameter, and refresh the "now"
+  values after applying
+- Keep a dialog's buttons in place when it is fitted to a small screen
+- Tolerate damaged entries in a backup and hand-edited settings in more places
+- Read program output that isn't valid UTF-8 without failing (several pages)
+- Say "About & Tools" where hints still pointed at the old System page
+- Remove code that was no longer used
+
 ## 0.31.0 (2026-11-12)
 
 **Openbox support, reorganized pages, and sliders that stop on their steps**

@@ -75,18 +75,37 @@ def running():
     now = time.monotonic()
     if now - _running[0] < 5:
         return _running[1]
-    found, uid = None, os.getuid()
+    found, uid, ours = None, os.getuid(), _display(os.environ.get("DISPLAY"))
     for d in glob.glob("/proc/[0-9]*"):
         try:
-            with open(os.path.join(d, "comm")) as f:
+            with open(os.path.join(d, "comm"), errors="replace") as f:   # (any bytes can be a process name)
                 name = f.read().strip()
-            if name in SUPPORTED and os.stat(d).st_uid == uid:
-                found = name
-                break
+            if name not in SUPPORTED or os.stat(d).st_uid != uid:
+                continue
         except OSError:
             continue
+        if found is None:
+            found = name          # the first one, unless one on our own display turns up
+        if ours is None:
+            break
+        try:                      # (two sessions of this user: i3 on :0, Openbox on :1 or in Xephyr)
+            with open(os.path.join(d, "environ"), "rb") as f:
+                env = dict(v.split(b"=", 1) for v in f.read().split(b"\0") if b"=" in v)
+        except OSError:
+            continue
+        if _display(env.get(b"DISPLAY", b"").decode(errors="replace")) == ours:
+            found = name
+            break
     _running[:] = [now, found]
     return found
+
+
+def _display(value):
+    """":0.0" and ":0" are the same display; None when there's none."""
+    if not value:
+        return None
+    host, _sep, rest = value.rpartition(":")
+    return f"{host}:{rest.split('.')[0]}"
 
 
 def page_for():

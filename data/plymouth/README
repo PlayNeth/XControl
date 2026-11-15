@@ -1,4 +1,4 @@
-Pictures of Plymouth's built-in boot splash themes, shown on System → Boot splash.
+Pictures of Plymouth's built-in boot splash themes, shown on About & Tools → Boot splash.
 
 bgrt, fade-in, glow, script, solar, spinfinity, spinner:
   Screenshots of the themes as Plymouth 24.004.60 draws them (its X11 renderer on a 640x400

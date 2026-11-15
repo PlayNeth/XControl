@@ -97,7 +97,7 @@ def _font_from(text, old):
     if not d.get_family():
         return old
     style = d.get_style()
-    return {"name": d.get_family(), "size": max(4, round(d.get_size() / Pango.SCALE)) or old["size"],
+    return {"name": d.get_family(), "size": max(4, round(d.get_size() / Pango.SCALE) or old["size"]),
             "weight": "bold" if d.get_weight() >= Pango.Weight.SEMIBOLD else "normal",
             "slant": {Pango.Style.ITALIC: "italic", Pango.Style.OBLIQUE: "oblique"}.get(style, "normal")}
 
@@ -274,7 +274,7 @@ class KeyDialog(Gtk.Dialog):
             xml = self._simple_xml()
             if ACTION_KINDS.get(self.action.get_active_id()) == "command" and not self.command.get_text().strip():
                 return None, _("Type the command to run.")
-        if not keys:
+        if not OB.valid_keys(keys):   # (none, or half of one: "W-")
             return None, _("Type or press the keys.")
         why = OB.check_actions(xml or "")
         if why:
@@ -651,6 +651,8 @@ class OpenboxPage(Gtk.Box):
     def _rule_edited(self, _cell, path, text, col):
         i = int(path)
         rule = self.c["rules"][i]
+        if text == self.rule_store[i][col]:   # Enter on an untouched cell: the text is a summary, not the rule
+            return
         if col == 0:
             match = OB.parse_match(text)
             if not match:
@@ -751,25 +753,33 @@ class OpenboxPage(Gtk.Box):
         c["animate_iconify"] = self.animate.get_active()
         c["drag_mod"] = self.drag_mod.get_active_id() or "A"
         c["follow_mouse"] = self.follow.get_active()
-        c["focus_delay"] = int(self.delay.get_value())
+        c["focus_delay"] = self._slid(self.delay, c["focus_delay"])
         c["raise_on_focus"] = self.raise_focus.get_active()
         c["focus_new"] = self.focus_new.get_active()
         c["placement"] = self.placement.get_active_id() or "Smart"
         c["center"] = self.center.get_active()
         c["placement_monitor"] = self.monitor.get_active_id() or "Primary"
-        c["resist_windows"] = int(self.resist_windows.get_value())
-        c["resist_edges"] = int(self.resist_edges.get_value())
+        c["resist_windows"] = self._slid(self.resist_windows, c["resist_windows"])
+        c["resist_edges"] = self._slid(self.resist_edges, c["resist_edges"])
         c["double_click"] = self.double_click.get_active_id() or "ToggleMaximize"
         c["root_menu"] = self.root_menu.get_active()
         c["root_window_list"] = self.root_list.get_active()
         c["desktops"] = int(self.desktops.get_value())
-        c["desktop_popup"] = int(self.popup.get_value())
+        c["desktop_popup"] = self._slid(self.popup, c["desktop_popup"])
         names = [entry.get_text().strip() for _lbl, entry in self.name_rows]
         while names and not names[-1]:
             names.pop()
         c["desktop_names"] = names
         self._sensitivity()
         self._commit_later()
+
+    @staticmethod
+    def _slid(slider, old):
+        """The slider's value, or the setting when it's past the slider's end and wasn't moved
+        (an imported 80 px stays 80, not the slider's 50, when something else changes)."""
+        adj = slider.get_adjustment()
+        value = int(slider.get_value())
+        return old if value == max(adj.get_lower(), min(adj.get_upper(), old)) else value
 
     def _commit_later(self, delay=700):
         if self.loading:
@@ -816,14 +826,17 @@ class OpenboxPage(Gtk.Box):
                 self.window.message(_("Openbox isn't installed"), _("Install the openbox package first."))
                 self._set_switch(False)
                 return
-            rc, _auto = OB.previous()
             if not self.saved_before or not self.c["base"]:
-                if rc and self._ask(_("Start from your current Openbox config?"),
-                                    _("Its look, keys, desktops, window rules and autostart programs are brought "
-                                      "over to this page. Otherwise the page starts from Openbox's defaults. Either "
-                                      "way your files are kept as backups."), _("Import it"), _("Openbox's defaults")):
+                if any(OB.previous()) and self._ask(
+                        _("Start from your current Openbox config?"),
+                        _("Its look, keys, desktops, window rules and autostart programs are brought "
+                          "over to this page. Otherwise the page starts from Openbox's defaults. Either "
+                          "way your files are kept as backups."), _("Import it"), _("Openbox's defaults")):
                     self.c["enabled"] = True
-                    self._do_import(quiet=False)
+                    if not self._do_import(quiet=False):   # unreadable: it stays Openbox's, untouched
+                        self.c["enabled"] = False
+                        self._set_switch(False)
+                        return
                 else:
                     self.c = OB.defaults()
                     self.c["enabled"] = True
@@ -833,7 +846,13 @@ class OpenboxPage(Gtk.Box):
                     else _("Openbox goes back to its own default config. XControl's files are kept as "
                            "rc.xml.xcontrol and autostart.xcontrol."))
             if self._ask(_("Put your previous Openbox config back?"), body, _("Put it back"), _("Keep XControl's")):
-                OB.restore()
+                try:
+                    OB.restore()
+                except OSError as e:     # the switch goes back on: XControl's files are still in place
+                    self.window.message(_("Could not read the config"), str(e))
+                    self.c["enabled"] = True
+                    self._set_switch(True)
+                    return
         self.c["enabled"] = on
         self._sensitivity()
         self._commit_later(0)
@@ -845,11 +864,11 @@ class OpenboxPage(Gtk.Box):
         self._sensitivity()
 
     def _import(self, _b):
-        rc, _auto = OB.previous()
-        if not rc:
+        path = next(filter(None, OB.previous()), None)   # (an autostart file alone counts too)
+        if not path:
             self.window.message(_("Nothing to import"), _("No Openbox config other than XControl's was found."))
             return
-        if self._ask(_("Import {path}?").format(path=rc.replace(os.path.expanduser("~"), "~")),
+        if self._ask(_("Import {path}?").format(path=path.replace(os.path.expanduser("~"), "~")),
                      _("The settings on this page are replaced by the ones in that file."), _("Import")):
             self._do_import(quiet=False)
             self._commit_later(0)
@@ -857,8 +876,7 @@ class OpenboxPage(Gtk.Box):
     def _do_import(self, quiet=True):
         rc, auto = OB.previous()
         try:
-            with open(rc, encoding="utf-8", errors="replace") as f:
-                text = f.read()
+            text = OB.read_rc(rc) if rc else OB.system_rc()
             auto_text = None
             if auto:
                 with open(auto, encoding="utf-8", errors="replace") as f:
@@ -866,13 +884,14 @@ class OpenboxPage(Gtk.Box):
             c, skipped = OB.import_config(text, self.c, auto_text)
         except (OSError, ValueError) as e:
             self.window.message(_("Could not read the config"), str(e))
-            return
+            return False
         c["enabled"] = self.c["enabled"]
         self.c = c
         self._fill()
         if skipped and not quiet:
             self.window.message(_("Imported"), _("Left out because XControl takes care of them now:") + "\n\n" +
                                 "\n".join(skipped[:12]))
+        return True
 
     def _show_file(self, _b):
         c = OB.normalize(self.c)
@@ -913,6 +932,5 @@ class OpenboxPage(Gtk.Box):
             if OB.can_restore():
                 text += " · " + _("Your previous config is kept as rc.xml.before-xcontrol.")
         self.status.set_text(text)
-        rc, _auto = OB.previous()
-        self.import_btn.set_sensitive(bool(rc))
+        self.import_btn.set_sensitive(any(OB.previous()))
         return False

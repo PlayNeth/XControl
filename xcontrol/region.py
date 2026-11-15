@@ -258,7 +258,9 @@ def _norm(name):
 def installed():
     """UTF-8 locales ready to use (locale -a)."""
     try:
-        out = subprocess.run(["locale", "-a"], capture_output=True, text=True, timeout=10).stdout.split()
+        # (errors: with Latin-1 locales generated, the list has aliases like "fran\xe7ais")
+        out = subprocess.run(["locale", "-a"], capture_output=True, text=True, errors="replace",
+                             timeout=10).stdout.split()
     except (OSError, subprocess.SubprocessError):
         return []
     return sorted({_norm(x) for x in out if "utf8" in x.lower().replace("-", "")

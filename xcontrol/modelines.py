@@ -63,7 +63,13 @@ class Modeline:
 
     @classmethod
     def from_dict(cls, d):
-        return cls(**{k: d[k] for k in cls.__dataclass_fields__ if k in d})
+        """A saved mode back from the settings file. Raises TypeError, KeyError or ValueError
+        for an entry that isn't one (the file can be edited by hand)."""
+        m = cls(**{k: cls.__dataclass_fields__[k].type(d[k]) for k in cls.__dataclass_fields__ if k in d})
+        if m.htotal <= 0 or m.vtotal <= 0 or m.clock_khz <= 0:
+            raise ValueError("not a video mode")
+        m.name  # (KeyError for a timing standard this version doesn't know)
+        return m
 
 
 MIN_V_BPORCH = 7  # as in edid-decode's CVT implementation

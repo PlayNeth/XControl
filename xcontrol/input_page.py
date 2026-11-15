@@ -62,8 +62,6 @@ def _section(title):
     return frame, grid
 
 
-
-
 def sync_autostart():
     """The background helper is needed while any input setting is saved."""
     from . import config
@@ -135,7 +133,7 @@ class PointerTab(Gtk.Box):
         self.profile = Gtk.ComboBoxText()
         self.profile.connect("changed", self._combo_changed, "accel_profile")
         self.speed = widgets.slider(-1, 1, 0.05, 2, lambda v: f"{v:+.2f}",
-                            [(-1, _("Slow")), (0, _("Default")), (1, _("Fast"))])
+                                    [(-1, _("Slow")), (0, _("Default")), (1, _("Fast"))])
         self.speed.connect("value-changed", lambda s: self._set("accel_speed", round(s.get_value(), 2)))
         self.scroll = widgets.slider(0.25, 4, 0.25, 2, lambda v: f"{v:.2f}×", [(1, _("Default"))])
         self.scroll.connect("value-changed", lambda s: self._set("scroll_factor", round(s.get_value(), 2)))
@@ -405,10 +403,12 @@ class KeyboardTab(Gtk.Box):
         frame, g = _section(_("Key repeat"))
         self.delay = widgets.slider(150, 1000, 10, 0, lambda v: _("{ms} ms").format(ms=int(v)))
         self.rate = widgets.slider(5, 60, 1, 0, lambda v: _("{n} per second").format(n=int(v)))
-        self._repeat_later = _Debounce(300, lambda _v: self._apply({"repeat_delay": int(self.delay.get_value()),
-                                                                     "repeat_rate": int(self.rate.get_value())}))
-        for s in (self.delay, self.rate):
-            s.connect("value-changed", lambda *_a: None if self.loading else self._repeat_later(None))
+        # only the slider that moved: the other may show a value from elsewhere that's outside
+        # its range (xset r rate 200 80), which must not be cut to the slider's end and saved
+        self._repeat_moved = set()
+        self._repeat_later = _Debounce(300, self._apply_repeat)
+        for key, s in (("repeat_delay", self.delay), ("repeat_rate", self.rate)):
+            s.connect("value-changed", self._repeat_changed, key)
         for i, text in enumerate((_("Delay before repeating"), _("Repeat speed"))):
             lbl = Gtk.Label(label=text, xalign=0)
             labels.add_widget(lbl)
@@ -527,6 +527,17 @@ class KeyboardTab(Gtk.Box):
         for combo, group in ((self.switch, "grp"), (self.caps, "caps"), (self.compose, "compose")):
             options = K.with_option(options, group, combo.get_active_id() or "")
         self._apply({"layout": layout, "variant": variant, "options": options})
+
+    def _repeat_changed(self, _slider, key):
+        if not self.loading:
+            self._repeat_moved.add(key)
+            self._repeat_later(None)
+
+    def _apply_repeat(self, _value):
+        sliders = {"repeat_delay": self.delay, "repeat_rate": self.rate}
+        changes = {key: int(sliders[key].get_value()) for key in sorted(self._repeat_moved)}
+        self._repeat_moved.clear()
+        self._apply(changes)
 
     def _apply(self, changes):
         try:
@@ -804,6 +815,13 @@ class GamingMouseTab(Gtk.Box):
                 o.props["IsActive"] = o is r
         return job
 
+    def _default_job(self, r):
+        def job():
+            r.make_default()
+            for o in self.profile.resolutions:   # (ratbagd moves the mark; keep our copy in step)
+                o.props["IsDefault"] = o is r
+        return job
+
     def _after_save_chosen(self, combo):
         if self.loading or not self.profile or combo.get_active_id() is None:
             return
@@ -832,21 +850,28 @@ class GamingMouseTab(Gtk.Box):
             default = Gtk.RadioButton.new_from_widget(default_group)
             default_group = default_group or default
             default.set_active(bool(r.get("IsDefault")))
-            default.connect("toggled", self._guard(lambda b, r=r: b.get_active() and r.make_default))
+            default.connect("toggled", self._guard(lambda b, r=r: b.get_active() and self._default_job(r)))
             g.attach(default, 2, i, 1, 1)
             self.w["default"].append(default)
-            choices = r.choices
+            choices = sorted(set(r.choices))
             if choices:
-                step = min((b - a for a, b in zip(choices, choices[1:])), default=50) or 50
+                step = min((b - a for a, b in zip(choices, choices[1:])), default=50)
                 spin = Gtk.SpinButton.new_with_range(choices[0], choices[-1], step)
                 spin.set_value(r.dpi)
+                shown = [r.dpi]   # the allowed value the field last settled on
 
-                def snap(s, r=r, choices=choices):
+                def snap(s, r=r, choices=choices, step=step, shown=shown):
                     want = int(s.get_value())
                     dpi = min(choices, key=lambda c: abs(c - want))
+                    if dpi == shown[0] and abs(want - dpi) >= step:
+                        # the arrows move one step, which in a list with uneven gaps (400, 800,
+                        # 1600…) is nearer to where it started: go to the next value that way
+                        i = choices.index(dpi) + (1 if want > dpi else -1)
+                        dpi = choices[min(max(i, 0), len(choices) - 1)]
                     if dpi != want:
                         s.set_value(dpi)  # comes back here with an allowed value
                         return None
+                    shown[0] = dpi
                     return (lambda: r.set_dpi(dpi)) if dpi != r.dpi else None
                 spin.connect("value-changed", self._guard(snap, after=self._refill_after_save))
                 g.attach(spin, 3, i, 1, 1)

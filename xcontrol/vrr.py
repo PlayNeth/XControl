@@ -28,10 +28,12 @@ def server_log(display=None, home=None):
     data = os.environ.get("XDG_DATA_HOME") or os.path.join(home, ".local", "share")
     candidates = []
     for d in (os.path.join(state, "xorg"), os.path.join(state, "xlibre"), os.path.join(data, "xorg"), LOG_DIR):
-        candidates += [p for p in glob.glob(os.path.join(d, f"*.{n}.log")) if os.path.isfile(p)]
-    if not candidates:
-        return None
-    return max(candidates, key=os.path.getmtime)
+        for p in glob.glob(os.path.join(d, f"X*.{n}.log")):     # (Xorg.0.log, XLibre.0.log)
+            try:
+                candidates.append((os.path.getmtime(p), p))
+            except OSError:
+                continue      # (gone since the listing, or not readable)
+    return max(candidates)[1] if candidates else None
 
 
 def x_vrr_enabled(log_text=None):

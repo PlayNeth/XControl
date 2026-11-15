@@ -7,6 +7,10 @@
 #     locale-gen. Only names listed in /usr/share/i18n/SUPPORTED are accepted.
 set -eu
 umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
+# [a-z] and [0-9] below must mean ASCII only: in other locales (pkexec keeps LANG) bash also
+# takes characters such as fullwidth letters or Arabic digits for them. Messages keep their language.
+case ${LC_ALL:-} in ?*) LANG=$LC_ALL; unset LC_ALL;; esac
+LC_COLLATE=C; export LANG LC_COLLATE
 
 die() { echo "xcontrol-locale-helper: $*" >&2; exit 1; }
 

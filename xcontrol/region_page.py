@@ -312,6 +312,8 @@ class RegionPage(Gtk.Box):
         if st:
             tz = st.get("Timezone", "")
             self.tz.get_child().set_text(tz)
+            for w in (self.tz, self.tz_btn, self.rtc):   # (switched off below when timedated didn't answer)
+                w.set_sensitive(True)
             self.ntp.set_active(bool(st.get("NTP")))
             self.ntp.set_sensitive(bool(st.get("CanNTP")))
             self.rtc.set_active(bool(st.get("LocalRTC")))

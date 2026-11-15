@@ -63,14 +63,17 @@ def _section(box, title):
     return grid
 
 
-
-
 class PanelPage(Gtk.Box):
     def __init__(self, window):
         super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.window = window
         self.desk = D.load()
         self.bar_key = D.bar_key()   # i3 and Openbox each have their own bar
+        # outside i3 (as the bar's config is written): no i3 module in the list, the generic one in its place
+        self.wm = wm.running()
+        self.other_wm = self.wm not in (None, "i3")
+        b = self.desk[self.bar_key]
+        b["modules"] = B.for_wm(b["modules"], self.wm)
         self.loading = True
         self._timer = None
         self.labels = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
@@ -173,6 +176,8 @@ class PanelPage(Gtk.Box):
         self.scroll_ws = Gtk.CheckButton(label=_("Scrolling anywhere on the bar switches workspaces"))
         self.scroll_ws.connect("toggled", self._changed)
         g.attach(self.scroll_ws, 1, 7, 1, 1)
+        if self.other_wm:   # it's done with i3-msg
+            self.scroll_ws.set_no_show_all(True)
         self.clock_locale = Gtk.ComboBoxText()
         sys_loc = B.system_locale()
         self.clock_locale.append("", _("Same as the system ({locale})").format(locale=sys_loc or "C"))
@@ -224,7 +229,8 @@ class PanelPage(Gtk.Box):
         b = self.desk[self.bar_key]
         ver = B.version()
         can = B.available(b, ver)
-        for i, (mid, pos, enabled) in enumerate(b["modules"]):
+        shown = self._shown_modules()
+        for i, (mid, pos, enabled) in enumerate(shown):
             row = Gtk.ListBoxRow(activatable=False)
             box = Gtk.Box(spacing=8, border_width=4)
             check = Gtk.CheckButton(active=enabled, valign=Gtk.Align.CENTER)
@@ -254,7 +260,7 @@ class PanelPage(Gtk.Box):
             for icon, delta in (("go-up-symbolic", -1), ("go-down-symbolic", 1)):
                 btn = Gtk.Button.new_from_icon_name(icon, Gtk.IconSize.BUTTON)
                 btn.set_relief(Gtk.ReliefStyle.NONE)
-                btn.set_sensitive(0 <= i + delta < len(b["modules"]))
+                btn.set_sensitive(0 <= i + delta < len(shown))
                 btn.connect("clicked", self._module_move, mid, delta)
                 box.pack_start(btn, False, False, 0)
             if mid not in can and mid == "battery":
@@ -265,10 +271,16 @@ class PanelPage(Gtk.Box):
         self.mod_list.show_all()
         widgets.protect(self.mod_list)
 
+    def _shown_modules(self):
+        """The modules in the list: all of them, but not i3's workspaces on another window manager."""
+        return [m for m in self.desk[self.bar_key]["modules"] if not (self.other_wm and m[0] == "workspaces")]
+
     def _module_settings(self, _btn, mid):
         from .bar_module_dialog import ModuleDialog
         title = _("Bar settings") if mid == "bar" else _("{module} settings").format(module=_(MODULE_LABELS[mid][0]))
-        dlg = ModuleDialog(self.window, self.desk[self.bar_key], mid, title)
+        # Openbox's desktops span every display, so the bar never pins them to one (see bar.generate)
+        hide = ("pin_workspaces",) if mid == "xworkspaces" and self.wm == "openbox" else ()
+        dlg = ModuleDialog(self.window, self.desk[self.bar_key], mid, title, hide=hide)
         if dlg.run() == Gtk.ResponseType.OK:
             dlg.save()
             self._commit_later()
@@ -295,9 +307,10 @@ class PanelPage(Gtk.Box):
 
     def _module_move(self, _btn, mid, delta):
         mods = self.desk[self.bar_key]["modules"]
-        i = next(k for k, m in enumerate(mods) if m[0] == mid)
-        j = i + delta
-        if 0 <= j < len(mods):
+        shown = self._shown_modules()   # past the neighbour in the list, not one that isn't shown
+        k = next(n for n, m in enumerate(shown) if m[0] == mid) + delta
+        if 0 <= k < len(shown):
+            i, j = (next(n for n, m in enumerate(mods) if m[0] == name) for name in (mid, shown[k][0]))
             mods[i], mods[j] = mods[j], mods[i]
             self._fill_modules()
             self._commit_later()
@@ -498,6 +511,7 @@ class PanelPage(Gtk.Box):
         kids = st.get("children") or {}
         errors = st.get("errors") or {}
         conflicts = D.session_conflicts()
+        file = wm.startup_file()
 
         b = self.desk[self.bar_key]
         bars = sorted(k[4:] or _("the screen") for k in kids if k.startswith("bar:"))
@@ -516,10 +530,10 @@ class PanelPage(Gtk.Box):
         lines = [line for kind, line in conflicts if kind in ("bar", "i3bar")]
         self._warn(self.bar_warn, b["enabled"] and foreign,
                    _("Another polybar is running (started by {file} or a script); it will sit on top "
-                     "of XControl's.").format(file=wm.startup_file()))
+                     "of XControl's.").format(file=file))
         self._conflict(self.bar_conflicts, b["enabled"] and lines,
                        _("Remove these from {file}, or there will be two bars after the next login:").format(
-                           file=wm.startup_file()), lines)
+                           file=file), lines)
 
         p = self.desk["picom"]
         if not shutil.which("picom"):
@@ -537,10 +551,10 @@ class PanelPage(Gtk.Box):
         lines = [line for kind, line in conflicts if kind == "compositor"]
         self._warn(self.pic_warn, p["enabled"] and foreign,
                    _("Another compositor is running, so XControl's can't start. Stop it, and remove it from "
-                     "{file}.").format(file=wm.startup_file()))
+                     "{file}.").format(file=file))
         self._conflict(self.pic_conflicts, p["enabled"] and lines,
                        _("Remove these from {file}, or the other compositor starts first after the next "
-                         "login:").format(file=wm.startup_file()), lines)
+                         "login:").format(file=file), lines)
         return False
 
     def _warn(self, bar, show, text):

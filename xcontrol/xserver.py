@@ -195,7 +195,7 @@ def _read_man(name, section, dirs=None):
                         return f.read()
                 if path.endswith(".zst") and shutil.which("zstd"):
                     return subprocess.run(["zstd", "-dc", path], capture_output=True, text=True,
-                                          timeout=10).stdout
+                                          errors="replace", timeout=10).stdout
                 with open(path, errors="replace") as f:
                     return f.read()
             except (OSError, EOFError, lzma.LZMAError, subprocess.SubprocessError):
@@ -385,7 +385,7 @@ def elsewhere(conf_dir=CONF_DIR, patterns=None):
 def driver_file_text(picks, gpu_list):
     """What XControl's driver file would hold: a Device section per GPU whose X driver it picks
     (X uses the first Device section it reads for its screen, before guessing a driver)."""
-    lines = ["# Written by XControl (System > X server): the X driver for each GPU. Delete this file to",
+    lines = ["# Written by XControl (About & Tools > X server): the X driver for each GPU. Delete this file to",
              "# go back to the automatic choice."]
     for card, kd, bus in gpu_list:
         if not picks.get(kd):
@@ -402,7 +402,7 @@ def file_text(drivers, server, xdriver="", modulepath_fix=False):
     OutputClass an empty ModulePath, for XLibre 25.1, which crashes on an OutputClass with neither
     Driver, Modules nor ModulePath (it reads cl->modulepath without checking it); "" just keeps
     the standard module path."""
-    lines = ["# Written by XControl (System > X server). Delete this file to undo everything here.",
+    lines = ["# Written by XControl (About & Tools > X server). Delete this file to undo everything here.",
              f"# for the X driver: {xdriver or '-'}"]
     for kd in sorted(drivers):
         if not drivers.get(kd):
@@ -474,7 +474,8 @@ def save(drivers, server, xdriver="", picks=None, gpu_list=None, modulepath_fix=
     except ValueError as e:
         return False, f"not allowed: {e}"
     try:
-        r = subprocess.run(["pkexec", HELPER] + args, capture_output=True, text=True, timeout=120)
+        r = subprocess.run(["pkexec", HELPER] + args, capture_output=True, text=True, errors="replace",
+                           timeout=120)
     except (OSError, subprocess.SubprocessError) as e:
         return False, str(e)
     if pkexec.cancelled(r):

@@ -1,4 +1,4 @@
-"""System > X server: which X server runs, the modules it loaded, and its options."""
+"""About & Tools > X server: which X server runs, the modules it loaded, and its options."""
 import os
 import threading
 
@@ -402,7 +402,8 @@ class XServerTab(Gtk.Box):
             if combo.get_active() < 0:
                 combo.set_active_id("")
             apply = Gtk.Button(label=_("Switch…"))
-            apply.set_sensitive(False)
+            # (a pick that's no longer offered, its driver removed, shows as automatic: let that be saved)
+            apply.set_sensitive((combo.get_active_id() or "") != self.picks.get(kd, ""))
             combo.connect("changed", lambda c, b=apply, k=kd: b.set_sensitive((c.get_active_id() or "") !=
                                                                               self.picks.get(k, "")))
             apply.connect("clicked", lambda _b, c=combo, k=kd: self._switch(k, c.get_active_id() or "",

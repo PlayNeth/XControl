@@ -74,20 +74,6 @@ def has_lid():
     return bool(glob.glob("/proc/acpi/button/lid/*/state")) or os.path.exists("/sys/class/power_supply/BAT0")
 
 
-def our_conf():
-    """{key: action} from XControl's logind drop-in."""
-    out = {}
-    try:
-        with open("/etc/systemd/logind.conf.d/50-xcontrol.conf") as f:
-            for line in f:
-                if "=" in line and not line.startswith(("#", "[")):
-                    k, v = line.strip().split("=", 1)
-                    out[k] = v
-    except OSError:
-        pass
-    return out
-
-
 def can_set_buttons():
     return bool(shutil.which("pkexec")) and os.path.exists(HELPER)
 

@@ -104,9 +104,10 @@ class ColorChoice(Gtk.Box):
 
 
 class ModuleDialog(Gtk.Dialog):
-    """Edit `b["options"][mid]` and `b["extra"][mid]` (mid "bar" edits only the extra lines)."""
+    """Edit `b["options"][mid]` and `b["extra"][mid]` (mid "bar" edits only the extra lines).
+    Options in `hide` aren't shown (they do nothing on this window manager) and keep their value."""
 
-    def __init__(self, parent, b, mid, title):
+    def __init__(self, parent, b, mid, title, hide=()):
         super().__init__(title=title, transient_for=parent, modal=True)
         self.b, self.mid = b, mid
         self.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
@@ -123,6 +124,8 @@ class ModuleDialog(Gtk.Dialog):
             grid = Gtk.Grid(column_spacing=12, row_spacing=8)
             r = 0
             for key, kind, _default in B.OPTIONS.get(mid, []):
+                if key in hide:
+                    continue
                 label = _(LABELS.get((mid, key), key))
                 value = opts[key]
                 if kind == "bool":
@@ -191,7 +194,7 @@ class ModuleDialog(Gtk.Dialog):
     def save(self):
         """Copy the dialog's values into the settings."""
         if self.mid != "bar":
-            opts = {}
+            opts = dict((self.b.get("options") or {}).get(self.mid) or {})   # hidden ones stay as they were
             for key, (kind, w) in self.widgets.items():
                 if kind == "bool":
                     opts[key] = w.get_active()

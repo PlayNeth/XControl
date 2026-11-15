@@ -35,8 +35,6 @@ def _hint(text):
     return lbl
 
 
-
-
 class ColorPanel(Gtk.Box):
     """The Displays page's Scaling and color tab (the tab's title is its heading)."""
 
@@ -150,6 +148,7 @@ class ColorPanel(Gtk.Box):
                 w.set_no_show_all(not avail[key])
         anything = any(avail.values())
         self.reset_btn.set_visible(anything)
+        self.reset_btn.set_no_show_all(not anything)   # (the window's show_all() comes after the first fill)
         self.empty.set_visible(bool(m) and not anything)
         if not m:
             self.loading = False

@@ -3412,10 +3412,10 @@ msgstr "X проигнорировал некоторые параметры X �
 #, python-brace-format
 msgid ""
 "At its last start X didn't use: {names}. The driver in use may not have them"
-" (System > X server)."
+" (About & Tools > X server)."
 msgstr ""
 "При последнем запуске X не использовал: {names}. Возможно, у используемого "
-"драйвера их нет (Система > X-сервер)."
+"драйвера их нет (Сведения и инструменты > X-сервер)."
 
 #: xcontrol/i3_page.py:17
 msgid "With title bar"

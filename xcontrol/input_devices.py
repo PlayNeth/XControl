@@ -115,7 +115,8 @@ def available():
 
 
 def _run(args, timeout=10):
-    out = subprocess.run(args, capture_output=True, text=True, timeout=timeout,
+    # (errors: a device name that isn't UTF-8 must not stop every device's settings)
+    out = subprocess.run(args, capture_output=True, text=True, errors="replace", timeout=timeout,
                          env=dict(os.environ, LC_ALL="C"))
     if out.returncode != 0:
         raise RuntimeError(out.stderr.strip() or f"{args[0]} exited with {out.returncode}")

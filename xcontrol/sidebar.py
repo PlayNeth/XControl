@@ -55,7 +55,8 @@ class Sidebar(Gtk.ScrolledWindow):
         if before is not None:
             box.pack_start(Gtk.Separator(margin_top=4), False, False, 0)
         lbl = Gtk.Label(xalign=0, margin_start=10, margin_top=8, margin_bottom=2)
-        lbl.set_markup("<small><b>{}</b></small>".format(GLib.markup_escape_text(_(row.group).upper())))
+        group = _(row.group).upper() if row.group else ""   # (_("") would be the translation's header)
+        lbl.set_markup("<small><b>{}</b></small>".format(GLib.markup_escape_text(group)))
         lbl.get_style_context().add_class("dim-label")
         box.pack_start(lbl, False, False, 0)
         box.show_all()

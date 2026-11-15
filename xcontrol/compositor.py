@@ -31,7 +31,10 @@ def normalize(p):
         out["blur"] = "off"
     for k, lo, hi in (("shadow_radius", 0, 40), ("shadow_opacity", 0, 100), ("fade_speed", 1, 30),
                       ("active_opacity", 30, 100), ("inactive_opacity", 30, 100), ("corner_radius", 0, 30)):
-        out[k] = max(lo, min(hi, int(out[k])))
+        try:
+            out[k] = max(lo, min(hi, int(out[k])))
+        except (TypeError, ValueError):   # a hand-edited config must not stop the service and the pages
+            out[k] = DEFAULT[k]
     return out
 
 

@@ -61,6 +61,13 @@ expect("empty list prop", mouse.props["libinput Accel Custom Fallback Points"], 
 kbds = [d for d in D.list_devices(with_props=False) if d.kind == "keyboard"]
 expect("keyboards (no masters, no XTEST)", [d.id for d in kbds], [10, 14])
 
+# a device whose name isn't UTF-8 (bytes straight from its firmware) doesn't stop the others
+raw = os.path.join(bindir, "latin1-xinput")
+with open(raw, "wb") as f:
+    f.write(b"#!/bin/sh\nprintf '    \\342\\206\\263 Caf\\351 Mouse\\tid=7\\t[slave  pointer  (2)]\\n'\n")
+os.chmod(raw, 0o755)
+expect("name that isn't UTF-8", [(d.id, d.name) for d in D.parse_list(D._run([raw]))], [(7, "Caf\ufffd Mouse")])
+
 # ---- live changes
 D.apply(mouse, "accel_profile", "flat")
 D.apply(mouse, "accel_speed", -0.35)
@@ -103,8 +110,8 @@ time.sleep(2.5)
 expect("watcher holds the lock", D.watcher_running(), True)
 p.kill()
 err = p.stderr.read()
-expect("watcher applied at start and on hotplug", err.count("applied 3 pointer settings") >= 1 and "device added" in err,
-       True)
+expect("watcher applied at start and on hotplug",
+       err.count("applied 3 pointer settings") >= 1 and "device added" in err, True)
 expect("lock released", D.watcher_running(), False)
 
 # ---- keyboard

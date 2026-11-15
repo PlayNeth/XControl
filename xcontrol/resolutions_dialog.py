@@ -206,8 +206,13 @@ class ResolutionsDialog(Gtk.Dialog):
         return edid.parse(raw) if raw else None
 
     def _modes(self):
-        return [modelines.Modeline.from_dict(d)
-                for d in self.data["display"]["custom_modes"].get(self.mon.name, [])]
+        modes = []
+        for d in self.data["display"]["custom_modes"].get(self.mon.name, []):
+            try:
+                modes.append(modelines.Modeline.from_dict(d))
+            except (TypeError, KeyError, ValueError):  # a damaged entry: the dialog still opens
+                continue
+        return modes
 
     def _save(self, modes=None):
         disp = self.data["display"]

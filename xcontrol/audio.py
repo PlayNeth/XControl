@@ -72,7 +72,7 @@ def _run(args, timeout=10):
     # and translates the field names of `pactl info`
     env = dict(os.environ, LC_ALL="C", LANGUAGE="")
     try:
-        r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, env=env)
+        r = subprocess.run(args, capture_output=True, text=True, errors="replace", timeout=timeout, env=env)
     except (OSError, subprocess.SubprocessError):
         return None
     return r.stdout if r.returncode == 0 else None

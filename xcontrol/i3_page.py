@@ -820,6 +820,7 @@ class I3Page(Gtk.Box):
         if on:
             if not shutil.which("i3"):
                 self.window.message(_("i3 isn't installed"), _("Install the i3-wm package first."))
+                self.c["enabled"] = False   # or the next import or change would save it as on
                 self._set_switch(False)
                 return
             prev = I3.previous()
@@ -828,11 +829,20 @@ class I3Page(Gtk.Box):
                     _("Its keys, startup programs, window rules and look are brought over to this page. "
                       "Otherwise the page starts from i3's defaults. Either way your file is kept as a backup."),
                     _("Import it"), _("i3's defaults")):
-                self._do_import(prev, quiet=False)
+                if not self._do_import(prev, quiet=False):   # unreadable: it stays i3's, untouched
+                    self.c["enabled"] = False
+                    self._set_switch(False)
+                    return
         elif I3.is_ours() and I3.can_restore():
             if self._ask(_("Put your previous i3 config back?"),
                          _("XControl's config is kept as config.xcontrol."), _("Put it back"), _("Keep XControl's")):
-                I3.restore()
+                try:
+                    I3.restore()
+                except OSError as e:     # the switch goes back on: XControl's config is still in place
+                    self.window.message(_("Could not read the config"), str(e))
+                    self.c["enabled"] = True
+                    self._set_switch(True)
+                    return
         self.c["enabled"] = on
         self._sensitivity()
         self._commit_later(0)
@@ -859,7 +869,7 @@ class I3Page(Gtk.Box):
                 text = f.read()
         except OSError as e:
             self.window.message(_("Could not read the config"), str(e))
-            return
+            return False
         c, skipped = I3.import_config(text, self.c)
         c["enabled"] = self.c["enabled"]
         self.c = c
@@ -867,6 +877,7 @@ class I3Page(Gtk.Box):
         if skipped and not quiet:
             self.window.message(_("Imported"), _("Left out because XControl takes care of them now:") + "\n\n" +
                                 "\n".join(skipped[:12]))
+        return True
 
     def _show_file(self, _b):
         text = I3.generate(I3.normalize(self.c), I3.bar_enabled())

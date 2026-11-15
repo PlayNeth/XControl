@@ -177,7 +177,6 @@ def disable_user_css():
     return done
 
 
-
 def _theme_source(name, dirs):
     for base in dirs:
         path = os.path.join(base, name)

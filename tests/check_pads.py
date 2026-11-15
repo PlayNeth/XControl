@@ -90,6 +90,11 @@ if prefix is not None:
     os.makedirs(os.path.join(dev, "1-2:1.3"))
     os.makedirs(drv)
     os.symlink(os.path.join(dev, "1-2:1.3"), os.path.join(drv, "1-2:1.3"))
+    for port, product in (("1-3", "0ce6"), ("1-4", "c52b")):     # a DualSense, and something else
+        put(os.path.join(hs, "devices", "usb1", port, "idVendor"), "054c\n")
+        put(os.path.join(hs, "devices", "usb1", port, "idProduct"), product + "\n")
+        os.makedirs(os.path.join(hs, "devices", "usb1", port, port + ":1.3"))
+        os.symlink(os.path.join(hs, "devices", "usb1", port, port + ":1.3"), os.path.join(drv, port + ":1.3"))
     put(os.path.join(drv, "unbind"))
     put(os.path.join(drv, "bind"))
     for root, dirs, files in os.walk(tmp):
@@ -108,8 +113,9 @@ if prefix is not None:
     kept = (os.path.exists(os.path.join(etc, "tmpfiles.d", "xcontrol-usbhid.conf")),
             os.path.exists(os.path.join(etc, "modprobe.d", "xcontrol-usbhid.conf")))
     expect("kept for next boots (built-in usbhid)", kept, (True, False))
-    expect("reconnected", (open(os.path.join(drv, "unbind")).read().strip(), "reconnected 1-2:1.3" in res.stdout),
-           ("1-2:1.3", True))
+    expect("reconnected (the DualSense too, nothing else)",
+           ("reconnected 1-2:1.3" in res.stdout, "reconnected 1-3:1.3" in res.stdout, "1-4" in res.stdout),
+           (True, True, False))
     put(os.path.join(hs, "module", "usbhid", "initstate"), "live")
     os.chmod(os.path.join(hs, "module", "usbhid", "initstate"), 0o666)
     run("usbpoll", "2")
@@ -173,6 +179,20 @@ try:
     rum = S.Rumble(FakeVpad(), wr)
     rum.handle(S.EV_UINPUT, S.UI_FF_UPLOAD, 1)
     expect("effect uploaded to the real pad", (rum.ids, uploaded), ({3: 7}, [struct.pack("HH", 40000, 20000)]))
+    for magnitude, strong in ((8000, 16000), (20000, 40000), (-32768, 65535)):
+        union = struct.pack("HHhhH", 0, 0, magnitude, 0, 0)
+        periodic = S.FF_EFFECT.pack(S.FF_PERIODIC, 3, 0, 0, 0, 500, 0, union + bytes(32 - len(union)))
+        real_begin, uploaded[:] = fake_ioctl, []
+
+        def begin(fd, req, arg=0, *rest, _e=periodic):
+            if req == S.UI_BEGIN_FF_UPLOAD:
+                arg[8:8 + len(_e)] = _e
+                return 0
+            return real_begin(fd, req, arg, *rest)
+        fcntl.ioctl = begin
+        rum.handle(S.EV_UINPUT, S.UI_FF_UPLOAD, 1)
+        fcntl.ioctl = fake_ioctl
+        expect(f"a periodic effect of {magnitude} is a rumble of {strong}", uploaded, [struct.pack("HH", strong, 0)])
     rum.handle(S.EV_FF, 3, 1)
     ev = S.EVENT.unpack(os.read(rd, S.EVENT.size))
     expect("play forwarded with the real id", ev[2:], (S.EV_FF, 7, 1))
@@ -281,6 +301,15 @@ try:
     hid_calls.clear()
     S.Controller(fake_pad, S.normalize({"enabled": True, "hide_real": False}), lambda m: None).close()
     expect("not hidden when unticked", hid_calls, [])
+    # a service that was killed left it hidden: the next one gives it back before opening it
+    real_access = os.access
+    os.access = lambda path, mode, **kw: path != fake_pad.gamepad and real_access(path, mode, **kw)
+    try:
+        S.Controller(fake_pad, S.normalize({"enabled": True, "hide_real": False}), lambda m: None).close()
+    finally:
+        os.access = real_access
+    expect("given back when found hidden", hid_calls,
+           [([fake_pad.gamepad, fake_pad.joystick, fake_pad.hidraw], False)])
 finally:
     P.set_hidden, S.VirtualPad = real_set_hidden, real_vpad
 expect("light bar and rate changes don't reopen it",

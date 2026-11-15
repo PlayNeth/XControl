@@ -1,4 +1,4 @@
-"""System → Boot splash: Plymouth's theme (with pictures), the delay and scale, and the two
+"""About & Tools → Boot splash: Plymouth's theme (with pictures), the delay and scale, and the two
 things outside XControl's reach that the splash needs (the mkinitcpio hook, `splash`)."""
 import os
 import threading

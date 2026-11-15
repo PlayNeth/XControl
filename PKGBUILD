@@ -4,7 +4,7 @@
 # For the AUR, replace the $startdir paths with a source=() tarball or git URL.
 
 pkgname=xcontrol
-pkgver=0.31.0
+pkgver=0.31.1
 pkgrel=1
 pkgdesc="Catalyst-style X11 control panel: per-game graphics settings, displays, input devices, controllers and system information"
 arch=('x86_64')
@@ -27,15 +27,15 @@ optdepends=(
   "openbox: XControl's Openbox config (Window Manager page)"
   'qt5ct: Qt 5 apps follow the icon theme and font'
   'qt6ct: Qt 6 apps follow the icon theme and font'
-  'kmod: module descriptions and parameter help on the System page (modinfo)'
-  'plymouth: boot splash themes on the System page'
-  'xss-lock: screen lock when idle and before suspend (Desktop page)'
+  'kmod: module descriptions and parameter help on the About & Tools page (modinfo)'
+  'plymouth: boot splash themes on the About & Tools page'
+  'xss-lock: screen lock when idle and before suspend (Wallpaper & Lock page)'
   'i3lock: screen locker that can show the wallpaper (or xsecurelock, slock)'
   "polybar: XControl's bar (Bar & Compositor page)"
   'picom: compositor: shadows, fading, transparency, no tearing (Bar & Compositor page)'
   'dunst: notifications (Notifications page)'
   "rofi: menu for a notification's actions (dmenu works too)"
-  'poweralertd: battery and power alerts (Notifications page)'
+  'poweralertd: battery and power alerts (Power page)'
   'libpulse: sound devices and profiles (pactl, Sound page)'
   'pipewire: sample rate and buffer size on the Sound page (pw-metadata), notification sounds (pw-play)'
   'pipewire-pulse: PulseAudio programs and pactl on PipeWire (Sound page)'
@@ -49,8 +49,8 @@ optdepends=(
   'accountsservice: your own picture shows on the login screen without a password'
   'hwdata: full monitor manufacturer, graphics card and network adapter names'
   'polkit: EDID overrides, kernel modules, X server options, the boot splash, user accounts, time, languages, power buttons and USB controller polling (needs a polkit agent)'
-  'mesa-utils: OpenGL and Mesa versions on the System page, "Test with glxgears" button'
-  'vulkan-tools: Vulkan version on the System page, "Test with vkcube" button'
+  'mesa-utils: OpenGL and Mesa versions on the About & Tools page, "Test with glxgears" button'
+  'vulkan-tools: Vulkan version on the About & Tools page, "Test with vkcube" button'
 )
 # The controller udev rules (/usr/lib/udev/rules.d/70-xcontrol-controllers.rules) apply to
 # controllers connected after installing: reconnect a DualShock 4 once.

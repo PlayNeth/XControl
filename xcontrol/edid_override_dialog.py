@@ -14,7 +14,7 @@ from . import edid, edid_override, monitor_info, pkexec, widgets, xrandr  # noqa
 from . import edid_override_status as status  # noqa: E402
 from .i18n import _, num  # noqa: E402
 from .paths import LIBDIR  # noqa: E402
-from .resolutions_dialog import SHORT_NAMES, standard_of  # noqa: E402
+from .resolutions_dialog import SHORT_NAMES, _work_area_height, standard_of  # noqa: E402
 
 HELPER = os.path.join(LIBDIR, "xcontrol-edid-helper")
 
@@ -324,12 +324,3 @@ class EdidOverrideDialog(Gtk.Dialog):
         Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(param, -1)
         self._update_status()
         self.main_window.set_status(_("Kernel parameter copied"))
-
-
-def _work_area_height(window):
-    try:
-        display = window.get_display()
-        mon = display.get_monitor_at_window(window.get_window()) or display.get_primary_monitor()
-        return mon.get_workarea().height
-    except Exception:  # noqa: BLE001
-        return 768

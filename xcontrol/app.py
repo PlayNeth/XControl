@@ -226,7 +226,7 @@ def main(argv=None):
     if "--version" in argv:
         print(f"xcontrol {__version__}")
         return 0
-    if "--sysinfo" in argv:  # the System page as text, e.g. for bug reports
+    if "--sysinfo" in argv:  # the About & Tools page as text, e.g. for bug reports
         from . import sysinfo
         print(sysinfo.as_text(sysinfo.snapshot(), english="--english" in argv), end="")
         return 0

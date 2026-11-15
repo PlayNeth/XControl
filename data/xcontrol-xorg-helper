@@ -20,6 +20,10 @@
 # have . , : + - and nothing else (no spaces, quotes or shell characters).
 set -eu
 umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
+# [a-z] and [0-9] below must mean ASCII only: in other locales (pkexec keeps LANG) bash also
+# takes characters such as fullwidth letters or Arabic digits for them. Messages keep their language.
+case ${LC_ALL:-} in ?*) LANG=$LC_ALL; unset LC_ALL;; esac
+LC_COLLATE=C; export LANG LC_COLLATE
 
 die() { echo "xcontrol-xorg-helper: $*" >&2; exit 1; }
 
@@ -108,7 +112,7 @@ if [ $npicks -eq 0 ]; then
 else
     tmp=$DFILE.tmp
     {
-        echo "# Written by XControl (System > X server): the X driver for each GPU. Delete this file to"
+        echo "# Written by XControl (About & Tools > X server): the X driver for each GPU. Delete this file to"
         echo "# go back to the automatic choice."
         for a in "$@"; do
             case $a in
@@ -138,7 +142,7 @@ if [ $nopts -eq 0 ]; then
 fi
 tmp=$FILE.tmp
 {
-    echo "# Written by XControl (System > X server). Delete this file to undo everything here."
+    echo "# Written by XControl (About & Tools > X server). Delete this file to undo everything here."
     echo "# for the X driver: $xdriver"
     for kd in $drivers; do
         echo

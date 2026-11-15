@@ -8,8 +8,11 @@ the ones below, the dock, menus, margins, ...) stays as it was. Openbox reconfig
 write; the autostart file is read at the next login.
 """
 import copy
+import ctypes
+import ctypes.util
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import time
@@ -30,7 +33,7 @@ DOUBLE_CLICK = ["ToggleMaximize", "ToggleShade", "Iconify", "ToggleAlwaysOnTop",
 TITLE_LAYOUTS = ["NLIMC", "LIMC", "NLC", "LC", "CMIL", "NLSDIMC"]
 FONT_WEIGHTS = ["normal", "bold"]
 FONT_SLANTS = ["normal", "italic", "oblique"]
-MATCH_KEYS = ["class", "name", "role", "title", "type"]
+MATCH_KEYS = ["class", "name", "role", "title", "type", "groupclass", "groupname"]
 # per-app settings the page writes as simple elements, and the position ones
 RULE_KEYS = ["desktop", "decor", "maximized", "fullscreen", "iconic", "shade", "layer", "focus",
              "skip_taskbar", "skip_pager", "x", "y", "monitor"]
@@ -38,8 +41,13 @@ POSITION_KEYS = ("x", "y", "monitor")
 
 SESSION_LINE = "xcontrol --session &"
 SYSTEM_RC = "/etc/xdg/openbox/rc.xml"
-SHELL_WORDS = re.compile(r"^(if|then|else|elif|fi|for|while|until|do|done|case|esac|\{|\}|function|export|"
-                         r"[A-Za-z_][A-Za-z0-9_]*=)")
+# lines of the autostart file that aren't a program to send to the background: shell syntax, and
+# what only works (or only makes sense: sleep) in the script's own shell. Whole words: not firefox.
+SHELL_WORDS = re.compile(r"^(?:(?:if|then|else|elif|fi|for|while|until|do|done|case|esac|function|export)"
+                         r"(?=[\s;]|$)|[{}])")
+# ...these only when the line is that one command: `sleep 3 && conky` does go to the background
+SHELL_BUILTINS = re.compile(r"^(?:cd|\.|source|unset|set|umask|ulimit|trap|alias|eval|wait|sleep|exit)(?=\s|$)")
+ASSIGNMENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
 
 # Used only when Openbox's own rc.xml can't be found: enough to move, resize and switch windows.
 FALLBACK_RC = """<?xml version="1.0" encoding="UTF-8"?>
@@ -174,9 +182,8 @@ def normalize(c):
     out = {k: copy.deepcopy(v) for k, v in DEFAULT.items()}
     if isinstance(c, dict):
         out.update({k: v for k, v in c.items() if k in DEFAULT})
-    for k, choices in CHOICES.items():
-        if out[k] not in choices:
-            out[k] = DEFAULT[k]
+    for k, choices in CHOICES.items():   # (Openbox reads these without minding the case)
+        out[k] = {x.lower(): x for x in choices}.get(str(out[k]).lower(), DEFAULT[k])
     for k in ("enabled", "keep_border", "animate_iconify", "follow_mouse", "raise_on_focus", "focus_new", "center",
               "root_menu", "root_window_list"):
         out[k] = bool(out[k])
@@ -203,9 +210,9 @@ def normalize(c):
     for r in out["rules"] if isinstance(out["rules"], list) else []:
         if not isinstance(r, dict):
             continue
-        match = {k: str(v) for k, v in (r.get("match") or {}).items() if k in MATCH_KEYS and str(v)}
-        settings = {k: str(v).strip() for k, v in (r.get("settings") or {}).items()
-                    if k in RULE_KEYS and str(v).strip()}
+        match, settings = (r.get(k) if isinstance(r.get(k), dict) else {} for k in ("match", "settings"))
+        match = {k: str(v) for k, v in match.items() if k in MATCH_KEYS and str(v)}
+        settings = {k: str(v).strip() for k, v in settings.items() if k in RULE_KEYS and str(v).strip()}
         if match:
             rules.append({"match": match, "settings": settings, "raw": str(r.get("raw") or "")})
     out["rules"] = rules
@@ -231,6 +238,21 @@ def _parse(text):
     """The document with its comments (ElementTree drops them otherwise)."""
     parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))
     return ET.fromstring(text, parser=parser)
+
+
+def read_rc(path):
+    """The text of an rc.xml: UTF-8 as a rule, else in the encoding it declares (Latin-1 failing that),
+    so an old file's accents aren't lost."""
+    with open(path, "rb") as f:
+        data = f.read()
+    try:
+        return data.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        m = re.match(rb"""\s*<\?xml[^>]*?encoding=["']([\w.-]+)""", data)
+        try:
+            return data.decode(m.group(1).decode("ascii") if m else "latin-1")
+        except (LookupError, UnicodeDecodeError):
+            return data.decode("utf-8", errors="replace")
 
 
 def _ns(root):
@@ -322,12 +344,39 @@ def key_id(keys):
     return "-".join(mods + [parts[-1].lower()])
 
 
+def valid_keys(keys):
+    """Whether `keys` can be a keybind's key: every key of the chain has a name, and its modifiers too."""
+    return bool(keys.split()) and all(all(key.split("-")) for key in keys.split())
+
+
+def _chains(keys, xml_text):
+    """The full key sequences a binding answers to: its own keys, then each nested keybind's."""
+    own = tuple(key_id(k) for k in keys.split())
+    try:
+        nested = [e for e in from_text(xml_text, "") if e.tag == "keybind" and e.get("key")]
+    except ValueError:
+        nested = []
+    if not nested:
+        return [own]
+    return [own + rest for e in nested for rest in _chains(e.get("key"), to_text(list(e)))]
+
+
 def clashes(bindings):
-    """{index: [indexes with the same keys]}."""
-    seen = {}
-    for i, b in enumerate(bindings):
-        seen.setdefault(key_id(b["keys"]), []).append(i)
-    return {i: [j for j in group if j != i] for group in seen.values() if len(group) > 1 for i in group}
+    """{index: [indexes with the same keys]}. Chains clash when one is the start of the other
+    (C-a t and C-a b don't), which is when Openbox drops the second."""
+    chains = [_chains(b["keys"], b["xml"]) for b in bindings]
+    first = {}
+    for i, group in enumerate(chains):   # (only bindings that start with the same key are compared)
+        for key in {chain[0] for chain in group if chain}:
+            first.setdefault(key, []).append(i)
+    out = {}
+    for group in first.values():
+        for i in group:
+            for j in group:
+                if i < j and any(a[:len(b)] == b[:len(a)] for a in chains[i] for b in chains[j]):
+                    out.setdefault(i, []).append(j)
+                    out.setdefault(j, []).append(i)
+    return {i: sorted(set(v)) for i, v in out.items()}
 
 
 def actions_of(xml_text):
@@ -458,8 +507,8 @@ def _mouse_settings(root, ns):
         for mb in ctx.findall(_q(ns, "mousebind")):
             if mb.get("action") == "DoubleClick" and mb.get("button") == "Left":
                 acts = mb.findall(_q(ns, "action"))
-                dbl = acts[0].get("name") if acts else "none"
-    return drag, dbl if dbl in DOUBLE_CLICK else "ToggleMaximize"
+                dbl = (acts[0].get("name") or "") if acts else "none"
+    return drag, dbl if dbl.lower() in [d.lower() for d in DOUBLE_CLICK] else "ToggleMaximize"
 
 
 ROOT_MENUS = {"root_menu": ("Right", "root-menu"), "root_window_list": ("Middle", "client-list-combined-menu")}
@@ -506,7 +555,7 @@ def import_autostart(text, managed=None):
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
-        cmd = re.sub(r"\s*&\s*$", "", line)
+        cmd = re.sub(r"(?<![&\\])\s*&\s*$", "", line)   # (not the end of "a &&", continued on the next line)
         if skipped_by(cmd, managed):
             skipped.append(line)
         else:
@@ -521,8 +570,7 @@ def system_rc():
     for d in dirs + [os.path.dirname(os.path.dirname(SYSTEM_RC))]:
         path = os.path.join(d, "openbox", "rc.xml")
         try:
-            with open(path, encoding="utf-8", errors="replace") as f:
-                text = f.read()
+            text = read_rc(path)
             _parse(text)
             return text
         except (OSError, ET.ParseError):
@@ -637,9 +685,10 @@ def _write_mouse(root, ns, c):
     for ctx in titlebars:
         for mb in ctx.findall(_q(ns, "mousebind")):
             if mb.get("action") == "DoubleClick" and mb.get("button") == "Left":
+                acts = mb.findall(_q(ns, "action"))
                 if c["double_click"] == "none":
                     ctx.remove(mb)
-                else:
+                elif not acts or (acts[0].get("name") or "").lower() != c["double_click"].lower():
                     for a in list(mb):
                         mb.remove(a)
                     ET.SubElement(mb, _q(ns, "action"), name=c["double_click"])
@@ -652,13 +701,39 @@ def _write_mouse(root, ns, c):
         ET.SubElement(mb, _q(ns, "action"), name=c["double_click"])
 
 
+def _comment_at(cmd):
+    """Where a shell line's trailing comment starts (an unquoted # at the start of a word), or its length."""
+    quote, i = "", 0
+    while i < len(cmd):
+        ch = cmd[i]
+        if ch == "\\" and quote != "'":
+            i += 1
+        elif quote:
+            quote = "" if ch == quote else quote
+        elif ch in "'\"":
+            quote = ch
+        elif ch == "#" and (i == 0 or cmd[i - 1].isspace()):
+            return i
+        i += 1
+    return len(cmd)
+
+
 def autostart_line(cmd):
     """A startup entry as an autostart line: commands go to the background (or the ones after
-    them would wait), shell syntax is written as it is."""
+    them would wait), shell syntax and lines that go on in the next one are written as they are."""
     cmd = cmd.strip()
-    if cmd.endswith(("&", "\\", ";")) or SHELL_WORDS.match(cmd):
+    at = _comment_at(cmd)
+    code, comment = cmd[:at].rstrip(), cmd[at:]
+    try:
+        words = shlex.split(code)
+    except ValueError:   # a quote that closes on another line
         return cmd
-    return cmd + " &"
+    if (not code or code.endswith(("&", "\\", ";", "|", "(", "{")) or SHELL_WORDS.match(code)
+            or (SHELL_BUILTINS.match(code) and not re.search(r"&&|\|\||[;|]", code))
+            or re.fullmatch(r"[^\s()]+\)", code)                 # a case's pattern
+            or all(ASSIGNMENT.match(w) for w in words)):         # X=1 (X=1 program does go to the background)
+        return cmd
+    return code + " &" + ("   " + comment if comment else "")
 
 
 def generate_autostart(c):
@@ -670,13 +745,15 @@ def generate_autostart(c):
 
 # ---------------------------------------------------------------- rules as text (the page's table)
 def match_text(match):
-    return " ".join(f'{k}="{v}"' for k, v in match.items())
+    return " ".join(f"{k}='{v}'" if '"' in v else f'{k}="{v}"' for k, v in match.items())
 
 
 def parse_match(text):
     """'class="Steam" title="Friends*"' -> {"class": "Steam", "title": "Friends*"}; a bare word is a class."""
-    found = {k: v for k, v in re.findall(r'(\w+)\s*=\s*"([^"]*)"', text) if k in MATCH_KEYS}
-    found.update({k: v for k, v in re.findall(r'(\w+)\s*=\s*([^\s"]+)', text) if k in MATCH_KEYS and k not in found})
+    found = {}
+    for k, *values in re.findall(r"""(\w+)\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+))""", text):
+        if k in MATCH_KEYS and k not in found and any(values):
+            found[k] = next(v for v in values if v)
     if not found and re.match(r"^[\w.*?-]+$", text.strip()):
         found["class"] = text.strip()
     return found
@@ -788,11 +865,74 @@ def write(c):
         _parse(text)   # (well-formed, or nothing is written)
     except (ValueError, ET.ParseError) as e:
         return False, [str(e)]
+    before = _desktops_in(target())
     changed = _write_file(target(), text)
-    _write_file(autostart_path(), generate_autostart(c))
-    if changed:
-        reload()
+    try:
+        _write_file(autostart_path(), generate_autostart(c))
+    finally:   # (rc.xml is in place even when the autostart file couldn't be written)
+        if changed:
+            reload()
+            names = c["desktop_names"][:c["desktops"]]
+            if before != (c["desktops"], names):
+                set_desktops(c["desktops"], names)
     return True, []
+
+
+def _desktops_in(path):
+    """(number, names) of the desktops in an rc.xml, or None when it can't be read."""
+    try:
+        root = _parse(read_rc(path))
+    except (OSError, ET.ParseError):
+        return None
+    ns = _ns(root)
+    names = root.find(f"{_q(ns, 'desktops')}/{_q(ns, 'names')}")
+    return (_int(_text(root, ns, "desktops/number"), 1, 10, None),
+            [(n.text or "").strip() for n in names.findall(_q(ns, "name"))] if names is not None else [])
+
+
+class _ClientMessage(ctypes.Structure):   # XClientMessageEvent, padded to an XEvent
+    _fields_ = [("type", ctypes.c_int), ("serial", ctypes.c_ulong), ("send_event", ctypes.c_int),
+                ("display", ctypes.c_void_p), ("window", ctypes.c_ulong), ("message_type", ctypes.c_ulong),
+                ("format", ctypes.c_int), ("l", ctypes.c_long * 5), ("pad", ctypes.c_long * 24)]
+
+
+def set_desktops(number, names):
+    """Openbox reads the number of desktops and their names from rc.xml only when it starts: after
+    that they belong to the session, and --reconfigure leaves them alone. So ask the way a pager
+    does, on the root window: a _NET_NUMBER_OF_DESKTOPS message and the _NET_DESKTOP_NAMES property
+    (the names up to the first empty one; Openbox takes the rest from rc.xml). False when it couldn't."""
+    from . import wm
+    if not os.environ.get("DISPLAY") or wm.running() != "openbox":
+        return False
+    vp, ul, ci = ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int
+    try:
+        x = ctypes.CDLL(ctypes.util.find_library("X11") or "libX11.so.6")
+        x.XOpenDisplay.restype, x.XOpenDisplay.argtypes = vp, [ctypes.c_char_p]
+        x.XDefaultRootWindow.restype, x.XDefaultRootWindow.argtypes = ul, [vp]
+        x.XInternAtom.restype, x.XInternAtom.argtypes = ul, [vp, ctypes.c_char_p, ci]
+        x.XChangeProperty.argtypes = [vp, ul, ul, ul, ci, ci, ctypes.c_char_p, ci]
+        x.XDeleteProperty.argtypes = [vp, ul, ul]
+        x.XSendEvent.argtypes = [vp, ul, ci, ctypes.c_long, ctypes.POINTER(_ClientMessage)]
+        x.XCloseDisplay.argtypes = [vp]
+    except (OSError, AttributeError):
+        return False
+    dpy = x.XOpenDisplay(None)
+    if not dpy:
+        return False
+    root = x.XDefaultRootWindow(dpy)
+    named = names[:names.index("")] if "" in names else names
+    if named:
+        data = b"".join(n.encode("utf-8") + b"\0" for n in named)
+        x.XChangeProperty(dpy, root, x.XInternAtom(dpy, b"_NET_DESKTOP_NAMES", 0),
+                          x.XInternAtom(dpy, b"UTF8_STRING", 0), 8, 0, data, len(data))
+    else:
+        x.XDeleteProperty(dpy, root, x.XInternAtom(dpy, b"_NET_DESKTOP_NAMES", 0))
+    ev = _ClientMessage(type=33, window=root, message_type=x.XInternAtom(dpy, b"_NET_NUMBER_OF_DESKTOPS", 0),
+                        format=32)
+    ev.l[0] = number
+    x.XSendEvent(dpy, root, 0, (1 << 19) | (1 << 20), ctypes.byref(ev))   # SubstructureNotify | Redirect
+    x.XCloseDisplay(dpy)   # (flushes)
+    return True
 
 
 def refresh():

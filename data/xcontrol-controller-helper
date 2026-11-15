@@ -5,9 +5,14 @@
 #
 #     Sets usbhid's joystick polling override (the jspoll parameter) right away, keeps it for
 #     the next boots (/etc/tmpfiles.d, plus /etc/modprobe.d when usbhid is a module), and
-#     reconnects USB DualShock 4 controllers so the new rate applies now. It covers every USB
+#     reconnects USB DualShock 4 and DualSense controllers so the new rate applies now. It covers every USB
 #     gamepad and joystick usbhid drives. Only those files are ever written.
 set -eu
+# Character ranges below ([a-z], [0-9]) must mean ASCII: under a UTF-8 locale bash (Arch's sh)
+# takes characters such as fullwidth letters or Arabic digits for them. Messages keep their language.
+case ${LC_ALL:-} in ?*) LANG=$LC_ALL; unset LC_ALL;; esac
+LC_COLLATE=C; export LANG LC_COLLATE
+umask 022   # (pkexec keeps the caller's umask; what this creates must stay readable)
 
 die() { echo "xcontrol-controller-helper: $*" >&2; exit 1; }
 
@@ -33,24 +38,27 @@ modprobe=$ETC/modprobe.d/xcontrol-usbhid.conf
 if [ "$ms" = 0 ]; then
     rm -f "$tmpfiles" "$modprobe"
 else
+    # (written to a temporary file first, so a failed write never leaves half a file)
     mkdir -p "$ETC/tmpfiles.d"
     printf '# Written by XControl (Controllers page): USB game controller polling, %s ms\nw %s - - - - %s\n' \
-        "$ms" /sys/module/usbhid/parameters/jspoll "$ms" > "$tmpfiles"
+        "$ms" /sys/module/usbhid/parameters/jspoll "$ms" > "$tmpfiles.tmp"
+    mv -f "$tmpfiles.tmp" "$tmpfiles"
     if [ -e "$SYS/module/usbhid/initstate" ]; then   # a module: also when it's loaded
         mkdir -p "$ETC/modprobe.d"
-        printf '# Written by XControl (Controllers page)\noptions usbhid jspoll=%s\n' "$ms" > "$modprobe"
+        printf '# Written by XControl (Controllers page)\noptions usbhid jspoll=%s\n' "$ms" > "$modprobe.tmp"
+        mv -f "$modprobe.tmp" "$modprobe"
     else
         rm -f "$modprobe"
     fi
 fi
 
-# reconnect USB DualShock 4s (Sony 054c: 05c4, 09cc, 0ba0) so the rate applies now
+# reconnect USB DualShock 4s (Sony 054c: 05c4, 09cc, 0ba0) and DualSenses (0ce6, 0df2) so the rate applies now
 drv=$SYS/bus/usb/drivers/usbhid
 for intf in "$drv"/*:*; do
     [ -e "$intf" ] || continue
     dev=$(dirname "$(readlink -f "$intf")")
     [ "$(cat "$dev/idVendor" 2>/dev/null)" = 054c ] || continue
-    case $(cat "$dev/idProduct" 2>/dev/null) in 05c4|09cc|0ba0) ;; *) continue;; esac
+    case $(cat "$dev/idProduct" 2>/dev/null) in 05c4|09cc|0ba0|0ce6|0df2) ;; *) continue;; esac
     name=$(basename "$intf")
     echo "$name" > "$drv/unbind" 2>/dev/null || true
     echo "$name" > "$drv/bind" 2>/dev/null || true

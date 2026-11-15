@@ -205,5 +205,5 @@ def _xserver_checks():
     if not ignored:
         return []
     return [("warn", _("X ignored some of XControl's X options"),
-             _("At its last start X didn't use: {names}. The driver in use may not have them (System > X "
+             _("At its last start X didn't use: {names}. The driver in use may not have them (About & Tools > X "
                "server).").format(names=", ".join(ignored)), None)]

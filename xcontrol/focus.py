@@ -11,6 +11,10 @@ import fnmatch
 import os
 
 
+class _ClassHint(ctypes.Structure):     # XClassHint
+    _fields_ = [("name", ctypes.c_void_p), ("klass", ctypes.c_void_p)]
+
+
 def process_names(pid, proc="/proc"):
     """Names a process goes by: its comm, its executable's file name, and its first argument's
     (Windows paths too: "Z:\\games\\Elden Ring\\eldenring.exe" -> "eldenring.exe")."""
@@ -67,7 +71,18 @@ class Focus:
         self._handler = ctypes.CFUNCTYPE(i, vp, vp)(lambda d, e: 0)
         x.XSetErrorHandler(ctypes.cast(self._handler, vp))
         self.dpy = x.XOpenDisplay(display.encode() if display else None)
+        self.lost = False
         if self.dpy:
+            # When the X server goes away (logging out), Xlib's default is to end the program on the
+            # spot: the controller service would leave the controllers hidden. With this (libX11
+            # 1.7+) the call just fails, and the service ends the usual way when it's told to.
+            if hasattr(x, "XSetIOErrorExitHandler"):
+                self._io = ctypes.CFUNCTYPE(i, vp)(lambda d: 0)      # (Xlib's own one exits too)
+                self._gone = ctypes.CFUNCTYPE(None, vp, vp)(lambda d, data: setattr(self, "lost", True))
+                x.XSetIOErrorHandler.restype, x.XSetIOErrorHandler.argtypes = vp, [vp]
+                x.XSetIOErrorExitHandler.restype, x.XSetIOErrorExitHandler.argtypes = None, [vp, vp, vp]
+                x.XSetIOErrorHandler(ctypes.cast(self._io, vp))
+                x.XSetIOErrorExitHandler(self.dpy, ctypes.cast(self._gone, vp), None)
             self.root = x.XDefaultRootWindow(self.dpy)
             self.atoms = {n: x.XInternAtom(self.dpy, n, 0) for n in (b"_NET_ACTIVE_WINDOW", b"_NET_WM_PID")}
 
@@ -87,13 +102,12 @@ class Focus:
         if not self.dpy:
             return []
         win = self._card(self.root, self.atoms[b"_NET_ACTIVE_WINDOW"], 0)    # (any type: WINDOW, as WMs set it)
+        if self.lost:
+            self.close()
         if not win:
             return []
         out = []
-
-        class Hint(ctypes.Structure):
-            _fields_ = [("name", ctypes.c_void_p), ("klass", ctypes.c_void_p)]
-        h = Hint()
+        h = _ClassHint()
         if self.x.XGetClassHint(self.dpy, win, ctypes.byref(h)):
             for p in (h.name, h.klass):
                 if p:

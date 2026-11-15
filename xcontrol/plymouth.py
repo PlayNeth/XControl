@@ -191,7 +191,7 @@ def format_hooks(hk):
 # ---------------------------------------------------------------- the kernel command line
 def cmdline(path="/proc/cmdline"):
     try:
-        with open(path) as f:
+        with open(path, errors="replace") as f:
             return f.read().strip()
     except OSError:
         return ""

@@ -119,6 +119,16 @@ for args, why, stdin in (
     code, _out = run(*args, stdin=stdin)
     expect(f"refuses {why}", code != 0, True)
 
+# ranges like [a-z] mean ASCII whatever the caller's language (bash takes more in other locales)
+utf8 = next((loc for loc in subprocess.run(["locale", "-a"], capture_output=True, text=True, errors="replace")
+             .stdout.split() if "_" in loc and loc.lower().endswith(("utf8", "utf-8"))), None) \
+    if shutil.which("locale") else None
+for shell in ("sh", "bash"):
+    if utf8 and shutil.which(shell):
+        r = subprocess.run(prefix + [shell, helper, "add", "\uff41na", "x", "0"], capture_output=True, input=b"pw\n",
+                           env=dict(env, LC_ALL=utf8))
+        expect(f"refuses a fullwidth letter in a user name ({shell}, {utf8})", r.returncode != 0, True)
+
 # (as root, the caller comes only from pkexec's PKEXEC_UID; without it the helper refuses to run)
 
 # the Python side
